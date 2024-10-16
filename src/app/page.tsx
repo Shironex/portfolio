@@ -1,10 +1,17 @@
+import { Metadata } from 'next'
+
 import Heading from '@/components/heading'
 import { Highlight } from '@/components/highlight'
 import Container from '@/components/layout/container'
 import { Paragraph } from '@/components/paragraph'
 import Projects from '@/components/projects'
 
-export default function Home() {
+export const metadata: Metadata = {
+  title: 'Home | Shirone',
+  description: 'Shirone is a developer, gamer and music lover.',
+}
+
+const HomePage = () => {
   return (
     <Container>
       <span className="text-4xl">👋</span>
@@ -29,3 +36,5 @@ export default function Home() {
     </Container>
   )
 }
+
+export default HomePage

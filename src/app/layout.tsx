@@ -9,8 +9,8 @@ import { cn } from '@/lib/utils'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Portfolio',
-  description: 'Portfolio',
+  title: 'Portfolio | Shirone',
+  description: 'Shirone is a developer, gamer and music lover.',
 }
 
 const inter = Inter({
