@@ -1,0 +1,41 @@
+version: '3.9'
+services:
+  db:
+    image: postgres
+    restart: always
+    container_name: db
+    ports:
+      - 5432:5432
+    networks:
+      - postgres
+    environment:
+      POSTGRES_PASSWORD: example
+      PGDATA: /data/postgres
+    volumes:
+      - next-starter:/data/postgres
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mail_server
+    restart: always
+    logging:
+      driver: 'none'
+    ports:
+      - '1025:1025' # smtp
+      - '8025:8025' # web ui
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    ports:
+      - '6379:6379'
+    networks:
+      - postgres
+    volumes:
+      - redis_data:/data
+
+networks:
+  postgres:
+    driver: bridge
+volumes:
+  next-starter:
+  redis_data:
