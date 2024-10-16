@@ -16,6 +16,6 @@ export type Project = {
   images: StaticImageData[] | string[]
   href: string
   slug?: string
-  stack?: string[]
+  stack: string[]
   content?: React.ReactNode | string
 }

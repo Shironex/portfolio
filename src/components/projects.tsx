@@ -40,9 +40,9 @@ const Projects = () => {
               <Image
                 src={project.thumbnail}
                 alt="thumbnail"
-                height="200"
+                height="143"
                 width="200"
-                className="rounded-md"
+                className="h-[143px] w-[200px] flex-shrink-0 rounded-md"
               />
               <div className="flex flex-col justify-between">
                 <div>
@@ -56,15 +56,31 @@ const Projects = () => {
                     {project.description}
                   </Paragraph>
                 </div>
-                <div className="mt-2 flex space-x-2 md:mb-1 md:mt-0">
-                  {project.stack?.map((stack: string) => (
-                    <span
-                      key={stack}
-                      className="rounded-sm bg-gray-50 px-2 py-1 text-xs text-secondary md:text-xs lg:text-xs"
-                    >
-                      {stack}
+                <div className="flex flex-wrap items-center justify-start gap-2 md:mb-1 md:mt-0">
+                  {project.stack.length > 0 ? (
+                    <>
+                      {project.stack.map((stack: string, index: number) => {
+                        if (index > 7) return null
+                        return (
+                          <span
+                            key={stack}
+                            className="rounded-sm bg-gray-50 px-2 py-1 text-xs text-muted-foreground"
+                          >
+                            {stack}
+                          </span>
+                        )
+                      })}
+                      {project.stack.length > 7 && (
+                        <span className="rounded-sm bg-gray-50 px-2 py-1 text-xs text-muted-foreground">
+                          +{project.stack.length - 8}
+                        </span>
+                      )}
+                    </>
+                  ) : (
+                    <span className="rounded-sm bg-gray-50 px-2 py-1 text-xs text-muted-foreground">
+                      No stack
                     </span>
-                  ))}
+                  )}
                 </div>
               </div>
             </Link>

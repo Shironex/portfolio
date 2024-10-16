@@ -85,8 +85,19 @@ export const projects = [
       writeWizIntegrationsMessages,
       writeWizProjectSettings,
     ],
-    stack: ['Nextjs', 'Tailwindcss'],
-    slug: 'aceternity',
+    stack: [
+      'Nextjs',
+      'Shadcn',
+      'Terraform',
+      'Drizzle',
+      'Redis',
+      'PostgreSQL',
+      'Stripe',
+      'OpenAI',
+      'AWS',
+      'BullMQ',
+    ],
+    slug: 'write-wiz',
     content: (
       <div>
         <p>
