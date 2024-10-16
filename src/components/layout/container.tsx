@@ -1,15 +1,15 @@
-import React from 'react';
+import React from 'react'
 
 type Props = {
-    children: React.ReactNode;
+  children: React.ReactNode
 }
 
 const Container = ({ children }: Props) => {
-    return (
-        <main className={'max-w-4xl w-full mx-auto py-20 px-4 md:px-10'}>
-            {children}
-        </main>
-    );
-};
+  return (
+    <main className={'mx-auto w-full max-w-4xl px-4 py-20 md:px-10'}>
+      {children}
+    </main>
+  )
+}
 
-export default Container;
+export default Container

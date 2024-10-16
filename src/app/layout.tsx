@@ -1,9 +1,12 @@
-import Footer from '@/components/layout/footer';
-import Sidebar from '@/components/layout/sidebar/index';
-import { cn } from '@/lib/utils';
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+
+import Footer from '@/components/layout/footer'
+import Sidebar from '@/components/layout/sidebar/index'
+
+import { cn } from '@/lib/utils'
+
+import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Portfolio',
@@ -13,8 +16,7 @@ export const metadata: Metadata = {
 const inter = Inter({
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-});
-
+})
 
 export default function RootLayout({
   children,
@@ -27,12 +29,12 @@ export default function RootLayout({
         suppressHydrationWarning={true}
         className={cn(
           inter.className,
-          'flex antialiased h-screen overflow-hidden bg-gray-100'
+          'flex h-screen overflow-hidden bg-gray-100 antialiased'
         )}
       >
         <Sidebar />
-        <div className="lg:pl-2 lg:pt-2 bg-gray-100 flex-1 overflow-y-auto">
-          <div className="flex-1 bg-white min-h-screen lg:rounded-tl-xl border border-transparent lg:border-neutral-200 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto bg-gray-100 lg:pl-2 lg:pt-2">
+          <div className="min-h-screen flex-1 overflow-y-auto border border-transparent bg-white lg:rounded-tl-xl lg:border-neutral-200">
             {children}
             <Footer />
           </div>
