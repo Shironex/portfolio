@@ -5,6 +5,8 @@ import Link from 'next/link'
 
 import { motion } from 'framer-motion'
 
+import { Badge } from '@/components/ui/badge'
+
 import { projects } from '@/lib/constants'
 import { Project } from '@/lib/type'
 
@@ -60,20 +62,17 @@ const Projects = () => {
                   {project.stack.length > 0 ? (
                     <>
                       {project.stack.map((stack: string, index: number) => {
-                        if (index > 7) return null
+                        if (index > 6) return null
                         return (
-                          <span
-                            key={stack}
-                            className="rounded-sm bg-gray-50 px-2 py-1 text-xs text-muted-foreground"
-                          >
+                          <Badge key={stack} variant="secondary">
                             {stack}
-                          </span>
+                          </Badge>
                         )
                       })}
                       {project.stack.length > 7 && (
-                        <span className="rounded-sm bg-gray-50 px-2 py-1 text-xs text-muted-foreground">
+                        <Badge variant="secondary">
                           +{project.stack.length - 8}
-                        </span>
+                        </Badge>
                       )}
                     </>
                   ) : (
