@@ -22,6 +22,8 @@ import writeWiz from '@/public/projects/write-wiz/thumbnail.png'
 import writeWizWorkItems2 from '@/public/projects/write-wiz/work-items-2.png'
 import writeWizWorkItems from '@/public/projects/write-wiz/work-items.png'
 
+import { ProjectStatus } from './type'
+
 export const navlinks = [
   {
     href: '/',
@@ -68,8 +70,9 @@ export const projects = [
     href: 'https://writewiz.shirone.xyz',
     title: 'Write-Wiz',
     description:
-      'Write-Wiz is a ai project management tool that helps you manage your projects and tasks.',
+      'Write-Wiz is an ai project management tool that helps you manage your projects and tasks. You can create projects, add tasks, send events from your projects and track it in our charts. There is also discord integration reports page, ai chatbox and many more features that are coming soon.',
     thumbnail: writeWiz,
+    status: 'In Progress' as ProjectStatus,
     images: [
       writeWiz,
       writeWizProjects,
@@ -87,27 +90,25 @@ export const projects = [
     ],
     stack: [
       'Nextjs',
+      'Typescript',
       'Shadcn',
-      'Terraform',
+      'Zod',
+      'Tailwind',
       'Drizzle',
       'Redis',
       'PostgreSQL',
+      'Terraform',
       'Stripe',
       'OpenAI',
       'AWS',
       'BullMQ',
+      'React-hook-form',
+      'zsa-react',
+      'Recharts',
+      'React-email',
     ],
     slug: 'write-wiz',
-    content: (
-      <div>
-        <p>
-          Write-Wiz is a ai project management tool that helps you manage your
-          projects and tasks. You can create projects, add tasks, send events
-          from your projects and track it in our charts. There is also discord
-          integration reports page, ai chatbox and many more features that are
-          coming soon.
-        </p>
-      </div>
-    ),
+    content:
+      'Write-Wiz is an ai project management tool that helps you manage your projects and tasks. You can create projects, add tasks, send events from your projects and track it in our charts. There is also discord integration reports page, ai chatbox and many more features that are coming soon.',
   },
 ]

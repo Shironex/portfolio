@@ -1,7 +1,6 @@
 import { Metadata } from 'next'
 
 import Heading from '@/components/heading'
-import { Highlight } from '@/components/highlight'
 import Container from '@/components/layout/container'
 import { Paragraph } from '@/components/paragraph'
 import Projects from '@/components/projects'
@@ -11,21 +10,22 @@ export const metadata: Metadata = {
   description: 'Shirone is a developer, gamer and music lover.',
 }
 
-const HomePage = () => {
+export default function Home() {
   return (
     <Container>
-      <span className="text-4xl">👋</span>
+      <span className="animate-pulse text-4xl">👋</span>
       <Heading className="font-black">Hello there! I&apos;m Kacper</Heading>
-      <Paragraph className="mt-4 max-w-xl">
-        I&apos;m a full-stack developer that loves{' '}
-        <Highlight>building new things</Highlight> and web apps that can impact
-        pepoles around me.
-      </Paragraph>
-      <Paragraph className="mt-4 max-w-xl">
-        I&apos;m a junior software engineer with{' '}
-        <Highlight>2 years of experience</Highlight> building applications in
-        React and Next.js.
-      </Paragraph>
+      <Paragraph
+        className="mt-4 max-w-xl"
+        words="I'm a full-stack developer that loves building new things and web apps that can impact pepoles around me."
+      />
+      <Paragraph
+        className="mt-4 max-w-xl"
+        words="I'm a junior software engineer with
+        I'm a junior software engineer with 
+        2 years of experience building applications in
+        React and Next.js."
+      />
       <Heading
         as="h2"
         className="mb-4 mt-20 text-lg font-black md:text-lg lg:text-lg"
@@ -36,5 +36,3 @@ const HomePage = () => {
     </Container>
   )
 }
-
-export default HomePage
