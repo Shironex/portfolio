@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 
 import Badge from '@/components/badge'
 
-import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { useMediaQuery } from '@/hooks/use-media-query'
 
 import SidebarHeader from './sidebar-header'
 import SidebarNavigation from './sidebar-navigation'

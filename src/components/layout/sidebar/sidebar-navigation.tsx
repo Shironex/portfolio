@@ -10,7 +10,7 @@ import { navlinks, socials } from '@/lib/constants'
 import { Navlink } from '@/lib/type'
 import { cn } from '@/lib/utils'
 
-import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { useMediaQuery } from '@/hooks/use-media-query'
 
 type Props = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>
