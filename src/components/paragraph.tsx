@@ -12,7 +12,7 @@ type Props = {
   words?: string
 }
 
-export const Paragraph = ({ className, children, words }: Props) => {
+const Paragraph = ({ className, children, words }: Props) => {
   return (
     <p
       className={cn(
@@ -38,3 +38,5 @@ export const Paragraph = ({ className, children, words }: Props) => {
     </p>
   )
 }
+
+export default Paragraph

@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 
 import Heading from '@/components/heading'
 import Container from '@/components/layout/container'
-import { Paragraph } from '@/components/paragraph'
+import Paragraph from '@/components/paragraph'
 import Projects from '@/components/projects'
 
 export const metadata: Metadata = {

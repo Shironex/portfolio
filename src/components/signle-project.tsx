@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { Project } from '@/lib/type'
 
 import Heading from './heading'
-import { Paragraph } from './paragraph'
+import Paragraph from './paragraph'
 import { Badge } from './ui/badge'
 import { ImagesSlider } from './ui/images-slider'
 
