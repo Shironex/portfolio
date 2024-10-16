@@ -19,5 +19,4 @@ jobs:
       - name: Linting
         run: pnpm run lint
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NEXT_PUBLIC_PUBLIC_URL: ${{ secrets.NEXT_PUBLIC_PUBLIC_URL }}

@@ -19,5 +19,4 @@ jobs:
       - name: TypeScript check
         run: pnpm run typecheck
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NEXT_PUBLIC_PUBLIC_URL: ${{ secrets.NEXT_PUBLIC_PUBLIC_URL }}
