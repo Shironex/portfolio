@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import Turnstile from 'react-turnstile'
 import { toast } from 'sonner'
 import { useServerAction } from 'zsa-react'
 
@@ -14,6 +15,8 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
+
+import { env } from '@/env/client'
 
 import { sendEmailAction } from './action'
 import { ContactFormSchema, contactFormSchema } from './validation'
@@ -30,6 +33,7 @@ const ContactForm = () => {
   const { execute, isPending } = useServerAction(sendEmailAction, {
     onSuccess: () => {
       console.log('Email sent successfully')
+      form.reset()
       toast('Email sent successfully')
     },
     onError: ({ err }) => {
@@ -38,6 +42,10 @@ const ContactForm = () => {
   })
 
   const handleSubmit = form.handleSubmit(async (data: ContactFormSchema) => {
+    if (!data.turnstileToken) {
+      toast('Please complete the captcha')
+      return
+    }
     await execute(data)
   })
 
@@ -99,6 +107,16 @@ const ContactForm = () => {
               <FormMessage />
             </FormItem>
           )}
+        />
+        <Turnstile
+          theme="light"
+          sitekey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+          onVerify={(token: string) => form.setValue('turnstileToken', token)}
+        />
+        <input
+          type="hidden"
+          name="verify"
+          onChange={(e) => form.setValue('verify', e.target.value)}
         />
         <Button
           className="mt-4 w-full rounded-md bg-neutral-100 px-2 py-2 font-bold text-neutral-500"
