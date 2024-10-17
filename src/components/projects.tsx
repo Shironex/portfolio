@@ -43,7 +43,7 @@ const Projects = () => {
               alt="thumbnail"
               height="143"
               width="200"
-              className="h-[143px] w-[200px] flex-shrink-0 self-end rounded-md"
+              className="h-[143px] w-[200px] flex-shrink-0 rounded-md lg:self-end"
             />
             <div className="flex flex-col justify-between gap-2">
               <div>
@@ -54,7 +54,7 @@ const Projects = () => {
                   {project.title}
                 </Heading>
                 <TextGenerateEffect
-                  className="mt-2 max-w-xl text-sm md:text-sm lg:text-sm"
+                  className="mt-2 max-w-xl text-sm font-light md:text-sm lg:text-sm"
                   words={project.description}
                 />
               </div>
