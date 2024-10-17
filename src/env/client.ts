@@ -6,7 +6,7 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_PUBLIC_URL: z.string().min(1),
     NEXT_PUBLIC_SKIP_EVENTS: z.string().optional(),
-    NEXT_PUBLIC_WRITEWIZ_PROJECT_ID: z.string().min(1),
+    NEXT_PUBLIC_WRITEWIZ_PROJECT_ID: z.string().optional(),
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().min(1),
   },
   runtimeEnv: {

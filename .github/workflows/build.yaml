@@ -29,7 +29,6 @@ jobs:
         run: pnpm run build
         env:
           NEXT_PUBLIC_PUBLIC_URL: ${{ secrets.NEXT_PUBLIC_PUBLIC_URL }}
-          NEXT_PUBLIC_WRITEWIZ_PROJECT_ID: ${{ secrets.NEXT_PUBLIC_WRITEWIZ_PROJECT_ID }}
           NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
           TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
