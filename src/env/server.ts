@@ -8,6 +8,7 @@ export const env = createEnv({
     RESEND_API_KEY: z.string().min(1),
     RESEND_MAIL_TO: z.string().min(1),
     TURNSTILE_SECRET_KEY: z.string().min(1),
+    REDIS_HOST: z.string().min(1),
   },
   onValidationError: (error: ZodError) => {
     console.error(

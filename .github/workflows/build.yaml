@@ -34,3 +34,4 @@ jobs:
           TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           RESEND_MAIL_TO: ${{ secrets.RESEND_MAIL_TO }}
+          REDIS_HOST: ${{ secrets.REDIS_HOST }}
