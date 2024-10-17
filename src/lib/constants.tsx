@@ -28,26 +28,31 @@ export const navlinks = [
   {
     href: '/',
     label: 'Home',
+    ariaLabel: 'Home',
     icon: IconBolt,
   },
   {
     href: '/about',
     label: 'About',
+    ariaLabel: 'About',
     icon: IconMessage2,
   },
   {
     href: '/projects',
     label: 'Projects',
+    ariaLabel: 'Projects',
     icon: IconBriefcase2,
   },
   {
     href: '/blog',
     label: 'Articles',
+    ariaLabel: 'Articles',
     icon: IconArticle,
   },
   {
     href: '/contact',
     label: 'Contact',
+    ariaLabel: 'Contact',
     icon: IconMail,
   },
 ]
@@ -56,11 +61,13 @@ export const socials = [
   {
     href: 'https://github.com/Shironex',
     label: 'GitHub',
+    ariaLabel: 'GitHub',
     icon: IconBrandGithub,
   },
   {
     href: 'https://discord.gg/ZpPwXMfU',
     label: 'Discord',
+    ariaLabel: 'Discord',
     icon: IconBrandDiscord,
   },
 ]

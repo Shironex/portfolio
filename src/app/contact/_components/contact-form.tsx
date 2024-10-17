@@ -61,6 +61,7 @@ const ContactForm = () => {
                 <FormLabel>Name</FormLabel>
                 <FormControl>
                   <input
+                    aria-label="Name"
                     type="text"
                     placeholder="Your Name"
                     className="w-full rounded-md bg-neutral-100 px-2 py-2 text-sm text-neutral-700 focus:outline-none focus:ring-2 focus:ring-neutral-200"
@@ -79,6 +80,7 @@ const ContactForm = () => {
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <input
+                    aria-label="Email"
                     type="email"
                     placeholder="Your email address"
                     className="w-full rounded-md bg-neutral-100 px-2 py-2 text-sm text-neutral-700 focus:outline-none focus:ring-2 focus:ring-neutral-200"
@@ -98,6 +100,7 @@ const ContactForm = () => {
               <FormLabel>Message</FormLabel>
               <FormControl>
                 <textarea
+                  aria-label="Message"
                   placeholder="Your Message"
                   rows={10}
                   className="mt-4 w-full resize-none rounded-md bg-neutral-100 px-2 py-2 text-sm text-neutral-700 focus:outline-none focus:ring-2 focus:ring-neutral-200"
@@ -109,6 +112,7 @@ const ContactForm = () => {
           )}
         />
         <Turnstile
+          aria-label="Captcha"
           theme="light"
           sitekey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
           onVerify={(token: string) => form.setValue('turnstileToken', token)}
@@ -117,8 +121,10 @@ const ContactForm = () => {
           type="hidden"
           name="verify"
           onChange={(e) => form.setValue('verify', e.target.value)}
+          aria-label="Verify"
         />
         <Button
+          aria-label="Submit Contact Form"
           className="mt-4 w-full rounded-md bg-neutral-100 px-2 py-2 font-bold text-neutral-500"
           type="submit"
           variant={'outline'}

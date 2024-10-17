@@ -30,6 +30,7 @@ export const SidebarNavigation = ({ setOpen }: Props) => {
           href={{
             pathname: link.href,
           }}
+          aria-label={link.ariaLabel}
           onClick={() => isMobile && setOpen(false)}
           className={cn(
             'flex items-center space-x-2 rounded-md px-2 py-2 text-sm text-muted-foreground transition duration-200 hover:text-primary',
@@ -55,6 +56,7 @@ export const SidebarNavigation = ({ setOpen }: Props) => {
           href={{
             pathname: link.href,
           }}
+          aria-label={link.ariaLabel}
           className={cn(
             'flex items-center space-x-2 rounded-md px-2 py-2 text-sm text-muted-foreground transition duration-200 hover:text-primary'
           )}

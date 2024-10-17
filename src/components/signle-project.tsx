@@ -82,6 +82,7 @@ const SingleProject = ({ project }: Props) => {
 
       <a
         href={project.href}
+        aria-label="Live Preview"
         target="__blank"
         className="group/button mt-auto inline-flex origin-left items-center gap-1 rounded-full bg-gray-800 px-4 py-2 text-sm font-medium text-white shadow-lg shadow-black/20 ring-gray-50/60 ring-offset-gray-900 transition hover:scale-105 focus:outline-none focus-visible:ring-1 focus-visible:ring-offset-2 group-hover/button:scale-105 group-hover/button:bg-gray-50/15 sm:backdrop-blur-sm"
       >

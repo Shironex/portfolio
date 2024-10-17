@@ -31,7 +31,10 @@ const Sidebar = () => {
               <SidebarHeader />
               <SidebarNavigation setOpen={setOpen} />
             </div>
-            <button onClick={() => isMobile && setOpen(false)}>
+            <button
+              onClick={() => isMobile && setOpen(false)}
+              aria-label="Read Resume"
+            >
               <Badge href="/" text="Read Resume" />
             </button>
           </motion.aside>
@@ -40,6 +43,7 @@ const Sidebar = () => {
       <button
         className="fixed bottom-4 right-4 z-50 flex h-8 w-8 items-center justify-center rounded-full border border-neutral-200 backdrop-blur-sm lg:hidden"
         onClick={() => setOpen(!open)}
+        aria-label="Open Sidebar Menu on Mobile"
       >
         <IconLayoutSidebarRightCollapse className="h-4 w-4 text-muted-foreground" />
       </button>

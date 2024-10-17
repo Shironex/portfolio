@@ -6,6 +6,7 @@ import type { IconProps } from '@tabler/icons-react'
 export interface Navlink {
   href: string
   label: string
+  ariaLabel: string
   icon?: React.ReactNode | IconProps | any
 }
 
