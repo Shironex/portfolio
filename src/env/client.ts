@@ -5,9 +5,14 @@ import { ZodError, z } from 'zod'
 export const env = createEnv({
   client: {
     NEXT_PUBLIC_PUBLIC_URL: z.string().min(1),
+    NEXT_PUBLIC_SKIP_EVENTS: z.string().optional(),
+    NEXT_PUBLIC_WRITEWIZ_PROJECT_ID: z.string().min(1),
   },
   runtimeEnv: {
     NEXT_PUBLIC_PUBLIC_URL: process.env.NEXT_PUBLIC_PUBLIC_URL,
+    NEXT_PUBLIC_SKIP_EVENTS: process.env.NEXT_PUBLIC_SKIP_EVENTS,
+    NEXT_PUBLIC_WRITEWIZ_PROJECT_ID:
+      process.env.NEXT_PUBLIC_WRITEWIZ_PROJECT_ID,
   },
   onValidationError: (error: ZodError) => {
     console.error(

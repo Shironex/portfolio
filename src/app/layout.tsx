@@ -6,7 +6,7 @@ import Sidebar from '@/components/layout/sidebar/index'
 
 import { cn } from '@/lib/utils'
 
-import './globals.css'
+import '@/styles/globals.css'
 
 export const metadata: Metadata = {
   title: 'Portfolio | Shirone',
@@ -18,11 +18,11 @@ const inter = Inter({
   weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
 })
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+type Props = {
   children: React.ReactNode
-}>) {
+}
+
+const RootLayout = ({ children }: Props) => {
   return (
     <html lang="en">
       <body
@@ -43,3 +43,5 @@ export default function RootLayout({
     </html>
   )
 }
+
+export default RootLayout
