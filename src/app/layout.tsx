@@ -42,6 +42,11 @@ const RootLayout = ({ children }: Props) => {
             <Footer />
           </div>
         </div>
+        <script
+          defer
+          src="https://analytics.shirone.xyz/script.js"
+          data-website-id="694509a6-3a2c-4358-bfb5-720d3b77c7b7"
+        ></script>
       </body>
     </html>
   )
