@@ -5,6 +5,8 @@ import { ZodError, z } from 'zod'
 export const env = createEnv({
   server: {
     NODE_ENV: z.enum(['development', 'production', 'test']),
+    RESEND_API_KEY: z.string().min(1),
+    RESEND_MAIL_TO: z.string().min(1),
   },
   onValidationError: (error: ZodError) => {
     console.error(

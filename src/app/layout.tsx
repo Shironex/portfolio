@@ -1,6 +1,8 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 
+import { Toaster } from '@/components/ui/sonner'
+
 import Footer from '@/components/layout/footer'
 import Sidebar from '@/components/layout/sidebar/index'
 
@@ -36,6 +38,7 @@ const RootLayout = ({ children }: Props) => {
         <div className="flex-1 overflow-y-auto bg-gray-100 lg:pl-2 lg:pt-2">
           <div className="min-h-screen flex-1 overflow-y-auto border border-transparent bg-white lg:rounded-tl-xl lg:border-neutral-200">
             {children}
+            <Toaster />
             <Footer />
           </div>
         </div>
