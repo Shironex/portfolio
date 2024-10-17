@@ -4,7 +4,7 @@ const SidebarHeader = () => {
   return (
     <div className="flex space-x-2">
       <Image
-        src="/profile.png"
+        src="https://cdn.discordapp.com/avatars/705891140049829908/2eb5c33d61fac7350172005be491ed60?size=1024"
         alt="Avatar"
         height="40"
         width="40"

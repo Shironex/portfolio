@@ -15,7 +15,10 @@ await jiti.import('./src/env/client.ts', { default: true })
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [{ hostname: 'images.unsplash.com' }],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'https', hostname: 'cdn.discordapp.com' },
+    ],
   },
   experimental: {
     typedRoutes: true,
