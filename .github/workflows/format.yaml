@@ -6,6 +6,9 @@ on:
 jobs:
   format:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -23,3 +26,4 @@ jobs:
         with:
           commit_message: 'chore(format): format code'
           branch: ${{ github.head_ref }}
+          commit_author: Shironex <Shironex@users.noreply.github.com>
