@@ -8,6 +8,20 @@ import {
   IconMessage2,
 } from '@tabler/icons-react'
 
+// Matmajka images
+import matmajkaAboutLessons from '@/public/projects/matmajka/about-lessons.png'
+import matmajkaAboutMe from '@/public/projects/matmajka/about-me.png'
+import matmajkaContact from '@/public/projects/matmajka/contact.png'
+import matmajkaOpinions from '@/public/projects/matmajka/opinions.png'
+import matmajka from '@/public/projects/matmajka/thumbnail.png'
+// Toriime images
+import toriimeAboutProject from '@/public/projects/toriime/about-project.png'
+import toriimeFaq from '@/public/projects/toriime/faq.png'
+import toriimeFooter from '@/public/projects/toriime/footer.png'
+import toriimeImages2 from '@/public/projects/toriime/images-2.png'
+import toriimeImages3 from '@/public/projects/toriime/images-3.png'
+import toriimeImages from '@/public/projects/toriime/images.png'
+import toriime from '@/public/projects/toriime/thumbnail.png'
 // Write-Wiz images
 import writeWizEvents2 from '@/public/projects/write-wiz/events-2.png'
 import writeWIzEvents from '@/public/projects/write-wiz/events.png'
@@ -22,22 +36,6 @@ import writeWizTeam from '@/public/projects/write-wiz/team.png'
 import writeWiz from '@/public/projects/write-wiz/thumbnail.png'
 import writeWizWorkItems2 from '@/public/projects/write-wiz/work-items-2.png'
 import writeWizWorkItems from '@/public/projects/write-wiz/work-items.png'
-
-// Matmajka images
-import matmajkaAboutLessons from '@/public/projects/matmajka/about-lessons.png'
-import matmajkaAboutMe from '@/public/projects/matmajka/about-me.png'
-import matmajkaContact from '@/public/projects/matmajka/contact.png'
-import matmajkaOpinions from '@/public/projects/matmajka/opinions.png'
-import matmajka from '@/public/projects/matmajka/thumbnail.png'
-
-// Toriime images
-import toriimeAboutProject from '@/public/projects/toriime/about-project.png'
-import toriimeFaq from '@/public/projects/toriime/faq.png'
-import toriimeFooter from '@/public/projects/toriime/footer.png'
-import toriimeImages2 from '@/public/projects/toriime/images-2.png'
-import toriimeImages3 from '@/public/projects/toriime/images-3.png'
-import toriimeImages from '@/public/projects/toriime/images.png'
-import toriime from '@/public/projects/toriime/thumbnail.png'
 
 import { ProjectStatus } from './type'
 
@@ -193,7 +191,7 @@ export const projects = [
       'hello-pangea/dnd',
       'Axios',
       'AWS',
-      'Docker'
+      'Docker',
     ],
     slug: 'toriime',
     content:
