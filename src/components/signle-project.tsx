@@ -7,6 +7,7 @@ import { Project } from '@/lib/type'
 
 import Heading from './heading'
 import Paragraph from './paragraph'
+import { TechnologyStack } from './technology-stack'
 import { Badge } from './ui/badge'
 import { ImagesSlider } from './ui/images-slider'
 
@@ -51,11 +52,7 @@ const SingleProject = ({ project }: Props) => {
           </div>
         )}
         <div className="mt-2 flex flex-wrap justify-start gap-2 md:mb-1 md:mt-0">
-          {project.stack?.map((stack: string) => (
-            <Badge key={stack} variant="secondary" className="text-xs">
-              {stack}
-            </Badge>
-          ))}
+          <TechnologyStack technologies={project.stack} />
         </div>
       </div>
       <div>

@@ -4,10 +4,23 @@ import { StaticImageData } from 'next/image'
 import React, { useEffect, useState } from 'react'
 
 import { AnimatePresence, motion } from 'framer-motion'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
 
 import { cn } from '@/lib/utils'
 
-export const ImagesSlider = ({
+interface ImagesSliderProps {
+  images: string[] | StaticImageData[]
+  children?: React.ReactNode
+  overlay?: boolean
+  overlayClassName?: string
+  className?: string
+  autoplay?: boolean
+  direction?: 'up' | 'down'
+}
+
+export const ImagesSlider: React.FC<ImagesSliderProps> = ({
   images,
   children,
   overlay = true,
@@ -15,14 +28,6 @@ export const ImagesSlider = ({
   className,
   autoplay = true,
   direction = 'up',
-}: {
-  images: string[] | StaticImageData[]
-  children?: React.ReactNode
-  overlay?: React.ReactNode
-  overlayClassName?: string
-  className?: string
-  autoplay?: boolean
-  direction?: 'up' | 'down'
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [loadedImages, setLoadedImages] = useState<string[]>([])
@@ -40,26 +45,27 @@ export const ImagesSlider = ({
   }
 
   useEffect(() => {
+    const loadImages = () => {
+      const loadPromises = images.map((image) => {
+        return new Promise<string>((resolve, reject) => {
+          const img = new Image()
+          img.src = typeof image === 'string' ? image : image.src
+          img.onload = () =>
+            resolve(typeof image === 'string' ? image : image.src)
+          img.onerror = reject
+        })
+      })
+
+      Promise.all(loadPromises)
+        .then((loadedImages) => {
+          setLoadedImages(loadedImages)
+        })
+        .catch((error) => console.error('Failed to load images', error))
+    }
+
     loadImages()
-  }, [])
+  }, [images])
 
-  const loadImages = () => {
-    const loadPromises = images.map((image) => {
-      return new Promise((resolve, reject) => {
-        const img = new Image()
-        img.src = typeof image === 'string' ? image : image.src
-        img.onload = () =>
-          resolve(typeof image === 'string' ? image : image.src)
-        img.onerror = reject
-      })
-    })
-
-    Promise.all(loadPromises)
-      .then((loadedImages) => {
-        setLoadedImages(loadedImages as string[])
-      })
-      .catch((error) => console.error('Failed to load images', error))
-  }
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'ArrowRight') {
@@ -71,23 +77,20 @@ export const ImagesSlider = ({
 
     window.addEventListener('keydown', handleKeyDown)
 
-    // autoplay
     let interval: NodeJS.Timeout
     if (autoplay) {
-      interval = setInterval(() => {
-        handleNext()
-      }, 5000)
+      interval = setInterval(handleNext, 5000)
     }
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
       clearInterval(interval)
     }
-  }, [])
+  }, [autoplay])
 
   const slideVariants = {
     initial: {
-      scale: 0,
+      scale: 0.8,
       opacity: 0,
       rotateX: 45,
     },
@@ -101,17 +104,17 @@ export const ImagesSlider = ({
       },
     },
     upExit: {
-      opacity: 1,
-      y: '-150%',
+      opacity: 0,
+      y: '-50%',
       transition: {
-        duration: 1,
+        duration: 0.3,
       },
     },
     downExit: {
-      opacity: 1,
-      y: '150%',
+      opacity: 0,
+      y: '50%',
       transition: {
-        duration: 1,
+        duration: 0.3,
       },
     },
   }
@@ -121,7 +124,7 @@ export const ImagesSlider = ({
   return (
     <div
       className={cn(
-        'relative flex h-full w-full items-center justify-center overflow-hidden',
+        'relative flex h-full w-full items-center justify-center overflow-hidden rounded-xl',
         className
       )}
       style={{
@@ -131,12 +134,12 @@ export const ImagesSlider = ({
       {areImagesLoaded && children}
       {areImagesLoaded && overlay && (
         <div
-          className={cn('absolute inset-0 z-40 bg-black/60', overlayClassName)}
+          className={cn('absolute inset-0 z-10 bg-black/30', overlayClassName)}
         />
       )}
 
       {areImagesLoaded && (
-        <AnimatePresence>
+        <AnimatePresence initial={false}>
           <motion.img
             key={currentIndex}
             src={loadedImages[currentIndex]}
@@ -144,12 +147,41 @@ export const ImagesSlider = ({
             animate="visible"
             exit={direction === 'up' ? 'upExit' : 'downExit'}
             variants={slideVariants}
-            width={1000}
-            height={1000}
-            className="image absolute inset-0 h-full w-full object-contain"
+            className="absolute inset-0 h-full w-full object-cover"
           />
         </AnimatePresence>
       )}
+
+      <div className="absolute inset-x-0 bottom-4 z-20 flex justify-center space-x-2">
+        {loadedImages.map((_, index) => (
+          <button
+            key={index}
+            className={cn(
+              'h-2 w-2 rounded-full transition-all',
+              index === currentIndex ? 'w-4 bg-white' : 'bg-white/50'
+            )}
+            onClick={() => setCurrentIndex(index)}
+          />
+        ))}
+      </div>
+
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute left-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/20 text-white hover:bg-black/30"
+        onClick={handlePrevious}
+      >
+        <ChevronLeft className="h-6 w-6" />
+      </Button>
+
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute right-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/20 text-white hover:bg-black/30"
+        onClick={handleNext}
+      >
+        <ChevronRight className="h-6 w-6" />
+      </Button>
     </div>
   )
 }

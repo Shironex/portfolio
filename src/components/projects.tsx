@@ -8,7 +8,7 @@ import { motion } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 
 import { projects } from '@/lib/constants'
-import { Project } from '@/lib/type'
+import { Project, Technology } from '@/lib/type'
 
 import Heading from './heading'
 import { TextGenerateEffect } from './ui/text-generate-effect'
@@ -61,11 +61,11 @@ const Projects = () => {
               <div className="flex flex-wrap items-center justify-start gap-2 md:mb-1 md:mt-0">
                 {project.stack.length > 0 ? (
                   <>
-                    {project.stack.map((stack: string, index: number) => {
+                    {project.stack.map((stack: Technology, index: number) => {
                       if (index > 6) return null
                       return (
-                        <Badge key={stack} variant="outline">
-                          {stack}
+                        <Badge key={stack.name} variant="outline">
+                          {stack.name}
                         </Badge>
                       )
                     })}

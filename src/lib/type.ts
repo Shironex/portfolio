@@ -16,14 +16,29 @@ export type ProjectStatus =
   | 'Cancelled'
   | 'On Hold'
 
+// Technology category enum
+export type TechnologyCategory =
+  | 'frontend'
+  | 'backend'
+  | 'database'
+  | 'devops'
+  | 'libraries'
+  | 'tools'
+  | 'services'
+
+export interface Technology {
+  name: string
+  category: TechnologyCategory
+}
+
 export interface Project {
   title: string
   description: string
-  thumbnail: StaticImageData
+  thumbnail: StaticImageData | string
   images: StaticImageData[] | string[]
   href: string
   slug?: string
-  stack: string[]
+  stack: Technology[]
   status: ProjectStatus
   content: string
 }

@@ -37,7 +37,7 @@ import writeWiz from '@/public/projects/write-wiz/thumbnail.png'
 import writeWizWorkItems2 from '@/public/projects/write-wiz/work-items-2.png'
 import writeWizWorkItems from '@/public/projects/write-wiz/work-items.png'
 
-import { ProjectStatus } from './type'
+import { Project } from './type'
 
 export const navlinks = [
   {
@@ -87,14 +87,14 @@ export const socials = [
   },
 ]
 
-export const projects = [
+export const projects: Project[] = [
   {
     href: 'https://writewiz.shirone.xyz',
     title: 'Write-Wiz',
     description:
-      'Write-Wiz is an ai project management tool that helps you manage your projects and tasks. You can create projects, add tasks, send events from your projects and track it in our charts. There is also discord integration reports page, ai chatbox and many more features that are coming soon.',
+      'Write-Wiz is an AI project management tool that helps you manage your projects and tasks. It includes Discord integration, AI chatbot, reports, and much more.',
     thumbnail: writeWiz,
-    status: 'In Progress' as ProjectStatus,
+    status: 'In Progress',
     images: [
       writeWiz,
       writeWizProjects,
@@ -111,36 +111,33 @@ export const projects = [
       writeWizProjectSettings,
     ],
     stack: [
-      'NextJS',
-      'Typescript',
-      'Shadcn',
-      'Zod',
-      'Tailwind',
-      'Drizzle',
-      'Redis',
-      'PostgreSQL',
-      'Terraform',
-      'Stripe',
-      'OpenAI',
-      'AWS',
-      'BullMQ',
-      'React-hook-form',
-      'zsa-react',
-      'Recharts',
-      'React-email',
-      'Docker',
+      { name: 'NextJS', category: 'frontend' },
+      { name: 'Typescript', category: 'frontend' },
+      { name: 'Shadcn', category: 'libraries' },
+      { name: 'Zod', category: 'libraries' },
+      { name: 'Redis', category: 'database' },
+      { name: 'Docker', category: 'devops' },
+      { name: 'PostgreSQL', category: 'database' },
+      { name: 'Terraform', category: 'devops' },
+      { name: 'Stripe', category: 'services' },
+      { name: 'OpenAI', category: 'services' },
+      { name: 'AWS', category: 'services' },
+      { name: 'BullMQ', category: 'libraries' },
+      { name: 'React-hook-form', category: 'libraries' },
+      { name: 'zsa-react', category: 'libraries' },
+      { name: 'Recharts', category: 'libraries' },
+      { name: 'React-email', category: 'libraries' },
     ],
     slug: 'write-wiz',
-    content:
-      'Write-Wiz is an ai project management tool that helps you manage your projects and tasks. You can create projects, add tasks, send events from your projects and track it in our charts. There is also discord integration reports page, ai chatbox and many more features that are coming soon.',
+    content: 'Write-Wiz is an AI project management tool with many features.',
   },
   {
     href: 'https://matmajka.com',
     title: 'Matmajka',
     description:
-      'Matmajka is a website for parents and students to contact tutor for private lessons for math, physics, chemistry.',
+      'Matmajka connects parents and students with private tutor for math, physics, and chemistry.',
     thumbnail: matmajka,
-    status: 'Completed' as ProjectStatus,
+    status: 'Completed',
     images: [
       matmajka,
       matmajkaAboutMe,
@@ -149,26 +146,22 @@ export const projects = [
       matmajkaContact,
     ],
     stack: [
-      'NextJS',
-      'Typescript',
-      'Tailwind',
-      'Resend',
-      'Zod',
-      'React-hook-form',
-      'Redis',
-      'Docker',
+      { name: 'NextJS', category: 'frontend' },
+      { name: 'Tailwind', category: 'frontend' },
+      { name: 'Docker', category: 'devops' },
+      { name: 'Resend', category: 'services' },
     ],
     slug: 'matmajka',
     content:
-      'Matmajka is a website for parents and students to contact tutor for private lessons for math, physics, chemistry.',
+      'Matmajka is a platform for private lessons in math, physics, and chemistry.',
   },
   {
     href: 'https://toriime.pl',
     title: 'Toriime',
     description:
-      'Toriime is a website where you can find and watch anime series/movies with subtitles in Polish language and much more.',
+      'Toriime is a platform for finding and watching anime series/movies with Polish subtitles.',
     thumbnail: toriime,
-    status: 'In Progress' as ProjectStatus,
+    status: 'In Progress',
     images: [
       toriime,
       toriimeAboutProject,
@@ -179,22 +172,22 @@ export const projects = [
       toriimeFooter,
     ],
     stack: [
-      'NextJS',
-      'NestJS',
-      'Shadcn',
-      'Typescript',
-      'Tailwind',
-      'MongoDB',
-      'Prisma',
-      'Zod',
-      'React-hook-form',
-      'hello-pangea/dnd',
-      'Axios',
-      'AWS',
-      'Docker',
+      { name: 'NextJS', category: 'frontend' },
+      { name: 'NestJS', category: 'backend' },
+      { name: 'Shadcn', category: 'libraries' },
+      { name: 'Typescript', category: 'frontend' },
+      { name: 'Tailwind', category: 'frontend' },
+      { name: 'MongoDB', category: 'database' },
+      { name: 'Prisma', category: 'database' },
+      { name: 'Zod', category: 'libraries' },
+      { name: 'React-hook-form', category: 'libraries' },
+      { name: 'hello-pangea/dnd', category: 'libraries' },
+      { name: 'Axios', category: 'libraries' },
+      { name: 'AWS', category: 'services' },
+      { name: 'Docker', category: 'devops' },
     ],
     slug: 'toriime',
     content:
-      'Toriime is a project that i work with group of friends. We are trying to create a website where you can find and watch anime series/movies with subtitles in Polish language, create your own lists and watch them later. Have own account with statistics of watched series/movies and much more interesting features.',
+      'Toriime is a collaborative project that I work with a group of friends. We are trying to create a website where you can find and watch anime series/movies with subtitles in Polish language, create your own lists and watch them later. Have own account with statistics of watched series/movies and much more interesting features.',
   },
 ]
