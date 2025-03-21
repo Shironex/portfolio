@@ -1,3 +1,11 @@
+## [1.8.2](https://github.com/Shironex/portfolio/compare/v1.8.1...v1.8.2) (2025-03-21)
+
+
+### Bug Fixes
+
+* eslint configuraiton ([4a9c669](https://github.com/Shironex/portfolio/commit/4a9c6694bfed2e5bb255b3923113077fc83818fb))
+* update release configuration to use 'master' branch ([3598d24](https://github.com/Shironex/portfolio/commit/3598d24d290c24b00d05357f1092ac799d010716))
+
 # Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
