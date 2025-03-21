@@ -1,0 +1,46 @@
+# dependencies
+node_modules
+.pnp
+.pnp.js
+
+# testing
+coverage
+.nyc_output
+
+# next.js
+.next/
+out/
+build
+dist
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+.env
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# cache
+.cache
+.eslintcache
+
+# package manager locks
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# public assets
+public/ 
