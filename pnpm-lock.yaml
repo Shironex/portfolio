@@ -132,6 +132,9 @@ importers:
       '@commitlint/config-conventional':
         specifier: ^19.8.0
         version: 19.8.0
+      '@next/eslint-plugin-next':
+        specifier: ^15.2.3
+        version: 15.2.3
       '@semantic-release/changelog':
         specifier: ^6.0.3
         version: 6.0.3(semantic-release@24.2.3(typescript@5.8.2))
