@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'motion/react'
 
 import Heading from '@/components/heading'
 import Paragraph from '@/components/paragraph'
@@ -79,7 +79,7 @@ export const Blogs = ({ blogs }: { blogs: Blog[] }) => {
                 <div className="mt-4 flex flex-wrap space-x-2">
                   {blog.tags?.map((tag) => (
                     <span
-                      key={`tag-${blog.slug}`}
+                      key={`tag-${blog.slug}-${tag}`}
                       className="rounded-md border border-neutral-200 bg-white px-1 py-0.5 text-xs text-muted-foreground"
                     >
                       {tag}

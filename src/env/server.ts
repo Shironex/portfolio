@@ -1,6 +1,6 @@
 /* eslint-disable n/no-process-env */
 import { createEnv } from '@t3-oss/env-nextjs'
-import { ZodError, z } from 'zod'
+import { z } from 'zod'
 
 export const env = createEnv({
   server: {
@@ -10,11 +10,8 @@ export const env = createEnv({
     TURNSTILE_SECRET_KEY: z.string().min(1),
     REDIS_HOST: z.string().min(1),
   },
-  onValidationError: (error: ZodError) => {
-    console.error(
-      '❌ Invalid environment variables:',
-      error.flatten().fieldErrors
-    )
+  onValidationError: (issues) => {
+    console.error('❌ Invalid environment variables:', issues)
     throw new Error('Invalid environment variables')
   },
   // Called when server variables are accessed on the client.
