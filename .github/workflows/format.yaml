@@ -1,8 +1,14 @@
 name: Format
+description: Format code with prettier
+
 on:
   push:
     branches: ['master', 'dev']
   workflow_dispatch:
+
+permissions:
+  contents: write
+
 jobs:
   format:
     runs-on: ubuntu-latest
@@ -15,15 +21,25 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Setup Node.js ⚙️ - Cache dependencies ⚡ - Install dependencies 🔧
-        uses: ./.github/actions/setup-node
-
-      - name: Formatting
-        run: pnpm run format
-
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-pnpm
         with:
-          commit_message: 'chore(format): format code'
-          branch: ${{ github.head_ref }}
-          commit_author: Shironex <Shironex@users.noreply.github.com>
+          node-version: '20'
+          pnpm-version: '9.12.3'
+          install-dependencies: 'true'
+
+      - name: Check formatting
+        run: pnpm format:check
+
+      - name: Format code if check fails
+        if: failure()
+        run: pnpm format
+
+      - name: Commit changes if any
+        if: failure()
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'style: format code with prettier'
+          commit_user_name: 'GitHub Actions'
+          commit_user_email: 'actions@github.com'
+          commit_author: 'GitHub Actions <actions@github.com>'

@@ -1,10 +1,15 @@
 name: Lint Check
+description: Lint code with eslint
+
 on:
   push:
     branches: ['master', 'dev']
   pull_request:
     branches: ['master', 'dev']
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   lint:
@@ -13,8 +18,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js ⚙️ - Cache dependencies ⚡ - Install dependencies 🔧
-        uses: ./.github/actions/setup-node
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-pnpm
+        with:
+          node-version: '20'
+          pnpm-version: '9.12.3'
+          install-dependencies: 'true'
 
       - name: Linting
         run: pnpm run lint
