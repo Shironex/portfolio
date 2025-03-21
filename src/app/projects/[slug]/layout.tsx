@@ -3,16 +3,16 @@ import React from 'react'
 import SendEventOnLoad from '@/components/send-event-on-load'
 
 type Props = {
-  params: {
-    slug: string
-  }
+  params: Promise<{ slug: string }>
   children: React.ReactNode
 }
 
-const SelectedProjectLayout = ({ children, params }: Props) => {
+const SelectedProjectLayout = async ({ children, params }: Props) => {
+  const slug = (await params).slug
+
   return (
     <>
-      <SendEventOnLoad eventKey={`user viewed ${params.slug} project`} />
+      <SendEventOnLoad eventKey={`user viewed ${slug} project`} />
       {children}
     </>
   )

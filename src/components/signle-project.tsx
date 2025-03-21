@@ -1,7 +1,7 @@
 'use client'
 
 import { IconArrowRight } from '@tabler/icons-react'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 
 import { Project } from '@/lib/type'
 

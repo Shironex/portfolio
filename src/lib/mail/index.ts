@@ -1,5 +1,7 @@
 'use server'
 
+import { JSX } from 'react'
+
 import { Resend } from 'resend'
 
 import { env } from '@/env/server'

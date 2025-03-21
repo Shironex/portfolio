@@ -8,11 +8,11 @@ import { projects } from '@/lib/constants'
 import { Project } from '@/lib/type'
 
 type Props = {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const slug = params.slug
+  const slug = (await params).slug
   const product = projects.find((p) => p.slug === slug) as Project | undefined
   if (product) {
     return {
@@ -27,8 +27,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-const ProjectOverviewPage = ({ params }: Props) => {
-  const slug = params.slug
+const ProjectOverviewPage = async ({ params }: Props) => {
+  const slug = (await params).slug
   const product = projects.find((p) => p.slug === slug)
 
   if (!product) {

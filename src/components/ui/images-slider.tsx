@@ -3,8 +3,8 @@
 import { StaticImageData } from 'next/image'
 import React, { useEffect, useState } from 'react'
 
-import { AnimatePresence, motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { AnimatePresence, motion } from 'motion/react'
 
 import { Button } from '@/components/ui/button'
 

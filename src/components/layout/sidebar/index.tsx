@@ -3,7 +3,7 @@
 import { useState } from 'react'
 
 import { IconLayoutSidebarRightCollapse } from '@tabler/icons-react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'motion/react'
 
 import Badge from '@/components/badge'
 

@@ -1,6 +1,6 @@
 /* eslint-disable n/no-process-env */
 import { createEnv } from '@t3-oss/env-nextjs'
-import { ZodError, z } from 'zod'
+import { z } from 'zod'
 
 export const env = createEnv({
   client: {
@@ -9,18 +9,15 @@ export const env = createEnv({
     NEXT_PUBLIC_WRITEWIZ_PROJECT_ID: z.string().optional(),
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().min(1),
   },
-  runtimeEnv: {
+  experimental__runtimeEnv: {
     NEXT_PUBLIC_PUBLIC_URL: process.env.NEXT_PUBLIC_PUBLIC_URL,
     NEXT_PUBLIC_SKIP_EVENTS: process.env.NEXT_PUBLIC_SKIP_EVENTS,
     NEXT_PUBLIC_WRITEWIZ_PROJECT_ID:
       process.env.NEXT_PUBLIC_WRITEWIZ_PROJECT_ID,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
   },
-  onValidationError: (error: ZodError) => {
-    console.error(
-      '❌ Invalid environment variables:',
-      error.flatten().fieldErrors
-    )
+  onValidationError: (issues) => {
+    console.error('❌ Invalid environment variables:', issues)
     throw new Error('Invalid environment variables')
   },
   // Called when server variables are accessed on the client.
