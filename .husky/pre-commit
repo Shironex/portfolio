@@ -1,0 +1,6 @@
+# Uruchom lint-staged
+npx lint-staged
+
+# Sprawdź, czy projekt się buduje
+echo "Checking if the project builds..."
+pnpm build || (echo "Build failed!" && exit 1) 

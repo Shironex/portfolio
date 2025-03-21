@@ -9,7 +9,9 @@
     "lint": "next lint",
     "format": "prettier src/ --write",
     "typecheck": "tsc --noEmit",
-    "release": "standard-version"
+    "release": "standard-version",
+    "prepare": "husky",
+    "commit": "git-cz"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.3",
@@ -53,15 +55,22 @@
     "zsa-react": "^0.2.3"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "@trivago/prettier-plugin-sort-imports": "5.2.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "commitizen": "^4.3.1",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.22.0",
     "eslint-config-next": "15.2.3",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-check-file": "3.1.0",
     "eslint-plugin-n": "^17.16.2",
+    "husky": "^9.1.7",
     "postcss": "^8",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "semantic-release": "^24.2.3",
@@ -69,5 +78,19 @@
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   },
-  "license": "MIT"
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml}": [
+      "prettier --write"
+    ]
+  },
+  "license": "MIT",
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  }
 }
