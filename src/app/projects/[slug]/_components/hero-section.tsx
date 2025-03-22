@@ -58,7 +58,7 @@ const HeroSection = ({ project }: HeroSectionProps) => {
           </motion.p>
 
           <motion.div
-            className="mb-8 flex flex-wrap justify-center gap-2"
+            className="mb-8 flex max-w-2xl flex-wrap justify-center gap-2"
             variants={fadeUp}
           >
             {project.technologies.map((tech: string) => (
@@ -74,7 +74,11 @@ const HeroSection = ({ project }: HeroSectionProps) => {
           >
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
-              <span>Completed: {project.completedDate}</span>
+              {project.inProgress
+                ? 'In Progress'
+                : project.completedDate
+                  ? `Completed: ${project.completedDate}`
+                  : `Started: ${project.startDate}`}
             </div>
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4" />

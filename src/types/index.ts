@@ -16,7 +16,7 @@ export interface Challenge {
 
 export interface TechDetails {
   stack: string[]
-  architecture: string
+  architecture?: string
   challenges: Challenge[]
 }
 
@@ -31,11 +31,13 @@ export interface Project {
   technologies: string[]
   features: string[]
   techDetails: TechDetails
-  completedDate: string
+  completedDate?: string
+  startDate?: string
+  inProgress?: boolean
   duration: string
   outcome: string
   demoUrl: string
-  githubUrl: string
+  githubUrl?: string
   featured: boolean
 }
 
