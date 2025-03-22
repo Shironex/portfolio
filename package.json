@@ -1,6 +1,6 @@
 {
-  "name": "my-v0-project",
-  "version": "0.1.0",
+  "name": "portfolio",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -55,7 +55,7 @@
     "lucide-react": "^0.454.0",
     "marked": "^9.1.0",
     "motion": "^12.5.0",
-    "next": "14.2.16",
+    "next": "15.2.3",
     "next-mdx-remote": "^5.0.0",
     "next-themes": "^0.4.4",
     "nextjs-toploader": "^3.7.15",
@@ -87,6 +87,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.0",
     "@commitlint/config-conventional": "^19.8.0",
+    "@eslint/js": "^9.23.0",
     "@next/eslint-plugin-next": "^15.2.3",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
@@ -94,6 +95,7 @@
     "@types/node": "^22",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@typescript-eslint/parser": "^8.27.0",
     "commitizen": "^4.3.1",
     "cz-conventional-changelog": "^3.3.0",
     "eslint": "^9.22.0",

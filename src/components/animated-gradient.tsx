@@ -1,7 +1,5 @@
 'use client'
 
-import type { ReactNode } from 'react'
-
 import { motion } from 'motion/react'
 
 interface AnimatedGradientProps {

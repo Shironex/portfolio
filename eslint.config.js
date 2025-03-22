@@ -1,4 +1,5 @@
 import { FlatCompat } from '@eslint/eslintrc'
+import js from '@eslint/js'
 import nextPlugin from '@next/eslint-plugin-next'
 import tseslint from '@typescript-eslint/eslint-plugin'
 import eslintConfigPrettier from 'eslint-config-prettier'
@@ -14,16 +15,9 @@ const eslintConfig = [
   {
     ignores: ['node_modules/**', 'dist/**', '.github/**', 'pnpm-lock.yaml'],
   },
-  ...compat.config({
-    extends: ['next'],
-  }),
+  js.configs.recommended,
+  ...compat.extends('plugin:@next/next/recommended'),
   {
-    files: ['**/*.ts', '**/*.tsx'],
-    settings: {
-      next: {
-        rootDir: '.',
-      },
-    },
     plugins: {
       '@typescript-eslint': tseslint,
       'check-file': checkFilePlugin,

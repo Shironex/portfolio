@@ -6,9 +6,9 @@ import React from 'react'
 import { ArrowRight } from 'lucide-react'
 import { motion } from 'motion/react'
 
-import { fadeUp } from '@/lib/animation-utils'
-import { staggerContainer } from '@/lib/animation-utils'
 import { APP_ROUTES } from '@/lib/constants'
+import { fadeUp } from '@/lib/utils/animations'
+import { staggerContainer } from '@/lib/utils/animations'
 
 import { AnimatedGradient } from '../animated-gradient'
 import { GradientHeading } from '../gradient-heading'

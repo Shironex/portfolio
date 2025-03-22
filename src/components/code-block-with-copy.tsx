@@ -4,7 +4,6 @@ import { useRef, useState } from 'react'
 
 import { Check, Copy } from 'lucide-react'
 import { motion } from 'motion/react'
-import { useTheme } from 'next-themes'
 
 import { cn } from '@/lib/utils'
 
@@ -23,7 +22,6 @@ export function CodeBlockWithCopy({
 }: CodeBlockWithCopyProps) {
   const [copied, setCopied] = useState(false)
   const codeRef = useRef<HTMLPreElement>(null)
-  const { theme } = useTheme()
 
   const copyToClipboard = async () => {
     if (!navigator.clipboard) {
