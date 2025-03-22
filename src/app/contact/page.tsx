@@ -12,9 +12,11 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 
 import { AnimatedGradient } from '@/components/animated-gradient'
+import ContactVisualization from '@/components/contact-visualization'
 import { GradientHeading } from '@/components/gradient-heading'
 import { PageTransition } from '@/components/layout/page-transition'
 import { ScrollAnimation } from '@/components/scroll-animation'
+import HeroSection from '@/components/sections/hero-section'
 
 import { fadeUp, staggerContainer } from '@/lib/utils/animations'
 
@@ -57,32 +59,10 @@ export default function ContactPage() {
     <PageTransition>
       <div className="flex flex-col">
         {/* Hero Section */}
-        <section className="relative pt-24 md:pt-32">
-          <AnimatedGradient className="absolute inset-0 -z-10 h-full w-full bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]" />
-          <div className="container mx-auto px-4 py-16 md:px-6 md:py-24">
-            <motion.div
-              className="flex flex-col items-center text-center"
-              variants={staggerContainer}
-              initial="hidden"
-              animate="show"
-            >
-              <GradientHeading
-                className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl"
-                delay={0.1}
-              >
-                Contact Me
-              </GradientHeading>
-
-              <motion.p
-                className="mb-8 max-w-2xl text-xl text-muted-foreground"
-                variants={fadeUp}
-              >
-                Reach out to me over email or fill up this contact form. I will
-                get back to you ASAP - I promise.
-              </motion.p>
-            </motion.div>
-          </div>
-        </section>
+        <HeroSection
+          title="Contact Me"
+          description="Reach out to me over email or fill up this contact form. I will get back to you ASAP - I promise."
+        />
 
         {/* Contact Form Section */}
         <section className="container mx-auto px-4 py-8 md:px-6 md:py-16">
@@ -256,23 +236,16 @@ export default function ContactPage() {
           </div>
         </section>
 
-        {/* Map Section */}
+        {/* Interactive Visualization Section */}
         <section className="container mx-auto px-4 py-8 md:px-6 md:py-16">
+          <div className="mb-8 text-center">
+            <h2 className="mb-2 text-2xl font-bold">Global Connectivity</h2>
+            <p className="text-muted-foreground">
+              Visualizing connections from Warsaw to the world
+            </p>
+          </div>
           <ScrollAnimation>
-            <motion.div
-              className="overflow-hidden rounded-xl border border-border"
-              whileHover={{ scale: 1.01 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-            >
-              <div className="aspect-video w-full bg-muted">
-                {/* Replace with actual map component or embed */}
-                <div className="flex h-full items-center justify-center bg-secondary/50 p-8 text-center">
-                  <p className="text-muted-foreground">
-                    Map of Warsaw, Poland would be displayed here
-                  </p>
-                </div>
-              </div>
-            </motion.div>
+            <ContactVisualization />
           </ScrollAnimation>
         </section>
       </div>

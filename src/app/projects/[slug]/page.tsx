@@ -1,5 +1,6 @@
 'use client'
 
+import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import { PageTransition } from '@/components/layout/page-transition'
@@ -16,12 +17,9 @@ import { useScrollTop } from '@/hooks/use-scroll-top'
 import HeroSection from './_components/hero-section'
 import ProjectDetailsSection from './_components/project-detail-section'
 
-type ProjectDetailPageProps = {
-  params: { slug: string }
-}
-
-const ProjectDetailPage = ({ params }: ProjectDetailPageProps) => {
-  const slug = params.slug
+const ProjectDetailPage = () => {
+  const params = useParams()
+  const slug = params.slug as string
   const [project, setProject] = useState<any>(null)
   const [relatedProjects, setRelatedProjects] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
