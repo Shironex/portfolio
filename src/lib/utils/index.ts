@@ -3,8 +3,6 @@ import { twMerge } from 'tailwind-merge'
 
 import { env } from '@/env/server'
 
-import * as animations from './animations'
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -39,5 +37,3 @@ export async function verifyTurnstile(token: string): Promise<void> {
     throw new Error('There was an error when veryfing captcha')
   }
 }
-
-export { animations }

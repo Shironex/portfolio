@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 
 import { motion } from 'motion/react'
 
-import { pageVariants } from '@/lib/animation-utils'
+import { pageVariants } from '@/lib/utils/animations'
 
 interface PageTransitionProps {
   children: ReactNode

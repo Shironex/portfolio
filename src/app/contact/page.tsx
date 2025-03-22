@@ -16,7 +16,7 @@ import { GradientHeading } from '@/components/gradient-heading'
 import { PageTransition } from '@/components/layout/page-transition'
 import { ScrollAnimation } from '@/components/scroll-animation'
 
-import { fadeUp, staggerContainer } from '@/lib/animation-utils'
+import { fadeUp, staggerContainer } from '@/lib/utils/animations'
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)

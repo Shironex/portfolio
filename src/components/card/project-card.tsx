@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { ExternalLink, Github } from 'lucide-react'
 import { motion } from 'motion/react'
 
-import { cardHover } from '@/lib/animation-utils'
+import { cardHover } from '@/lib/utils/animations'
 
 import { Project } from '@/types'
 
