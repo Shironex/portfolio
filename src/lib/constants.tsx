@@ -1,3 +1,11 @@
+export const APP_ROUTES = {
+  toHome: '/',
+  toAbout: '/about',
+  toProjects: '/projects',
+  toArticles: '/articles',
+  toContact: '/contact',
+} as const
+
 // // Matmajka images
 // import matmajkaAboutLessons from '@/public/projects/matmajka/about-lessons.png'
 // import matmajkaAboutMe from '@/public/projects/matmajka/about-me.png'
