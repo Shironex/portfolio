@@ -5,6 +5,8 @@ import { Github } from 'lucide-react'
 import { Variants, motion } from 'motion/react'
 import { AnimatePresence } from 'motion/react'
 
+import { GITHUB_URL } from '@/lib/constants'
+
 import { NavItem } from '@/types'
 
 import { Button } from '../ui/button'
@@ -84,7 +86,7 @@ const MobileNavBar = ({
             <div className="mt-6 flex items-center gap-4">
               <motion.div variants={itemVariants} className="w-full">
                 <Link
-                  href="https://github.com/shirone"
+                  href={GITHUB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full"

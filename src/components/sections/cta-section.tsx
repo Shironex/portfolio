@@ -5,7 +5,7 @@ import { motion } from 'motion/react'
 
 import { Button } from '@/components/ui/button'
 
-import { APP_ROUTES } from '@/lib/constants'
+import { APP_ROUTES, GITHUB_URL } from '@/lib/constants'
 
 import { ScrollAnimation } from '../scroll-animation'
 
@@ -66,7 +66,7 @@ const CTASection = ({
 
               {showGitHubButton && (
                 <Link
-                  href="https://github.com/shirone"
+                  href={GITHUB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

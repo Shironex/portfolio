@@ -101,7 +101,7 @@ const ContactVisualization = () => {
               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20">
                 <MapPin className="h-3 w-3 text-primary" />
               </div>
-              <span className="text-xs">Warsaw, Poland</span>
+              <span className="text-xs">Gdańsk, Poland</span>
             </div>
           </div>
         </motion.div>
@@ -174,7 +174,7 @@ const ContactVisualization = () => {
 
         {/* Phone icon with card */}
         <motion.div
-          className="absolute bottom-[30%] right-[18%] rounded-xl border border-border bg-card/80 p-4 shadow-lg backdrop-blur-sm"
+          className="absolute bottom-[40%] right-[19%] rounded-xl border border-border bg-card/80 p-4 shadow-lg backdrop-blur-sm"
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.7, duration: 0.8 }}
@@ -382,7 +382,7 @@ const ContactVisualization = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.8 }}
         >
-          Connecting globally from Warsaw, Poland
+          Connecting globally from Gdańsk, Poland
         </motion.p>
       </div>
     </div>

@@ -6,6 +6,8 @@ export const APP_ROUTES = {
   toContact: '/contact',
 } as const
 
+export const GITHUB_URL = 'https://github.com/shironex'
+
 // // Matmajka images
 // import matmajkaAboutLessons from '@/public/projects/matmajka/about-lessons.png'
 // import matmajkaAboutMe from '@/public/projects/matmajka/about-me.png'

@@ -11,6 +11,8 @@ import { Button } from '@/components/ui/button'
 
 import { ThemeToggle } from '@/components/theme-toggle'
 
+import { GITHUB_URL } from '@/lib/constants'
+
 import { NavItem } from '@/types'
 
 import MobileNavBar from './mobile-navbar'
@@ -134,16 +136,17 @@ export function Navbar() {
 
           <div className="flex items-center gap-4">
             <motion.div variants={itemVariants}>
-              <Link
-                href="https://github.com/shirone"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
                 <motion.div
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button variant="ghost" size="icon" aria-label="GitHub">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="GitHub"
+                    className="hover:text-primary"
+                  >
                     <Github className="h-5 w-5" />
                   </Button>
                 </motion.div>
@@ -155,7 +158,12 @@ export function Navbar() {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <Button variant="ghost" size="icon" aria-label="Contact">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Contact"
+                    className="hover:text-primary"
+                  >
                     <Mail className="h-5 w-5" />
                   </Button>
                 </motion.div>

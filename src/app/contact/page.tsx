@@ -115,7 +115,7 @@ export default function ContactPage() {
                     </motion.div>
                     <div>
                       <h3 className="font-medium">Location</h3>
-                      <p className="text-muted-foreground">Warsaw, Poland</p>
+                      <p className="text-muted-foreground">Gdańsk, Poland</p>
                     </div>
                   </motion.div>
                 </div>
@@ -239,9 +239,10 @@ export default function ContactPage() {
         {/* Interactive Visualization Section */}
         <section className="container mx-auto px-4 py-8 md:px-6 md:py-16">
           <div className="mb-8 text-center">
-            <h2 className="mb-2 text-2xl font-bold">Global Connectivity</h2>
+            <h2 className="mb-2 text-2xl font-bold">While you&apos;re bored</h2>
             <p className="text-muted-foreground">
-              Visualizing connections from Warsaw to the world
+              You can look at this animation to see how I&apos;m connected to
+              the world
             </p>
           </div>
           <ScrollAnimation>
