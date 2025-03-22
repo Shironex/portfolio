@@ -38,3 +38,14 @@ export interface Project {
   githubUrl: string
   featured: boolean
 }
+
+export interface Article {
+  slug: string
+  title: string
+  date: string
+  excerpt: string
+  tags: string[]
+  readTime: string
+  image: string
+  content: string
+}

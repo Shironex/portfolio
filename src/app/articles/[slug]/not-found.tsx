@@ -1,6 +1,10 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { ArrowLeft } from "lucide-react"
+import Link from 'next/link'
+
+import { ArrowLeft } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+
+import { APP_ROUTES } from '@/lib/constants'
 
 export default function ArticleNotFound() {
   return (
@@ -9,7 +13,7 @@ export default function ArticleNotFound() {
       <p className="mb-8 max-w-md text-muted-foreground">
         The article you're looking for doesn't exist or has been moved.
       </p>
-      <Link href="/articles">
+      <Link href={APP_ROUTES.toArticles}>
         <Button className="gap-2">
           <ArrowLeft className="h-4 w-4" />
           Back to Articles
@@ -18,4 +22,3 @@ export default function ArticleNotFound() {
     </div>
   )
 }
-

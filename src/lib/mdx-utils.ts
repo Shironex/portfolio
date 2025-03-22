@@ -2,20 +2,10 @@ import fs from 'fs'
 import matter from 'gray-matter'
 import path from 'path'
 
+import { Article } from '@/types'
+
 // Define the articles directory
 const articlesDirectory = path.join(process.cwd(), 'src/content/articles')
-
-// Define the Article type
-export type Article = {
-  slug: string
-  title: string
-  date: string
-  excerpt: string
-  tags: string[]
-  readTime: string
-  image: string
-  content: string
-}
 
 // Get all article slugs
 export function getArticleSlugs() {
