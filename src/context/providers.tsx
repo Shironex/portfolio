@@ -1,5 +1,7 @@
 import React from 'react'
 
+import NextTopLoader from 'nextjs-toploader'
+
 import { ThemeProvider } from './theme-provider'
 
 interface ProvidersProps {
@@ -14,6 +16,7 @@ const Providers = ({ children }: ProvidersProps) => {
       enableSystem={false}
       disableTransitionOnChange
     >
+      <NextTopLoader color="#9B85F6" />
       {children}
     </ThemeProvider>
   )

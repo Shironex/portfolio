@@ -10,10 +10,20 @@ const HomePage = () => {
   return (
     <PageTransition>
       <div className="flex flex-col">
-        <HeroSection />
+        <HeroSection
+          title="Hello there! I'm Kacper"
+          description="I'm a full-stack developer that loves building new things and web apps that can impact peoples around me."
+          showAvailableForNewProjects={true}
+          showBottomButtons={true}
+        />
         <FeaturedProjectsSection />
         <SkillsSection />
-        <CTASection />
+        <CTASection
+          title="Let's Work Together"
+          description={`I'm currently available for freelance projects, full-time
+            positions, or collaborations. If you have a project in mind or
+            just want to chat, feel free to reach out!`}
+        />
       </div>
     </PageTransition>
   )
