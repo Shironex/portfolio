@@ -20,6 +20,8 @@ import HeroSection from '@/components/sections/hero-section'
 
 import { fadeUp, staggerContainer } from '@/lib/utils/animations'
 
+import ContactForm from './_components/contact-form'
+
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
@@ -122,117 +124,7 @@ export default function ContactPage() {
               </div>
             </ScrollAnimation>
 
-            <ScrollAnimation delay={0.2}>
-              <motion.div
-                className="rounded-xl border border-border bg-card p-6 md:p-8"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                whileHover={{
-                  boxShadow:
-                    '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
-                }}
-              >
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <motion.div
-                    className="space-y-2"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                  >
-                    <label htmlFor="name" className="text-sm font-medium">
-                      Name
-                    </label>
-                    <Input
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      placeholder="Your Name"
-                      required
-                    />
-                  </motion.div>
-
-                  <motion.div
-                    className="space-y-2"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                  >
-                    <label htmlFor="email" className="text-sm font-medium">
-                      Email
-                    </label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="Your email address"
-                      required
-                    />
-                  </motion.div>
-
-                  <motion.div
-                    className="space-y-2"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                  >
-                    <label htmlFor="message" className="text-sm font-medium">
-                      Message
-                    </label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      placeholder="Your Message"
-                      rows={6}
-                      required
-                    />
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <Button
-                      type="submit"
-                      className="w-full gap-2"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? 'Sending...' : 'Submit'}
-                      <motion.div
-                        animate={
-                          isSubmitting ? { rotate: 360 } : { x: [0, 5, 0] }
-                        }
-                        transition={
-                          isSubmitting
-                            ? {
-                                duration: 1,
-                                repeat: Number.POSITIVE_INFINITY,
-                                ease: 'linear',
-                              }
-                            : {
-                                duration: 1.5,
-                                repeat: Number.POSITIVE_INFINITY,
-                                repeatType: 'loop',
-                                ease: 'easeInOut',
-                                times: [0, 0.6, 1],
-                              }
-                        }
-                      >
-                        <Send className="h-4 w-4" />
-                      </motion.div>
-                    </Button>
-                  </motion.div>
-                </form>
-              </motion.div>
-            </ScrollAnimation>
+            <ContactForm />
           </div>
         </section>
 

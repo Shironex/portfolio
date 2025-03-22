@@ -1,38 +1,46 @@
 'use server'
 
-import { createServerAction } from 'zsa'
-
+import { PublicError } from '@/lib/errors'
 import { sendMail } from '@/lib/mail'
 import ContactFormEmail from '@/lib/mail/templates/contact-form'
-import { rateLimitByKey } from '@/lib/ratelimit'
+import { rateLimitBot, rateLimitByKey } from '@/lib/ratelimit'
+import { unauthenticatedAction } from '@/lib/safe-action'
 import { verifyTurnstile } from '@/lib/utils'
 
 import { env } from '@/env/server'
 
 import { contactFormSchema } from './validation'
 
-export const sendEmailAction = createServerAction()
-  .input(contactFormSchema)
-  .handler(async ({ input }) => {
+export const sendEmailAction = unauthenticatedAction
+  .metadata({
+    actionName: 'send Email Action',
+  })
+  .schema(contactFormSchema)
+  .action(async ({ parsedInput }) => {
     //? 5 requests per 2 minutes
     const result = await rateLimitByKey(
-      `${input.name}-${input.email}-contact`,
+      `${parsedInput.name}-${parsedInput.email}-contact`,
       5,
       120
     )
 
     if (!result.success) {
-      throw new Error('Rate limit exceeded. Try again in 2 minutes')
+      throw new PublicError('Rate limit exceeded. Try again in 2 minutes')
     }
 
-    await verifyTurnstile(input.turnstileToken)
+    await verifyTurnstile(parsedInput.turnstileToken)
 
-    if (input.verify) {
-      console.log('Wykryto robota', input)
-      throw new Error('Robot detected')
+    if (parsedInput.verify) {
+      console.log('Wykryto robota', parsedInput)
+      await rateLimitBot(
+        `${parsedInput.name}-${parsedInput.email}-contact`,
+        1,
+        9999
+      )
+      throw new PublicError('Robot detected')
     }
 
-    const body = ContactFormEmail({ data: input })
+    const body = ContactFormEmail({ data: parsedInput })
 
     try {
       await sendMail({
@@ -42,10 +50,8 @@ export const sendEmailAction = createServerAction()
       })
     } catch (error) {
       console.error(error)
-      throw new Error(
+      throw new PublicError(
         'There was an error when sending email. Plase try again later.'
       )
     }
-
-    return { data: 'Email sent' }
   })
