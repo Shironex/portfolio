@@ -2,35 +2,25 @@
 
 import { useEffect, useRef } from 'react'
 
-import { useTheme } from 'next-themes'
-
-interface ArticleContentSimpleProps {
+interface ArticleContentProps {
   htmlContent: string
 }
 
-export function ArticleContentSimple({
-  htmlContent,
-}: ArticleContentSimpleProps) {
+export function ArticleContent({ htmlContent }: ArticleContentProps) {
   const contentRef = useRef<HTMLDivElement>(null)
-  const { theme } = useTheme()
 
   useEffect(() => {
-    // This code only runs in the browser
     if (typeof window !== 'undefined' && contentRef.current) {
-      // Dynamically import highlight.js only on the client side
       const applyHighlighting = async () => {
         try {
-          // Import highlight.js and the theme CSS
           const hljs = (await import('highlight.js')).default
 
-          // Find all code blocks and apply highlighting
           const codeBlocks = contentRef.current?.querySelectorAll('pre code')
+
           if (codeBlocks) {
             codeBlocks.forEach((block) => {
-              // Apply highlighting
               hljs.highlightElement(block as HTMLElement)
 
-              // Get language from class if available
               const languageClass = Array.from(block.classList).find((cls) =>
                 cls.startsWith('language-')
               )
@@ -38,6 +28,7 @@ export function ArticleContentSimple({
               if (languageClass) {
                 const language = languageClass.replace('language-', '')
                 const pre = block.parentElement
+
                 if (pre && language !== 'plaintext') {
                   pre.setAttribute('data-language', language)
                   pre.classList.add('code-block')
