@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/Shironex/portfolio/compare/v1.9.0...v1.10.0) (2025-03-23)
+
+
+### Features
+
+* update project images and introduce new client page ([738d4a9](https://github.com/Shironex/portfolio/commit/738d4a99b0c13c7c91c9a6b8e6631bbe94144d49))
+
 # [1.9.0](https://github.com/Shironex/portfolio/compare/v1.8.2...v1.9.0) (2025-03-23)
 
 
