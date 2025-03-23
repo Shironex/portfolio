@@ -7,8 +7,12 @@
     "dev:email": "email dev --dir ./src/lib/mail/templates",
     "build": "next build",
     "start": "next start",
+    "lint": "next lint",
     "format": "prettier 'src/**/*.{js,ts,jsx,tsx}' --write",
-    "lint": "next lint"
+    "format:check": "prettier 'src/**/*.{js,ts,jsx,tsx}' --check",
+    "release": "standard-version",
+    "prepare": "husky",
+    "commit": "git-cz"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
