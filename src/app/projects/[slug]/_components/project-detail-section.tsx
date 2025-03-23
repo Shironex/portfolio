@@ -57,7 +57,7 @@ const ProjectDetailsSection = ({ project }: ProjectDetailsSectionProps) => {
           </h2>
           <div className="mb-12">
             <h3 className="mb-4 text-xl font-medium">Technology Stack</h3>
-            <div className="mb-6 grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+            <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-4">
               {project.techDetails.stack.map((tech: string, index: number) => (
                 <div
                   key={index}

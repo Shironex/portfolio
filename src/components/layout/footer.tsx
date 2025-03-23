@@ -21,7 +21,7 @@ export function Footer() {
           </div>
 
           <div className="flex flex-col items-center gap-4 md:flex-row">
-            <nav className="flex gap-6">
+            <nav className="flex flex-wrap gap-6 sm:flex-nowrap">
               <Link
                 href="/"
                 className="text-sm text-muted-foreground hover:text-foreground"

@@ -1,61 +1,21 @@
 'use client'
 
 import type React from 'react'
-import { useState } from 'react'
 
-import { Mail, MapPin, Send } from 'lucide-react'
+import { Mail, MapPin } from 'lucide-react'
 import { motion } from 'motion/react'
-import { toast } from 'sonner'
 
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-
-import { AnimatedGradient } from '@/components/animated-gradient'
 import ContactVisualization from '@/components/contact-visualization'
-import { GradientHeading } from '@/components/gradient-heading'
 import { PageTransition } from '@/components/layout/page-transition'
 import { ScrollAnimation } from '@/components/scroll-animation'
 import HeroSection from '@/components/sections/hero-section'
 
-import { fadeUp, staggerContainer } from '@/lib/utils/animations'
+import { useMediaQuery } from '@/hooks/use-media-query'
 
 import ContactForm from './_components/contact-form'
 
 export default function ContactPage() {
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-  })
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    toast('Message sent!', {
-      description:
-        "Thank you for your message. I'll get back to you as soon as possible.",
-    })
-
-    setFormData({
-      name: '',
-      email: '',
-      message: '',
-    })
-    setIsSubmitting(false)
-  }
+  const isMobile = useMediaQuery('(max-width: 768px)')
 
   return (
     <PageTransition>
@@ -129,18 +89,22 @@ export default function ContactPage() {
         </section>
 
         {/* Interactive Visualization Section */}
-        <section className="container mx-auto px-4 py-8 md:px-6 md:py-16">
-          <div className="mb-8 text-center">
-            <h2 className="mb-2 text-2xl font-bold">While you&apos;re bored</h2>
-            <p className="text-muted-foreground">
-              You can look at this animation to see how I&apos;m connected to
-              the world
-            </p>
-          </div>
-          <ScrollAnimation>
-            <ContactVisualization />
-          </ScrollAnimation>
-        </section>
+        {!isMobile && (
+          <section className="container mx-auto px-4 py-8 md:px-6 md:py-16">
+            <div className="mb-8 text-center">
+              <h2 className="mb-2 text-2xl font-bold">
+                While you&apos;re bored
+              </h2>
+              <p className="text-muted-foreground">
+                You can look at this animation to see how I&apos;m connected to
+                the world
+              </p>
+            </div>
+            <ScrollAnimation>
+              <ContactVisualization />
+            </ScrollAnimation>
+          </section>
+        )}
       </div>
     </PageTransition>
   )
