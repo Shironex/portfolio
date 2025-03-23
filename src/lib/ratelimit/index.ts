@@ -65,4 +65,23 @@ export const rateLimitByKey = async (
   return result
 }
 
+export const rateLimitBot = async (
+  keyword: string,
+  limit: number,
+  duration: number
+): Promise<{
+  success: boolean
+}> => {
+  if (env.NODE_ENV === 'test') {
+    return { limit, remaining: limit, success: true } as Result
+  }
+
+  const key = `rate_limit:${keyword}`
+
+  redisClient.incr(key)
+  redisClient.expire(key, duration)
+
+  return { success: true }
+}
+
 export default rateLimiter

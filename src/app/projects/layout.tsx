@@ -9,7 +9,7 @@ type Props = {
 const ProjectsLayout = ({ children }: Props) => {
   return (
     <>
-      <SendEventOnLoad eventKey="user viewed app" />
+      <SendEventOnLoad eventKey="user viewed projects" />
       {children}
     </>
   )

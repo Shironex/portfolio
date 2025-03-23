@@ -1,27 +1,69 @@
-import { Metadata } from 'next'
+'use client'
 
-import Heading from '@/components/heading'
-import Container from '@/components/layout/container'
-import Projects from '@/components/projects'
-import SendEventOnLoad from '@/components/send-event-on-load'
+import ProjectCard from '@/components/card/project-card'
+import { PageTransition } from '@/components/layout/page-transition'
+import { ScrollAnimation } from '@/components/scroll-animation'
+import CTASection from '@/components/sections/cta-section'
+import HeroSection from '@/components/sections/hero-section'
 
-export const metadata: Metadata = {
-  title: 'Projects | Shirone',
-  description: 'Shirone is a developer, gamer and music lover.',
-}
+import { projectsData } from '@/data/projects-data'
 
-const ProjectsPage = () => {
+export default function ProjectsPage() {
+  const featuredProjects = projectsData.filter((project) => project.featured)
+  const otherProjects = projectsData.filter((project) => !project.featured)
+
   return (
-    <Container>
-      <SendEventOnLoad eventKey="user viewed projects" />
-      <Heading className="mb-10 font-black">
-        {' '}
-        What I&apos;ve been working on
-      </Heading>
+    <PageTransition>
+      <div className="flex flex-col">
+        <HeroSection
+          title="Projects"
+          description="A collection of my recent projects, showcasing my skills and experience in web development."
+        />
 
-      <Projects />
-    </Container>
+        {/* Featured Projects */}
+        <section className="container mx-auto px-4 py-8 md:px-6 md:py-16">
+          <ScrollAnimation>
+            <h2 className="mb-8 text-2xl font-bold md:text-3xl">
+              Featured Projects
+            </h2>
+          </ScrollAnimation>
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {featuredProjects.map((project, index) => (
+              <ProjectCard
+                key={project.id}
+                project={project}
+                delay={0.1 * index}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* Other Projects */}
+        <section className="bg-secondary/50">
+          <div className="container mx-auto px-4 py-16 md:px-6 md:py-24">
+            <ScrollAnimation>
+              <h2 className="mb-8 text-2xl font-bold md:text-3xl">
+                Other Projects
+              </h2>
+            </ScrollAnimation>
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {otherProjects.map((project, index) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  delay={0.1 * index}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <CTASection
+          title="Have a project in mind?"
+          description="Let's discuss how I can help bring your ideas to life."
+        />
+      </div>
+    </PageTransition>
   )
 }
-
-export default ProjectsPage

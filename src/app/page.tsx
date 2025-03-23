@@ -1,38 +1,32 @@
-import { Metadata } from 'next'
+'use client'
 
-import Heading from '@/components/heading'
-import Container from '@/components/layout/container'
-import Paragraph from '@/components/paragraph'
-import Projects from '@/components/projects'
+import { PageTransition } from '@/components/layout/page-transition'
+import CTASection from '@/components/sections/cta-section'
+import FeaturedProjectsSection from '@/components/sections/featured-projects-section'
+import HeroSection from '@/components/sections/hero-section'
+import SkillsSection from '@/components/sections/skills-section'
 
-export const metadata: Metadata = {
-  title: 'Home | Shirone',
-  description: 'Shirone is a developer, gamer and music lover.',
-}
-
-export default function Home() {
+const HomePage = () => {
   return (
-    <Container>
-      <span className="animate-pulse text-4xl">👋</span>
-      <Heading className="font-black">Hello there! I&apos;m Kacper</Heading>
-      <Paragraph
-        className="mt-4 max-w-xl"
-        words="I'm a full-stack developer that loves building new things and web apps that can impact pepoles around me."
-      />
-      <Paragraph
-        className="mt-4 max-w-xl"
-        words="I'm a junior software engineer with
-        I'm a junior software engineer with 
-        2 years of experience building applications in
-        React and Next.js."
-      />
-      <Heading
-        as="h2"
-        className="mb-4 mt-20 text-lg font-black md:text-lg lg:text-lg"
-      >
-        What I&apos;ve been working on
-      </Heading>
-      <Projects />
-    </Container>
+    <PageTransition>
+      <div className="flex flex-col">
+        <HeroSection
+          title="Hello there! I'm Kacper"
+          description="I'm a full-stack developer that loves building new things and web apps that can impact peoples around me."
+          showAvailableForNewProjects={true}
+          showBottomButtons={true}
+        />
+        <FeaturedProjectsSection />
+        <SkillsSection />
+        <CTASection
+          title="Let's Work Together"
+          description={`I'm currently available for freelance projects, full-time
+            positions, or collaborations. If you have a project in mind or
+            just want to chat, feel free to reach out!`}
+        />
+      </div>
+    </PageTransition>
   )
 }
+
+export default HomePage

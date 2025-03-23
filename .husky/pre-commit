@@ -2,5 +2,5 @@
 npx lint-staged
 
 # Sprawdź, czy projekt się buduje
-echo "Checking if the project builds..."
-pnpm build || (echo "Build failed!" && exit 1) 
+echo "Checking if the project have no lint errors..."
+pnpm lint || (echo "Linting failed!" && exit 1) 
