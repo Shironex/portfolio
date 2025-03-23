@@ -8,21 +8,20 @@ import { Footer } from '@/components/layout/footer'
 import { Navbar } from '@/components/layout/navbar'
 import { ScrollRestoration } from '@/components/scroll-restoration'
 
+import { defaultMetadata } from '@/lib/metadata-config'
+
 import Providers from '@/context/providers'
 import '@/styles/globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  title: 'Shirone | Developer Portfolio',
-  description: 'Personal portfolio of Shirone, a full-stack developer',
+export const metadata: Metadata = defaultMetadata
+
+interface RootLayoutProps {
+  children: React.ReactNode
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>

@@ -1,10 +1,16 @@
+import { Metadata } from 'next'
 import React from 'react'
 
 import SendEventOnLoad from '@/components/send-event-on-load'
 
-type ContactLayoutProps = {
+import { generateMetadata } from '@/lib/metadata-config'
+import { sectionMetadata } from '@/lib/metadata-config'
+
+interface ContactLayoutProps {
   children: React.ReactNode
 }
+
+export const metadata: Metadata = generateMetadata(sectionMetadata.contact)
 
 const ContactLayout = ({ children }: ContactLayoutProps) => {
   return (

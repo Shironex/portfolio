@@ -14,6 +14,7 @@ import { ScrollAnimation } from '@/components/scroll-animation'
 import { ArticleContent } from '@/components/sections/article-content'
 
 import { getArticleBySlug, getArticleSlugs } from '@/lib/mdx-utils'
+import { generateMetadata as generateMeta } from '@/lib/metadata-config'
 
 import { Article } from '@/types'
 
@@ -40,16 +41,33 @@ export async function generateMetadata({
   const article = getArticleBySlug(slug)
 
   if (!article) {
-    return {
+    return generateMeta({
       title: 'Article Not Found',
       description: 'The requested article could not be found.',
-    }
+      path: `/articles/${slug}`,
+    })
   }
 
-  return {
-    title: `${article.title} | Shirone`,
+  return generateMeta({
+    title: article.title,
     description: article.excerpt,
-  }
+    path: `/articles/${article.slug}`,
+    ogImage: article.image || '/og-articles.jpg',
+    openGraph: {
+      type: 'article',
+      publishedTime: article.date,
+      authors: ['Shirone'],
+      tags: article.tags,
+      images: [
+        {
+          url: `${process.env.NEXT_PUBLIC_PUBLIC_URL || 'https://shirone.xyz'}${article.image || '/og-articles.jpg'}`,
+          width: 1200,
+          height: 630,
+          alt: article.title,
+        },
+      ],
+    },
+  })
 }
 
 const ArticlePage = async ({ params }: ArticlePageProps) => {
