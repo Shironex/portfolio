@@ -1,7 +1,7 @@
-"use client"
+'use client'
 
-import { useEffect } from "react"
-import { usePathname } from "next/navigation"
+import { usePathname } from 'next/navigation'
+import { useEffect } from 'react'
 
 export function ScrollRestoration() {
   const pathname = usePathname()
@@ -10,10 +10,9 @@ export function ScrollRestoration() {
     // Scroll to top on route change
     window.scrollTo({
       top: 0,
-      behavior: "smooth",
+      behavior: 'smooth',
     })
   }, [pathname])
 
   return null
 }
-
