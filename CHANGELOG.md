@@ -1,3 +1,10 @@
+## [1.10.1](https://github.com/Shironex/portfolio/compare/v1.10.0...v1.10.1) (2025-03-23)
+
+
+### Bug Fixes
+
+* update lastModified date handling in sitemap generation ([82eeb4d](https://github.com/Shironex/portfolio/commit/82eeb4d25c002f0074949a5182c6028cc2a2f179))
+
 # [1.10.0](https://github.com/Shironex/portfolio/compare/v1.9.0...v1.10.0) (2025-03-23)
 
 
