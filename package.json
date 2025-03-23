@@ -7,6 +7,7 @@
     "dev:email": "email dev --dir ./src/lib/mail/templates",
     "build": "next build",
     "start": "next start",
+    "format": "prettier 'src/**/*.{js,ts,jsx,tsx}' --write",
     "lint": "next lint"
   },
   "dependencies": {
