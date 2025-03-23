@@ -1,3 +1,19 @@
+# [1.9.0](https://github.com/Shironex/portfolio/compare/v1.8.2...v1.9.0) (2025-03-23)
+
+
+### Bug Fixes
+
+* update location references and improve footer links ([1072432](https://github.com/Shironex/portfolio/commit/107243241375d33341051b87e66111822155cc1e))
+
+
+### Features
+
+* add article layout and card components for improved article display ([8ab1380](https://github.com/Shironex/portfolio/commit/8ab1380ef6534bb0ac8352531b5b890e9d978a5b))
+* add new project images and update project data structure ([4e0b0fd](https://github.com/Shironex/portfolio/commit/4e0b0fd9e54c409471e78b75e45a5fdaf0d74dd2))
+* enhance contact form and email handling ([4d9d9ab](https://github.com/Shironex/portfolio/commit/4d9d9abd267b1806a9b5094f5784b013f7f22372))
+* enhance contact page with new visualization and modular components ([578616e](https://github.com/Shironex/portfolio/commit/578616edde8bdc5d61706ecfe0661dc760fe8092))
+* redesigned whole app style ([95c2860](https://github.com/Shironex/portfolio/commit/95c286062721204973ed3e0d582f72c1c61dcdc3))
+
 ## [1.8.2](https://github.com/Shironex/portfolio/compare/v1.8.1...v1.8.2) (2025-03-21)
 
 
