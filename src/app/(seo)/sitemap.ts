@@ -7,11 +7,12 @@ import { projectsData } from '@/data/projects-data'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = siteConfig.url
+  const currentDate = new Date().toISOString()
 
   // Get all static routes from section metadata
   const staticRoutes = Object.values(sectionMetadata).map((section) => ({
     url: `${baseUrl}${section.path}`,
-    lastModified: new Date(),
+    lastModified: currentDate,
     changeFrequency: 'weekly' as const,
     priority: section.path === '/' ? 1.0 : 0.8,
   }))
@@ -19,7 +20,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Get all project routes
   const projectRoutes = projectsData.map((project) => ({
     url: `${baseUrl}/projects/${project.slug}`,
-    lastModified: new Date(project.completedDate || ''),
+    lastModified: project.completedDate
+      ? new Date(project.completedDate).toISOString()
+      : currentDate,
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }))
@@ -28,7 +31,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const articles = getAllArticles()
   const articleRoutes = articles.map((article) => ({
     url: `${baseUrl}/articles/${article.slug}`,
-    lastModified: new Date(article.date),
+    lastModified: article.date
+      ? new Date(article.date).toISOString()
+      : currentDate,
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }))
