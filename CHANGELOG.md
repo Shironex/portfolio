@@ -1,3 +1,10 @@
+## [1.10.2](https://github.com/Shironex/portfolio/compare/v1.10.1...v1.10.2) (2025-03-23)
+
+
+### Bug Fixes
+
+* **package.json:** bring back missing scripts ([97d6787](https://github.com/Shironex/portfolio/commit/97d6787f48a59d42749296d8a8495290849baa56))
+
 ## [1.10.1](https://github.com/Shironex/portfolio/compare/v1.10.0...v1.10.1) (2025-03-23)
 
 
