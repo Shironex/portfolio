@@ -1,6 +1,7 @@
 'use client'
 
 import type { ReactNode } from 'react'
+import type { JSX } from 'react'
 
 import { motion } from 'motion/react'
 
