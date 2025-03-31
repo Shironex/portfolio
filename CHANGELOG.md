@@ -1,3 +1,10 @@
+## [1.10.3](https://github.com/Shironex/portfolio/compare/v1.10.2...v1.10.3) (2025-03-31)
+
+
+### Bug Fixes
+
+* correct writewiz live demo url ([c447c0e](https://github.com/Shironex/portfolio/commit/c447c0e3f786b7a7f88c34ecc332e8b0bf186057))
+
 ## [1.10.2](https://github.com/Shironex/portfolio/compare/v1.10.1...v1.10.2) (2025-03-23)
 
 
