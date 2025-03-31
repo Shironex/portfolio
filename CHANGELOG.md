@@ -1,3 +1,10 @@
+## [1.10.4](https://github.com/Shironex/portfolio/compare/v1.10.3...v1.10.4) (2025-03-31)
+
+
+### Bug Fixes
+
+* add missing await in /articles/[slug] page ([ec50c16](https://github.com/Shironex/portfolio/commit/ec50c16a3b377c1c8c6792ab2a86504063b9502e))
+
 ## [1.10.3](https://github.com/Shironex/portfolio/compare/v1.10.2...v1.10.3) (2025-03-31)
 
 
