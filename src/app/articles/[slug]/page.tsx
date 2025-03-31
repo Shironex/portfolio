@@ -86,7 +86,7 @@ const ArticlePage = async ({ params }: ArticlePageProps) => {
   })
 
   // Convert markdown to HTML
-  const htmlContent = marked(article.content)
+  const htmlContent = await marked(article.content)
 
   return (
     <PageTransition>
