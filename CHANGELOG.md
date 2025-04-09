@@ -1,3 +1,10 @@
+## [1.10.5](https://github.com/Shironex/portfolio/compare/v1.10.4...v1.10.5) (2025-03-31)
+
+
+### Bug Fixes
+
+* add missing JSX type import in gradient heading causing build to fail ([935ecb9](https://github.com/Shironex/portfolio/commit/935ecb9dc5dae6f62ef3930763ffa92c3f862790))
+
 ## [1.10.4](https://github.com/Shironex/portfolio/compare/v1.10.3...v1.10.4) (2025-03-31)
 
 
