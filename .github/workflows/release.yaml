@@ -1,5 +1,5 @@
 name: Release
-description: Release the project with semantic-release
+
 on:
   push:
     branches: ['master']
