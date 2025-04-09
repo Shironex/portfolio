@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit",
     "format": "prettier 'src/**/*.{js,ts,jsx,tsx}' --write",
     "format:check": "prettier 'src/**/*.{js,ts,jsx,tsx}' --check",
     "release": "standard-version",

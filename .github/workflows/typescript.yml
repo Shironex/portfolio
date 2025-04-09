@@ -1,0 +1,28 @@
+name: TypeScript Check
+
+on:
+  push:
+    branches: ['master', 'dev']
+  pull_request:
+    branches: ['master', 'dev']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js and pnpm
+        uses: ./.github/actions/setup-pnpm
+        with:
+          node-version: '20'
+          pnpm-version: '9.12.3'
+          install-dependencies: 'true'
+
+      - name: TypeScript Check
+        run: pnpm run typecheck
