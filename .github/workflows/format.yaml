@@ -1,5 +1,4 @@
 name: Format
-description: Format code with prettier
 
 on:
   push:

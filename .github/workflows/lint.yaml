@@ -1,5 +1,4 @@
 name: Lint Check
-description: Lint code with eslint
 
 on:
   push:
@@ -25,12 +24,8 @@ jobs:
           pnpm-version: '9.12.3'
           install-dependencies: 'true'
 
+      - name: Copy .env.example to .env
+        run: cp .env.example .env
+
       - name: Linting
         run: pnpm run lint
-        env:
-          NEXT_PUBLIC_PUBLIC_URL: ${{ secrets.NEXT_PUBLIC_PUBLIC_URL }}
-          NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
-          TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          RESEND_MAIL_TO: ${{ secrets.RESEND_MAIL_TO }}
-          REDIS_HOST: ${{ secrets.REDIS_HOST }}
