@@ -238,8 +238,8 @@ importers:
         specifier: ^9.24.0
         version: 9.24.0
       '@next/eslint-plugin-next':
-        specifier: ^15.2.5
-        version: 15.2.5
+        specifier: ^15.3.1
+        version: 15.3.1
       '@semantic-release/changelog':
         specifier: ^6.0.3
         version: 6.0.3(semantic-release@24.2.3(typescript@5.8.2))
@@ -833,9 +833,6 @@ packages:
 
   '@next/env@15.2.5':
     resolution: {integrity: sha512-uWkCf9C8wKTyQjqrNk+BA7eL3LOQdhL+xlmJUf2O85RM4lbzwBwot3Sqv2QGe/RGnc3zysIf1oJdtq9S00pkmQ==}
-
-  '@next/eslint-plugin-next@15.2.5':
-    resolution: {integrity: sha512-Q1ncASVFKSy+AbabimYxr/2HH/h+qlKlwu1fYV48xUefGzVimS3i3nKwYsM2w+rLdpMFdJyoVowrYyjKu47rBw==}
 
   '@next/eslint-plugin-next@15.3.1':
     resolution: {integrity: sha512-oEs4dsfM6iyER3jTzMm4kDSbrQJq8wZw5fmT6fg2V3SMo+kgG+cShzLfEV20senZzv8VF+puNLheiGPlBGsv2A==}
@@ -6709,10 +6706,6 @@ snapshots:
   '@next/env@15.2.4': {}
 
   '@next/env@15.2.5': {}
-
-  '@next/eslint-plugin-next@15.2.5':
-    dependencies:
-      fast-glob: 3.3.1
 
   '@next/eslint-plugin-next@15.3.1':
     dependencies:
