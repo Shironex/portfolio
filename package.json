@@ -98,7 +98,7 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@trivago/prettier-plugin-sort-imports": "5.2.2",
-    "@types/node": "^22.14.0",
+    "@types/node": "^22.14.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@typescript-eslint/parser": "^8.29.1",
