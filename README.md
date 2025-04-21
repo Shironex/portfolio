@@ -49,7 +49,7 @@
 
 ## About The Project
 
-[![Portfolio Screen Shot](assets/project.png)](https://shirone.xyz/)
+[![Portfolio Screen Shot](public/og-image.png)](https://shirone.xyz/)
 
 This portfolio showcases my skills as a full-stack developer, focusing on modern technologies such as Next.js, TypeScript, TailwindCSS, and Framer Motion.
 

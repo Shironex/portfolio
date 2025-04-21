@@ -94,7 +94,7 @@ export const mdxComponents = {
       <Image
         className={cn('rounded-lg border border-border', className)}
         alt={alt || ''}
-        src={src}
+        src={src as string}
         width={width ? Number(width) : 800}
         height={height ? Number(height) : 500}
         {...props}
