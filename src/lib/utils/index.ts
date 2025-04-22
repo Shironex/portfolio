@@ -3,6 +3,8 @@ import { twMerge } from 'tailwind-merge'
 
 import { env } from '@/env/server'
 
+import { PublicError } from '../errors'
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -34,6 +36,8 @@ export async function verifyTurnstile(token: string): Promise<void> {
   const turnstileData = await turnstileResponse.json()
 
   if (!turnstileData.success) {
-    throw new Error('There was an error when veryfing captcha')
+    throw new PublicError(
+      'There was an error when veryfing captcha. Please try again.'
+    )
   }
 }

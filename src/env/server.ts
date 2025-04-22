@@ -9,6 +9,8 @@ export const env = createEnv({
     RESEND_MAIL_TO: z.string().min(1),
     TURNSTILE_SECRET_KEY: z.string().min(1),
     REDIS_HOST: z.string().min(1),
+    SENTRY_URL: z.string().min(1),
+    SENTRY_DSN: z.string().min(1),
   },
   onValidationError: (issues) => {
     console.error('❌ Invalid environment variables:', issues)

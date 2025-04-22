@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs'
 import { createSafeActionClient } from 'next-safe-action'
 import { z } from 'zod'
 
@@ -21,6 +22,12 @@ const unauthenticatedAction = createSafeActionClient({
       return `${!isAllowedError && isDev ? 'DEV ONLY ENABLED - ' : ''}${err.message}`
     } else {
       console.error(err)
+      Sentry.captureException(err, {
+        tags: {
+          source: 'server_action',
+          actionName: utils?.metadata?.actionName || 'unknown',
+        },
+      })
       return 'Something went wrong'
     }
   },
@@ -29,17 +36,28 @@ const unauthenticatedAction = createSafeActionClient({
 
   const startTime = performance.now()
 
-  const result = await next()
+  return await Sentry.startSpan(
+    {
+      name: `Server Action: ${metadata?.actionName || 'Unknown Action'}`,
+      op: 'server.action',
+    },
+    async () => {
+      try {
+        const result = await next()
 
-  const endTime = performance.now()
+        const endTime = performance.now()
+        console.log('Result ->', result)
+        console.log('Client input ->', clientInput)
+        console.log('Metadata ->', metadata)
+        console.log('Action execution took', endTime - startTime, 'ms')
 
-  console.log('Result ->', result)
-  console.log('Client input ->', clientInput)
-  console.log('Metadata ->', metadata)
-  console.log('Action execution took', endTime - startTime, 'ms')
-
-  // And then return the result of the awaited action.
-  return result
+        return result
+      } catch (error) {
+        // Błędy są przechwytywane przez handleServerError
+        throw error
+      }
+    }
+  )
 })
 
 export { unauthenticatedAction }

@@ -33,8 +33,13 @@ jobs:
           pnpm-version: '9.12.3'
           install-dependencies: 'true'
 
-      - name: Copy .env.example to .env
-        run: cp .env.example .env
+      - name: Create .env file with secrets
+        run: |
+          cp .env.example .env
+          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> .env
+          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
+          echo "SENTRY_URL=${{ secrets.SENTRY_URL }}" >> .env
+          echo "CI=true" >> .env
 
       - name: Next Build 🔧
         run: pnpm run build
