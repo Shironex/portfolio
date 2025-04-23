@@ -72,16 +72,16 @@ Feel free to explore the code, suggest changes, or get in touch for any question
 
 This portfolio is built with a selection of modern tools and libraries f:
 
-- Next js 14
+- Next js 15
 - TailwindCSS
-- Framer Motion
+- motion react
 - Cloudflare Turnstile
 - Redis
 - Resend
 - Shadcn ui
 - React-hook-form
 - Zod
-- Zsa-react
+- Next safe action
 - Docker-compose
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -129,8 +129,6 @@ To use this project, you need to have pnpm installed.
 - [ ] Roadmap page that get data from Writewiz
 - [ ] Changelog page that get data from Writewiz
 - [ ] More blog posts
-- [ ] Multi-language Support
-  - [ ] Polish
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
