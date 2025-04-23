@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/Shironex/portfolio/compare/v1.11.0...v1.12.0) (2025-04-23)
+
+
+### Features
+
+* adds dynamic csp and reorganizes mdx imports ([25be255](https://github.com/Shironex/portfolio/commit/25be255e22c9a236afc1f6eba11d199d4ce39201))
+
 # [1.11.0](https://github.com/Shironex/portfolio/compare/v1.10.5...v1.11.0) (2025-04-22)
 
 
