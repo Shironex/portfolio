@@ -1,4 +1,4 @@
-import React from 'react'
+import { headers } from 'next/headers'
 
 import NextTopLoader from 'nextjs-toploader'
 
@@ -8,13 +8,16 @@ interface ProvidersProps {
   children: React.ReactNode
 }
 
-const Providers = ({ children }: ProvidersProps) => {
+const Providers = async ({ children }: ProvidersProps) => {
+  const nonce = (await headers()).get('x-custom-nonce') || ''
+
   return (
     <ThemeProvider
       attribute="class"
       defaultTheme="dark"
       enableSystem={false}
       disableTransitionOnChange
+      nonce={nonce}
     >
       <NextTopLoader color="#9B85F6" />
       {children}

@@ -13,8 +13,8 @@ import { PageTransition } from '@/components/layout/page-transition'
 import { ScrollAnimation } from '@/components/scroll-animation'
 import { ArticleContent } from '@/components/sections/article-content'
 
-import { getArticleBySlug, getArticleSlugs } from '@/lib/mdx-utils'
 import { generateMetadata as generateMeta } from '@/lib/metadata-config'
+import { getArticleBySlug, getArticleSlugs } from '@/lib/utils/mdx'
 
 import { Article } from '@/types'
 

@@ -41,6 +41,7 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
               alt={`${project.title} Project`}
               width={600}
               height={400}
+              priority
               className="h-48 w-full object-cover"
             />
           </motion.div>

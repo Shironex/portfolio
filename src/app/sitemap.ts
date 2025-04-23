@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 
-import { getAllArticles } from '@/lib/mdx-utils'
 import { sectionMetadata, siteConfig } from '@/lib/metadata-config'
+import { getAllArticles } from '@/lib/utils/mdx'
 
 import { projectsData } from '@/data/projects-data'
 

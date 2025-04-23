@@ -3,7 +3,7 @@ import { PageTransition } from '@/components/layout/page-transition'
 import HeroSection from '@/components/sections/hero-section'
 import NewsletterSection from '@/components/sections/newsletter-section'
 
-import { getAllArticles } from '@/lib/mdx-utils'
+import { getAllArticles } from '@/lib/utils/mdx'
 
 export const metadata = {
   title: 'Articles & Insights | Shirone',
