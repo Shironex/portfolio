@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/Shironex/portfolio/compare/v1.10.5...v1.11.0) (2025-04-22)
+
+
+### Features
+
+* adds sentry error monitoring ([6354310](https://github.com/Shironex/portfolio/commit/6354310a45f3064631067dbe5053c9672fa29bd9))
+
 ## [1.10.5](https://github.com/Shironex/portfolio/compare/v1.10.4...v1.10.5) (2025-03-31)
 
 
