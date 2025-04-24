@@ -6,7 +6,6 @@ import {
   Heading,
   Hr,
   Html,
-  Img,
   Link,
   Preview,
   Row,
@@ -17,7 +16,7 @@ import {
 import { ContactFormSchema } from '@/app/contact/_components/validation'
 
 export interface ContactFormEmailProps {
-  data: ContactFormSchema
+  data: Omit<ContactFormSchema, 'turnstileToken' | 'verify'>
 }
 
 export const ContactFormEmail = ({ data }: ContactFormEmailProps) => {
@@ -100,8 +99,8 @@ export const ContactFormEmail = ({ data }: ContactFormEmailProps) => {
 
 ContactFormEmail.PreviewProps = {
   data: {
-    name: 'Kacper Nowak',
-    email: 'kacper@example.com',
+    name: 'test',
+    email: 'test@example.com',
     message:
       "Hello, I'm interested in discussing a potential project for my company. I need a new web application with modern design and functionality. Looking forward to hearing from you!",
   },

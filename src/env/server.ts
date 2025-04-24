@@ -6,11 +6,17 @@ export const env = createEnv({
   server: {
     NODE_ENV: z.enum(['development', 'production', 'test']),
     RESEND_API_KEY: z.string().min(1),
+    RESEND_ENABLED: z.string().transform((val) => val === 'true'),
     RESEND_MAIL_TO: z.string().min(1),
     TURNSTILE_SECRET_KEY: z.string().min(1),
     REDIS_HOST: z.string().min(1),
     SENTRY_URL: z.string().min(1),
     SENTRY_DSN: z.string().min(1),
+    SMTP_HOST: z.string().min(1),
+    SMTP_PORT: z.string().min(1),
+    SMTP_USER: z.string().min(1),
+    SMTP_PASSWORD: z.string().min(1),
+    DISCORD_WEBHOOK_URL: z.string().min(1),
   },
   onValidationError: (issues) => {
     console.error('❌ Invalid environment variables:', issues)

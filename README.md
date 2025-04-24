@@ -57,12 +57,13 @@ This portfolio showcases my skills as a full-stack developer, focusing on modern
 
 - Clean and maintainable code.
 - TailwindCSS for styling.
-- Framer Motion for animation.
+- motion react for animation.
 - Cloudflare Turnstile for secure, bot-free interactions.
 - Rate limiting with Redis.
 - Contact form with Resend.
 - Form validation with Zod and react-hook-form.
 - MDX for blog posts.
+- Send Discord notification with image snapshot using bullmq and puppeteer
 
 Feel free to explore the code, suggest changes, or get in touch for any questions!
 
@@ -83,6 +84,9 @@ This portfolio is built with a selection of modern tools and libraries f:
 - Zod
 - Next safe action
 - Docker-compose
+- Bullmq
+- puppeteer
+- axios
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -125,10 +129,6 @@ To use this project, you need to have pnpm installed.
 <!-- ROADMAP -->
 
 ## Roadmap
-
-- [ ] Roadmap page that get data from Writewiz
-- [ ] Changelog page that get data from Writewiz
-- [ ] More blog posts
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

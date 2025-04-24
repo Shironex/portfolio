@@ -4,10 +4,12 @@ import * as Sentry from '@sentry/nextjs'
 
 import { PublicError } from '@/lib/errors'
 import { sendMail } from '@/lib/mail'
+import { renderContactFormEmail } from '@/lib/mail/render'
 import ContactFormEmail from '@/lib/mail/templates/contact-form'
+import { discordQueue } from '@/lib/queue'
 import { rateLimitBot, rateLimitByKey } from '@/lib/ratelimit'
 import { unauthenticatedAction } from '@/lib/safe-action'
-import { verifyTurnstile } from '@/lib/utils'
+import { verifyTurnstile } from '@/lib/utils/cloudflare'
 
 import { env } from '@/env/server'
 
@@ -46,21 +48,34 @@ export const sendEmailAction = unauthenticatedAction
           messageLength: parsedInput.message?.length || 0,
         },
       })
-      await rateLimitBot(
-        `${parsedInput.name}-${parsedInput.email}-contact`,
-        1,
-        9999
-      )
+
+      await rateLimitBot(`${parsedInput.name}-${parsedInput.email}-contact`, 1)
+
       throw new PublicError('Robot detected')
     }
 
-    const body = ContactFormEmail({ data: parsedInput })
+    let body: string | React.ReactNode
+
+    if (env.RESEND_ENABLED) {
+      body = ContactFormEmail({ data: parsedInput })
+    } else {
+      body = await renderContactFormEmail({
+        name: parsedInput.name,
+        email: parsedInput.email,
+        message: parsedInput.message,
+      })
+    }
 
     try {
       await sendMail({
         subject: 'New contact form submission',
         to: env.RESEND_MAIL_TO,
         body,
+      })
+
+      //? Add to queue to send to discord notification
+      await discordQueue.add('contact-form-webhook', {
+        data: parsedInput,
       })
     } catch (error) {
       Sentry.captureException(error, {
@@ -77,6 +92,8 @@ export const sendEmailAction = unauthenticatedAction
           hasVerify: !!parsedInput.verify,
         },
       })
+
+      console.error(error)
 
       throw new PublicError(
         'There was an error when sending email. Plase try again later.'

@@ -21,6 +21,13 @@ const nextConfig = {
   images: {
     remotePatterns: [{ protocol: 'https', hostname: 'images.unsplash.com' }],
   },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals = [...(config.externals || []), 'bullmq']
+    }
+
+    return config
+  },
 }
 
 const withMDX = createMDX({

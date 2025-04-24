@@ -12,15 +12,15 @@ type Result = {
 
 const rateLimiter = async (
   client: Redis,
-  ip: string,
+  keyword: string,
   limit: number,
   duration: number
 ): Promise<Result> => {
-  if (env.NODE_ENV === 'test') {
+  if (env.NODE_ENV === 'test' || env.NODE_ENV === 'development') {
     return { limit, remaining: limit, success: true } as Result
   }
 
-  const key = `rate_limit:${ip}`
+  const key = `rate_limit:${keyword}`
   const currentCount = await client.get(key)
   const count = parseInt(currentCount as string, 10) || 0
 
@@ -28,8 +28,8 @@ const rateLimiter = async (
     return { limit, remaining: limit - count, success: false }
   }
 
-  client.incr(key)
-  client.expire(key, duration)
+  await client.incr(key)
+  await client.expire(key, duration)
 
   return { limit, remaining: limit - (count + 1), success: true }
 }
@@ -54,34 +54,23 @@ export const rateLimitByKey = async (
   limit: number,
   duration: number
 ): Promise<Result> => {
-  if (env.NODE_ENV === 'test') {
-    return { limit, remaining: limit, success: true } as Result
-  }
-
-  const key = `rate_limit:${keyword}`
-
-  const result = await rateLimiter(redisClient, key, limit, duration)
+  const result = await rateLimiter(redisClient, keyword, limit, duration)
 
   return result
 }
 
 export const rateLimitBot = async (
   keyword: string,
-  limit: number,
   duration: number
-): Promise<{
-  success: boolean
-}> => {
-  if (env.NODE_ENV === 'test') {
-    return { limit, remaining: limit, success: true } as Result
+): Promise<void> => {
+  if (env.NODE_ENV === 'test' || env.NODE_ENV === 'development') {
+    return
   }
 
   const key = `rate_limit:${keyword}`
 
-  redisClient.incr(key)
-  redisClient.expire(key, duration)
-
-  return { success: true }
+  await redisClient.incr(key)
+  await redisClient.expire(key, duration)
 }
 
 export default rateLimiter
