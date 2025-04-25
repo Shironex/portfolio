@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/Shironex/portfolio/compare/v1.13.0...v1.14.0) (2025-04-25)
+
+
+### Features
+
+* docker file deployment ([4a82013](https://github.com/Shironex/portfolio/commit/4a82013961772c7024f46774013d90320cdd6afe))
+
 # [1.13.0](https://github.com/Shironex/portfolio/compare/v1.12.0...v1.13.0) (2025-04-25)
 
 
