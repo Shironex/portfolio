@@ -1,5 +1,5 @@
 import { render } from '@react-email/render'
-import puppeteer from 'puppeteer'
+import puppeteer from 'puppeteer-core'
 
 import { ContactFormSchema } from '@/app/contact/_components/validation'
 
@@ -12,7 +12,12 @@ export async function emailFormToPng(
   const html = await render(<ContactFormEmail data={data} />)
 
   const browser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    executablePath:
+      process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
+    args: process.env.PUPPETEER_ARGS?.split(' ') || [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+    ],
     headless: true,
   })
 

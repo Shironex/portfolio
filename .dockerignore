@@ -1,0 +1,9 @@
+node_modules
+.next
+*.log
+.git
+.DS_Store
+.vscode
+.idea
+**/README.md
+**/LICENSE

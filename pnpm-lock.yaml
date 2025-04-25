@@ -176,9 +176,9 @@ importers:
       nodemailer:
         specifier: ^6.10.1
         version: 6.10.1
-      puppeteer:
+      puppeteer-core:
         specifier: ^24.7.2
-        version: 24.7.2(typescript@5.8.2)
+        version: 24.7.2
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -6218,11 +6218,6 @@ packages:
   puppeteer-core@24.7.2:
     resolution: {integrity: sha512-P9pZyTmJqKODFCnkZgemCpoFA4LbAa8+NumHVQKyP5X9IgdNS1ZnAnIh1sMAwhF8/xEUGf7jt+qmNLlKieFw1Q==}
     engines: {node: '>=18'}
-
-  puppeteer@24.7.2:
-    resolution: {integrity: sha512-ifYqoY6wGs0yZeFuFPn8BE9FhuveXkarF+eO18I2e/axdoCh4Qh1AE+qXdJBhdaeoPt6eRNTY4Dih29Jbq8wow==}
-    engines: {node: '>=18'}
-    hasBin: true
 
   q@1.5.1:
     resolution: {integrity: sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw==}
@@ -13885,21 +13880,6 @@ snapshots:
       - bare-buffer
       - bufferutil
       - supports-color
-      - utf-8-validate
-
-  puppeteer@24.7.2(typescript@5.8.2):
-    dependencies:
-      '@puppeteer/browsers': 2.10.2
-      chromium-bidi: 4.1.1(devtools-protocol@0.0.1425554)
-      cosmiconfig: 9.0.0(typescript@5.8.2)
-      devtools-protocol: 0.0.1425554
-      puppeteer-core: 24.7.2
-      typed-query-selector: 2.12.0
-    transitivePeerDependencies:
-      - bare-buffer
-      - bufferutil
-      - supports-color
-      - typescript
       - utf-8-validate
 
   q@1.5.1: {}

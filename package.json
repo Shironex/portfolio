@@ -15,6 +15,20 @@
     "prepare": "husky",
     "commit": "git-cz"
   },
+  "engines": {
+    "node": ">=22.11.0",
+    "pnpm": ">=10.9.0"
+  },
+  "packageManager": "pnpm@10.9.0",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@sentry/cli",
+      "esbuild",
+      "msgpackr-extract",
+      "sharp",
+      "unrs-resolver"
+    ]
+  },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
     "@next/mdx": "^15.3.1",
@@ -72,7 +86,7 @@
     "next-themes": "^0.4.6",
     "nextjs-toploader": "^3.8.16",
     "nodemailer": "^6.10.1",
-    "puppeteer": "^24.7.2",
+    "puppeteer-core": "^24.7.2",
     "react": "^19.1.0",
     "react-day-picker": "8.10.1",
     "react-dom": "^19.1.0",
