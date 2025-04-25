@@ -1,6 +1,20 @@
 # [1.14.0](https://github.com/Shironex/portfolio/compare/v1.13.0...v1.14.0) (2025-04-25)
 
 
+### Bug Fixes
+
+* **security:** autofix 3rd party Github Actions should be pinned ([4a0b919](https://github.com/Shironex/portfolio/commit/4a0b919578bad27d90d036869addab9d5cc93434))
+* **ci:** failing due to validation of discord webhook url ([0998bd1](https://github.com/Shironex/portfolio/commit/0998bd156052260ffc4ceddb4ab81573000124e8))
+* **ci:** update ci node and pnpm version ([5883b4b](https://github.com/Shironex/portfolio/commit/5883b4b8f6d34e9d54633cee774b46446da1656a))
+
+
+### Features
+
+* docker file deployment ([4a82013](https://github.com/Shironex/portfolio/commit/4a82013961772c7024f46774013d90320cdd6afe))
+
+# [1.14.0](https://github.com/Shironex/portfolio/compare/v1.13.0...v1.14.0) (2025-04-25)
+
+
 ### Features
 
 * docker file deployment ([4a82013](https://github.com/Shironex/portfolio/commit/4a82013961772c7024f46774013d90320cdd6afe))
