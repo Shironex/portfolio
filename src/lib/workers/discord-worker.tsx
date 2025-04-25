@@ -15,43 +15,47 @@ type DiscordJobData = {
 const discordWorker = new Worker(
   'discord-webhook',
   async (job) => {
-    const { data } = job.data as DiscordJobData
-    console.log('Discord worker started for contact form')
+    try {
+      const { data } = job.data as DiscordJobData
+      console.log('Discord worker started for contact form')
 
-    const png = await emailFormToPng(data)
+      const png = await emailFormToPng(data)
 
-    const form = new FormData()
-    form.append('file', png, { filename: 'contact.png' })
+      const form = new FormData()
+      form.append('file', png, { filename: 'contact.png' })
 
-    const embed = generateDefaultEmbed({
-      title: 'New contact form submission',
-      message: `new contact form submission`,
-      image: `attachment://contact.png`,
-      fields: [
-        {
-          name: 'Name',
-          value: data.name,
-          inline: true,
-        },
-        {
-          name: 'Email',
-          value: data.email,
-          inline: true,
-        },
-        {
-          name: 'Message',
-          value: data.message,
-          inline: false,
-        },
-      ],
-    })
+      const embed = generateDefaultEmbed({
+        title: 'New contact form submission',
+        message: `new contact form submission`,
+        image: `attachment://contact.png`,
+        fields: [
+          {
+            name: 'Name',
+            value: data.name,
+            inline: true,
+          },
+          {
+            name: 'Email',
+            value: data.email,
+            inline: true,
+          },
+          {
+            name: 'Message',
+            value: data.message,
+            inline: false,
+          },
+        ],
+      })
 
-    const response = await sendDiscordWebhook(embed, form)
+      const response = await sendDiscordWebhook(embed, form)
 
-    if (response.status !== 200 && response.status !== 204) {
-      throw new Error(
-        `Request failed with status: ${response.status} - ${response.statusText}`
-      )
+      if (response.status !== 200 && response.status !== 204) {
+        throw new Error(
+          `Request failed with status: ${response.status} - ${response.statusText}`
+        )
+      }
+    } catch (error) {
+      console.error(error)
     }
   },
   {
