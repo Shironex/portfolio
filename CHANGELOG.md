@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/Shironex/portfolio/compare/v1.12.0...v1.13.0) (2025-04-25)
+
+
+### Features
+
+* adds local mail fallback and discord notifications ([1c7c243](https://github.com/Shironex/portfolio/commit/1c7c2432c0ef666e8d4376cb5b287f7610d68bd3))
+
 # [1.12.0](https://github.com/Shironex/portfolio/compare/v1.11.0...v1.12.0) (2025-04-23)
 
 
