@@ -67,5 +67,9 @@ WORKDIR /home/app/standalone
 
 EXPOSE 3000
 
+RUN apk add --no-cache shadow && \
+    useradd -U -u 1000 appuser && \
+    chown -R 1000:1000 /home/app/standalone
+USER 1000
 ENTRYPOINT ["dumb-init", "--"]
 CMD ["node", "server.js"]
