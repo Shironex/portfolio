@@ -4,11 +4,11 @@ inputs:
   node-version:
     description: 'Node.js version'
     required: false
-    default: '20'
+    default: '22.11.0'
   pnpm-version:
     description: 'pnpm version'
     required: false
-    default: '9.12.3'
+    default: '10.9.01'
   install-dependencies:
     description: 'Whether to install dependencies'
     required: false
