@@ -22,10 +22,6 @@ jobs:
 
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-pnpm
-        with:
-          node-version: '20'
-          pnpm-version: '9.12.3'
-          install-dependencies: 'true'
 
       - name: Check formatting
         run: pnpm format:check

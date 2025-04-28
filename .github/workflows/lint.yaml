@@ -19,11 +19,7 @@ jobs:
 
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-pnpm
-        with:
-          node-version: '20'
-          pnpm-version: '9.12.3'
-          install-dependencies: 'true'
-
+        
       - name: Copy .env.example to .env
         run: cp .env.example .env
 
