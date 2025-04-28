@@ -19,8 +19,6 @@ jobs:
 
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-pnpm
-        with:
-          install-dependencies: 'true'
 
       - name: TypeScript Check
         run: pnpm run typecheck

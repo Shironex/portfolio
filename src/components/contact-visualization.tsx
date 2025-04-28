@@ -16,6 +16,8 @@ import {
 } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
 
+import { EMAIL_CONTACT } from '@/lib/constants'
+
 import { CodeMessageAnimation } from './code-message-animation'
 
 const ContactVisualization = () => {
@@ -95,7 +97,7 @@ const ContactVisualization = () => {
               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20">
                 <Mail className="h-3 w-3 text-primary" />
               </div>
-              <span className="text-xs">support@shirone.xyz</span>
+              <span className="text-xs">{EMAIL_CONTACT}</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20">

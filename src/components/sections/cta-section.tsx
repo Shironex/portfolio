@@ -46,7 +46,11 @@ const CTASection = ({
                     tap: { scale: 0.98 },
                   }}
                 >
-                  <Button size="lg" className="gap-2">
+                  <Button
+                    size="lg"
+                    className="gap-2"
+                    data-umami-event="Click Button Get in Touch"
+                  >
                     Get in Touch
                     <motion.div
                       animate={{ x: [0, 5, 0] }}

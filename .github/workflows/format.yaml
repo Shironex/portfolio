@@ -22,20 +22,18 @@ jobs:
 
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-pnpm
-        with:
-          node-version: '20'
-          pnpm-version: '9.12.3'
-          install-dependencies: 'true'
 
       - name: Check formatting
+        id: format-check
+        continue-on-error: true
         run: pnpm format:check
 
       - name: Format code if check fails
-        if: failure()
+        if: steps.format-check.outcome == 'failure'
         run: pnpm format
 
       - name: Commit changes if any
-        if: failure()
+        if: steps.format-check.outcome == 'failure'
         uses: stefanzweifel/git-auto-commit-action@b863ae1933cb653a53c021fe36dbb774e1fb9403 # v5
         with:
           commit_message: 'style: format code with prettier'

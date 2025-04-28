@@ -12,6 +12,7 @@ import { ScrollRestoration } from '@/components/scroll-restoration'
 import { defaultMetadata } from '@/lib/metadata-config'
 
 import Providers from '@/context/providers'
+import { env } from '@/env/server'
 import '@/styles/globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -32,7 +33,14 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           <ScrollRestoration />
           <div className="flex min-h-screen flex-col">
             <Navbar />
-            <main className="flex-1">{children}</main>
+            <main className="flex-1">
+              {children}
+              <script
+                defer
+                src={env.ANALYTIC_URL + '/script.js'}
+                data-website-id={env.ANALYTIC_ID}
+              />
+            </main>
             <Footer />
           </div>
           <Toaster />

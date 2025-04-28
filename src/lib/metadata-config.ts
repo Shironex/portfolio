@@ -3,7 +3,7 @@ import { Metadata } from 'next'
 // Base URL for the website (used for absolute URLs in metadata)
 export const siteConfig = {
   name: 'Shirone | Developer Portfolio',
-  url: process.env.NEXT_PUBLIC_PUBLIC_URL || 'https://shirone.xyz',
+  url: process.env.NEXT_PUBLIC_PUBLIC_URL || 'https://shirone.dev',
   ogImage: '/og-image.png', // Default Open Graph image
   description:
     'Personal portfolio of Shirone, a full-stack developer specializing in Next.js and modern web technologies',

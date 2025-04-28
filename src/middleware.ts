@@ -10,7 +10,7 @@ export function middleware(req: NextRequest) {
   const csp = [
     `base-uri 'none'`,
     `child-src 'none'`,
-    `connect-src 'self'`,
+    `connect-src 'self' https://analytics.shirone.dev`,
     `default-src 'self'`,
     `font-src 'self'`,
     `form-action 'self'`,
@@ -20,14 +20,14 @@ export function middleware(req: NextRequest) {
     `manifest-src 'self'`,
     `media-src 'self'`,
     `object-src 'none'`,
-    `script-src 'self' 'nonce-${nonce}' 'unsafe-eval' https://logging.shirone.xyz https://challenges.cloudflare.com`,
+    `script-src 'self' 'nonce-${nonce}' 'unsafe-eval' https://logging.shirone.dev https://challenges.cloudflare.com https://analytics.shirone.dev`,
     `style-src 'self' 'unsafe-inline'`,
     `worker-src 'self'`,
   ].join('; ')
 
   // Inject security headers
   res.headers.set('Content-Security-Policy', csp)
-  res.headers.set('Cross-Origin-Embedder-Policy', 'require-corp')
+  res.headers.set('Cross-Origin-Embedder-Policy', 'credentialless')
   res.headers.set('Cross-Origin-Opener-Policy', 'same-origin')
   res.headers.set('Cross-Origin-Resource-Policy', 'same-origin')
   res.headers.set('Origin-Agent-Cluster', '?1')

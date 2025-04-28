@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'article',
       images: [
         {
-          url: `${process.env.NEXT_PUBLIC_PUBLIC_URL || 'https://shirone.xyz'}${project.image || '/og-projects.jpg'}`,
+          url: `${process.env.NEXT_PUBLIC_PUBLIC_URL || 'https://shirone.dev'}${project.image || '/og-projects.jpg'}`,
           width: 1200,
           height: 630,
           alt: project.title,

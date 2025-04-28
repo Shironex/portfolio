@@ -11,9 +11,7 @@ import { Button } from '@/components/ui/button'
 
 import { ThemeToggle } from '@/components/theme-toggle'
 
-import { GITHUB_URL } from '@/lib/constants'
-
-import { NavItem } from '@/types'
+import { GITHUB_URL, NAV_ITEMS } from '@/lib/constants'
 
 import MobileNavBar from './mobile-navbar'
 import MobileNavbarToggle from './mobile-navbar-toggle'
@@ -38,14 +36,6 @@ export function Navbar() {
   const closeMenu = () => {
     setIsOpen(false)
   }
-
-  const navItems: NavItem[] = [
-    { name: 'Home', path: '/' },
-    { name: 'About', path: '/about' },
-    { name: 'Projects', path: '/projects' },
-    { name: 'Articles', path: '/articles' },
-    { name: 'Contact', path: '/contact' },
-  ]
 
   // Animation variants
   const navbarVariants: Variants = {
@@ -107,7 +97,7 @@ export function Navbar() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex md:items-center md:gap-6">
           <ul className="flex items-center gap-6">
-            {navItems.map((item) => (
+            {NAV_ITEMS.map((item) => (
               <motion.li key={item.name} variants={itemVariants}>
                 <Link
                   href={item.path}
@@ -116,6 +106,7 @@ export function Navbar() {
                       ? 'text-primary'
                       : 'text-muted-foreground'
                   }`}
+                  data-umami-event={`Click Button Navigate to ${item.name}`}
                 >
                   {item.name}
                   {pathname === item.path && (
@@ -136,7 +127,12 @@ export function Navbar() {
 
           <div className="flex items-center gap-4">
             <motion.div variants={itemVariants}>
-              <Link href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
+              <Link
+                href={GITHUB_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-umami-event="Click Button View GitHub Profile"
+              >
                 <motion.div
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
@@ -153,7 +149,10 @@ export function Navbar() {
               </Link>
             </motion.div>
             <motion.div variants={itemVariants}>
-              <Link href="/contact">
+              <Link
+                href="/contact"
+                data-umami-event="Click Button View Contact Page"
+              >
                 <motion.div
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
@@ -169,7 +168,10 @@ export function Navbar() {
                 </motion.div>
               </Link>
             </motion.div>
-            <motion.div variants={itemVariants}>
+            <motion.div
+              variants={itemVariants}
+              data-umami-event="Click Button Toggle Theme"
+            >
               <ThemeToggle />
             </motion.div>
           </div>
@@ -189,7 +191,7 @@ export function Navbar() {
         pathname={pathname}
         itemVariants={itemVariants}
         closeMenu={closeMenu}
-        navItems={navItems}
+        navItems={NAV_ITEMS}
       />
     </motion.header>
   )

@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 import { Github } from 'lucide-react'
 
-import { GITHUB_URL } from '@/lib/constants'
+import { GITHUB_URL, NAV_ITEMS } from '@/lib/constants'
 
 export function Footer() {
   return (
@@ -22,36 +22,16 @@ export function Footer() {
 
           <div className="flex flex-col items-center gap-4 md:flex-row">
             <nav className="flex flex-wrap gap-6 sm:flex-nowrap">
-              <Link
-                href="/"
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                Home
-              </Link>
-              <Link
-                href="/about"
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                About
-              </Link>
-              <Link
-                href="/projects"
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                Projects
-              </Link>
-              <Link
-                href="/articles"
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                Articles
-              </Link>
-              <Link
-                href="/contact"
-                className="text-sm text-muted-foreground hover:text-foreground"
-              >
-                Contact
-              </Link>
+              {NAV_ITEMS.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.path}
+                  className="text-sm text-muted-foreground hover:text-foreground"
+                  data-umami-event={`Click Button Navigate to ${item.name}`}
+                >
+                  {item.name}
+                </Link>
+              ))}
             </nav>
 
             <div className="flex items-center gap-4">

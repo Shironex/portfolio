@@ -30,6 +30,7 @@ const MobileNavbarToggle = ({
           size="icon"
           onClick={toggleMenu}
           aria-label="Toggle Menu"
+          data-umami-event="Click Mobile Button Toggle Menu"
         >
           <AnimatePresence mode="wait" initial={false}>
             <motion.div

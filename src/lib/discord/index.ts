@@ -6,18 +6,25 @@ import { FullDiscordEmbed } from '@/types'
 
 export const sendDiscordWebhook = async (
   embed: FullDiscordEmbed,
-  formData: FormData
+  formData?: FormData
 ) => {
-  formData.append(
-    'payload_json',
-    JSON.stringify({
+  if (formData) {
+    formData.append(
+      'payload_json',
+      JSON.stringify({
+        embeds: [embed],
+      })
+    )
+    const response = await axios.post(env.DISCORD_WEBHOOK_URL, formData, {
+      headers: formData.getHeaders(),
+    })
+
+    return response
+  } else {
+    const response = await axios.post(env.DISCORD_WEBHOOK_URL, {
       embeds: [embed],
     })
-  )
 
-  const response = await axios.post(env.DISCORD_WEBHOOK_URL, formData, {
-    headers: formData.getHeaders(),
-  })
-
-  return response
+    return response
+  }
 }

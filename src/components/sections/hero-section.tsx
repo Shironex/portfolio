@@ -95,7 +95,11 @@ const BottomButtons = () => {
             tap: { scale: 0.98 },
           }}
         >
-          <Button size="lg" className="gap-2">
+          <Button
+            size="lg"
+            className="gap-2"
+            data-umami-event="Click Button View My Work"
+          >
             View My Work
             <motion.div
               animate={{ x: [0, 5, 0] }}
@@ -121,7 +125,11 @@ const BottomButtons = () => {
             tap: { scale: 0.98 },
           }}
         >
-          <Button size="lg" variant="outline">
+          <Button
+            size="lg"
+            variant="outline"
+            data-umami-event="Click Button Get in Touch"
+          >
             Get in Touch
           </Button>
         </motion.div>

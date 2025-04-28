@@ -28,8 +28,6 @@ jobs:
 
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-pnpm
-        with:
-          install-dependencies: 'true'
 
       - name: Create .env file with secrets
         run: |
