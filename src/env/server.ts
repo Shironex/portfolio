@@ -17,6 +17,8 @@ export const env = createEnv({
     SMTP_USER: z.string().min(1),
     SMTP_PASSWORD: z.string().min(1),
     DISCORD_WEBHOOK_URL: z.string().min(1),
+    ANALYTIC_URL: z.string().min(1),
+    ANALYTIC_ID: z.string().min(1),
   },
   onValidationError: (issues) => {
     console.error('❌ Invalid environment variables:', issues)

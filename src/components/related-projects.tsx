@@ -15,7 +15,7 @@ export function RelatedProjects({ projects }: RelatedProjectsProps) {
   return (
     <div className="grid gap-8 md:grid-cols-3">
       {projects.map((project, index) => (
-        <Link key={project.id} href={`/projects/${project.slug}`}>
+        <Link key={project.id} href={`/projects/${project.slug}`} data-umami-event={`Click Button View Related Project ${project.title}`}>
           <motion.div
             className="overflow-hidden rounded-xl border border-border bg-card transition-all hover:shadow-lg"
             whileHover={{ y: -5 }}

@@ -104,7 +104,7 @@ const HeroSection = ({ project }: HeroSectionProps) => {
                     tap: { scale: 0.98 },
                   }}
                 >
-                  <Button className="gap-2">
+                  <Button className="gap-2" data-umami-event={`Click Button View Live Demo of Project ${project.title}`}>
                     <ExternalLink className="h-4 w-4" />
                     View Live Demo
                   </Button>
