@@ -10,6 +10,8 @@ import { PageTransition } from '@/components/layout/page-transition'
 import { ScrollAnimation } from '@/components/scroll-animation'
 import HeroSection from '@/components/sections/hero-section'
 
+import { EMAIL_CONTACT } from '@/lib/constants'
+
 import { useMediaQuery } from '@/hooks/use-media-query'
 
 import ContactForm from './_components/contact-form'
@@ -55,9 +57,7 @@ export default function ContactPage() {
                     </motion.div>
                     <div>
                       <h3 className="font-medium">Email</h3>
-                      <p className="text-muted-foreground">
-                        support@shirone.xyz
-                      </p>
+                      <p className="text-muted-foreground">{EMAIL_CONTACT}</p>
                     </div>
                   </motion.div>
 

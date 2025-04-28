@@ -9,7 +9,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://shirone.xyz/">
+  <a href="https://shirone.dev/">
     <img src="./src/app/icon.png" alt="Logo" width="40" height="40" style="border-radius: 50%;">
   </a>
 
@@ -18,7 +18,7 @@
   <p align="center">
     A showcase of my development skills, projects, and contributions in full-stack development.
     <br />
-    <a href="https://shirone.xyz/"><strong>Demo Live »</strong></a>
+    <a href="https://shirone.dev/"><strong>Demo Live »</strong></a>
   </p>
 </div>
 
@@ -49,7 +49,7 @@
 
 ## About The Project
 
-[![Portfolio Screen Shot](public/og-image.png)](https://shirone.xyz/)
+[![Portfolio Screen Shot](public/og-image.png)](https://shirone.dev/)
 
 This portfolio showcases my skills as a full-stack developer, focusing on modern technologies such as Next.js, TypeScript, TailwindCSS, and Framer Motion.
 

@@ -60,7 +60,7 @@ export async function generateMetadata({
       tags: article.tags,
       images: [
         {
-          url: `${process.env.NEXT_PUBLIC_PUBLIC_URL || 'https://shirone.xyz'}${article.image || '/og-articles.jpg'}`,
+          url: `${process.env.NEXT_PUBLIC_PUBLIC_URL || 'https://shirone.dev'}${article.image || '/og-articles.jpg'}`,
           width: 1200,
           height: 630,
           alt: article.title,

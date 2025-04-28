@@ -20,7 +20,7 @@ export function middleware(req: NextRequest) {
     `manifest-src 'self'`,
     `media-src 'self'`,
     `object-src 'none'`,
-    `script-src 'self' 'nonce-${nonce}' 'unsafe-eval' https://logging.shirone.xyz https://challenges.cloudflare.com`,
+    `script-src 'self' 'nonce-${nonce}' 'unsafe-eval' https://logging.shirone.dev https://challenges.cloudflare.com`,
     `style-src 'self' 'unsafe-inline'`,
     `worker-src 'self'`,
   ].join('; ')

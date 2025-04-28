@@ -169,7 +169,7 @@ export const projectsData: Project[] = [
     duration: '11 months',
     outcome:
       'Write-Wiz is a private project for my own use, but I decided to share it with the community in the near future. I hope that it can be helpful for other programmers.',
-    demoUrl: 'https://writewiz.shirone.xyz/',
+    demoUrl: 'https://writewiz.shirone.dev/',
     featured: true,
   },
   {

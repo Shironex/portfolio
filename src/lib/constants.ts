@@ -8,4 +8,5 @@ export const APP_ROUTES = {
 
 export const GITHUB_URL = 'https://github.com/shironex'
 export const AUTHOR_NAME = 'Shironex'
-export const EMAIL_SENDER = '"shironex" <noreply@shirone.xyz>'
+export const EMAIL_SENDER = '"shironex" <noreply@shirone.dev>'
+export const EMAIL_CONTACT = 'support@shirone.dev'

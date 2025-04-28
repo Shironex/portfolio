@@ -4,7 +4,7 @@ const trackEvent = async (key: string) => {
   if (env.NEXT_PUBLIC_SKIP_EVENTS) {
     return
   }
-  await fetch('https://writewiz.shirone.xyz/api/events', {
+  await fetch('https://writewiz.shirone.dev/api/events', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
