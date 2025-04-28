@@ -127,7 +127,12 @@ export function Navbar() {
 
           <div className="flex items-center gap-4">
             <motion.div variants={itemVariants}>
-              <Link href={GITHUB_URL} target="_blank" rel="noopener noreferrer" data-umami-event="Click Button View GitHub Profile">
+              <Link
+                href={GITHUB_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-umami-event="Click Button View GitHub Profile"
+              >
                 <motion.div
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
@@ -144,7 +149,10 @@ export function Navbar() {
               </Link>
             </motion.div>
             <motion.div variants={itemVariants}>
-              <Link href="/contact" data-umami-event="Click Button View Contact Page">
+              <Link
+                href="/contact"
+                data-umami-event="Click Button View Contact Page"
+              >
                 <motion.div
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
@@ -160,7 +168,10 @@ export function Navbar() {
                 </motion.div>
               </Link>
             </motion.div>
-            <motion.div variants={itemVariants} data-umami-event="Click Button Toggle Theme">
+            <motion.div
+              variants={itemVariants}
+              data-umami-event="Click Button Toggle Theme"
+            >
               <ThemeToggle />
             </motion.div>
           </div>

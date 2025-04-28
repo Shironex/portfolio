@@ -47,7 +47,11 @@ const FeaturedProjectsSection = () => {
                 tap: { scale: 0.98 },
               }}
             >
-              <Button variant="outline" className="gap-2" data-umami-event="Click Button View All Projects">
+              <Button
+                variant="outline"
+                className="gap-2"
+                data-umami-event="Click Button View All Projects"
+              >
                 View All Projects
                 <motion.div
                   animate={{ x: [0, 5, 0] }}

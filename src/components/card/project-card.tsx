@@ -74,7 +74,12 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
                 tap: { scale: 0.98 },
               }}
             >
-              <Button variant="default" size="sm" className="gap-2" data-umami-event={`Click Button View Details of Project ${project.title}`}>
+              <Button
+                variant="default"
+                size="sm"
+                className="gap-2"
+                data-umami-event={`Click Button View Details of Project ${project.title}`}
+              >
                 View Details
               </Button>
             </motion.div>
@@ -93,7 +98,12 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
                   tap: { scale: 0.98 },
                 }}
               >
-                <Button variant="outline" size="sm" className="gap-2" data-umami-event={`Click Button View Live Demo of Project ${project.title}`}>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2"
+                  data-umami-event={`Click Button View Live Demo of Project ${project.title}`}
+                >
                   <ExternalLink className="h-4 w-4" />
                   Live Demo
                 </Button>
@@ -114,7 +124,12 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
                   tap: { scale: 0.98 },
                 }}
               >
-                <Button variant="ghost" size="sm" className="gap-2" data-umami-event={`Click Button View Code of Project ${project.title}`}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-2"
+                  data-umami-event={`Click Button View Code of Project ${project.title}`}
+                >
                   <Github className="h-4 w-4" />
                   Code
                 </Button>
