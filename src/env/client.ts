@@ -8,6 +8,7 @@ export const env = createEnv({
     NEXT_PUBLIC_SKIP_EVENTS: z.string().optional(),
     NEXT_PUBLIC_WRITEWIZ_PROJECT_ID: z.string().optional(),
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().min(1),
+    NEXT_PUBLIC_AVAILABLE_FOR: z.string().optional(),
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_PUBLIC_URL: process.env.NEXT_PUBLIC_PUBLIC_URL,
@@ -15,6 +16,7 @@ export const env = createEnv({
     NEXT_PUBLIC_WRITEWIZ_PROJECT_ID:
       process.env.NEXT_PUBLIC_WRITEWIZ_PROJECT_ID,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
+    NEXT_PUBLIC_AVAILABLE_FOR: process.env.NEXT_PUBLIC_AVAILABLE_FOR,
   },
   onValidationError: (issues) => {
     console.error('❌ Invalid environment variables:', issues)

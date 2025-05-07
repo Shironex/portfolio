@@ -13,7 +13,7 @@ const HomeClientPage = () => {
         <HeroSection
           title="Hello there! I'm Kacper"
           description="I'm a full-stack developer that loves building new things and web apps that can impact peoples around me."
-          showAvailableForNewProjects={false}
+          showAvailableForNewProjects={true}
           showBottomButtons={true}
         />
         <FeaturedProjectsSection />

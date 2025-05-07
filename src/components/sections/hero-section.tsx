@@ -10,6 +10,8 @@ import { APP_ROUTES } from '@/lib/constants'
 import { fadeUp } from '@/lib/utils/animations'
 import { staggerContainer } from '@/lib/utils/animations'
 
+import { env } from '@/env/client'
+
 import { AnimatedGradient } from '../animated-gradient'
 import { GradientHeading } from '../gradient-heading'
 import { Button } from '../ui/button'
@@ -67,7 +69,11 @@ const AvailableForNewProjects = () => {
       variants={fadeUp}
     >
       <motion.span
-        className={`mr-2 inline-block h-2 w-2 rounded-full ${'bg-red-500'}`}
+        className={`mr-2 inline-block h-2 w-2 rounded-full ${
+          env.NEXT_PUBLIC_AVAILABLE_FOR === 'true'
+            ? 'bg-green-500'
+            : 'bg-red-500'
+        }`}
         animate={{
           scale: [1, 1.2, 1],
           opacity: [1, 0.7, 1],
@@ -78,7 +84,9 @@ const AvailableForNewProjects = () => {
           ease: 'easeInOut',
         }}
       />
-      Not available for new projects
+      {env.NEXT_PUBLIC_AVAILABLE_FOR === 'true'
+        ? 'Available for new projects'
+        : 'Not available for new projects'}
     </motion.div>
   )
 }
