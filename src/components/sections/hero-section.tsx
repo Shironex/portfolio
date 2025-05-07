@@ -17,7 +17,7 @@ import { Button } from '../ui/button'
 interface HeroSectionProps {
   title: string
   description: string
-  showAvailableForNewProjects?: boolean
+  showAvailableForNewProjects: boolean
   showBottomButtons?: boolean
 }
 
@@ -37,7 +37,9 @@ const HeroSection = ({
           initial="hidden"
           animate="show"
         >
-          {showAvailableForNewProjects && <AvailableForNewProjects />}
+          <AvailableForNewProjects
+            showAvailableForNewProjects={showAvailableForNewProjects}
+          />
 
           <GradientHeading
             className="mb-6 text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl"
@@ -60,14 +62,20 @@ const HeroSection = ({
   )
 }
 
-const AvailableForNewProjects = () => {
+const AvailableForNewProjects = ({
+  showAvailableForNewProjects,
+}: {
+  showAvailableForNewProjects: boolean
+}) => {
   return (
     <motion.div
       className="mb-6 inline-flex items-center rounded-full border border-border bg-secondary px-3 py-1 text-sm"
       variants={fadeUp}
     >
       <motion.span
-        className="mr-2 inline-block h-2 w-2 rounded-full bg-green-500"
+        className={`mr-2 inline-block h-2 w-2 rounded-full ${
+          showAvailableForNewProjects ? 'bg-green-500' : 'bg-red-500'
+        }`}
         animate={{
           scale: [1, 1.2, 1],
           opacity: [1, 0.7, 1],
@@ -78,7 +86,9 @@ const AvailableForNewProjects = () => {
           ease: 'easeInOut',
         }}
       />
-      Available for new projects
+      {showAvailableForNewProjects
+        ? 'Available for new projects'
+        : 'Not available for new projects'}
     </motion.div>
   )
 }
