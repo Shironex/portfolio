@@ -1,3 +1,10 @@
+# [1.15.0](https://github.com/Shironex/portfolio/compare/v1.14.0...v1.15.0) (2025-05-29)
+
+
+### Features
+
+* add debug script for semantic-release troubleshooting ([ca1ebb5](https://github.com/Shironex/portfolio/commit/ca1ebb52ca8fbb3e89797746f4b255650065ae1a))
+
 # [1.14.0](https://github.com/Shironex/portfolio/compare/v1.13.0...v1.14.0) (2025-05-29)
 
 
