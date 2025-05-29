@@ -8,6 +8,27 @@
 * broken pnpm version in action file ([3a7553e](https://github.com/Shironex/portfolio/commit/3a7553e05e223b8b2936815d58a912f421751101))
 * build ([b2d7074](https://github.com/Shironex/portfolio/commit/b2d70743481ac704647566a7ff4d67b42508943c))
 * **ci:** failing due to validation of discord webhook url ([0998bd1](https://github.com/Shironex/portfolio/commit/0998bd156052260ffc4ceddb4ab81573000124e8))
+* **ci:** improve semantic-release workflow and fix duplicate tag issue ([36c4c5c](https://github.com/Shironex/portfolio/commit/36c4c5cb7181710f29206a8f4ec2e324662943ba))
+* to last commit before release ([0a30b74](https://github.com/Shironex/portfolio/commit/0a30b74439efe1321b11bdf100233afeb3299cf8))
+* **ci:** update ci node and pnpm version ([5883b4b](https://github.com/Shironex/portfolio/commit/5883b4b8f6d34e9d54633cee774b46446da1656a))
+
+
+### Features
+
+* bring back umami analytics ([b75f99c](https://github.com/Shironex/portfolio/commit/b75f99c6891c0670a1a1625653fea6674caf7241))
+* change status of available for new projects in hero section ([eff882b](https://github.com/Shironex/portfolio/commit/eff882baca7168b26899c152e739b19169612f99))
+* docker file deployment ([4a82013](https://github.com/Shironex/portfolio/commit/4a82013961772c7024f46774013d90320cdd6afe))
+
+# [1.14.0](https://github.com/Shironex/portfolio/compare/v1.13.0...v1.14.0) (2025-05-29)
+
+
+### Bug Fixes
+
+* **security:** autofix 3rd party Github Actions should be pinned ([4a0b919](https://github.com/Shironex/portfolio/commit/4a0b919578bad27d90d036869addab9d5cc93434))
+* broken pnpm lock file ([80532fe](https://github.com/Shironex/portfolio/commit/80532feaabdddc271f3f7654fce376fc3a290b65))
+* broken pnpm version in action file ([3a7553e](https://github.com/Shironex/portfolio/commit/3a7553e05e223b8b2936815d58a912f421751101))
+* build ([b2d7074](https://github.com/Shironex/portfolio/commit/b2d70743481ac704647566a7ff4d67b42508943c))
+* **ci:** failing due to validation of discord webhook url ([0998bd1](https://github.com/Shironex/portfolio/commit/0998bd156052260ffc4ceddb4ab81573000124e8))
 * to last commit before release ([0a30b74](https://github.com/Shironex/portfolio/commit/0a30b74439efe1321b11bdf100233afeb3299cf8))
 * **ci:** update ci node and pnpm version ([5883b4b](https://github.com/Shironex/portfolio/commit/5883b4b8f6d34e9d54633cee774b46446da1656a))
 
