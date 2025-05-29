@@ -119,6 +119,7 @@
     "@next/eslint-plugin-next": "^15.3",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.3",
     "@trivago/prettier-plugin-sort-imports": "5.2.2",
     "@types/node": "^22.15.24",
     "@types/nodemailer": "^6.4.17",
