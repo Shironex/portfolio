@@ -50,7 +50,6 @@ RUN apk add --no-cache \
     ttf-freefont \
     dumb-init
 
-# Puppeteer env config
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
@@ -64,6 +63,8 @@ COPY --chown=nextjs:nodejs --from=builder /app/package.json ./standalone/package
 COPY --chown=nextjs:nodejs --from=builder /app/node_modules ./standalone/node_modules
 
 WORKDIR /home/app/standalone
+
+USER nextjs
 
 EXPOSE 3000
 
