@@ -62,7 +62,7 @@
     "@radix-ui/react-tooltip": "^1.2.7",
     "@react-email/components": "^0.0.41",
     "@react-email/render": "^1.1.2",
-    "@sentry/nextjs": "^9.23.0",
+    "@sentry/nextjs": "^9.38.0",
     "@t3-oss/env-nextjs": "^0.13.6",
     "autoprefixer": "^10.4.21",
     "axios": "^1.9.0",
