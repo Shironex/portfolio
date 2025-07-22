@@ -131,7 +131,7 @@ export const pageVariants: Variants = {
 }
 
 // Card hover animation
-export const cardHover = {
+export const cardHover: Variants = {
   rest: {
     scale: 1,
     y: 0,

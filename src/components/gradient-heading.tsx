@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react'
 import type { JSX } from 'react'
 
-import { motion } from 'motion/react'
+import { type Variants, motion } from 'motion/react'
 
 interface GradientHeadingProps {
   children: ReactNode
@@ -22,7 +22,7 @@ export function GradientHeading({
     'bg-gradient-to-r from-foreground via-primary to-purple-500 bg-clip-text text-transparent'
   const combinedClasses = `${baseClasses} ${className}`
 
-  const variants = {
+  const variants: Variants = {
     hidden: {
       opacity: 0,
       y: 20,

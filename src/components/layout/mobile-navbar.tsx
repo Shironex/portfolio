@@ -2,7 +2,7 @@ import Link from 'next/link'
 import React from 'react'
 
 import { Github } from 'lucide-react'
-import { Variants, motion } from 'motion/react'
+import { type Variants, motion } from 'motion/react'
 import { AnimatePresence } from 'motion/react'
 
 import { GITHUB_URL } from '@/lib/constants'
@@ -26,7 +26,7 @@ const MobileNavBar = ({
   closeMenu,
   navItems,
 }: MobileNavBarProps) => {
-  const mobileMenuVariants = {
+  const mobileMenuVariants: Variants = {
     hidden: { opacity: 0, y: -20, height: 0 },
     visible: {
       opacity: 1,

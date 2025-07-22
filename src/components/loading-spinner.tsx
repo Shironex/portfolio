@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'motion/react'
+import { type Transition, motion } from 'motion/react'
 
 interface LoadingSpinnerProps {
   size?: number
@@ -19,7 +19,7 @@ export function LoadingSpinner({
   text,
   textClass = 'text-sm text-muted-foreground mt-2',
 }: LoadingSpinnerProps) {
-  const spinTransition = {
+  const spinTransition: Transition = {
     repeat: Number.POSITIVE_INFINITY,
     ease: 'linear',
     duration: 1.5,
