@@ -4,7 +4,7 @@ import { StaticImageData } from 'next/image'
 import React, { useEffect, useState } from 'react'
 
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, type Variants, motion } from 'motion/react'
 
 import { Button } from '@/components/ui/button'
 
@@ -88,7 +88,7 @@ export const ImagesSlider: React.FC<ImagesSliderProps> = ({
     }
   }, [autoplay])
 
-  const slideVariants = {
+  const slideVariants: Variants = {
     initial: {
       scale: 0.8,
       opacity: 0,
