@@ -4,7 +4,6 @@ import * as Sentry from '@sentry/nextjs'
 
 import { PublicError } from '@/lib/errors'
 import { sendMail } from '@/lib/mail'
-import { renderContactFormEmail } from '@/lib/mail/render'
 import ContactFormEmail from '@/lib/mail/templates/contact-form'
 import { discordQueue } from '@/lib/queue'
 import { rateLimitBot, rateLimitByKey } from '@/lib/ratelimit'
@@ -19,7 +18,7 @@ export const sendEmailAction = unauthenticatedAction
   .metadata({
     actionName: 'send Email Action',
   })
-  .schema(contactFormSchema)
+  .inputSchema(contactFormSchema)
   .action(async ({ parsedInput }) => {
     //? 5 requests per 1 hour
     const result = await rateLimitByKey(
@@ -54,17 +53,7 @@ export const sendEmailAction = unauthenticatedAction
       throw new PublicError('Robot detected')
     }
 
-    let body: string | React.ReactNode
-
-    if (env.RESEND_ENABLED) {
-      body = ContactFormEmail({ data: parsedInput })
-    } else {
-      body = await renderContactFormEmail({
-        name: parsedInput.name,
-        email: parsedInput.email,
-        message: parsedInput.message,
-      })
-    }
+    const body = ContactFormEmail({ data: parsedInput })
 
     try {
       await sendMail({
