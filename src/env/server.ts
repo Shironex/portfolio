@@ -5,7 +5,12 @@ import { z } from 'zod'
 export const env = createEnv({
   server: {
     NODE_ENV: z.enum(['development', 'production', 'test']),
-    CI: z.boolean().optional(),
+    CI: z
+      .preprocess((val) => {
+        if (typeof val === 'string') return val === 'true'
+        return val
+      }, z.boolean())
+      .optional(),
     RESEND_API_KEY: z.string().min(1),
     RESEND_MAIL_TO: z.string().min(1),
     TURNSTILE_SECRET_KEY: z.string().min(1),
