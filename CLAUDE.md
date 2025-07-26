@@ -77,3 +77,119 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - File/folder naming uses kebab-case (enforced by ESLint)
 - No process.env access allowed (use typed env imports)
 - Sentry integration for production error tracking
+
+## Sentry Integration
+
+### Configuration Files
+
+- **Client-side**: `instrumentation-client.ts`
+- **Server-side**: `sentry.server.config.ts`
+- **Edge runtime**: `sentry.edge.config.ts`
+
+Import Sentry in other files using: `import * as Sentry from "@sentry/nextjs"`
+
+### Exception Handling
+
+Use `Sentry.captureException(error)` in try-catch blocks to capture and log errors:
+
+```javascript
+try {
+  // Your code here
+} catch (error) {
+  Sentry.captureException(error)
+}
+```
+
+### Performance Monitoring with Spans
+
+Create spans for meaningful actions like API calls, button clicks, and function executions:
+
+#### Component Actions Example
+
+```javascript
+function TestComponent() {
+  const handleTestButtonClick = () => {
+    Sentry.startSpan(
+      {
+        op: 'ui.click',
+        name: 'Test Button Click',
+      },
+      (span) => {
+        span.setAttribute('config', 'some config')
+        span.setAttribute('metric', 'some metric')
+        doSomething()
+      }
+    )
+  }
+
+  return (
+    <button type="button" onClick={handleTestButtonClick}>
+      Test Sentry
+    </button>
+  )
+}
+```
+
+#### API Calls Example
+
+```javascript
+async function fetchUserData(userId) {
+  return Sentry.startSpan(
+    {
+      op: 'http.client',
+      name: `GET /api/users/${userId}`,
+    },
+    async () => {
+      const response = await fetch(`/api/users/${userId}`)
+      const data = await response.json()
+      return data
+    }
+  )
+}
+```
+
+### Logging
+
+Enable logging in Sentry configuration:
+
+```javascript
+Sentry.init({
+  dsn: 'your-dsn-here',
+  _experiments: {
+    enableLogs: true,
+  },
+  integrations: [
+    // Optionally send console logs to Sentry
+    Sentry.consoleLoggingIntegration({ levels: ['log', 'error', 'warn'] }),
+  ],
+})
+```
+
+Use structured logging with the Sentry logger:
+
+```javascript
+const { logger } = Sentry
+
+logger.trace('Starting database connection', { database: 'users' })
+logger.debug(logger.fmt`Cache miss for user: ${userId}`)
+logger.info('Updated profile', { profileId: 345 })
+logger.warn('Rate limit reached for endpoint', {
+  endpoint: '/api/results/',
+  isEnterprise: false,
+})
+logger.error('Failed to process payment', {
+  orderId: 'order_123',
+  amount: 99.99,
+})
+logger.fatal('Database connection pool exhausted', {
+  database: 'users',
+  activeConnections: 100,
+})
+```
+
+### Best Practices
+
+- Use meaningful `name` and `op` properties for spans
+- Add relevant attributes to spans for better context
+- Use `logger.fmt` template literals for structured logging with variables
+- Child spans can be nested within parent spans for detailed tracing
