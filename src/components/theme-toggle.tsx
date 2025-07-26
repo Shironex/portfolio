@@ -26,7 +26,7 @@ export function ThemeToggle() {
 
   const handleThemeToggle = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark'
-    
+
     Sentry.startSpan(
       {
         op: 'ui.click',

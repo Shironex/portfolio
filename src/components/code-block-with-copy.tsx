@@ -54,7 +54,10 @@ export function CodeBlockWithCopy({
           } catch (err) {
             console.error('Failed to copy code:', err)
             span.setAttribute('copy.success', false)
-            span.setAttribute('copy.error', err instanceof Error ? err.message : 'Unknown error')
+            span.setAttribute(
+              'copy.error',
+              err instanceof Error ? err.message : 'Unknown error'
+            )
           }
 
           document.body.removeChild(textArea)
@@ -68,7 +71,10 @@ export function CodeBlockWithCopy({
           } catch (err) {
             console.error('Failed to copy code:', err)
             span.setAttribute('copy.success', false)
-            span.setAttribute('copy.error', err instanceof Error ? err.message : 'Unknown error')
+            span.setAttribute(
+              'copy.error',
+              err instanceof Error ? err.message : 'Unknown error'
+            )
           }
         }
 
