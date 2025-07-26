@@ -1,3 +1,15 @@
+# [1.16.0](https://github.com/Shironex/portfolio/compare/v1.15.0...v1.16.0) (2025-07-26)
+
+
+### Bug Fixes
+
+* enhance CI environment variable handling in server configuration ([e7214fa](https://github.com/Shironex/portfolio/commit/e7214fa01a22a16828e23e47c0c78b0fb282f21b))
+
+
+### Features
+
+* add comprehensive Sentry error tracking and performance monitoring ([37ca579](https://github.com/Shironex/portfolio/commit/37ca5798671eb3faf7c9e9b69414dbceb27583a4))
+
 # [1.15.0](https://github.com/Shironex/portfolio/compare/v1.14.0...v1.15.0) (2025-05-29)
 
 
