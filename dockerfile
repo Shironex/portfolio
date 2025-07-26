@@ -68,5 +68,4 @@ USER nextjs
 
 EXPOSE 3000
 
-ENTRYPOINT ["dumb-init", "--"]
 CMD ["node", "server.js"]
