@@ -5,12 +5,15 @@ import { z } from 'zod'
 export const env = createEnv({
   server: {
     NODE_ENV: z.enum(['development', 'production', 'test']),
+    CI: z.boolean().optional(),
     RESEND_API_KEY: z.string().min(1),
     RESEND_MAIL_TO: z.string().min(1),
     TURNSTILE_SECRET_KEY: z.string().min(1),
     REDIS_HOST: z.string().min(1),
     SENTRY_URL: z.string().min(1).optional(),
     SENTRY_DSN: z.string().min(1).optional(),
+    SENTRY_ORG: z.string().min(1).optional(),
+    SENTRY_PROJECT: z.string().min(1).optional(),
     DISCORD_WEBHOOK_URL: z.string().min(1),
     ANALYTIC_URL: z.string().min(1),
     ANALYTIC_ID: z.string().min(1),

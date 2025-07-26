@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
+import * as Sentry from '@sentry/nextjs'
 import { Moon, Sun } from 'lucide-react'
 import { useTheme } from 'next-themes'
 
@@ -23,11 +24,29 @@ export function ThemeToggle() {
     )
   }
 
+  const handleThemeToggle = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark'
+    
+    Sentry.startSpan(
+      {
+        op: 'ui.click',
+        name: 'Theme Toggle',
+      },
+      (span) => {
+        span.setAttributes({
+          'theme.from': theme || 'unknown',
+          'theme.to': newTheme,
+        })
+        setTheme(newTheme)
+      }
+    )
+  }
+
   return (
     <Button
       variant="ghost"
       size="icon"
-      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+      onClick={handleThemeToggle}
       aria-label="Toggle theme"
       className="hover:text-primary"
     >

@@ -9,6 +9,7 @@ import { Variants, motion } from 'motion/react'
 
 import { Button } from '@/components/ui/button'
 
+import { SentryLink } from '@/components/sentry-link'
 import { ThemeToggle } from '@/components/theme-toggle'
 
 import { GITHUB_URL, NAV_ITEMS } from '@/lib/constants'
@@ -79,10 +80,11 @@ export function Navbar() {
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
         <motion.div variants={itemVariants}>
-          <Link
+          <SentryLink
             href="/"
             className="flex items-center gap-2 text-xl font-bold"
             onClick={closeMenu}
+            eventName="Navigate to Home (Logo)"
           >
             <motion.span
               className="bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent"
@@ -91,7 +93,7 @@ export function Navbar() {
             >
               Shirone
             </motion.span>
-          </Link>
+          </SentryLink>
         </motion.div>
 
         {/* Desktop Navigation */}
@@ -99,7 +101,7 @@ export function Navbar() {
           <ul className="flex items-center gap-6">
             {NAV_ITEMS.map((item) => (
               <motion.li key={item.name} variants={itemVariants}>
-                <Link
+                <SentryLink
                   href={item.path}
                   className={`relative px-1 py-2 text-sm font-medium transition-colors hover:text-primary ${
                     pathname === item.path
@@ -107,6 +109,7 @@ export function Navbar() {
                       : 'text-muted-foreground'
                   }`}
                   data-umami-event={`Click Button Navigate to ${item.name}`}
+                  eventName={`Navigate to ${item.name}`}
                 >
                   {item.name}
                   {pathname === item.path && (
@@ -120,7 +123,7 @@ export function Navbar() {
                       }}
                     />
                   )}
-                </Link>
+                </SentryLink>
               </motion.li>
             ))}
           </ul>

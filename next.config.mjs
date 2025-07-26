@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable n/no-process-env */
 import createMDX from '@next/mdx'
 import { withSentryConfig } from '@sentry/nextjs'
 import { createJiti } from 'jiti'
@@ -49,9 +51,9 @@ export default withSentryConfig(withMDX(nextConfig), {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
-  org: 'root',
-  project: 'portfolio',
-  sentryUrl: process.env.SENTRY_URL || '',
+  org: process.env.SENTRY_ORG || 'tabitabi',
+  project: process.env.SENTRY_PROJECT || 'portfolio',
+  sentryUrl: process.env.SENTRY_URL || 'https://sentry.tabitabi.dev',
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
@@ -75,5 +77,5 @@ export default withSentryConfig(withMDX(nextConfig), {
   // See the following for more information:
   // https://docs.sentry.io/product/crons/
   // https://vercel.com/docs/cron-jobs
-  automaticVercelMonitors: true,
+  automaticVercelMonitors: false,
 })

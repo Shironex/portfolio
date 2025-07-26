@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react'
 
+import * as Sentry from '@sentry/nextjs'
 import { Check, Copy } from 'lucide-react'
 import { motion } from 'motion/react'
 
@@ -24,35 +25,57 @@ export function CodeBlockWithCopy({
   const codeRef = useRef<HTMLPreElement>(null)
 
   const copyToClipboard = async () => {
-    if (!navigator.clipboard) {
-      // Fallback for older browsers
-      const textArea = document.createElement('textarea')
-      textArea.value = code
-      textArea.style.position = 'fixed'
-      document.body.appendChild(textArea)
-      textArea.focus()
-      textArea.select()
+    Sentry.startSpan(
+      {
+        op: 'ui.click',
+        name: 'Copy Code Button',
+      },
+      async (span) => {
+        span.setAttributes({
+          'code.language': language,
+          'code.length': code.length,
+          'clipboard.api': !!navigator.clipboard,
+        })
 
-      try {
-        document.execCommand('copy')
-        setCopied(true)
-      } catch (err) {
-        console.error('Failed to copy code:', err)
+        if (!navigator.clipboard) {
+          // Fallback for older browsers
+          const textArea = document.createElement('textarea')
+          textArea.value = code
+          textArea.style.position = 'fixed'
+          document.body.appendChild(textArea)
+          textArea.focus()
+          textArea.select()
+
+          try {
+            document.execCommand('copy')
+            setCopied(true)
+            span.setAttribute('copy.success', true)
+            span.setAttribute('copy.method', 'legacy')
+          } catch (err) {
+            console.error('Failed to copy code:', err)
+            span.setAttribute('copy.success', false)
+            span.setAttribute('copy.error', err instanceof Error ? err.message : 'Unknown error')
+          }
+
+          document.body.removeChild(textArea)
+        } else {
+          // Modern browsers
+          try {
+            await navigator.clipboard.writeText(code)
+            setCopied(true)
+            span.setAttribute('copy.success', true)
+            span.setAttribute('copy.method', 'modern')
+          } catch (err) {
+            console.error('Failed to copy code:', err)
+            span.setAttribute('copy.success', false)
+            span.setAttribute('copy.error', err instanceof Error ? err.message : 'Unknown error')
+          }
+        }
+
+        // Reset copied state after 2 seconds
+        setTimeout(() => setCopied(false), 2000)
       }
-
-      document.body.removeChild(textArea)
-    } else {
-      // Modern browsers
-      try {
-        await navigator.clipboard.writeText(code)
-        setCopied(true)
-      } catch (err) {
-        console.error('Failed to copy code:', err)
-      }
-    }
-
-    // Reset copied state after 2 seconds
-    setTimeout(() => setCopied(false), 2000)
+    )
   }
 
   return (
