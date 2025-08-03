@@ -200,6 +200,11 @@ export const projectsData: Project[] = [
           'The about lessons section with more details about the lessons',
       },
       {
+        src: '/projects/matmajka/lessons.png',
+        alt: 'Matmajka Lessons',
+        caption: 'The lessons section with the lessons that Maja offers',
+      },
+      {
         src: '/projects/matmajka/opinions.png',
         alt: 'Matmajka Opinions',
         caption: 'The opinions section with the opinions of the students',
