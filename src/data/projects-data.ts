@@ -224,23 +224,7 @@ export const projectsData: Project[] = [
     ],
     techDetails: {
       stack: ['Next.js', 'Tailwind CSS', 'Docker', 'Resend', 'Framer Motion'],
-      challenges: [
-        {
-          challenge:
-            'Create a project in short amount of time also after 12h of working at the vacation',
-          solution:
-            'Used Tailwind CSS for the simple design and Framer Motion for the animations',
-        },
-        {
-          challenge: 'Secure form with Cloudflare Turnstile',
-          solution:
-            'Used Cloudflare Turnstile for secure form validation and protection against spam and abuse',
-        },
-        {
-          challenge: 'Integrating with external services like Resend',
-          solution: 'Used Resend for sending emails to the users and the team',
-        },
-      ],
+      challenges: [],
     },
     completedDate: 'November 2024',
     duration: '1 month',
