@@ -1,3 +1,10 @@
+# [1.17.0](https://github.com/Shironex/portfolio/compare/v1.16.0...v1.17.0) (2025-08-03)
+
+
+### Features
+
+* update project images and add lessons section ([785ef0c](https://github.com/Shironex/portfolio/commit/785ef0c6aff014dc18e1561e2a6dd478df919e22))
+
 # [1.16.0](https://github.com/Shironex/portfolio/compare/v1.15.0...v1.16.0) (2025-07-26)
 
 
