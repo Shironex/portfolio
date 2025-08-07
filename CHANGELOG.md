@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/Shironex/portfolio/compare/v1.17.0...v1.18.0) (2025-08-07)
+
+
+### Features
+
+* add perfect clean car&house project to portfolio ([3614a8e](https://github.com/Shironex/portfolio/commit/3614a8e5e61c5da2f529c16548a251be65885479))
+
 # [1.17.0](https://github.com/Shironex/portfolio/compare/v1.16.0...v1.17.0) (2025-08-03)
 
 
