@@ -1,3 +1,10 @@
+# [1.19.0](https://github.com/Shironex/portfolio/compare/v1.18.0...v1.19.0) (2025-08-07)
+
+
+### Features
+
+* add next.js saas template project data and images ([56843a9](https://github.com/Shironex/portfolio/commit/56843a9f3a1c6f33af2418ea8a59aa10b2640d36))
+
 # [1.18.0](https://github.com/Shironex/portfolio/compare/v1.17.0...v1.18.0) (2025-08-07)
 
 
