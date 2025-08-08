@@ -41,41 +41,41 @@ const RecentCommits: React.FC<RecentCommitsProps> = ({
   }
 
   return (
-    <div className="w-full rounded-lg bg-card p-6">
+    <div className="w-full rounded-lg bg-card p-3 sm:p-6">
       <div className="mb-4">
-        <h3 className="text-lg font-semibold text-foreground">
+        <h3 className="text-base sm:text-lg font-semibold text-foreground">
           Recent Commits
         </h3>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs sm:text-sm text-muted-foreground">
           Latest commits across all repositories
         </p>
       </div>
       
-      <div className="space-y-3">
+      <div className="space-y-2 sm:space-y-3">
         {commits.map((commit) => (
           <div
             key={commit.id}
-            className="group relative rounded-md border border-border/50 bg-background/50 p-4 transition-all hover:border-primary/50 hover:bg-secondary/30"
+            className="group relative rounded-md border border-border/50 bg-background/50 p-3 sm:p-4 transition-all hover:border-primary/50 hover:bg-secondary/30"
           >
-            <div className="flex items-start justify-between gap-4">
-              <div className="flex-1 space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs text-primary">
+            <div className="flex items-start justify-between gap-2 sm:gap-4">
+              <div className="flex-1 min-w-0 space-y-1 sm:space-y-2">
+                <div className="flex flex-wrap items-center gap-1 sm:gap-2">
+                  <span className="font-mono text-xs text-primary truncate">
                     {commit.repository}
                   </span>
-                  <span className="text-muted-foreground">/</span>
+                  <span className="text-muted-foreground hidden sm:inline">/</span>
                   <Badge variant="outline" className="text-xs">
                     {commit.branch}
                   </Badge>
                 </div>
                 
-                <p className="text-sm text-foreground">
+                <p className="text-xs sm:text-sm text-foreground line-clamp-2">
                   {commit.message}
                 </p>
                 
-                <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs text-muted-foreground">
                   <span>{formatDate(commit.date)}</span>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 sm:gap-2">
                     <span className="text-green-600">+{commit.additions}</span>
                     <span className="text-red-600">-{commit.deletions}</span>
                   </div>
@@ -87,12 +87,12 @@ const RecentCommits: React.FC<RecentCommitsProps> = ({
                   href={commit.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="opacity-0 transition-opacity group-hover:opacity-100"
+                  className="opacity-0 transition-opacity group-hover:opacity-100 flex-shrink-0"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
+                    width="14"
+                    height="14"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"

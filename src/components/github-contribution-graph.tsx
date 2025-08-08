@@ -36,22 +36,19 @@ const ContributionGraph: React.FC<ContributionGraphProps> = ({
     weeks.push(contributions.slice(i, i + 7))
   }
 
-  const currentMonth = new Date().getMonth()
-  const displayMonths = []
-  for (let i = 0; i < 12; i++) {
-    displayMonths.push(months[(currentMonth - 11 + i + 12) % 12])
-  }
+  // Display months from Jan to Dec in order
+  const displayMonths = months
 
   return (
-    <div className="w-full rounded-lg bg-card p-6">
+    <div className="w-full rounded-lg bg-card p-3 sm:p-6">
       <div className="mb-4">
-        <h3 className="text-lg font-semibold text-foreground">
+        <h3 className="text-base sm:text-lg font-semibold text-foreground">
           {totalContributions.toLocaleString()} contributions in the last year
         </h3>
       </div>
       
-      <div className="overflow-x-auto">
-        <div className="min-w-[700px]">
+      <div className="overflow-x-auto -mx-3 px-3 sm:mx-0 sm:px-0">
+        <div className="min-w-[600px] sm:min-w-[700px]">
           <div className="mb-2 flex justify-between px-8">
             {displayMonths.map((month) => (
               <span key={month} className="text-xs text-muted-foreground">
@@ -69,13 +66,13 @@ const ContributionGraph: React.FC<ContributionGraphProps> = ({
               ))}
             </div>
             
-            <div className="flex flex-1 gap-[3px]">
+            <div className="flex flex-1 gap-[2px] sm:gap-[3px]">
               {weeks.map((week, weekIndex) => (
-                <div key={weekIndex} className="flex flex-col gap-[3px]">
+                <div key={weekIndex} className="flex flex-col gap-[2px] sm:gap-[3px]">
                   {week.map((day, dayIndex) => (
                     <div
                       key={`${weekIndex}-${dayIndex}`}
-                      className={`h-3 w-3 rounded-sm ${getContributionColor(day.level)} transition-all hover:ring-2 hover:ring-primary/50`}
+                      className={`h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-sm ${getContributionColor(day.level)} transition-all hover:ring-2 hover:ring-primary/50`}
                       title={`${day.count} contributions on ${day.date}`}
                     />
                   ))}
@@ -90,7 +87,7 @@ const ContributionGraph: React.FC<ContributionGraphProps> = ({
               {[0, 1, 2, 3, 4].map((level) => (
                 <div
                   key={level}
-                  className={`h-3 w-3 rounded-sm ${getContributionColor(level)}`}
+                  className={`h-2.5 w-2.5 sm:h-3 sm:w-3 rounded-sm ${getContributionColor(level)}`}
                 />
               ))}
             </div>
