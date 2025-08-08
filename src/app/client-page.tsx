@@ -3,6 +3,7 @@
 import { PageTransition } from '@/components/layout/page-transition'
 import CTASection from '@/components/sections/cta-section'
 import FeaturedProjectsSection from '@/components/sections/featured-projects-section'
+import GitHubActivitySection from '@/components/sections/github-activity-section'
 import HeroSection from '@/components/sections/hero-section'
 import SkillsSection from '@/components/sections/skills-section'
 
@@ -17,6 +18,7 @@ const HomeClientPage = () => {
           showBottomButtons={true}
         />
         <FeaturedProjectsSection />
+        <GitHubActivitySection />
         <SkillsSection />
         <CTASection
           title="Let's Work Together"
