@@ -112,7 +112,7 @@
     "postcss": "^8.5.6",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.6.14",
-    "react-email": "^4.2.5",
+    "react-email": "^4.2.8",
     "semantic-release": "^24.2.7",
     "standard-version": "^9.5.0",
     "tailwindcss": "^3.4.17",
