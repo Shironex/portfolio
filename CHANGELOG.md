@@ -1,3 +1,10 @@
+## [1.20.2](https://github.com/Shironex/portfolio/compare/v1.20.1...v1.20.2) (2025-08-10)
+
+
+### Bug Fixes
+
+* resolve Puppeteer race conditions and connection stability issues ([cb43fdc](https://github.com/Shironex/portfolio/commit/cb43fdcfd453a46648c542fdda4aff5be90e4785))
+
 ## [1.20.1](https://github.com/Shironex/portfolio/compare/v1.20.0...v1.20.1) (2025-08-10)
 
 
