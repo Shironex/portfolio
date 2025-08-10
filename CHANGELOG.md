@@ -1,3 +1,10 @@
+## [1.20.1](https://github.com/Shironex/portfolio/compare/v1.20.0...v1.20.1) (2025-08-10)
+
+
+### Bug Fixes
+
+* resolve Puppeteer "Target closed" errors in production ([047d11d](https://github.com/Shironex/portfolio/commit/047d11d46310b87bcf524b8f124161d7a90b3000))
+
 # [1.20.0](https://github.com/Shironex/portfolio/compare/v1.19.0...v1.20.0) (2025-08-10)
 
 
