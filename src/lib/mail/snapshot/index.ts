@@ -1,45 +1,64 @@
 import * as Sentry from '@sentry/nextjs'
 import type { Browser, LaunchOptions } from 'puppeteer'
 
-let browser: Browser | null = null
-
-async function getBrowser() {
-  if (browser) {
-    return browser
-  }
-
-  const options: any = {
+// Get browser launch options optimized for production
+function getBrowserOptions(): any {
+  const isProduction = process.env.NODE_ENV === 'production'
+  
+  const baseOptions: any = {
+    headless: true,
+    timeout: 30000, // 30 second timeout
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-dev-shm-usage',
       '--disable-gpu',
       '--no-first-run',
+      '--disable-extensions',
+      '--disable-background-timer-throttling',
+      '--disable-backgrounding-occluded-windows',
+      '--disable-renderer-backgrounding',
+      '--disable-web-security',
+      '--disable-features=TranslateUI',
+      '--disable-default-apps',
+    ],
+  }
+  
+  if (isProduction) {
+    // Production-specific flags for Docker/Alpine
+    baseOptions.args.push(
       '--no-zygote',
       '--single-process',
-      '--disable-extensions',
-    ],
-    headless: true,
+      '--disable-dev-shm-usage',
+      '--memory-pressure-off',
+      '--max_old_space_size=4096',
+      '--disable-background-networking'
+    )
+    baseOptions.executablePath = '/usr/bin/chromium-browser'
   }
+  
+  return baseOptions
+}
 
-  // Check if running in Docker (production)
-  const isDocker = process.env.NODE_ENV === 'production'
+// Create a fresh browser instance for each operation
+async function createBrowser(): Promise<Browser> {
+
+  const options = getBrowserOptions()
+  const isProduction = process.env.NODE_ENV === 'production'
 
   let puppeteer
-  if (isDocker) {
-    // In Docker, use puppeteer-core with system Chromium
+  if (isProduction) {
+    // In production, use puppeteer-core with system Chromium
     puppeteer = await import('puppeteer-core')
-    options.executablePath = '/usr/bin/chromium-browser'
   } else {
-    // For local development, use full puppeteer which manages Chrome
+    // For local development, try full puppeteer first
     try {
       puppeteer = await import('puppeteer')
-      // puppeteer will automatically find/download Chrome
     } catch (error) {
       // Fallback to puppeteer-core if puppeteer is not available
       puppeteer = await import('puppeteer-core')
       
-      // For local development with puppeteer-core, try common Chromium paths
+      // For local development, try common browser paths
       const possiblePaths = [
         // macOS paths
         '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -52,27 +71,15 @@ async function getBrowser() {
         '/usr/bin/chromium',
         '/usr/bin/google-chrome',
         '/usr/bin/google-chrome-stable',
-        // Windows paths (running on WSL or similar)
-        'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
-        'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
       ]
 
-      // Find the first available browser
       const { execSync } = await import('child_process')
       for (const path of possiblePaths) {
         try {
-          // Check if the path exists
-          if (process.platform === 'win32') {
-            // Windows check
-            execSync(`if exist "${path}" echo exists`, { stdio: 'ignore' })
-          } else {
-            // Unix-like systems check
-            execSync(`test -f "${path}"`, { stdio: 'ignore' })
-          }
+          execSync(`test -f "${path}"`, { stdio: 'ignore' })
           options.executablePath = path
           break
         } catch {
-          // Path doesn't exist, try next one
           continue
         }
       }
@@ -85,8 +92,7 @@ async function getBrowser() {
     }
   }
 
-  browser = await puppeteer.launch(options) as Browser
-  return browser
+  return await puppeteer.launch(options) as Browser
 }
 
 export async function emailHtmlToImage(html: string): Promise<Buffer> {
@@ -96,16 +102,20 @@ export async function emailHtmlToImage(html: string): Promise<Buffer> {
       op: 'puppeteer.screenshot',
       attributes: {
         'html.length': html.length,
+        'environment': process.env.NODE_ENV || 'development',
       },
     },
     async (span) => {
+      let browser: Browser | null = null
       let page = null
+      
       try {
-        const browserInstance = await getBrowser()
-        if (!browserInstance) {
-          throw new Error('Failed to initialize browser')
-        }
-        page = await browserInstance.newPage()
+        // Create fresh browser instance for each operation
+        browser = await createBrowser()
+        page = await browser.newPage()
+        
+        // Set page timeout
+        page.setDefaultTimeout(15000) // 15 seconds
 
         // Set viewport to ensure consistent rendering
         await page.setViewport({
@@ -156,38 +166,61 @@ export async function emailHtmlToImage(html: string): Promise<Buffer> {
 
         return screenshot as Buffer
       } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+        const errorName = error instanceof Error ? error.name : 'UnknownError'
+        
         span.setAttributes({
           'screenshot.success': false,
-          'error.message': error instanceof Error ? error.message : 'Unknown error',
+          'error.message': errorMessage,
+          'error.name': errorName,
         })
 
         Sentry.captureException(error, {
           tags: {
             source: 'email_snapshot',
             errorType: 'puppeteer_error',
+            errorName,
+          },
+          extra: {
+            htmlLength: html.length,
+            environment: process.env.NODE_ENV,
           },
         })
 
         throw error
       } finally {
-        if (page) {
-          await page.close()
+        // Always clean up resources
+        try {
+          if (page && !page.isClosed()) {
+            await page.close()
+          }
+        } catch (cleanupError) {
+          console.warn('Failed to close page:', cleanupError)
+        }
+        
+        try {
+          if (browser) {
+            await browser.close()
+          }
+        } catch (cleanupError) {
+          console.warn('Failed to close browser:', cleanupError)
         }
       }
     }
   )
 }
 
-// Cleanup function to close browser when needed
-export async function closeBrowser() {
-  if (browser) {
+// Test function to verify browser functionality
+export async function testBrowser(): Promise<boolean> {
+  try {
+    const browser = await createBrowser()
+    const page = await browser.newPage()
+    await page.goto('data:text/html,<html><body>Test</body></html>')
+    await page.close()
     await browser.close()
-    browser = null
+    return true
+  } catch (error) {
+    console.error('Browser test failed:', error)
+    return false
   }
-}
-
-// Graceful shutdown
-if (typeof process !== 'undefined') {
-  process.on('SIGINT', closeBrowser)
-  process.on('SIGTERM', closeBrowser)
 }

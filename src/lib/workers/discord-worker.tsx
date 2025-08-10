@@ -32,24 +32,58 @@ const discordWorker = new Worker(
           const { data } = job.data as DiscordJobData
           console.log('Discord worker started for contact form')
 
-          // Render the email HTML
-          const emailHtml = await renderContactFormEmail({
-            name: data.name,
-            email: data.email,
-            message: data.message,
-          })
+          let form: FormData | undefined = undefined
+          let embedImage: string | undefined = undefined
 
-          // Convert HTML to PNG
-          const pngBuffer = await emailHtmlToImage(emailHtml)
+          // Try to create email snapshot, but don't fail if it doesn't work
+          try {
+            console.log('Attempting to create email snapshot...')
+            
+            // Render the email HTML
+            const emailHtml = await renderContactFormEmail({
+              name: data.name,
+              email: data.email,
+              message: data.message,
+            })
 
-          // Create form data with the image
-          const form = new FormData()
-          form.append('file', pngBuffer, { filename: 'contact-email.png' })
+            // Convert HTML to PNG with timeout
+            const pngBuffer = await Promise.race([
+              emailHtmlToImage(emailHtml),
+              new Promise<never>((_, reject) => 
+                setTimeout(() => reject(new Error('Snapshot timeout')), 20000)
+              )
+            ])
 
+            // Create form data with the image
+            form = new FormData()
+            form.append('file', pngBuffer, { filename: 'contact-email.png' })
+            embedImage = 'attachment://contact-email.png'
+            
+            console.log('✅ Email snapshot created successfully')
+          } catch (snapshotError) {
+            console.warn('⚠️ Failed to create email snapshot, proceeding without image:', 
+              snapshotError instanceof Error ? snapshotError.message : 'Unknown error'
+            )
+            
+            // Log to Sentry but don't fail the job
+            Sentry.captureException(snapshotError, {
+              tags: {
+                source: 'discord_worker',
+                errorType: 'snapshot_fallback',
+              },
+              extra: {
+                jobId: job.id,
+                contactName: data.name,
+                contactEmail: data.email,
+              },
+            })
+          }
+
+          // Create Discord embed (with or without image)
           const embed = generateDefaultEmbed({
             title: 'New contact form submission',
             message: `New message from ${data.name}`,
-            image: `attachment://contact-email.png`,
+            image: embedImage,
             fields: [
               {
                 name: 'From',
@@ -66,6 +100,12 @@ const discordWorker = new Worker(
                 value: data.message.substring(0, 200) + (data.message.length > 200 ? '...' : ''),
                 inline: false,
               },
+              // Add status field if snapshot failed
+              ...(embedImage ? [] : [{
+                name: 'Status',
+                value: '⚠️ Email preview not available',
+                inline: false,
+              }]),
             ],
           })
 
