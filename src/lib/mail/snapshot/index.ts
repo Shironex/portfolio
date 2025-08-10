@@ -8,33 +8,62 @@ function getBrowserOptions(): any {
   const baseOptions: any = {
     headless: true,
     timeout: 30000, // 30 second timeout
+    // Critical: Do NOT use pipe: true in Docker (causes Target closed errors per GitHub #6258)
+    pipe: false,
     args: [
+      // Essential Docker/container stability flags
       '--no-sandbox',
-      '--disable-setuid-sandbox',
+      '--disable-setuid-sandbox', 
       '--disable-dev-shm-usage',
       '--disable-gpu',
-      '--no-first-run',
-      '--disable-extensions',
+      '--disable-software-rasterizer',
       '--disable-background-timer-throttling',
       '--disable-backgrounding-occluded-windows',
       '--disable-renderer-backgrounding',
+      '--disable-ipc-flooding-protection',
+      
+      // Additional container stability flags  
+      '--no-first-run',
+      '--no-default-browser-check',
+      '--disable-extensions',
+      '--disable-plugins',
+      '--disable-sync',
+      '--disable-translate',
+      '--disable-background-networking',
+      '--disable-background-mode',
+      '--disable-client-side-phishing-detection',
+      '--disable-hang-monitor',
+      '--disable-popup-blocking',
+      '--disable-prompt-on-repost',
+      '--disable-component-update',
+      '--disable-domain-reliability',
       '--disable-web-security',
-      '--disable-features=TranslateUI',
-      '--disable-default-apps',
+      '--disable-features=TranslateUI,VizDisplayCompositor',
+      
+      // Process management for containers
+      '--no-zygote',
+      '--single-process',
+      '--run-all-compositor-stages-before-draw',
+      '--disable-checker-imaging',
+      
+      // Memory optimizations
+      '--memory-pressure-off',
+      '--max_old_space_size=4096',
+      '--aggressive-cache-discard',
     ],
   }
   
   if (isProduction) {
-    // Production-specific flags for Docker/Alpine
-    baseOptions.args.push(
-      '--no-zygote',
-      '--single-process',
-      '--disable-dev-shm-usage',
-      '--memory-pressure-off',
-      '--max_old_space_size=4096',
-      '--disable-background-networking'
-    )
+    // Production-specific: Use system Chromium in Docker
     baseOptions.executablePath = '/usr/bin/chromium-browser'
+    
+    // Additional Docker-specific flags for Alpine Linux
+    baseOptions.args.push(
+      '--disable-logging',
+      '--disable-crash-reporter',
+      '--disable-metrics',
+      '--disable-metrics-reporting'
+    )
   }
   
   return baseOptions
