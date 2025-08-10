@@ -1,3 +1,11 @@
+# [1.20.0](https://github.com/Shironex/portfolio/compare/v1.19.0...v1.20.0) (2025-08-10)
+
+
+### Features
+
+* add email snapshot to Discord webhook notifications ([c16ddee](https://github.com/Shironex/portfolio/commit/c16ddee178e6c177c45d53b06a4a1cfa22d422db))
+* redesign contact form email to match portfolio design system ([e1aebe6](https://github.com/Shironex/portfolio/commit/e1aebe62af04113e084fe219262498fda34df52c))
+
 # [1.19.0](https://github.com/Shironex/portfolio/compare/v1.18.0...v1.19.0) (2025-08-07)
 
 
