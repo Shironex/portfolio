@@ -1,3 +1,10 @@
+## [1.20.3](https://github.com/Shironex/portfolio/compare/v1.20.2...v1.20.3) (2025-08-10)
+
+
+### Bug Fixes
+
+* apply Docker-specific Puppeteer fixes for Target closed errors ([38dda95](https://github.com/Shironex/portfolio/commit/38dda95379f2a061514fdb9b90318faab6747551)), closes [puppeteer/puppeteer#6258](https://github.com/puppeteer/puppeteer/issues/6258) [puppeteer/puppeteer#6258](https://github.com/puppeteer/puppeteer/issues/6258)
+
 ## [1.20.2](https://github.com/Shironex/portfolio/compare/v1.20.1...v1.20.2) (2025-08-10)
 
 
