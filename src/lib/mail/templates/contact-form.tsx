@@ -137,7 +137,8 @@ const container = {
 }
 
 const headerSection = {
-  background: 'linear-gradient(135deg, hsl(240, 3.7%, 15.9%) 0%, hsl(240, 10%, 8%) 100%)',
+  background:
+    'linear-gradient(135deg, hsl(240, 3.7%, 15.9%) 0%, hsl(240, 10%, 8%) 100%)',
   padding: '40px 40px 30px',
   textAlign: 'center' as const,
   borderBottom: '1px solid hsl(240, 3.7%, 15.9%)',
@@ -150,7 +151,8 @@ const headerOverlay = {
   left: 0,
   right: 0,
   bottom: 0,
-  background: 'radial-gradient(ellipse 80% 80% at 50% -20%, rgba(184, 148, 255, 0.15), rgba(255,255,255,0))',
+  background:
+    'radial-gradient(ellipse 80% 80% at 50% -20%, rgba(184, 148, 255, 0.15), rgba(255,255,255,0))',
   pointerEvents: 'none' as const,
 }
 
@@ -159,7 +161,8 @@ const logo = {
   fontWeight: '700' as const,
   margin: '0 0 8px 0',
   textAlign: 'center' as const,
-  background: 'linear-gradient(to right, hsl(252, 87%, 67%), hsl(277, 100%, 75%))',
+  background:
+    'linear-gradient(to right, hsl(252, 87%, 67%), hsl(277, 100%, 75%))',
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
   backgroundClip: 'text',
@@ -187,7 +190,8 @@ const heading = {
   fontWeight: '700' as const,
   margin: '0 0 12px 0',
   letterSpacing: '-0.025em',
-  background: 'linear-gradient(to right, hsl(0, 0%, 98%), hsl(252, 87%, 67%), hsl(277, 100%, 75%))',
+  background:
+    'linear-gradient(to right, hsl(0, 0%, 98%), hsl(252, 87%, 67%), hsl(277, 100%, 75%))',
   WebkitBackgroundClip: 'text',
   WebkitTextFillColor: 'transparent',
   backgroundClip: 'text',
@@ -217,7 +221,8 @@ const detailsContainer = {
 const detailsHeader = {
   padding: '16px 24px',
   borderBottom: '1px solid hsl(240, 3.7%, 25%)',
-  background: 'linear-gradient(135deg, hsl(240, 3.7%, 18%) 0%, hsl(240, 3.7%, 15.9%) 100%)',
+  background:
+    'linear-gradient(135deg, hsl(240, 3.7%, 18%) 0%, hsl(240, 3.7%, 15.9%) 100%)',
 }
 
 const detailsTitle = {
@@ -290,7 +295,8 @@ const buttonContainer = {
 }
 
 const button = {
-  background: 'linear-gradient(135deg, hsl(252, 87%, 67%) 0%, hsl(277, 100%, 75%) 100%)',
+  background:
+    'linear-gradient(135deg, hsl(252, 87%, 67%) 0%, hsl(277, 100%, 75%) 100%)',
   borderRadius: '8px',
   color: 'hsl(0, 0%, 98%)',
   display: 'inline-block',

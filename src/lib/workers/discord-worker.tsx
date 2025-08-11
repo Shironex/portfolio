@@ -38,7 +38,7 @@ const discordWorker = new Worker(
           // Try to create email snapshot, but don't fail if it doesn't work
           try {
             console.log('Attempting to create email snapshot...')
-            
+
             // Render the email HTML
             const emailHtml = await renderContactFormEmail({
               name: data.name,
@@ -49,22 +49,25 @@ const discordWorker = new Worker(
             // Convert HTML to PNG with timeout
             const pngBuffer = await Promise.race([
               emailHtmlToImage(emailHtml),
-              new Promise<never>((_, reject) => 
+              new Promise<never>((_, reject) =>
                 setTimeout(() => reject(new Error('Snapshot timeout')), 20000)
-              )
+              ),
             ])
 
             // Create form data with the image
             form = new FormData()
             form.append('file', pngBuffer, { filename: 'contact-email.png' })
             embedImage = 'attachment://contact-email.png'
-            
+
             console.log('✅ Email snapshot created successfully')
           } catch (snapshotError) {
-            console.warn('⚠️ Failed to create email snapshot, proceeding without image:', 
-              snapshotError instanceof Error ? snapshotError.message : 'Unknown error'
+            console.warn(
+              '⚠️ Failed to create email snapshot, proceeding without image:',
+              snapshotError instanceof Error
+                ? snapshotError.message
+                : 'Unknown error'
             )
-            
+
             // Log to Sentry but don't fail the job
             Sentry.captureException(snapshotError, {
               tags: {
@@ -97,15 +100,21 @@ const discordWorker = new Worker(
               },
               {
                 name: 'Quick Preview',
-                value: data.message.substring(0, 200) + (data.message.length > 200 ? '...' : ''),
+                value:
+                  data.message.substring(0, 200) +
+                  (data.message.length > 200 ? '...' : ''),
                 inline: false,
               },
               // Add status field if snapshot failed
-              ...(embedImage ? [] : [{
-                name: 'Status',
-                value: '⚠️ Email preview not available',
-                inline: false,
-              }]),
+              ...(embedImage
+                ? []
+                : [
+                    {
+                      name: 'Status',
+                      value: '⚠️ Email preview not available',
+                      inline: false,
+                    },
+                  ]),
             ],
           })
 
