@@ -1,3 +1,10 @@
+# [1.21.0](https://github.com/Shironex/portfolio/compare/v1.20.3...v1.21.0) (2025-08-17)
+
+
+### Features
+
+* add ENV Vault project and improve demo URL handling ([4320ff7](https://github.com/Shironex/portfolio/commit/4320ff7fcc41ee103fcd5f47652fe97ef3c33e61))
+
 ## [1.20.3](https://github.com/Shironex/portfolio/compare/v1.20.2...v1.20.3) (2025-08-10)
 
 
