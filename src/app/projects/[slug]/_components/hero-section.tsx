@@ -90,7 +90,7 @@ const HeroSection = ({ project }: HeroSectionProps) => {
             className="flex flex-col gap-4 sm:flex-row"
             variants={fadeUp}
           >
-            {project.demoUrl && (
+            {project.demoUrl && project.demoUrl !== '#desktop-app' && project.demoUrl !== '#in-development' && (
               <Link
                 href={project.demoUrl}
                 target="_blank"
@@ -113,6 +113,42 @@ const HeroSection = ({ project }: HeroSectionProps) => {
                   </Button>
                 </motion.div>
               </Link>
+            )}
+            {project.demoUrl === '#desktop-app' && (
+              <motion.div
+                whileHover="hover"
+                whileTap="tap"
+                variants={{
+                  hover: { scale: 1.05 },
+                  tap: { scale: 0.98 },
+                }}
+              >
+                <Button
+                  className="gap-2 cursor-not-allowed opacity-50"
+                  disabled
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  Desktop Application
+                </Button>
+              </motion.div>
+            )}
+            {project.demoUrl === '#in-development' && (
+              <motion.div
+                whileHover="hover"
+                whileTap="tap"
+                variants={{
+                  hover: { scale: 1.05 },
+                  tap: { scale: 0.98 },
+                }}
+              >
+                <Button
+                  className="gap-2 cursor-not-allowed opacity-50"
+                  disabled
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  Coming Soon
+                </Button>
+              </motion.div>
             )}
 
             {project.githubUrl && (

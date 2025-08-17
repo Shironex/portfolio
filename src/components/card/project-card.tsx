@@ -84,7 +84,7 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
               </Button>
             </motion.div>
           </Link>
-          {project.demoUrl && (
+          {project.demoUrl && project.demoUrl !== '#desktop-app' && project.demoUrl !== '#in-development' && (
             <Link
               href={project.demoUrl}
               target="_blank"
@@ -109,6 +109,28 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
                 </Button>
               </motion.div>
             </Link>
+          )}
+          {project.demoUrl === '#desktop-app' && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 cursor-not-allowed opacity-50"
+              disabled
+            >
+              <ExternalLink className="h-4 w-4" />
+              Desktop App
+            </Button>
+          )}
+          {project.demoUrl === '#in-development' && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 cursor-not-allowed opacity-50"
+              disabled
+            >
+              <ExternalLink className="h-4 w-4" />
+              In Development
+            </Button>
           )}
           {project.githubUrl && (
             <Link
