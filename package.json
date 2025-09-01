@@ -59,7 +59,7 @@
     "motion": "^12.23.12",
     "next": "15.4.4",
     "next-mdx-remote": "^5.0.0",
-    "next-safe-action": "^8.0.8",
+    "next-safe-action": "^8.0.11",
     "next-themes": "^0.4.6",
     "nextjs-toploader": "^3.8.16",
     "puppeteer": "24.16.1",
