@@ -1,3 +1,10 @@
+## [1.22.1](https://github.com/Shironex/portfolio/compare/v1.22.0...v1.22.1) (2025-09-03)
+
+
+### Bug Fixes
+
+* update featured status for Sudeko project to false ([0af9e1d](https://github.com/Shironex/portfolio/commit/0af9e1d1107f9898e15cc2da5e9d6acf845ac8ae))
+
 # [1.22.0](https://github.com/Shironex/portfolio/compare/v1.21.0...v1.22.0) (2025-09-03)
 
 
