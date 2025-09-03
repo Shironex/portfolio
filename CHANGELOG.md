@@ -1,3 +1,10 @@
+# [1.22.0](https://github.com/Shironex/portfolio/compare/v1.21.0...v1.22.0) (2025-09-03)
+
+
+### Features
+
+* add Sudeko project with detailed description, images, and technologies ([21a5d00](https://github.com/Shironex/portfolio/commit/21a5d0074686755cd47cfb3452c7d3f122f5dd83))
+
 # [1.21.0](https://github.com/Shironex/portfolio/compare/v1.20.3...v1.21.0) (2025-08-17)
 
 
