@@ -852,6 +852,6 @@ export const projectsData: Project[] = [
     outcome:
       "Sudeko successfully launched as a professional service website that effectively showcases the company's electrical and construction expertise. The modern design and comprehensive service presentation have helped establish a strong online presence for the business, making it easier for potential clients to understand services and make contact.",
     demoUrl: 'https://sudekospzoo.pl/',
-    featured: true,
+    featured: false,
   },
 ] as const
