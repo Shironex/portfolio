@@ -90,30 +90,32 @@ const HeroSection = ({ project }: HeroSectionProps) => {
             className="flex flex-col gap-4 sm:flex-row"
             variants={fadeUp}
           >
-            {project.demoUrl && project.demoUrl !== '#desktop-app' && project.demoUrl !== '#in-development' && (
-              <Link
-                href={project.demoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <motion.div
-                  whileHover="hover"
-                  whileTap="tap"
-                  variants={{
-                    hover: { scale: 1.05 },
-                    tap: { scale: 0.98 },
-                  }}
+            {project.demoUrl &&
+              project.demoUrl !== '#desktop-app' &&
+              project.demoUrl !== '#in-development' && (
+                <Link
+                  href={project.demoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  <Button
-                    className="gap-2"
-                    data-umami-event={`Click Button View Live Demo of Project ${project.title}`}
+                  <motion.div
+                    whileHover="hover"
+                    whileTap="tap"
+                    variants={{
+                      hover: { scale: 1.05 },
+                      tap: { scale: 0.98 },
+                    }}
                   >
-                    <ExternalLink className="h-4 w-4" />
-                    View Live Demo
-                  </Button>
-                </motion.div>
-              </Link>
-            )}
+                    <Button
+                      className="gap-2"
+                      data-umami-event={`Click Button View Live Demo of Project ${project.title}`}
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      View Live Demo
+                    </Button>
+                  </motion.div>
+                </Link>
+              )}
             {project.demoUrl === '#desktop-app' && (
               <motion.div
                 whileHover="hover"
@@ -124,7 +126,7 @@ const HeroSection = ({ project }: HeroSectionProps) => {
                 }}
               >
                 <Button
-                  className="gap-2 cursor-not-allowed opacity-50"
+                  className="cursor-not-allowed gap-2 opacity-50"
                   disabled
                 >
                   <ExternalLink className="h-4 w-4" />
@@ -142,7 +144,7 @@ const HeroSection = ({ project }: HeroSectionProps) => {
                 }}
               >
                 <Button
-                  className="gap-2 cursor-not-allowed opacity-50"
+                  className="cursor-not-allowed gap-2 opacity-50"
                   disabled
                 >
                   <ExternalLink className="h-4 w-4" />
