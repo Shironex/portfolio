@@ -2,6 +2,394 @@ import { Project } from '@/types'
 
 export const projectsData: Project[] = [
   {
+    id: 'matmajka',
+    slug: 'matmajka',
+    title: 'Matmajka',
+    summary:
+      'Matmajka connects parents and students with private tutor Maja that help with math, physics, and chemistry.',
+    description: [
+      'Matmajka is an landing page for my private tutor friend Maja that helps with math, physics, and chemistry. ',
+    ],
+    image: '/projects/matmajka/thumbnail.png',
+    gallery: [
+      {
+        src: '/projects/matmajka/overview.png',
+        alt: 'Matmajka Homepage',
+        caption: 'The welcoming homepage',
+      },
+      {
+        src: '/projects/matmajka/about-me.png',
+        alt: 'Matmajka About Me',
+        caption: 'The about me section with more details about the Maja',
+      },
+      {
+        src: '/projects/matmajka/about-lessons.png',
+        alt: 'Matmajka About Lessons',
+        caption:
+          'The about lessons section with more details about the lessons',
+      },
+      {
+        src: '/projects/matmajka/lessons.png',
+        alt: 'Matmajka Lessons',
+        caption: 'The lessons section with the lessons that Maja offers',
+      },
+      {
+        src: '/projects/matmajka/opinions.png',
+        alt: 'Matmajka Opinions',
+        caption: 'The opinions section with the opinions of the students',
+      },
+      {
+        src: '/projects/matmajka/contact.png',
+        alt: 'Matmajka Contact',
+        caption: 'The contact section with the contact form',
+      },
+    ],
+    technologies: ['NextJS', 'Tailwind', 'Docker', 'Resend', 'Framer Motion'],
+    features: [
+      'Simple landing page with a clean design',
+      'Translations to Polish and English',
+      'Feedback dialog that is integrated with the Write-Wiz Project',
+      'Animated UI elements using Framer Motion',
+    ],
+    techDetails: {
+      stack: ['Next.js', 'Tailwind CSS', 'Docker', 'Resend', 'Framer Motion'],
+      challenges: [],
+    },
+    completedDate: 'November 2024',
+    duration: '1 month',
+    outcome:
+      'Matmajka has successfully connected over 32 students with qualified tutor in its first six months of operation. The platform has received positive feedback from both students and friends, with many reporting significant improvements in academic performance. The project is going to be expanded with a learning platform for the students to learn from the lessons by doing quizzes and exercises in the future.',
+    demoUrl: 'https://matmajka.com',
+    featured: true,
+  },
+  {
+    id: 'perfect-clean-car-house',
+    slug: 'perfect-clean-car-house',
+    title: 'Perfect Clean Car&House',
+    summary:
+      'Professional car detailing and furniture cleaning service website offering comprehensive cleaning solutions with modern Polish interface.',
+    description: [
+      'Perfect Clean Car&House is a professional service website designed for a car detailing and furniture cleaning business. The platform showcases various cleaning services including car detailing, paint correction, ceramic coating, and furniture cleaning with a focus on quality and customer satisfaction.',
+      'The website features a modern, dark-themed design with striking yellow accents that reflects the professional nature of the business. Built with a mobile-first approach, it provides an intuitive user experience for customers looking to book cleaning services.',
+      'The platform includes comprehensive service listings, pricing information, a portfolio gallery, customer testimonials, and an integrated contact system to streamline the booking process for both car and furniture cleaning services.',
+    ],
+    image: '/projects/pcch/thumbnail.png',
+    gallery: [
+      {
+        src: '/projects/pcch/overview.png',
+        alt: 'Perfect Clean Car&House Homepage',
+        caption:
+          'Professional homepage with service statistics and call-to-action',
+      },
+      {
+        src: '/projects/pcch/services.png',
+        alt: 'Perfect Clean Car&House Services',
+        caption:
+          'Comprehensive service offerings including detailing and paint correction',
+      },
+      {
+        src: '/projects/pcch/prices.png',
+        alt: 'Perfect Clean Car&House Pricing',
+        caption: 'Transparent pricing structure for various service packages',
+      },
+      {
+        src: '/projects/pcch/gallery.png',
+        alt: 'Perfect Clean Car&House Gallery',
+        caption: 'Portfolio showcase of completed car detailing projects',
+      },
+      {
+        src: '/projects/pcch/opinions.png',
+        alt: 'Perfect Clean Car&House Reviews',
+        caption: 'Customer testimonials and feedback section',
+      },
+      {
+        src: '/projects/pcch/realizations.png',
+        alt: 'Perfect Clean Car&House Realizations',
+        caption: 'Before and after gallery of completed projects',
+      },
+      {
+        src: '/projects/pcch/contact.png',
+        alt: 'Perfect Clean Car&House Contact',
+        caption: 'Contact form with business information and service booking',
+      },
+    ],
+    technologies: [
+      'Next.js',
+      'TypeScript',
+      'Tailwind CSS',
+      'Shadcn UI',
+      'React Hook Form',
+      'Zod',
+      'Resend',
+      'Motion',
+      'Radix UI',
+      'Lucide React',
+    ],
+    features: [
+      'Professional service landing page with modern design',
+      'Comprehensive service listings with detailed descriptions',
+      'Pricing transparency with multiple service packages',
+      'Interactive portfolio gallery showcasing completed work',
+      'Customer testimonials and reviews section',
+      'Integrated contact form with validation',
+      'Mobile-responsive design optimized for all devices',
+      'Professional branding with consistent visual identity',
+    ],
+    techDetails: {
+      stack: [
+        'Next.js 15',
+        'TypeScript',
+        'Tailwind CSS',
+        'Shadcn UI',
+        'React Hook Form',
+        'Zod Validation',
+        'Resend Email',
+        'Motion Animations',
+        'Radix UI Primitives',
+        'Lucide React Icons',
+      ],
+      architecture:
+        'Perfect Clean Car&House follows a modern Next.js architecture with server-side rendering for optimal SEO performance. The application uses a component-based structure with reusable UI components from Shadcn UI library, type-safe form handling with React Hook Form and Zod validation, and email integration through Resend service.',
+      challenges: [
+        {
+          challenge:
+            'Creating an engaging visual hierarchy for service information',
+          solution:
+            'Implemented a card-based layout with consistent spacing and typography, using Tailwind CSS for responsive design and yellow accent colors for important call-to-action elements',
+        },
+        {
+          challenge: 'Showcasing portfolio work effectively',
+          solution:
+            'Developed an interactive gallery component with high-quality image optimization and before/after comparison views to demonstrate service quality',
+        },
+      ],
+    },
+    completedDate: 'August 2025',
+    duration: '2 weeks',
+    outcome:
+      'Perfect Clean Car&House successfully launched as a professional service website that effectively showcases the business offerings and facilitates customer inquiries. The modern design and user-friendly interface have helped establish a strong online presence for the cleaning service business, making it easier for potential customers to understand services and make bookings.',
+    demoUrl: 'https://perfectcleancarhouse.pl',
+    featured: true,
+  },
+  {
+    id: 'sudeko',
+    slug: 'sudeko',
+    title: 'Sudeko',
+    summary:
+      'Professional electrical and construction services company website showcasing comprehensive solutions with modern Polish interface.',
+    description: [
+      'Sudeko is a professional website designed for an electrical installation and construction services company operating in Elbląg, Poland since 2019. The platform showcases comprehensive electrical and building project management services with a focus on quality and professional expertise.',
+      "The website features a modern, professional design with striking blue and yellow branding that reflects the company's technical expertise and reliability. Built with a mobile-first approach, it provides an intuitive experience for clients looking to understand and engage with electrical and construction services.",
+      "The platform includes detailed service offerings, project portfolio, professional credentials, and client testimonials to establish trust and demonstrate the company's capabilities in both electrical installations and construction projects.",
+    ],
+    image: '/projects/sudeko/thumbnail.png',
+    gallery: [
+      {
+        src: '/projects/sudeko/overview.png',
+        alt: 'Sudeko Homepage',
+        caption:
+          'Professional homepage showcasing company statistics and services',
+      },
+      {
+        src: '/projects/sudeko/services.png',
+        alt: 'Sudeko Services',
+        caption:
+          'Comprehensive service offerings including electrical and construction',
+      },
+      {
+        src: '/projects/sudeko/about-us.png',
+        alt: 'Sudeko About Us',
+        caption: 'Company information and professional credentials',
+      },
+      {
+        src: '/projects/sudeko/why-us.png',
+        alt: 'Sudeko Why Choose Us',
+        caption: 'Value propositions and competitive advantages',
+      },
+      {
+        src: '/projects/sudeko/contact.png',
+        alt: 'Sudeko Contact',
+        caption: 'Contact information and service inquiry form',
+      },
+    ],
+    technologies: [
+      'Next.js',
+      'TypeScript',
+      'Tailwind CSS',
+      'Radix UI',
+      'React Hook Form',
+      'Zod',
+      'Framer Motion',
+      'Lucide React',
+      'Resend',
+      'Arcjet',
+      'React Turnstile',
+      'Next Themes',
+      'Sonner',
+    ],
+    features: [
+      'Professional service website with modern design',
+      'Comprehensive service portfolio presentation',
+      'Company statistics and achievements showcase',
+      'Professional credentials and certifications display',
+      'Client testimonials and project portfolio',
+      'Advanced security with Arcjet rate limiting and bot protection',
+      'Contact form with validation, honeypot, and Cloudflare Turnstile',
+      'Mobile-responsive design optimized for all devices',
+      'Professional branding with consistent visual identity',
+      'SEO-optimized content and structure',
+      'Multi-section navigation for easy browsing',
+    ],
+    techDetails: {
+      stack: [
+        'Next.js 15',
+        'TypeScript',
+        'Tailwind CSS',
+        'Radix UI Primitives',
+        'React Hook Form',
+        'Zod Validation',
+        'Framer Motion',
+        'Lucide React Icons',
+        'Resend Email',
+        'Arcjet Security',
+        'Cloudflare Turnstile',
+        'Next Themes',
+        'Sonner Toast',
+      ],
+      architecture:
+        'Sudeko follows a modern Next.js architecture with server-side rendering for optimal SEO performance. The application uses a component-based structure with reusable UI components from Radix UI, form handling with React Hook Form and Zod validation, email integration through Resend, and comprehensive security through Arcjet rate limiting and Cloudflare Turnstile bot protection.',
+      challenges: [
+        {
+          challenge:
+            'Creating a professional and trustworthy brand presentation',
+          solution:
+            'Developed a clean, professional design with consistent blue and yellow branding, clear service categorization, and prominent display of company credentials and statistics',
+        },
+        {
+          challenge: 'Showcasing technical services effectively to clients',
+          solution:
+            'Implemented detailed service sections with clear descriptions, visual icons, and organized categorization of electrical and construction services',
+        },
+        {
+          challenge: 'Ensuring accessibility and user experience',
+          solution:
+            'Used Radix UI primitives for accessibility compliance and implemented responsive design with Tailwind CSS for optimal viewing across all devices',
+        },
+        {
+          challenge: 'Protecting contact forms from spam and abuse',
+          solution:
+            'Implemented multi-layered security with Arcjet for rate limiting, honeypot fields for bot detection, and Cloudflare Turnstile for human verification',
+        },
+      ],
+    },
+    completedDate: 'September 2025',
+    duration: '3 days',
+    outcome:
+      "Sudeko successfully launched as a professional service website that effectively showcases the company's electrical and construction expertise. The modern design and comprehensive service presentation have helped establish a strong online presence for the business, making it easier for potential clients to understand services and make contact.",
+    demoUrl: 'https://sudekospzoo.pl/',
+    featured: true,
+  },
+  {
+    id: 'toriime',
+    slug: 'toriime',
+    title: 'Toriime',
+    summary:
+      'A streaming platform for finding and watching anime series and movies with Polish subtitles.',
+    description: [
+      'Toriime is a project is created with my friends to give a better experience to the Polish anime community by providing a comprehensive library of anime content with high-quality Polish subtitles and a friendly user interface. Platform is not only for anime watchers but also for translators who can contribute to the platform by adding new subtitles to the anime and creating their own community and groups. The platform is still in development and will be expanded with more features in the future.',
+    ],
+    image: '/projects/toriime/thumbnail.png',
+    gallery: [
+      {
+        src: '/projects/toriime/thumbnail.png',
+        alt: 'Toriime Thumbnail',
+        caption: 'The homepage of the project',
+      },
+      {
+        src: '/projects/toriime/about-project.png',
+        alt: 'Toriime About Project',
+        caption:
+          'The about project section with more details about the project',
+      },
+      {
+        src: '/projects/toriime/images.png',
+        alt: 'Toriime Images',
+        caption: 'The images section with all the images of the project',
+      },
+      {
+        src: '/projects/toriime/images-2.png',
+        alt: 'Toriime Images 2',
+        caption: 'More images of the project',
+      },
+      {
+        src: '/projects/toriime/images-3.png',
+        alt: 'Toriime Images 3',
+        caption: 'More images of the project',
+      },
+      {
+        src: '/projects/toriime/faq.png',
+        alt: 'Toriime FAQ',
+        caption: 'The FAQ section with the questions and answers',
+      },
+      {
+        src: '/projects/toriime/footer.png',
+        alt: 'Toriime Footer',
+        caption: 'The footer section with the social media links',
+      },
+    ],
+    technologies: [
+      'NextJS',
+      'Shadcn',
+      'TypeScript',
+      'Tailwind',
+      'MongoDB',
+      'Prisma',
+      'hello-pangea/dnd',
+    ],
+    features: [
+      'Extensive library of anime with Polish subtitles',
+      'Custom video player with advanced subtitle controls',
+      'User profiles with watch history and favorites',
+      'Community translation tools and workflow',
+      'Recommendation engine based on viewing habits',
+      'Mobile-responsive design for on-the-go viewing',
+      'Drag and drop for anime list',
+      'Customizeable anime list and profile',
+      'And many more...',
+    ],
+    techDetails: {
+      stack: [
+        'Next.js',
+        'TypeScript',
+        'Shadcn UI',
+        'Tailwind CSS',
+        'MongoDB',
+        'Prisma ORM',
+        'AWS S3',
+        'Nest js',
+        'TipTap js',
+        'hello-pangea/dnd',
+        'React Hook Form',
+        'BullMQ',
+      ],
+      architecture:
+        'Toriime uses a microservices architecture with Next.js for the frontend and dedicated services for backend and subtitle management. Content is stored in MongoDB with media files hosted on AWS S3 and delivered via CloudFront CDN.',
+      challenges: [
+        {
+          challenge: 'Use one account across other services',
+          solution:
+            'Used Nest js to create own oauth server and used it to authenticate users and give access to other services in the future',
+        },
+      ],
+    },
+    inProgress: true,
+    duration: '2 years',
+    outcome:
+      'Toriime was orginally going to be a simple project but turns out to be a big one. It is still in high development state but its already have a ready to use services to be used when website will be ready.',
+    demoUrl: 'https://toriime.pl',
+    featured: false,
+  },
+  {
     id: 'write-wiz',
     slug: 'write-wiz',
     title: 'Write-Wiz',
@@ -170,276 +558,6 @@ export const projectsData: Project[] = [
     outcome:
       'Write-Wiz is a private project for my own use, but I decided to share it with the community in the near future. I hope that it can be helpful for other programmers.',
     demoUrl: 'https://writewiz.shirone.dev/',
-    featured: true,
-  },
-  {
-    id: 'matmajka',
-    slug: 'matmajka',
-    title: 'Matmajka',
-    summary:
-      'Matmajka connects parents and students with private tutor Maja that help with math, physics, and chemistry.',
-    description: [
-      'Matmajka is an landing page for my private tutor friend Maja that helps with math, physics, and chemistry. ',
-    ],
-    image: '/projects/matmajka/thumbnail.png',
-    gallery: [
-      {
-        src: '/projects/matmajka/overview.png',
-        alt: 'Matmajka Homepage',
-        caption: 'The welcoming homepage',
-      },
-      {
-        src: '/projects/matmajka/about-me.png',
-        alt: 'Matmajka About Me',
-        caption: 'The about me section with more details about the Maja',
-      },
-      {
-        src: '/projects/matmajka/about-lessons.png',
-        alt: 'Matmajka About Lessons',
-        caption:
-          'The about lessons section with more details about the lessons',
-      },
-      {
-        src: '/projects/matmajka/lessons.png',
-        alt: 'Matmajka Lessons',
-        caption: 'The lessons section with the lessons that Maja offers',
-      },
-      {
-        src: '/projects/matmajka/opinions.png',
-        alt: 'Matmajka Opinions',
-        caption: 'The opinions section with the opinions of the students',
-      },
-      {
-        src: '/projects/matmajka/contact.png',
-        alt: 'Matmajka Contact',
-        caption: 'The contact section with the contact form',
-      },
-    ],
-    technologies: ['NextJS', 'Tailwind', 'Docker', 'Resend', 'Framer Motion'],
-    features: [
-      'Simple landing page with a clean design',
-      'Translations to Polish and English',
-      'Feedback dialog that is integrated with the Write-Wiz Project',
-      'Animated UI elements using Framer Motion',
-    ],
-    techDetails: {
-      stack: ['Next.js', 'Tailwind CSS', 'Docker', 'Resend', 'Framer Motion'],
-      challenges: [],
-    },
-    completedDate: 'November 2024',
-    duration: '1 month',
-    outcome:
-      'Matmajka has successfully connected over 32 students with qualified tutor in its first six months of operation. The platform has received positive feedback from both students and friends, with many reporting significant improvements in academic performance. The project is going to be expanded with a learning platform for the students to learn from the lessons by doing quizzes and exercises in the future.',
-    demoUrl: 'https://matmajka.com',
-    featured: true,
-  },
-  {
-    id: 'toriime',
-    slug: 'toriime',
-    title: 'Toriime',
-    summary:
-      'A streaming platform for finding and watching anime series and movies with Polish subtitles.',
-    description: [
-      'Toriime is a project is created with my friends to give a better experience to the Polish anime community by providing a comprehensive library of anime content with high-quality Polish subtitles and a friendly user interface. Platform is not only for anime watchers but also for translators who can contribute to the platform by adding new subtitles to the anime and creating their own community and groups. The platform is still in development and will be expanded with more features in the future.',
-    ],
-    image: '/projects/toriime/thumbnail.png',
-    gallery: [
-      {
-        src: '/projects/toriime/thumbnail.png',
-        alt: 'Toriime Thumbnail',
-        caption: 'The homepage of the project',
-      },
-      {
-        src: '/projects/toriime/about-project.png',
-        alt: 'Toriime About Project',
-        caption:
-          'The about project section with more details about the project',
-      },
-      {
-        src: '/projects/toriime/images.png',
-        alt: 'Toriime Images',
-        caption: 'The images section with all the images of the project',
-      },
-      {
-        src: '/projects/toriime/images-2.png',
-        alt: 'Toriime Images 2',
-        caption: 'More images of the project',
-      },
-      {
-        src: '/projects/toriime/images-3.png',
-        alt: 'Toriime Images 3',
-        caption: 'More images of the project',
-      },
-      {
-        src: '/projects/toriime/faq.png',
-        alt: 'Toriime FAQ',
-        caption: 'The FAQ section with the questions and answers',
-      },
-      {
-        src: '/projects/toriime/footer.png',
-        alt: 'Toriime Footer',
-        caption: 'The footer section with the social media links',
-      },
-    ],
-    technologies: [
-      'NextJS',
-      'Shadcn',
-      'TypeScript',
-      'Tailwind',
-      'MongoDB',
-      'Prisma',
-      'hello-pangea/dnd',
-    ],
-    features: [
-      'Extensive library of anime with Polish subtitles',
-      'Custom video player with advanced subtitle controls',
-      'User profiles with watch history and favorites',
-      'Community translation tools and workflow',
-      'Recommendation engine based on viewing habits',
-      'Mobile-responsive design for on-the-go viewing',
-      'Drag and drop for anime list',
-      'Customizeable anime list and profile',
-      'And many more...',
-    ],
-    techDetails: {
-      stack: [
-        'Next.js',
-        'TypeScript',
-        'Shadcn UI',
-        'Tailwind CSS',
-        'MongoDB',
-        'Prisma ORM',
-        'AWS S3',
-        'Nest js',
-        'TipTap js',
-        'hello-pangea/dnd',
-        'React Hook Form',
-        'BullMQ',
-      ],
-      architecture:
-        'Toriime uses a microservices architecture with Next.js for the frontend and dedicated services for backend and subtitle management. Content is stored in MongoDB with media files hosted on AWS S3 and delivered via CloudFront CDN.',
-      challenges: [
-        {
-          challenge: 'Use one account across other services',
-          solution:
-            'Used Nest js to create own oauth server and used it to authenticate users and give access to other services in the future',
-        },
-      ],
-    },
-    inProgress: true,
-    duration: '2 years',
-    outcome:
-      'Toriime was orginally going to be a simple project but turns out to be a big one. It is still in high development state but its already have a ready to use services to be used when website will be ready.',
-    demoUrl: 'https://toriime.pl',
-    featured: true,
-  },
-  {
-    id: 'perfect-clean-car-house',
-    slug: 'perfect-clean-car-house',
-    title: 'Perfect Clean Car&House',
-    summary:
-      'Professional car detailing and furniture cleaning service website offering comprehensive cleaning solutions with modern Polish interface.',
-    description: [
-      'Perfect Clean Car&House is a professional service website designed for a car detailing and furniture cleaning business. The platform showcases various cleaning services including car detailing, paint correction, ceramic coating, and furniture cleaning with a focus on quality and customer satisfaction.',
-      'The website features a modern, dark-themed design with striking yellow accents that reflects the professional nature of the business. Built with a mobile-first approach, it provides an intuitive user experience for customers looking to book cleaning services.',
-      'The platform includes comprehensive service listings, pricing information, a portfolio gallery, customer testimonials, and an integrated contact system to streamline the booking process for both car and furniture cleaning services.',
-    ],
-    image: '/projects/pcch/thumbnail.png',
-    gallery: [
-      {
-        src: '/projects/pcch/overview.png',
-        alt: 'Perfect Clean Car&House Homepage',
-        caption:
-          'Professional homepage with service statistics and call-to-action',
-      },
-      {
-        src: '/projects/pcch/services.png',
-        alt: 'Perfect Clean Car&House Services',
-        caption:
-          'Comprehensive service offerings including detailing and paint correction',
-      },
-      {
-        src: '/projects/pcch/prices.png',
-        alt: 'Perfect Clean Car&House Pricing',
-        caption: 'Transparent pricing structure for various service packages',
-      },
-      {
-        src: '/projects/pcch/gallery.png',
-        alt: 'Perfect Clean Car&House Gallery',
-        caption: 'Portfolio showcase of completed car detailing projects',
-      },
-      {
-        src: '/projects/pcch/opinions.png',
-        alt: 'Perfect Clean Car&House Reviews',
-        caption: 'Customer testimonials and feedback section',
-      },
-      {
-        src: '/projects/pcch/realizations.png',
-        alt: 'Perfect Clean Car&House Realizations',
-        caption: 'Before and after gallery of completed projects',
-      },
-      {
-        src: '/projects/pcch/contact.png',
-        alt: 'Perfect Clean Car&House Contact',
-        caption: 'Contact form with business information and service booking',
-      },
-    ],
-    technologies: [
-      'Next.js',
-      'TypeScript',
-      'Tailwind CSS',
-      'Shadcn UI',
-      'React Hook Form',
-      'Zod',
-      'Resend',
-      'Motion',
-      'Radix UI',
-      'Lucide React',
-    ],
-    features: [
-      'Professional service landing page with modern design',
-      'Comprehensive service listings with detailed descriptions',
-      'Pricing transparency with multiple service packages',
-      'Interactive portfolio gallery showcasing completed work',
-      'Customer testimonials and reviews section',
-      'Integrated contact form with validation',
-      'Mobile-responsive design optimized for all devices',
-      'Professional branding with consistent visual identity',
-    ],
-    techDetails: {
-      stack: [
-        'Next.js 15',
-        'TypeScript',
-        'Tailwind CSS',
-        'Shadcn UI',
-        'React Hook Form',
-        'Zod Validation',
-        'Resend Email',
-        'Motion Animations',
-        'Radix UI Primitives',
-        'Lucide React Icons',
-      ],
-      architecture:
-        'Perfect Clean Car&House follows a modern Next.js architecture with server-side rendering for optimal SEO performance. The application uses a component-based structure with reusable UI components from Shadcn UI library, type-safe form handling with React Hook Form and Zod validation, and email integration through Resend service.',
-      challenges: [
-        {
-          challenge:
-            'Creating an engaging visual hierarchy for service information',
-          solution:
-            'Implemented a card-based layout with consistent spacing and typography, using Tailwind CSS for responsive design and yellow accent colors for important call-to-action elements',
-        },
-        {
-          challenge: 'Showcasing portfolio work effectively',
-          solution:
-            'Developed an interactive gallery component with high-quality image optimization and before/after comparison views to demonstrate service quality',
-        },
-      ],
-    },
-    completedDate: 'August 2025',
-    duration: '2 weeks',
-    outcome:
-      'Perfect Clean Car&House successfully launched as a professional service website that effectively showcases the business offerings and facilitates customer inquiries. The modern design and user-friendly interface have helped establish a strong online presence for the cleaning service business, making it easier for potential customers to understand services and make bookings.',
-    demoUrl: 'https://perfectcleancarhouse.pl',
     featured: false,
   },
   {
@@ -734,124 +852,6 @@ export const projectsData: Project[] = [
     outcome:
       'ENV Vault successfully solves the environment variable management problem for developers, providing a clean and efficient alternative to juggling multiple .env files in code editors. The application is nearing completion with plans for public release after final tweaks and testing.',
     demoUrl: '#desktop-app',
-    featured: false,
-  },
-  {
-    id: 'sudeko',
-    slug: 'sudeko',
-    title: 'Sudeko',
-    summary:
-      'Professional electrical and construction services company website showcasing comprehensive solutions with modern Polish interface.',
-    description: [
-      'Sudeko is a professional website designed for an electrical installation and construction services company operating in Elbląg, Poland since 2019. The platform showcases comprehensive electrical and building project management services with a focus on quality and professional expertise.',
-      "The website features a modern, professional design with striking blue and yellow branding that reflects the company's technical expertise and reliability. Built with a mobile-first approach, it provides an intuitive experience for clients looking to understand and engage with electrical and construction services.",
-      "The platform includes detailed service offerings, project portfolio, professional credentials, and client testimonials to establish trust and demonstrate the company's capabilities in both electrical installations and construction projects.",
-    ],
-    image: '/projects/sudeko/thumbnail.png',
-    gallery: [
-      {
-        src: '/projects/sudeko/overview.png',
-        alt: 'Sudeko Homepage',
-        caption:
-          'Professional homepage showcasing company statistics and services',
-      },
-      {
-        src: '/projects/sudeko/services.png',
-        alt: 'Sudeko Services',
-        caption:
-          'Comprehensive service offerings including electrical and construction',
-      },
-      {
-        src: '/projects/sudeko/about-us.png',
-        alt: 'Sudeko About Us',
-        caption: 'Company information and professional credentials',
-      },
-      {
-        src: '/projects/sudeko/why-us.png',
-        alt: 'Sudeko Why Choose Us',
-        caption: 'Value propositions and competitive advantages',
-      },
-      {
-        src: '/projects/sudeko/contact.png',
-        alt: 'Sudeko Contact',
-        caption: 'Contact information and service inquiry form',
-      },
-    ],
-    technologies: [
-      'Next.js',
-      'TypeScript',
-      'Tailwind CSS',
-      'Radix UI',
-      'React Hook Form',
-      'Zod',
-      'Framer Motion',
-      'Lucide React',
-      'Resend',
-      'Arcjet',
-      'React Turnstile',
-      'Next Themes',
-      'Sonner',
-    ],
-    features: [
-      'Professional service website with modern design',
-      'Comprehensive service portfolio presentation',
-      'Company statistics and achievements showcase',
-      'Professional credentials and certifications display',
-      'Client testimonials and project portfolio',
-      'Advanced security with Arcjet rate limiting and bot protection',
-      'Contact form with validation, honeypot, and Cloudflare Turnstile',
-      'Mobile-responsive design optimized for all devices',
-      'Professional branding with consistent visual identity',
-      'SEO-optimized content and structure',
-      'Multi-section navigation for easy browsing',
-    ],
-    techDetails: {
-      stack: [
-        'Next.js 15',
-        'TypeScript',
-        'Tailwind CSS',
-        'Radix UI Primitives',
-        'React Hook Form',
-        'Zod Validation',
-        'Framer Motion',
-        'Lucide React Icons',
-        'Resend Email',
-        'Arcjet Security',
-        'Cloudflare Turnstile',
-        'Next Themes',
-        'Sonner Toast',
-      ],
-      architecture:
-        'Sudeko follows a modern Next.js architecture with server-side rendering for optimal SEO performance. The application uses a component-based structure with reusable UI components from Radix UI, form handling with React Hook Form and Zod validation, email integration through Resend, and comprehensive security through Arcjet rate limiting and Cloudflare Turnstile bot protection.',
-      challenges: [
-        {
-          challenge:
-            'Creating a professional and trustworthy brand presentation',
-          solution:
-            'Developed a clean, professional design with consistent blue and yellow branding, clear service categorization, and prominent display of company credentials and statistics',
-        },
-        {
-          challenge: 'Showcasing technical services effectively to clients',
-          solution:
-            'Implemented detailed service sections with clear descriptions, visual icons, and organized categorization of electrical and construction services',
-        },
-        {
-          challenge: 'Ensuring accessibility and user experience',
-          solution:
-            'Used Radix UI primitives for accessibility compliance and implemented responsive design with Tailwind CSS for optimal viewing across all devices',
-        },
-        {
-          challenge: 'Protecting contact forms from spam and abuse',
-          solution:
-            'Implemented multi-layered security with Arcjet for rate limiting, honeypot fields for bot detection, and Cloudflare Turnstile for human verification',
-        },
-      ],
-    },
-    completedDate: 'September 2025',
-    duration: '3 days',
-    outcome:
-      "Sudeko successfully launched as a professional service website that effectively showcases the company's electrical and construction expertise. The modern design and comprehensive service presentation have helped establish a strong online presence for the business, making it easier for potential clients to understand services and make contact.",
-    demoUrl: 'https://sudekospzoo.pl/',
     featured: false,
   },
 ] as const
