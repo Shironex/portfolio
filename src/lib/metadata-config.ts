@@ -113,13 +113,6 @@ export const sectionMetadata: Record<string, PageMetadata> = {
     path: '/projects',
     ogImage: '/og-projects.png',
   },
-  articles: {
-    title: 'Articles & Insights',
-    description:
-      'Read my thoughts and tutorials on web development, technology, and programming',
-    path: '/articles',
-    ogImage: '/og-articles.png',
-  },
   contact: {
     title: 'Contact Me',
     description:
