@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 /* eslint-disable n/no-process-env */
-import createMDX from '@next/mdx'
 import { withSentryConfig } from '@sentry/nextjs'
 import { createJiti } from 'jiti'
 import { fileURLToPath } from 'url'
@@ -17,7 +16,11 @@ const nextConfig = {
   },
   webpack: (config, { isServer }) => {
     if (isServer) {
-      config.externals = [...(config.externals || []), 'bullmq']
+      // Ensure bullmq/ioredis are bundled to avoid serverExternalPackages warnings
+      config.externals = (config.externals || []).filter(
+        (ext) =>
+          !(typeof ext === 'string' && (ext === 'bullmq' || ext === 'ioredis'))
+      )
     }
 
     return config
@@ -25,9 +28,7 @@ const nextConfig = {
   output: 'standalone',
 }
 
-const withMDX = createMDX()
-
-export default withSentryConfig(withMDX(nextConfig), {
+export default withSentryConfig(nextConfig, {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 
