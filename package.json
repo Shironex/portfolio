@@ -42,7 +42,7 @@
     "@sentry/nextjs": "^10.11.0",
     "@t3-oss/env-nextjs": "^0.13.8",
     "autoprefixer": "^10.4.21",
-    "axios": "^1.11.0",
+    "axios": "^1.12.0",
     "bullmq": "^5.58.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
