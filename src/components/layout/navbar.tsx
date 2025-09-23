@@ -151,26 +151,6 @@ export function Navbar() {
                 </motion.div>
               </Link>
             </motion.div>
-            <motion.div variants={itemVariants}>
-              <Link
-                href="/contact"
-                data-umami-event="Click Button View Contact Page"
-              >
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label="Contact"
-                    className="hover:text-primary"
-                  >
-                    <Mail className="h-5 w-5" />
-                  </Button>
-                </motion.div>
-              </Link>
-            </motion.div>
             <motion.div
               variants={itemVariants}
               data-umami-event="Click Button Toggle Theme"
