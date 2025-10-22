@@ -1,41 +1,46 @@
+'use client'
+
 import { Code, Headphones } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import { FeatureCard } from '@/components/card/feature-card'
 import { ScrollAnimation } from '@/components/scroll-animation'
 
 export const InterestsSection = () => {
+  const t = useTranslations('interests')
+
   return (
     <section className="bg-secondary/50">
       <div className="container mx-auto px-4 py-16 md:px-6 md:py-24">
         <ScrollAnimation>
           <div className="mb-12 flex flex-col items-center text-center">
             <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
-              My Interests
+              {t('title')}
             </h2>
             <p className="max-w-2xl text-muted-foreground">
-              When its comes to my life, here&apos;s what keeps me busy.
+              {t('description')}
             </p>
           </div>
         </ScrollAnimation>
 
         <div className="grid gap-8 md:grid-cols-3">
           <FeatureCard
-            title="Programming"
-            description="Exploring new technologies and frameworks, contributing to open-source projects, and building personal projects to solve real-world problems."
+            title={t('programming.title')}
+            description={t('programming.description')}
             icon={<Code className="h-6 w-6" />}
           />
 
           <FeatureCard
             delay={0.2}
-            title="Music"
-            description="Discovering new artists and genres, attending concerts, and creating playlists for different moods and activities."
+            title={t('music.title')}
+            description={t('music.description')}
             icon={<Headphones className="h-6 w-6" />}
           />
 
           <FeatureCard
             delay={0.3}
-            title="Motorcycles"
-            description="Dreaming about owning a CFMoto 450 SS, learning about motorcycle mechanics, and planning future road trips."
+            title={t('motorcycles.title')}
+            description={t('motorcycles.description')}
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"

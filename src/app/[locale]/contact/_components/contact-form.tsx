@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Send } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useAction } from 'next-safe-action/hooks'
+import { useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
 import { useForm } from 'react-hook-form'
 import Turnstile from 'react-turnstile'
@@ -30,6 +31,8 @@ import { ContactFormSchema, contactFormSchema } from './validation'
 
 const ContactForm = () => {
   const { theme } = useTheme()
+  const t = useTranslations('contact')
+
   const form = useForm<ContactFormSchema>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
@@ -42,7 +45,7 @@ const ContactForm = () => {
   const { executeAsync, isPending } = useAction(sendEmailAction, {
     onSuccess: () => {
       form.reset()
-      toast('Email sent successfully')
+      toast(t('toast.success'))
     },
     onError: ({ error }) => {
       toast(error.serverError)
@@ -51,7 +54,7 @@ const ContactForm = () => {
 
   const handleSubmit = form.handleSubmit(async (data: ContactFormSchema) => {
     if (!data.turnstileToken) {
-      toast('Please complete the captcha')
+      toast(t('toast.captchaRequired'))
       return
     }
     await executeAsync(data)
@@ -76,13 +79,13 @@ const ContactForm = () => {
               name="name"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel htmlFor="name">Name</FormLabel>
+                  <FormLabel htmlFor="name">{t('form.name')}</FormLabel>
                   <FormControl>
                     <Input
                       id="name"
-                      aria-label="Name"
+                      aria-label={t('form.name')}
                       type="text"
-                      placeholder="Your Name"
+                      placeholder={t('form.namePlaceholder')}
                       required
                       {...field}
                     />
@@ -96,13 +99,13 @@ const ContactForm = () => {
               name="email"
               render={({ field }) => (
                 <FormItem className="w-full">
-                  <FormLabel htmlFor="email">Email</FormLabel>
+                  <FormLabel htmlFor="email">{t('form.email')}</FormLabel>
                   <FormControl>
                     <Input
                       id="email"
-                      aria-label="Email"
+                      aria-label={t('form.email')}
                       type="email"
-                      placeholder="Your email address"
+                      placeholder={t('form.emailPlaceholder')}
                       required
                       {...field}
                     />
@@ -117,12 +120,12 @@ const ContactForm = () => {
               name="message"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="message">Message</FormLabel>
+                  <FormLabel htmlFor="message">{t('form.message')}</FormLabel>
                   <FormControl>
                     <Textarea
                       id="message"
-                      aria-label="Message"
-                      placeholder="Your Message"
+                      aria-label={t('form.message')}
+                      placeholder={t('form.messagePlaceholder')}
                       rows={6}
                       {...field}
                     />
@@ -153,7 +156,7 @@ const ContactForm = () => {
               disabled={isPending}
               data-umami-event="Click Button Submit Contact Form"
             >
-              {isPending ? 'Sending...' : 'Submit'}
+              {isPending ? t('form.sending') : t('form.submit')}
               <motion.div
                 animate={isPending ? { rotate: 360 } : { x: [0, 5, 0] }}
                 transition={
