@@ -37,8 +37,9 @@ export function proxy(req: NextRequest) {
         `media-src 'self'`,
         `object-src 'none'`,
         // Use a nonce for any inline scripts; allow dev eval if needed
-        `script-src 'self' 'nonce-${nonce}' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com https://analytics.shirone.dev`,
-        `script-src-elem 'self' 'nonce-${nonce}' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com https://analytics.shirone.dev`,
+        // Temporarily allow inline to unblock hydration while keeping nonce for critical tags
+        `script-src 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com https://analytics.shirone.dev`,
+        `script-src-elem 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com https://analytics.shirone.dev`,
         `style-src 'self' 'unsafe-inline'`,
         `worker-src 'self' blob:`,
       ].join('; ')
@@ -62,8 +63,8 @@ export function proxy(req: NextRequest) {
       res.headers.set('X-XSS-Protection', '0')
       res.headers.set('Cache-Control', 'no-store, must-revalidate')
 
-      // Optional: expose your nonce to Server Components
-      res.headers.set('x-custom-nonce', nonce)
+      // Expose nonce for Next.js to apply to its inline scripts
+      res.headers.set('x-nonce', nonce)
 
       return res
     }
