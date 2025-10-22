@@ -4,7 +4,8 @@ import { sectionMetadata, siteConfig } from '@/lib/metadata-config'
 
 import { projectsData } from '@/data/projects-data'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  'use cache'
   const baseUrl = siteConfig.url
   const currentDate = new Date().toISOString()
 
