@@ -2,11 +2,14 @@
 /* eslint-disable n/no-process-env */
 import { withSentryConfig } from '@sentry/nextjs'
 import { createJiti } from 'jiti'
+import createNextIntlPlugin from 'next-intl/plugin'
 import { fileURLToPath } from 'url'
 
 const jiti = createJiti(fileURLToPath(import.meta.url))
 await jiti.import('./src/env/server.ts', { default: true })
 await jiti.import('./src/env/client.ts', { default: true })
+
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -28,7 +31,7 @@ const nextConfig = {
   output: 'standalone',
 }
 
-export default withSentryConfig(nextConfig, {
+export default withSentryConfig(withNextIntl(nextConfig), {
   // For all available options, see:
   // https://www.npmjs.com/package/@sentry/webpack-plugin#options
 

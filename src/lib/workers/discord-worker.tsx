@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/nextjs'
 import { Worker } from 'bullmq'
 import FormData from 'form-data'
 
-import { ContactFormSchema } from '@/app/contact/_components/validation'
+import { ContactFormSchema } from '@/app/[locale]/contact/_components/validation'
 
 import { sendDiscordWebhook } from '../discord'
 import { generateDefaultEmbed } from '../discord/embeds'

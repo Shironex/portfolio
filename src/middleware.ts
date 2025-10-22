@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import * as Sentry from '@sentry/nextjs'
+import createIntlMiddleware from 'next-intl/middleware'
 
 import { env } from './env/server'
+import { routing } from './i18n/routing'
+
+// Create i18n middleware
+const intlMiddleware = createIntlMiddleware(routing)
 
 export function middleware(req: NextRequest) {
   return Sentry.startSpan(
@@ -16,7 +21,8 @@ export function middleware(req: NextRequest) {
       },
     },
     () => {
-      const res = NextResponse.next()
+      // First, handle i18n routing
+      const res = intlMiddleware(req)
 
       // Generate a nonce (16 bytes → base64 string)
       const nonce = Buffer.from(crypto.randomUUID()).toString('base64')

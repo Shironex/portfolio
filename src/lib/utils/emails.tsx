@@ -1,7 +1,7 @@
 import { render } from '@react-email/render'
 import puppeteer from 'puppeteer-core'
 
-import { ContactFormSchema } from '@/app/contact/_components/validation'
+import { ContactFormSchema } from '@/app/[locale]/contact/_components/validation'
 
 import ContactFormEmail from '../mail/templates/contact-form'
 

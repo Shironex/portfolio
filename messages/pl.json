@@ -1,0 +1,152 @@
+{
+  "nav": {
+    "home": "Strona główna",
+    "about": "O mnie",
+    "projects": "Projekty",
+    "contact": "Kontakt"
+  },
+  "hero": {
+    "greeting": "Cześć! Jestem Kacper",
+    "description": "Jestem full-stack developerem, który uwielbia tworzyć nowe rzeczy i aplikacje webowe, które mogą wpływać na ludzi wokół mnie.",
+    "availableForWork": "Dostępny dla nowych projektów",
+    "notAvailableForWork": "Niedostępny dla nowych projektów",
+    "viewMyWork": "Zobacz Moje Prace",
+    "getInTouch": "Skontaktuj się"
+  },
+  "projects": {
+    "featuredTitle": "Nad czym pracowałem",
+    "featuredDescription": "Wybór moich ostatnich projektów i współprac.",
+    "viewAllProjects": "Zobacz Wszystkie Projekty",
+    "viewDetails": "Zobacz Szczegóły",
+    "liveDemo": "Demo na żywo",
+    "desktopApp": "Aplikacja Desktopowa",
+    "inDevelopment": "W Trakcie Rozwoju",
+    "code": "Kod",
+    "moreCount": "+{count} więcej",
+    "pageTitle": "Projekty",
+    "pageDescription": "Kolekcja moich ostatnich projektów, pokazująca moje umiejętności i doświadczenie w tworzeniu aplikacji webowych.",
+    "featuredProjects": "Wyróżnione Projekty",
+    "otherProjects": "Inne Projekty",
+    "ctaTitle": "Masz pomysł na projekt?",
+    "ctaDescription": "Porozmawiajmy o tym, jak mogę pomóc wcielić Twoje pomysły w życie."
+  },
+  "projectDetail": {
+    "overview": "Przegląd Projektu",
+    "keyFeatures": "Kluczowe Funkcje",
+    "technicalDetails": "Szczegóły Techniczne",
+    "techStack": "Stack Technologiczny",
+    "architecture": "Architektura",
+    "challengesAndSolutions": "Wyzwania i Rozwiązania",
+    "challenge": "Wyzwanie:",
+    "solution": "Rozwiązanie:",
+    "outcomeAndResults": "Wynik i Rezultaty",
+    "relatedProjects": "Powiązane Projekty",
+    "ctaTitle": "Zainteresowany współpracą?",
+    "ctaDescription": "Jestem zawsze otwarty na nowe możliwości i współprace. Porozmawiajmy o tym, jak mogę pomóc wcielić Twoje pomysły w życie."
+  },
+  "skills": {
+    "title": "Moje Umiejętności i Ekspertyza",
+    "description": "Specjalizuję się w budowaniu nowoczesnych aplikacji webowych z użyciem tych technologii.",
+    "frontend": {
+      "title": "Frontend Development",
+      "description": "Tworzenie responsywnych i interaktywnych interfejsów użytkownika z nowoczesnymi frameworkami."
+    },
+    "backend": {
+      "title": "Backend Development",
+      "description": "Budowanie solidnych aplikacji serwerowych i API do zasilania aplikacji webowych."
+    },
+    "devops": {
+      "title": "DevOps & Deployment & Narzędzia Testowe",
+      "description": "Konfiguracja pipeline'ów CI/CD i wdrażanie aplikacji w środowiskach produkcyjnych."
+    }
+  },
+  "cta": {
+    "workTogether": "Pracujmy Razem",
+    "workTogetherDescription": "Jestem obecnie dostępny dla projektów freelance, pełnoetatowych stanowisk lub współpracy. Jeśli masz pomysł na projekt lub po prostu chcesz porozmawiać, skontaktuj się ze mną!",
+    "letsConnect": "Połączmy się",
+    "letsConnectDescription": "Jestem zawsze otwarty na nowe możliwości, współprace lub po prostu przyjacielską rozmowę o technologii, muzyce lub motocyklach.",
+    "followOnGithub": "Obserwuj na GitHub"
+  },
+  "about": {
+    "pageTitle": "O mnie",
+    "pageDescription": "Cześć, jestem Kacper — pasjonat programowania, entuzjasta technologii i miłośnik kreatywności we wszystkich jej formach.",
+    "myJourney": "Moja Droga",
+    "journey": {
+      "paragraph1": "Od momentu, gdy rozpocząłem moją podróż z programowaniem, byłem zafascynowany magią budowania aplikacji webowych, które mogą naprawdę zmienić coś w życiu.",
+      "paragraph2": "Jako junior Next.js developer z dwuletnim doświadczeniem, specjalizuję się w przekształcaniu pomysłów w funkcjonalne, płynne rozwiązania cyfrowe. Czy to narzędzie, które ułatwia życie mnie, moim przyjaciołom czy rodzinie, tworzę oprogramowanie, które łączy wydajność z elegancją.",
+      "paragraph3": "Poza kodowaniem mam szeroki zakres zainteresowań. Muzyka jest dużą częścią mojego życia – lubię odkrywać różne gatunki i nowych artystów. Jestem także fanem rozwiązywania problemów w każdej formie, czy to rozwikłanie złożonych problemów z kodem, czy rozwiązanie kostki Rubika.",
+      "paragraph4": "A kiedy nie jestem zanurzony w technologii, prawdopodobnie marzę o motocyklach. Moim celem jest posiadanie CFMoto 450 SSR w niedalekiej przyszłości."
+    },
+    "contactMe": "Skontaktuj się ze mną",
+    "downloadResume": "Pobierz CV"
+  },
+  "interests": {
+    "title": "Moje Zainteresowania",
+    "description": "Jeśli chodzi o moje życie, oto co mnie zajmuje.",
+    "programming": {
+      "title": "Programowanie",
+      "description": "Eksplorowanie nowych technologii i frameworków, współtworzenie projektów open-source i budowanie osobistych projektów rozwiązujących problemy ze świata rzeczywistego."
+    },
+    "music": {
+      "title": "Muzyka",
+      "description": "Odkrywanie nowych artystów i gatunków, uczestnictwo w koncertach i tworzenie playlist na różne nastroje i aktywności."
+    },
+    "motorcycles": {
+      "title": "Motocykle",
+      "description": "Marzenie o posiadaniu CFMoto 450 SS, uczenie się o mechanice motocyklowej i planowanie przyszłych wycieczek."
+    }
+  },
+  "contact": {
+    "pageTitle": "Skontaktuj się ze mną",
+    "pageDescription": "Skontaktuj się ze mną przez email lub wypełnij ten formularz kontaktowy. Odezwę się do Ciebie jak najszybciej - obiecuję.",
+    "getInTouch": "Skontaktuj się",
+    "availability": "Jestem obecnie dostępny dla projektów freelance, pełnoetatowych stanowisk lub współpracy. Jeśli masz pomysł na projekt lub po prostu chcesz porozmawiać, skontaktuj się ze mną!",
+    "email": "Email",
+    "location": "Lokalizacja",
+    "locationValue": "Gdańsk, Polska",
+    "visualizationTitle": "Podczas gdy się nudzisz",
+    "visualizationDescription": "Możesz spojrzeć na tę animację, aby zobaczyć jak jestem połączony ze światem",
+    "form": {
+      "name": "Imię",
+      "namePlaceholder": "Twoje Imię",
+      "email": "Email",
+      "emailPlaceholder": "Twój adres email",
+      "message": "Wiadomość",
+      "messagePlaceholder": "Twoja Wiadomość",
+      "submit": "Wyślij",
+      "sending": "Wysyłanie..."
+    },
+    "validation": {
+      "nameRequired": "Imię jest wymagane",
+      "emailRequired": "Email jest wymagany",
+      "emailInvalid": "Nieprawidłowy adres email",
+      "messageRequired": "Wiadomość jest wymagana"
+    },
+    "toast": {
+      "captchaRequired": "Proszę ukończyć captchę",
+      "success": "Email wysłany pomyślnie",
+      "rateLimit": "Przekroczono limit. Spróbuj ponownie za 1 godzinę",
+      "robotDetected": "Wykryto robota",
+      "error": "Wystąpił błąd podczas wysyłania emaila. Spróbuj ponownie później.",
+      "captchaError": "Wystąpił błąd podczas weryfikacji captcha. Spróbuj ponownie."
+    }
+  },
+  "footer": {
+    "tagline": "Full-stack developer tworzący aplikacje webowe, które mają wpływ",
+    "copyright": "© {year} Shirone. Wszelkie prawa zastrzeżone."
+  },
+  "common": {
+    "loading": "Ładowanie...",
+    "pleaseWait": "Proszę czekać, pobieramy dane."
+  },
+  "errors": {
+    "pageNotFound": "Strona nie znaleziona",
+    "pageNotFoundDescription": "Nie mogliśmy znaleźć strony, której szukasz.",
+    "pageNotFoundCta": "Sprawdź URL lub wróć na stronę główną.",
+    "backToHome": "Powrót do Strony Głównej",
+    "projectNotFound": "Projekt nie znaleziony",
+    "projectNotFoundDescription": "Nie mogliśmy znaleźć projektu, którego szukasz.",
+    "projectNotFoundCta": "Sprawdź URL lub wróć do projektów.",
+    "backToProjects": "Powrót do Projektów"
+  }
+}

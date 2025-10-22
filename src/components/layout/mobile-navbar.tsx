@@ -1,14 +1,19 @@
-import Link from 'next/link'
+'use client'
+
 import React from 'react'
 
 import { Github } from 'lucide-react'
 import { type Variants, motion } from 'motion/react'
 import { AnimatePresence } from 'motion/react'
+import { useTranslations } from 'next-intl'
 
+import { Link } from '@/i18n/routing'
 import { GITHUB_URL } from '@/lib/constants'
 
 import { NavItem } from '@/types'
 
+import { LanguageSwitcher } from '../language-switcher'
+import { ThemeToggle } from '../theme-toggle'
 import { Button } from '../ui/button'
 
 interface MobileNavBarProps {
@@ -26,6 +31,8 @@ const MobileNavBar = ({
   closeMenu,
   navItems,
 }: MobileNavBarProps) => {
+  const t = useTranslations()
+
   const mobileMenuVariants: Variants = {
     hidden: { opacity: 0, y: -20, height: 0 },
     visible: {
@@ -78,32 +85,31 @@ const MobileNavBar = ({
                     }`}
                     onClick={closeMenu}
                   >
-                    {item.name}
+                    {t(item.name)}
                   </Link>
                 </motion.li>
               ))}
             </ul>
-            <div className="mt-6 flex items-center gap-4">
-              <motion.div variants={itemVariants} className="w-full">
-                <Link
+            <div className="mt-6 flex items-center justify-between gap-4">
+              <motion.div variants={itemVariants} className="flex gap-2">
+                <LanguageSwitcher />
+                <ThemeToggle />
+              </motion.div>
+              <motion.div variants={itemVariants}>
+                <a
                   href={GITHUB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full"
                 >
                   <motion.div
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start gap-2"
-                    >
+                    <Button variant="outline" size="icon">
                       <Github className="h-5 w-5" />
-                      GitHub
                     </Button>
                   </motion.div>
-                </Link>
+                </a>
               </motion.div>
             </div>
           </nav>

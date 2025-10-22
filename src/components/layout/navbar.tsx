@@ -1,7 +1,6 @@
 'use client'
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 
 import { Github, Mail } from 'lucide-react'
@@ -9,9 +8,11 @@ import { Variants, motion } from 'motion/react'
 
 import { Button } from '@/components/ui/button'
 
+import { LanguageSwitcher } from '@/components/language-switcher'
 import { SentryLink } from '@/components/sentry-link'
 import { ThemeToggle } from '@/components/theme-toggle'
 
+import { Link, usePathname } from '@/i18n/routing'
 import { GITHUB_URL, NAV_ITEMS } from '@/lib/constants'
 
 import MobileNavBar from './mobile-navbar'
@@ -21,6 +22,7 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
+  const t = useTranslations()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -108,10 +110,10 @@ export function Navbar() {
                       ? 'text-primary'
                       : 'text-muted-foreground'
                   }`}
-                  data-umami-event={`Click Button Navigate to ${item.name}`}
-                  eventName={`Navigate to ${item.name}`}
+                  data-umami-event={`Click Button Navigate to ${t(item.name)}`}
+                  eventName={`Navigate to ${t(item.name)}`}
                 >
-                  {item.name}
+                  {t(item.name)}
                   {pathname === item.path && (
                     <motion.div
                       layoutId="navbar-indicator"
@@ -130,7 +132,7 @@ export function Navbar() {
 
           <div className="flex items-center gap-4">
             <motion.div variants={itemVariants}>
-              <Link
+              <a
                 href={GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -149,7 +151,10 @@ export function Navbar() {
                     <Github className="h-5 w-5" />
                   </Button>
                 </motion.div>
-              </Link>
+              </a>
+            </motion.div>
+            <motion.div variants={itemVariants}>
+              <LanguageSwitcher />
             </motion.div>
             <motion.div
               variants={itemVariants}

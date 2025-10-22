@@ -1,0 +1,152 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
+  "hero": {
+    "greeting": "Hello there! I'm Kacper",
+    "description": "I'm a full-stack developer that loves building new things and web apps that can impact peoples around me.",
+    "availableForWork": "Available for new projects",
+    "notAvailableForWork": "Not available for new projects",
+    "viewMyWork": "View My Work",
+    "getInTouch": "Get in Touch"
+  },
+  "projects": {
+    "featuredTitle": "What I've been working on",
+    "featuredDescription": "A selection of my recent projects and collaborations.",
+    "viewAllProjects": "View All Projects",
+    "viewDetails": "View Details",
+    "liveDemo": "Live Demo",
+    "desktopApp": "Desktop App",
+    "inDevelopment": "In Development",
+    "code": "Code",
+    "moreCount": "+{count} more",
+    "pageTitle": "Projects",
+    "pageDescription": "A collection of my recent projects, showcasing my skills and experience in web development.",
+    "featuredProjects": "Featured Projects",
+    "otherProjects": "Other Projects",
+    "ctaTitle": "Have a project in mind?",
+    "ctaDescription": "Let's discuss how I can help bring your ideas to life."
+  },
+  "projectDetail": {
+    "overview": "Project Overview",
+    "keyFeatures": "Key Features",
+    "technicalDetails": "Technical Details",
+    "techStack": "Technology Stack",
+    "architecture": "Architecture",
+    "challengesAndSolutions": "Challenges & Solutions",
+    "challenge": "Challenge:",
+    "solution": "Solution:",
+    "outcomeAndResults": "Outcome & Results",
+    "relatedProjects": "Related Projects",
+    "ctaTitle": "Interested in working together?",
+    "ctaDescription": "I'm always open to new opportunities and collaborations. Let's discuss how I can help bring your ideas to life."
+  },
+  "skills": {
+    "title": "My Skills & Expertise",
+    "description": "I specialize in building modern web applications with these technologies.",
+    "frontend": {
+      "title": "Frontend Development",
+      "description": "Creating responsive and interactive user interfaces with modern frameworks."
+    },
+    "backend": {
+      "title": "Backend Development",
+      "description": "Building robust server-side applications and APIs to power web applications."
+    },
+    "devops": {
+      "title": "DevOps & Deployment & Testing Tools",
+      "description": "Setting up CI/CD pipelines and deploying applications to production environments."
+    }
+  },
+  "cta": {
+    "workTogether": "Let's Work Together",
+    "workTogetherDescription": "I'm currently available for freelance projects, full-time positions, or collaborations. If you have a project in mind or just want to chat, feel free to reach out!",
+    "letsConnect": "Let's Connect",
+    "letsConnectDescription": "I'm always open to new opportunities, collaborations, or just a friendly chat about tech, music, or motorcycles.",
+    "followOnGithub": "Follow on GitHub"
+  },
+  "about": {
+    "pageTitle": "About Me",
+    "pageDescription": "Hey there, I'm Kacper — a passionate developer, tech enthusiast, and a lover of creativity in all forms.",
+    "myJourney": "My Journey",
+    "journey": {
+      "paragraph1": "From the moment I began my coding journey, I was captivated by the magic of building web applications that could genuinely make a difference.",
+      "paragraph2": "As a junior Next.js developer with two years of experience, I specialize in turning ideas into functional, seamless digital solutions. Whether it's a tool to make life easier for me, my friends, or my family, I'm all about creating impactful software that merges performance with elegance.",
+      "paragraph3": "Beyond the code, I have a diverse range of interests. Music is a big part of my life – I enjoy exploring different genres and discovering new artists. I'm also a fan of problem-solving in any form, whether it's untangling complex coding issues or solving a Rubik's cube.",
+      "paragraph4": "And when I'm not immersed in tech, you'll probably find me dreaming about motorcycles. My goal is to own a CFMoto 450 SSR in the near future."
+    },
+    "contactMe": "Contact Me",
+    "downloadResume": "Download Resume"
+  },
+  "interests": {
+    "title": "My Interests",
+    "description": "When its comes to my life, here's what keeps me busy.",
+    "programming": {
+      "title": "Programming",
+      "description": "Exploring new technologies and frameworks, contributing to open-source projects, and building personal projects to solve real-world problems."
+    },
+    "music": {
+      "title": "Music",
+      "description": "Discovering new artists and genres, attending concerts, and creating playlists for different moods and activities."
+    },
+    "motorcycles": {
+      "title": "Motorcycles",
+      "description": "Dreaming about owning a CFMoto 450 SS, learning about motorcycle mechanics, and planning future road trips."
+    }
+  },
+  "contact": {
+    "pageTitle": "Contact Me",
+    "pageDescription": "Reach out to me over email or fill up this contact form. I will get back to you ASAP - I promise.",
+    "getInTouch": "Get in Touch",
+    "availability": "I'm currently available for freelance work, full-time positions, or collaborations. If you have a project in mind or just want to chat, feel free to reach out!",
+    "email": "Email",
+    "location": "Location",
+    "locationValue": "Gdańsk, Poland",
+    "visualizationTitle": "While you're bored",
+    "visualizationDescription": "You can look at this animation to see how I'm connected to the world",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Your Name",
+      "email": "Email",
+      "emailPlaceholder": "Your email address",
+      "message": "Message",
+      "messagePlaceholder": "Your Message",
+      "submit": "Submit",
+      "sending": "Sending..."
+    },
+    "validation": {
+      "nameRequired": "Name is required",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email address",
+      "messageRequired": "Message is required"
+    },
+    "toast": {
+      "captchaRequired": "Please complete the captcha",
+      "success": "Email sent successfully",
+      "rateLimit": "Rate limit exceeded. Try again in 1 hour",
+      "robotDetected": "Robot detected",
+      "error": "There was an error when sending email. Please try again later.",
+      "captchaError": "There was an error when verifying captcha. Please try again."
+    }
+  },
+  "footer": {
+    "tagline": "Full-stack developer building impactful web applications",
+    "copyright": "© {year} Shirone. All rights reserved."
+  },
+  "common": {
+    "loading": "Loading...",
+    "pleaseWait": "Please wait while we fetch the data."
+  },
+  "errors": {
+    "pageNotFound": "Page Not Found",
+    "pageNotFoundDescription": "We couldn't find the page you're looking for.",
+    "pageNotFoundCta": "Please check the URL or return to the home page.",
+    "backToHome": "Back to Home",
+    "projectNotFound": "Project Not Found",
+    "projectNotFoundDescription": "We couldn't find the project you're looking for.",
+    "projectNotFoundCta": "Please check the URL or return to the projects page.",
+    "backToProjects": "Back to Projects"
+  }
+}
