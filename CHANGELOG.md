@@ -1,3 +1,10 @@
+## [1.23.3](https://github.com/Shironex/portfolio/compare/v1.23.2...v1.23.3) (2025-10-22)
+
+
+### Bug Fixes
+
+* **csp:** update CSP to allow inline scripts and expose nonce for client-side access ([f7cca8b](https://github.com/Shironex/portfolio/commit/f7cca8baf45cd83bbaef8d51c6f5c27d92ffbee7))
+
 ## [1.23.2](https://github.com/Shironex/portfolio/compare/v1.23.1...v1.23.2) (2025-10-22)
 
 
