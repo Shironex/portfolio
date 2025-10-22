@@ -1,3 +1,10 @@
+## [1.23.1](https://github.com/Shironex/portfolio/compare/v1.23.0...v1.23.1) (2025-10-22)
+
+
+### Bug Fixes
+
+* **proxy:** update Content Security Policy to allow self-hosted fonts and inline scripts ([2026f81](https://github.com/Shironex/portfolio/commit/2026f81e78294d1349de1e0cd50ac5d26702182b))
+
 # [1.23.0](https://github.com/Shironex/portfolio/compare/v1.22.1...v1.23.0) (2025-10-22)
 
 
