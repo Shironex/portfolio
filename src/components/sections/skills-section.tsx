@@ -1,6 +1,9 @@
+'use client'
+
 import React from 'react'
 
 import { Code } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import { FeatureCard } from '../card/feature-card'
 import { Badge } from '../ui/badge'
@@ -97,23 +100,24 @@ const skills: Skills = {
 }
 
 const SkillsSection = () => {
+  const t = useTranslations('skills')
+
   return (
     <section className="bg-secondary/50">
       <div className="container mx-auto px-4 py-16 md:px-6 md:py-24">
         <div className="mb-12 flex flex-col items-center text-center">
           <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
-            My Skills & Expertise
+            {t('title')}
           </h2>
           <p className="max-w-2xl text-muted-foreground">
-            I specialize in building modern web applications with these
-            technologies.
+            {t('description')}
           </p>
         </div>
 
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           <FeatureCard
-            title="Frontend Development"
-            description="Creating responsive and interactive user interfaces with modern frameworks."
+            title={t('frontend.title')}
+            description={t('frontend.description')}
             icon={<Code className="h-6 w-6" />}
           >
             <div className="flex flex-wrap gap-2">
@@ -127,8 +131,8 @@ const SkillsSection = () => {
 
           <FeatureCard
             delay={0.2}
-            title="Backend Development"
-            description="Building robust server-side applications and APIs to power web applications."
+            title={t('backend.title')}
+            description={t('backend.description')}
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -160,8 +164,8 @@ const SkillsSection = () => {
 
           <FeatureCard
             delay={0.3}
-            title="DevOps & Deployment & Testing Tools"
-            description="Setting up CI/CD pipelines and deploying applications to production environments."
+            title={t('devops.title')}
+            description={t('devops.description')}
             icon={
               <svg
                 xmlns="http://www.w3.org/2000/svg"

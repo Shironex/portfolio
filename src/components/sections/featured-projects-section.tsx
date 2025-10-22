@@ -1,11 +1,12 @@
 'use client'
 
-import Link from 'next/link'
 import React from 'react'
 
 import { ArrowRight } from 'lucide-react'
 import { motion } from 'motion/react'
+import { useTranslations } from 'next-intl'
 
+import { Link } from '@/i18n/routing'
 import { projectsData } from '@/data/projects-data'
 
 import ProjectCard from '../card/project-card'
@@ -13,6 +14,7 @@ import { ScrollAnimation } from '../scroll-animation'
 import { Button } from '../ui/button'
 
 const FeaturedProjectsSection = () => {
+  const t = useTranslations('projects')
   const featuredProjects = projectsData
     .filter((project) => project.featured)
     .slice(0, 3)
@@ -22,10 +24,10 @@ const FeaturedProjectsSection = () => {
       <ScrollAnimation>
         <div className="mb-12 flex flex-col items-center text-center">
           <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
-            What I&apos;ve been working on
+            {t('featuredTitle')}
           </h2>
           <p className="max-w-2xl text-muted-foreground">
-            A selection of my recent projects and collaborations.
+            {t('featuredDescription')}
           </p>
         </div>
       </ScrollAnimation>
@@ -52,7 +54,7 @@ const FeaturedProjectsSection = () => {
                 className="gap-2"
                 data-umami-event="Click Button View All Projects"
               >
-                View All Projects
+                {t('viewAllProjects')}
                 <motion.div
                   animate={{ x: [0, 5, 0] }}
                   transition={{

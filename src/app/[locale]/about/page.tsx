@@ -3,6 +3,7 @@
 import Image from 'next/image'
 
 import { motion } from 'motion/react'
+import { useTranslations } from 'next-intl'
 
 import { PageTransition } from '@/components/layout/page-transition'
 import { ScrollAnimation } from '@/components/scroll-animation'
@@ -12,12 +13,15 @@ import HeroSection from '@/components/sections/hero-section'
 import { InterestsSection } from '@/components/sections/interests-section'
 
 export default function AboutPage() {
+  const t = useTranslations('about')
+  const tCta = useTranslations('cta')
+
   return (
     <PageTransition>
       <div className="flex flex-col">
         <HeroSection
-          title="About Me"
-          description="Hey there, I'm Kacper — a passionate developer, tech enthusiast, and a lover of creativity in all forms."
+          title={t('pageTitle')}
+          description={t('pageDescription')}
         />
 
         {/* Main Content */}
@@ -31,9 +35,8 @@ export default function AboutPage() {
         <InterestsSection />
 
         <CTASection
-          title="Let's Connect"
-          description={`I'm always open to new opportunities, collaborations, or
-                  just a friendly chat about tech, music, or motorcycles.`}
+          title={tCta('letsConnect')}
+          description={tCta('letsConnectDescription')}
           showGitHubButton={true}
         />
       </div>

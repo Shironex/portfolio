@@ -1,11 +1,12 @@
 'use client'
 
-import Link from 'next/link'
 import React from 'react'
 
 import { ArrowRight } from 'lucide-react'
 import { motion } from 'motion/react'
+import { useTranslations } from 'next-intl'
 
+import { Link } from '@/i18n/routing'
 import { APP_ROUTES } from '@/lib/constants'
 import { fadeUp } from '@/lib/utils/animations'
 import { staggerContainer } from '@/lib/utils/animations'
@@ -63,6 +64,8 @@ const HeroSection = ({
 }
 
 const AvailableForNewProjects = () => {
+  const t = useTranslations('hero')
+
   return (
     <motion.div
       className="mb-6 inline-flex items-center rounded-full border border-border bg-secondary px-3 py-1 text-sm"
@@ -85,13 +88,15 @@ const AvailableForNewProjects = () => {
         }}
       />
       {env.NEXT_PUBLIC_AVAILABLE_FOR === 'true'
-        ? 'Available for new projects'
-        : 'Not available for new projects'}
+        ? t('availableForWork')
+        : t('notAvailableForWork')}
     </motion.div>
   )
 }
 
 const BottomButtons = () => {
+  const t = useTranslations('hero')
+
   return (
     <motion.div className="flex flex-col gap-4 sm:flex-row" variants={fadeUp}>
       <Link href={APP_ROUTES.toProjects}>
@@ -108,7 +113,7 @@ const BottomButtons = () => {
             className="gap-2"
             data-umami-event="Click Button View My Work"
           >
-            View My Work
+            {t('viewMyWork')}
             <motion.div
               animate={{ x: [0, 5, 0] }}
               transition={{
@@ -138,7 +143,7 @@ const BottomButtons = () => {
             variant="outline"
             data-umami-event="Click Button Get in Touch"
           >
-            Get in Touch
+            {t('getInTouch')}
           </Button>
         </motion.div>
       </Link>

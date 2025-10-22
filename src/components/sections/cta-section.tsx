@@ -1,10 +1,12 @@
-import Link from 'next/link'
+'use client'
 
 import { ArrowRight, Github } from 'lucide-react'
 import { motion } from 'motion/react'
+import { useTranslations } from 'next-intl'
 
 import { Button } from '@/components/ui/button'
 
+import { Link } from '@/i18n/routing'
 import { APP_ROUTES, GITHUB_URL } from '@/lib/constants'
 
 import { ScrollAnimation } from '../scroll-animation'
@@ -20,6 +22,9 @@ const CTASection = ({
   description,
   showGitHubButton = false,
 }: CTASectionProps) => {
+  const tHero = useTranslations('hero')
+  const t = useTranslations('cta')
+
   return (
     <section className="container mx-auto px-4 py-16 md:px-6 md:py-24">
       <ScrollAnimation>
@@ -51,7 +56,7 @@ const CTASection = ({
                     className="gap-2"
                     data-umami-event="Click Button Get in Touch"
                   >
-                    Get in Touch
+                    {tHero('getInTouch')}
                     <motion.div
                       animate={{ x: [0, 5, 0] }}
                       transition={{
@@ -69,7 +74,7 @@ const CTASection = ({
               </Link>
 
               {showGitHubButton && (
-                <Link
+                <a
                   href={GITHUB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -84,10 +89,10 @@ const CTASection = ({
                   >
                     <Button size="lg" variant="outline" className="gap-2">
                       <Github className="h-4 w-4" />
-                      Follow on GitHub
+                      {t('followOnGithub')}
                     </Button>
                   </motion.div>
-                </Link>
+                </a>
               )}
             </div>
           </div>
