@@ -14,6 +14,11 @@ const nextConfig = {
   images: {
     remotePatterns: [{ protocol: 'https', hostname: 'images.unsplash.com' }],
   },
+  cacheComponents: true,
+  cacheLife: {
+    hours: { stale: 3600, revalidate: 900, expire: 86400 },
+    days: { stale: 86400, revalidate: 3600, expire: 604800 },
+  },
   webpack: (config, { isServer }) => {
     if (isServer) {
       // Ensure bullmq/ioredis are bundled to avoid serverExternalPackages warnings
