@@ -11,6 +11,13 @@ import { projectsData } from '@/data/projects-data'
 import ProjectCard from '../card/project-card'
 import { ScrollAnimation } from '../scroll-animation'
 import { Button } from '../ui/button'
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from '../ui/empty'
 
 const FeaturedProjectsSection = () => {
   const featuredProjects = projectsData
@@ -30,11 +37,29 @@ const FeaturedProjectsSection = () => {
         </div>
       </ScrollAnimation>
 
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {featuredProjects.map((project, index) => (
-          <ProjectCard key={project.id} project={project} delay={0.1 * index} />
-        ))}
-      </div>
+      {featuredProjects.length === 0 ? (
+        <Empty className="border">
+          <EmptyHeader>
+            <EmptyTitle>No featured projects</EmptyTitle>
+            <EmptyDescription>
+              When projects are featured, they will be highlighted here.
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent>
+            Add featured projects to draw attention to your best work.
+          </EmptyContent>
+        </Empty>
+      ) : (
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {featuredProjects.map((project, index) => (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              delay={0.1 * index}
+            />
+          ))}
+        </div>
+      )}
 
       <ScrollAnimation delay={0.4}>
         <div className="mt-12 flex justify-center">

@@ -1,28 +1,40 @@
-import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
 import nextPlugin from '@next/eslint-plugin-next'
 import tseslint from '@typescript-eslint/eslint-plugin'
+import tsParser from '@typescript-eslint/parser'
 import eslintConfigPrettier from 'eslint-config-prettier'
 import checkFilePlugin from 'eslint-plugin-check-file'
 import nPlugin from 'eslint-plugin-n'
 
-const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname,
-})
-
 /** @type {import('eslint').Linter.FlatConfig[]} */
 const eslintConfig = [
   {
-    ignores: ['node_modules/**', 'dist/**', '.github/**', 'pnpm-lock.yaml'],
+    ignores: [
+      'node_modules/**',
+      '.next/**',
+      'out/**',
+      'dist/**',
+      '.github/**',
+      'pnpm-lock.yaml',
+    ],
   },
   js.configs.recommended,
-  ...compat.extends('plugin:@next/next/recommended'),
+  // Next.js 16 flat config (no legacy extends or compat)
+  nextPlugin.configs['core-web-vitals'],
   {
     plugins: {
       '@typescript-eslint': tseslint,
       'check-file': checkFilePlugin,
       n: nPlugin,
       next: nextPlugin,
+    },
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: 2022,
+        sourceType: 'module',
+        ecmaFeatures: { jsx: true },
+      },
     },
     rules: {
       // TypeScript rules
@@ -73,6 +85,21 @@ const eslintConfig = [
       'next/no-unwanted-polyfillio': 'error',
     },
   },
+  // Node/CommonJS globals for JS tooling scripts
+  {
+    files: ['.commitlintrc.js', 'scripts/**/*.js'],
+    languageOptions: {
+      sourceType: 'script',
+      globals: {
+        module: 'readonly',
+        require: 'readonly',
+        __dirname: 'readonly',
+        __filename: 'readonly',
+        process: 'readonly',
+      },
+    },
+  },
+  // Keep Prettier last to disable formatting-related ESLint rules
   eslintConfigPrettier,
 ]
 

@@ -1,4 +1,14 @@
-'use client'
+'use cache'
+
+import { cacheLife } from 'next/cache'
+
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyTitle,
+} from '@/components/ui/empty'
 
 import ProjectCard from '@/components/card/project-card'
 import { PageTransition } from '@/components/layout/page-transition'
@@ -8,7 +18,8 @@ import HeroSection from '@/components/sections/hero-section'
 
 import { projectsData } from '@/data/projects-data'
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  cacheLife('days')
   const featuredProjects = projectsData.filter((project) => project.featured)
   const otherProjects = projectsData.filter((project) => !project.featured)
 
@@ -27,15 +38,29 @@ export default function ProjectsPage() {
               Featured Projects
             </h2>
           </ScrollAnimation>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {featuredProjects.map((project, index) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                delay={0.1 * index}
-              />
-            ))}
-          </div>
+          {featuredProjects.length === 0 ? (
+            <Empty className="border">
+              <EmptyHeader>
+                <EmptyTitle>No featured projects</EmptyTitle>
+                <EmptyDescription>
+                  When projects are marked as featured, they will appear here.
+                </EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent>
+                Check back later or browse all projects below.
+              </EmptyContent>
+            </Empty>
+          ) : (
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {featuredProjects.map((project, index) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  delay={0.1 * index}
+                />
+              ))}
+            </div>
+          )}
         </section>
 
         {/* Other Projects */}
@@ -46,15 +71,29 @@ export default function ProjectsPage() {
                 Other Projects
               </h2>
             </ScrollAnimation>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {otherProjects.map((project, index) => (
-                <ProjectCard
-                  key={project.id}
-                  project={project}
-                  delay={0.1 * index}
-                />
-              ))}
-            </div>
+            {otherProjects.length === 0 ? (
+              <Empty className="border bg-background">
+                <EmptyHeader>
+                  <EmptyTitle>No projects to display</EmptyTitle>
+                  <EmptyDescription>
+                    Projects you add will be shown here with details and links.
+                  </EmptyDescription>
+                </EmptyHeader>
+                <EmptyContent>
+                  Consider adding new projects to showcase your work.
+                </EmptyContent>
+              </Empty>
+            ) : (
+              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                {otherProjects.map((project, index) => (
+                  <ProjectCard
+                    key={project.id}
+                    project={project}
+                    delay={0.1 * index}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </section>
 

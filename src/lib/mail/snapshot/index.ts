@@ -173,7 +173,10 @@ async function createPageWithRetry(browser: Browser): Promise<any> {
       })
 
       page.on('pageerror', (error) => {
-        console.warn('Page script error:', error.message)
+        console.warn(
+          'Page script error:',
+          (error as Error)?.message || 'Unknown error'
+        )
       })
 
       // Test page responsiveness with a simple operation

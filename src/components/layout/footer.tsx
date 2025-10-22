@@ -4,7 +4,12 @@ import { Github } from 'lucide-react'
 
 import { GITHUB_URL, NAV_ITEMS } from '@/lib/constants'
 
-export function Footer() {
+async function getCurrentYear() {
+  'use cache'
+  return new Date().getFullYear()
+}
+
+export async function Footer() {
   return (
     <footer className="border-t border-border bg-card">
       <div className="container mx-auto px-4 py-8 md:px-6">
@@ -43,7 +48,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Shirone. All rights reserved.
+          © {await getCurrentYear()} Shirone. All rights reserved.
         </div>
       </div>
     </footer>

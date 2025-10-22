@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/nextjs'
 
 import { env } from './env/server'
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   return Sentry.startSpan(
     {
       name: `Middleware: ${req.method} ${req.nextUrl.pathname}`,
