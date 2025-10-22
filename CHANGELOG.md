@@ -1,3 +1,19 @@
+# [1.23.0](https://github.com/Shironex/portfolio/compare/v1.22.1...v1.23.0) (2025-10-22)
+
+
+### Bug Fixes
+
+* **footer:** avoid server-time access by caching current year in Server Component ([ce248d7](https://github.com/Shironex/portfolio/commit/ce248d70f5d8db72adc4efb9a9aa2964f4ce5033))
+
+
+### Features
+
+* **ui:** add shadcn Empty and Item primitives ([1fa6162](https://github.com/Shironex/portfolio/commit/1fa6162a0163d9a8d0e4d9001a0fdcf3c2c8570f))
+* **ui:** add shadcn Spinner and RouteLoading; wire Suspense fallbacks + route loading files ([9b18ac2](https://github.com/Shironex/portfolio/commit/9b18ac20b0126604fdd322812419c7777ac302ec))
+* **app:** convert key routes to Server Components with 'use cache' + cacheLife ([4f46b50](https://github.com/Shironex/portfolio/commit/4f46b5013b5d5332972d9c62d28c80643f98f7b1))
+* **about:** extract ImagesGallery client island; keep About page server-rendered ([279faa5](https://github.com/Shironex/portfolio/commit/279faa5074caa2c1c3e94366aeab959258e199a8))
+* **projects:** show Empty states for project lists and related projects ([542a266](https://github.com/Shironex/portfolio/commit/542a266f12c175d035bbbf31527a429efbfa623c))
+
 ## [1.22.1](https://github.com/Shironex/portfolio/compare/v1.22.0...v1.22.1) (2025-09-03)
 
 
