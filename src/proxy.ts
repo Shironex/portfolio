@@ -27,7 +27,8 @@ export function proxy(req: NextRequest) {
         `child-src 'none'`,
         `connect-src 'self' https://analytics.shirone.dev ${env.SENTRY_URL} https://*.ingest.sentry.io`,
         `default-src 'self'`,
-        `font-src 'self'`,
+        // Allow self-hosted fonts, data URLs, and trusted HTTPS origins (covers CDNs)
+        `font-src 'self' data: https:`,
         `form-action 'self'`,
         `frame-ancestors 'none'`,
         `frame-src https://challenges.cloudflare.com`,
@@ -35,7 +36,8 @@ export function proxy(req: NextRequest) {
         `manifest-src 'self'`,
         `media-src 'self'`,
         `object-src 'none'`,
-        `script-src 'self' 'nonce-${nonce}' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com https://analytics.shirone.dev`,
+        // Allow inline scripts during hydration (Next.js/dev tooling) and dynamic scripts from trusted origins
+        `script-src 'self' 'unsafe-inline' 'unsafe-eval' 'strict-dynamic' ${env.SENTRY_URL} https://challenges.cloudflare.com https://analytics.shirone.dev`,
         `style-src 'self' 'unsafe-inline'`,
         `worker-src 'self' blob:`,
       ].join('; ')
