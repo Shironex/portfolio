@@ -1,3 +1,11 @@
+## [1.23.2](https://github.com/Shironex/portfolio/compare/v1.23.1...v1.23.2) (2025-10-22)
+
+
+### Bug Fixes
+
+* **route-loading:** adjust loading component to occupy full screen height ([b991e76](https://github.com/Shironex/portfolio/commit/b991e7639c554cecabbf42c8404bb6e769899dba))
+* **csp:** use nonce-based script-src and allow https fonts ([aaeaf3e](https://github.com/Shironex/portfolio/commit/aaeaf3e40bc760ee6b35c1b1d78513b02732b722))
+
 ## [1.23.1](https://github.com/Shironex/portfolio/compare/v1.23.0...v1.23.1) (2025-10-22)
 
 
