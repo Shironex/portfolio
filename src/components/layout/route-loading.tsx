@@ -11,7 +11,7 @@ export function RouteLoading({
 }: RouteLoadingProps) {
   return (
     <div
-      className={`flex items-center justify-center gap-3 py-8 ${className || ''}`}
+      className={`flex h-screen items-center justify-center gap-3 py-8 ${className || ''}`}
     >
       <Spinner className="size-5" />
       <span className="text-sm text-muted-foreground">{message}</span>
