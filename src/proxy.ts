@@ -36,8 +36,9 @@ export function proxy(req: NextRequest) {
         `manifest-src 'self'`,
         `media-src 'self'`,
         `object-src 'none'`,
-        // Allow inline scripts during hydration (Next.js/dev tooling) and dynamic scripts from trusted origins
-        `script-src 'self' 'unsafe-inline' 'unsafe-eval' 'strict-dynamic' ${env.SENTRY_URL} https://challenges.cloudflare.com https://analytics.shirone.dev`,
+        // Use a nonce for any inline scripts; allow dev eval if needed
+        `script-src 'self' 'nonce-${nonce}' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com https://analytics.shirone.dev`,
+        `script-src-elem 'self' 'nonce-${nonce}' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com https://analytics.shirone.dev`,
         `style-src 'self' 'unsafe-inline'`,
         `worker-src 'self' blob:`,
       ].join('; ')

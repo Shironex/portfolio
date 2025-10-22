@@ -5,6 +5,7 @@ import { Suspense } from 'react'
 
 import { Toaster } from '@/components/ui/sonner'
 
+import AnalyticsScript from '@/components/analytics-script'
 import { Footer } from '@/components/layout/footer'
 import { Navbar } from '@/components/layout/navbar'
 import { RouteLoading } from '@/components/layout/route-loading'
@@ -13,7 +14,6 @@ import { ScrollRestoration } from '@/components/scroll-restoration'
 import { defaultMetadata } from '@/lib/metadata-config'
 
 import Providers from '@/context/providers'
-import { env } from '@/env/server'
 import '@/styles/globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -41,11 +41,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
               </Suspense>
               <main className="flex-1">
                 {children}
-                <script
-                  defer
-                  src={env.ANALYTIC_URL + '/script.js'}
-                  data-website-id={env.ANALYTIC_ID}
-                />
+                <AnalyticsScript />
               </main>
               <Footer />
             </div>
