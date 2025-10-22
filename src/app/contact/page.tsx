@@ -1,7 +1,5 @@
 'use client'
 
-import type React from 'react'
-
 import { Mail, MapPin } from 'lucide-react'
 import { motion } from 'motion/react'
 

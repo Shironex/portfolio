@@ -1,8 +1,6 @@
 import { Metadata } from 'next'
 import React from 'react'
 
-import SendEventOnLoad from '@/components/send-event-on-load'
-
 import { generateMetadata } from '@/lib/metadata-config'
 import { sectionMetadata } from '@/lib/metadata-config'
 
@@ -13,12 +11,7 @@ type Props = {
 }
 
 const ProjectsLayout = ({ children }: Props) => {
-  return (
-    <>
-      <SendEventOnLoad eventKey="user viewed projects" />
-      {children}
-    </>
-  )
+  return <>{children}</>
 }
 
 export default ProjectsLayout
