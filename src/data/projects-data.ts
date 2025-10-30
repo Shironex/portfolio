@@ -11,6 +11,7 @@ export const projectsData: Project[] = [
       'Matmajka is an landing page for my private tutor friend Maja that helps with math, physics, and chemistry. ',
     ],
     image: '/projects/matmajka/thumbnail.png',
+    projectType: 'web',
     gallery: [
       {
         src: '/projects/matmajka/overview.png',
@@ -57,8 +58,6 @@ export const projectsData: Project[] = [
     },
     completedDate: 'November 2024',
     duration: '1 month',
-    outcome:
-      'Matmajka has successfully connected over 32 students with qualified tutor in its first six months of operation. The platform has received positive feedback from both students and friends, with many reporting significant improvements in academic performance. The project is going to be expanded with a learning platform for the students to learn from the lessons by doing quizzes and exercises in the future.',
     demoUrl: 'https://matmajka.com',
     featured: true,
   },
@@ -74,6 +73,7 @@ export const projectsData: Project[] = [
       'The platform includes comprehensive service listings, pricing information, a portfolio gallery, customer testimonials, and an integrated contact system to streamline the booking process for both car and furniture cleaning services.',
     ],
     image: '/projects/pcch/thumbnail.png',
+    projectType: 'web',
     gallery: [
       {
         src: '/projects/pcch/overview.png',
@@ -166,8 +166,6 @@ export const projectsData: Project[] = [
     },
     completedDate: 'August 2025',
     duration: '2 weeks',
-    outcome:
-      'Perfect Clean Car&House successfully launched as a professional service website that effectively showcases the business offerings and facilitates customer inquiries. The modern design and user-friendly interface have helped establish a strong online presence for the cleaning service business, making it easier for potential customers to understand services and make bookings.',
     demoUrl: 'https://perfectcleancarhouse.pl',
     featured: true,
   },
@@ -183,6 +181,7 @@ export const projectsData: Project[] = [
       "The platform includes detailed service offerings, project portfolio, professional credentials, and client testimonials to establish trust and demonstrate the company's capabilities in both electrical installations and construction projects.",
     ],
     image: '/projects/sudeko/thumbnail.png',
+    projectType: 'web',
     gallery: [
       {
         src: '/projects/sudeko/overview.png',
@@ -284,8 +283,6 @@ export const projectsData: Project[] = [
     },
     completedDate: 'September 2025',
     duration: '3 days',
-    outcome:
-      "Sudeko successfully launched as a professional service website that effectively showcases the company's electrical and construction expertise. The modern design and comprehensive service presentation have helped establish a strong online presence for the business, making it easier for potential clients to understand services and make contact.",
     demoUrl: 'https://sudekospzoo.pl/',
     featured: true,
   },
@@ -299,6 +296,7 @@ export const projectsData: Project[] = [
       'Toriime is a project is created with my friends to give a better experience to the Polish anime community by providing a comprehensive library of anime content with high-quality Polish subtitles and a friendly user interface. Platform is not only for anime watchers but also for translators who can contribute to the platform by adding new subtitles to the anime and creating their own community and groups. The platform is still in development and will be expanded with more features in the future.',
     ],
     image: '/projects/toriime/thumbnail.png',
+    projectType: 'web',
     gallery: [
       {
         src: '/projects/toriime/thumbnail.png',
@@ -384,8 +382,6 @@ export const projectsData: Project[] = [
     },
     inProgress: true,
     duration: '2 years',
-    outcome:
-      'Toriime was orginally going to be a simple project but turns out to be a big one. It is still in high development state but its already have a ready to use services to be used when website will be ready.',
     demoUrl: 'https://toriime.pl',
     featured: false,
   },
@@ -401,6 +397,7 @@ export const projectsData: Project[] = [
       'One of the standout features is the AI chatbot that can help with content ideation, provide writing suggestions, and even help with editing. The Discord integration allows team members to receive notifications and updates directly in their preferred communication channel.',
     ],
     image: '/projects/write-wiz/thumbnail.png',
+    projectType: 'web',
     gallery: [
       {
         src: '/projects/write-wiz/overview.png',
@@ -553,10 +550,8 @@ export const projectsData: Project[] = [
         },
       ],
     },
-    inProgress: true,
+    inProgress: false,
     duration: '11 months',
-    outcome:
-      'Write-Wiz is a private project for my own use, but I decided to share it with the community in the near future. I hope that it can be helpful for other programmers.',
     demoUrl: 'https://writewiz.shirone.dev/',
     featured: false,
   },
@@ -572,6 +567,7 @@ export const projectsData: Project[] = [
       'As a monorepo structure, it separates concerns between the Next.js frontend and NestJS backend API, enabling independent scaling and deployment while maintaining shared UI components and TypeScript configurations across the entire stack.',
     ],
     image: '/projects/next-js-template/thumbnail.png',
+    projectType: 'web',
     gallery: [
       {
         src: '/projects/next-js-template/overview.png',
@@ -741,8 +737,6 @@ export const projectsData: Project[] = [
     },
     inProgress: true,
     duration: '2 months',
-    outcome:
-      'Next.js SaaS Template is nearing completion and will serve as a comprehensive foundation for building modern SaaS applications. The template provides developers with a production-ready starting point, significantly reducing development time and ensuring best practices are followed from the beginning of any SaaS project.',
     demoUrl: '',
     githubUrl: 'https://github.com/Shironex/next-js-nest-js-template',
     featured: false,
@@ -759,6 +753,7 @@ export const projectsData: Project[] = [
       'Features include project-based organization, powerful search functionality for both project names and variable names, and quick clipboard integration for seamless workflow integration. The application runs natively on desktop platforms while maintaining a modern web-based UI.',
     ],
     image: '/projects/env-vault/thumbnail.png',
+    projectType: 'desktop',
     gallery: [
       {
         src: '/projects/env-vault/home-screen.png',
@@ -848,11 +843,428 @@ export const projectsData: Project[] = [
         },
       ],
     },
-    inProgress: true,
+    completedDate: 'September 2025',
     duration: '3 months',
-    outcome:
-      'ENV Vault successfully solves the environment variable management problem for developers, providing a clean and efficient alternative to juggling multiple .env files in code editors. The application is nearing completion with plans for public release after final tweaks and testing.',
     demoUrl: '#desktop-app',
+    featured: false,
+  },
+  {
+    id: 'cli-template',
+    slug: 'cli-template',
+    title: 'CLI Template',
+    summary:
+      'A modern template for building command-line applications with TypeScript, Commander.js, and best practices.',
+    description: [
+      'CLI Template is a comprehensive starting point for developers looking to build professional command-line applications. Built with TypeScript and Commander.js, it provides a solid foundation with modern development tools and best practices baked in.',
+      'The template comes pre-configured with everything needed for CLI development, including interactive mode support, table output formatting with cli-table3, progress bars with cli-progress, and comprehensive testing setup with Vitest. The project structure is designed to be intuitive and scalable.',
+      'One of the standout features is the complete CI/CD setup with GitHub Actions for automated testing, code quality checks with CodeQL, and automated releases. The template also includes VitePress documentation, making it easy to create professional documentation for your CLI tools.',
+    ],
+    projectType: 'cli',
+    gallery: [],
+    technologies: [
+      'TypeScript',
+      'Commander.js',
+      'Vitest',
+      'ESLint',
+      'Prettier',
+      'VitePress',
+      'cli-table3',
+      'cli-progress',
+      'tsup',
+      'GitHub Actions',
+    ],
+    features: [
+      'Modern TypeScript stack with strict type checking',
+      'Commander.js for powerful CLI argument parsing',
+      'Interactive mode with menu-driven interface',
+      'Formatted table output with cli-table3',
+      'Progress bars and visual indicators',
+      'Comprehensive testing setup with Vitest',
+      'Code quality tools (ESLint, Prettier)',
+      'CI/CD pipeline with GitHub Actions',
+      'Automated testing and releases',
+      'VitePress documentation site',
+      'Multiple example commands (hello, table, progress)',
+      'Custom logger utility with colored output',
+      'Error handling with custom error classes',
+      'Package.json helper utilities',
+      'Ready for global npm installation',
+    ],
+    techDetails: {
+      stack: [
+        'TypeScript',
+        'Commander.js',
+        'Vitest',
+        'tsup',
+        'ESLint',
+        'Prettier',
+        'VitePress',
+        'cli-table3',
+        'cli-progress',
+        'inquirer',
+      ],
+      architecture:
+        'CLI Template follows a modular architecture with clear separation of concerns. Commands are organized in the commands/ directory, utilities are isolated in utils/, and type definitions are centralized in types/. The build process uses tsup for fast, optimized bundling with support for both CommonJS and ES modules. The testing setup uses Vitest for unit testing with coverage reporting.',
+      challenges: [
+        {
+          challenge: 'Creating a flexible and extensible command structure',
+          solution:
+            'Implemented a modular command system using Commander.js subcommands, allowing easy addition of new commands without modifying the core structure',
+        },
+        {
+          challenge: 'Providing comprehensive examples for common CLI patterns',
+          solution:
+            'Built example commands for tables, progress bars, and interactive modes, demonstrating best practices for each pattern with multiple variations',
+        },
+        {
+          challenge: 'Setting up automated CI/CD for CLI tools',
+          solution:
+            'Configured GitHub Actions workflows for testing, code quality checks with CodeQL, and automated semantic versioning releases',
+        },
+        {
+          challenge: 'Making the template documentation-ready',
+          solution:
+            'Integrated VitePress for documentation with pre-configured guides, API references, and examples that can be easily customized',
+        },
+      ],
+    },
+    completedDate: 'April 2025',
+    duration: '1 month',
+    demoUrl: 'https://shironex.github.io/cli-template/',
+    githubUrl: 'https://github.com/Shironex/cli-template',
+    featured: false,
+  },
+  {
+    id: 'gh-labels-cli',
+    slug: 'gh-labels-cli',
+    title: 'GitHub Labels CLI',
+    summary:
+      'Command-line tool for managing labels in GitHub repositories with AI-powered suggestions using OpenAI.',
+    description: [
+      'GitHub Labels CLI is a powerful command-line tool designed to streamline label management across GitHub repositories. Built with TypeScript and the Octokit REST API, it provides an intuitive interface for organizing and maintaining repository labels at scale.',
+      'The tool features an interactive mode that guides users through common label management tasks, including fetching repository lists, adding/removing labels, and creating custom label templates. Users can save label configurations and reuse them across multiple repositories, ensuring consistency across projects.',
+      'One of the standout features is AI-powered label suggestions for pull requests. Using OpenAI API, the tool analyzes PR titles, descriptions, changed files, and code context to automatically suggest appropriate labels with confidence scores. It can also generate comprehensive PR descriptions, making it invaluable for large teams looking to automate workflow categorization and maintain consistent documentation.',
+    ],
+    projectType: 'cli',
+    gallery: [],
+    technologies: [
+      'TypeScript',
+      'Commander.js',
+      'Octokit',
+      'OpenAI API',
+      'Inquirer',
+      'Chalk',
+      'Ora',
+      'Zod',
+      'Vitest',
+      'VitePress',
+      'Semantic Release',
+      'Husky',
+    ],
+    features: [
+      'Interactive mode for guided label management',
+      'Fetch and list user repositories from GitHub',
+      'Add and remove labels from repositories',
+      'Create and save custom label templates',
+      'Reuse label templates across multiple repositories',
+      'AI-powered label suggestions for pull requests',
+      'Automatic PR description generation using AI',
+      'Analyze changed files and code context',
+      'Confidence scoring for label suggestions',
+      'Support for bulk label operations',
+      'Colored terminal output with Chalk',
+      'Loading spinners and progress indicators',
+      'Type-safe validation with Zod',
+      'Comprehensive testing with Vitest',
+      'Full VitePress documentation',
+      'Semantic versioning and automated releases',
+    ],
+    techDetails: {
+      stack: [
+        'TypeScript',
+        'Commander.js',
+        '@octokit/rest',
+        'OpenAI API',
+        'Inquirer',
+        'Chalk',
+        'Ora',
+        'Zod',
+        'Vitest',
+        'VitePress',
+        'tsup',
+        'Semantic Release',
+        'Husky',
+        'Commitizen',
+      ],
+      architecture:
+        'GitHub Labels CLI follows a modular command-based architecture using Commander.js for command routing and argument parsing. The tool integrates with GitHub API via Octokit for repository and label operations, and OpenAI API for intelligent label suggestions. Interactive prompts are powered by Inquirer, providing a user-friendly CLI experience. The codebase uses Zod for runtime validation of API responses and user input, ensuring type safety throughout the application.',
+      challenges: [
+        {
+          challenge: 'Integrating AI for intelligent label suggestions',
+          solution:
+            'Implemented OpenAI API integration that analyzes PR context including title, description, changed files, and code diff to provide relevant label suggestions with confidence scores',
+        },
+        {
+          challenge: 'Managing complex GitHub API interactions',
+          solution:
+            'Used Octokit REST client with proper error handling and rate limiting, implementing retry logic for failed requests and clear error messages for users',
+        },
+        {
+          challenge: 'Creating reusable label templates',
+          solution:
+            'Built a template system that allows users to export labels from any repository and save them as JSON templates for quick application to other repositories',
+        },
+        {
+          challenge: 'Providing excellent user experience in the terminal',
+          solution:
+            'Combined Inquirer for interactive prompts, Chalk for colored output, and Ora for loading indicators to create an intuitive and visually appealing CLI interface',
+        },
+      ],
+    },
+    completedDate: 'May 2025',
+    duration: '2 months',
+    demoUrl: 'https://shironex.github.io/gh-labels-cli/',
+    githubUrl: 'https://github.com/Shironex/gh-labels-cli',
+    featured: false,
+  },
+  {
+    id: 'ag-gdrive-generator',
+    slug: 'ag-gdrive-generator',
+    title: 'AG GDrive Link Generator',
+    summary:
+      'Desktop Electron app for automating Google Drive video link generation with Discord formatting and automatic updates.',
+    description: [
+      'AG GDrive Link Generator is a specialized desktop application built for the AnimeGate community to streamline their video sharing workflow. The app automates the process of generating shareable Google Drive links for video files, formatting them for Discord, and managing episode sequences.',
+      'Built with Electron and React 19, the application provides a modern, intuitive interface for browsing Google Drive folders, automatically detecting episode numbers from filenames, and generating properly formatted Discord messages with embedded video players. The app integrates with Google Service Accounts for secure, automated access to shared drives.',
+      'One of the key features is the automatic update system using electron-updater and GitHub Releases. When a new version is pushed, all users receive the update automatically without manual distribution, making it easy to roll out improvements and fixes to the entire group instantly.',
+    ],
+    image: '/projects/gdrive-generator/thumbnail.png',
+    projectType: 'desktop',
+    gallery: [
+      {
+        src: '/projects/gdrive-generator/overview.png',
+        alt: 'AG GDrive Generator Main Interface',
+        caption: 'Main interface with folder browser and episode detection',
+      },
+      {
+        src: '/projects/gdrive-generator/generate-links.png',
+        alt: 'AG GDrive Generator Link Generation',
+        caption:
+          'Automatic link generation with Discord formatting copied to clipboard',
+      },
+      {
+        src: '/projects/gdrive-generator/service-account.png',
+        alt: 'AG GDrive Generator Link Generation 2',
+        caption: 'Google service account settings',
+      },
+      {
+        src: '/projects/gdrive-generator/settings.png',
+        alt: 'AG GDrive Generator Settings',
+        caption: 'Settings panel with theme and language options',
+      },
+    ],
+    technologies: [
+      'Electron',
+      'React 19',
+      'TypeScript',
+      'Vite',
+      'Tailwind CSS 4',
+      'shadcn-ui',
+      'TanStack Router',
+      'TanStack Query',
+      'Google APIs',
+      'i18next',
+      'electron-updater',
+      'electron-store',
+      'Vitest',
+      'Playwright',
+      'pnpm',
+    ],
+    features: [
+      'Automatic episode number detection from filenames',
+      'Google Drive folder browsing with Service Account integration',
+      'Discord message formatting with embedded video players',
+      'Copy links or full Discord messages to clipboard',
+      'Gap detection in episode sequences',
+      'Auto-fill assist for missing episodes',
+      'Automatic updates via GitHub Releases',
+      'Custom title bar with window controls',
+      'Dark/Light theme support',
+      'Bilingual interface (Polish & English)',
+      'Persistent settings with electron-store',
+      'Debug mode with separate console window',
+      'Professional NSIS installer for Windows',
+      'Type-safe file-based routing',
+      'Comprehensive error handling',
+    ],
+    techDetails: {
+      stack: [
+        'Electron 38',
+        'React 19',
+        'TypeScript',
+        'Vite',
+        'Tailwind CSS 4',
+        'shadcn-ui',
+        'Radix UI',
+        'TanStack Router',
+        'TanStack Query',
+        'Google APIs',
+        'i18next',
+        'electron-updater',
+        'electron-store',
+        'electron-window-state',
+        'Zod',
+        'Vitest',
+        'Playwright',
+      ],
+      architecture:
+        'AG GDrive Generator follows modern Electron architecture with context isolation and secure IPC communication. The main process handles Google API interactions via Service Accounts, while the renderer process provides a React-based UI. TanStack Router manages file-based routing with type safety, and TanStack Query handles data fetching and caching. The auto-update system uses electron-updater to check GitHub Releases and seamlessly install updates in the background.',
+      challenges: [
+        {
+          challenge: 'Rapid migration from Next.js web app to Electron',
+          solution:
+            'Leveraged existing React components and business logic, adapting only the API layer from HTTP endpoints to IPC channels. Completed the full migration in just one day by focusing on the Electron-specific features like window management and auto-updates',
+        },
+        {
+          challenge: 'Secure Google Drive integration without user OAuth',
+          solution:
+            'Implemented Google Service Account authentication, allowing the app to access shared drives without requiring each user to authenticate individually, while maintaining security through proper scope limitations',
+        },
+        {
+          challenge: 'Automatic episode detection and gap handling',
+          solution:
+            'Built pattern matching system to extract episode numbers from various filename formats, with intelligent gap detection that alerts users to missing episodes and provides auto-fill suggestions',
+        },
+        {
+          challenge: 'Seamless automatic updates for all users',
+          solution:
+            'Integrated electron-updater with GitHub Releases, enabling one-click publishing that automatically distributes updates to all users without manual intervention, significantly reducing maintenance overhead',
+        },
+      ],
+    },
+    completedDate: 'October 2025',
+    duration: '1 day (port), 1 day (initial web version)',
+    demoUrl: '#desktop-app',
+    featured: false,
+  },
+  {
+    id: 'ag-anime-bot',
+    slug: 'ag-anime-bot',
+    title: 'AG Anime Bot',
+    summary:
+      'Enterprise-grade Discord bot for anime enthusiasts with AniList/MAL integration, AI-powered Polish translations, and intelligent caching.',
+    description: [
+      'AG Anime Bot is a feature-rich Discord bot built for the AnimeGate Polish anime community, providing seamless access to anime information from multiple sources. The bot integrates with both AniList and MyAnimeList APIs, offering comprehensive anime data with automatic Polish translations powered by OpenAI.',
+      'Built with NestJS and following enterprise architecture patterns, the bot features an intelligent priority-based caching system that learns from usage metrics to optimize response times. It includes sophisticated rate limiting across multiple levels (user, channel, guild, global) and a batch translation service that reduces translation costs by 50% using OpenAI Batch API.',
+      'The bot provides daily automated notifications for airing anime schedules, administrative tools for bulk pre-caching entire seasons or years, and detailed cache statistics. The monorepo structure with pnpm and Turbo allows for shared UI components and future web dashboard integration, while Docker deployment ensures easy scalability and reliability.',
+    ],
+    image: '/projects/anime-bot/upcoming-animes.png',
+    projectType: 'api',
+    gallery: [
+      {
+        src: '/projects/anime-bot/anime-search.png',
+        alt: 'AG Anime Bot Search Command',
+        caption:
+          'Anime search with automatic Polish translation and character information',
+      },
+      {
+        src: '/projects/anime-bot/upcoming-animes.png',
+        alt: 'AG Anime Bot Daily Airing Schedule',
+        caption: "Automated daily notifications for today's airing anime",
+      },
+      {
+        src: '/projects/anime-bot/automatic-translation-cron.png',
+        alt: 'AG Anime Bot Translation System',
+        caption: 'Automatic translation cron job with batch processing',
+      },
+      {
+        src: '/projects/anime-bot/cache-statistics.png',
+        alt: 'AG Anime Bot Cache Statistics',
+        caption:
+          'Cache statistics showing priority distribution and job status',
+      },
+    ],
+    technologies: [
+      'NestJS',
+      'Necord',
+      'Discord.js',
+      'TypeScript',
+      'PostgreSQL',
+      'Prisma ORM',
+      'OpenAI API',
+      'AniList GraphQL',
+      'Jikan API',
+      'pnpm Monorepo',
+      'Turbo',
+      'Docker',
+      'Next.js',
+      'shadcn-ui',
+      'nestjs-pino',
+    ],
+    features: [
+      'Dual anime database integration (AniList + MyAnimeList)',
+      'Automatic Polish translation of synopses and genres via OpenAI',
+      'Priority-based intelligent caching system with usage metrics',
+      'Multi-level rate limiting (user, channel, guild, global)',
+      'Daily automated airing schedule notifications with role pings',
+      'Character information with Japanese and English voice actors',
+      'Admin bulk pre-caching for seasons, years, and trending anime',
+      'Batch translation service with 50% cost reduction',
+      'Translation reporting via Discord webhooks',
+      'Circuit breaker pattern for API resilience',
+      'Cache statistics and job tracking dashboard',
+      'Docker deployment with multi-stage builds',
+      'Monorepo architecture with shared UI packages',
+      'Type-safe database queries with Prisma',
+      'Structured logging with pino',
+      'Scheduled jobs with timezone support (Europe/Warsaw)',
+    ],
+    techDetails: {
+      stack: [
+        'NestJS 11',
+        'Necord 6 (Discord.js 14)',
+        'TypeScript 5.7',
+        'PostgreSQL 16',
+        'Prisma 6.16',
+        'OpenAI SDK 6.1',
+        'AniList GraphQL API',
+        'Jikan API v4',
+        'pnpm 10.4',
+        'Turbo 2.5',
+        'Docker',
+        'nestjs-pino 4.4',
+        'Next.js (future web dashboard)',
+        'shadcn-ui',
+      ],
+      architecture:
+        'AG Anime Bot follows NestJS enterprise architecture with dependency injection, modular design, and clear separation of concerns. The bot uses Necord for type-safe Discord.js integration, with commands organized into user and admin modules. Services handle external API interactions with circuit breaker patterns and rate limiting. The database layer uses Prisma ORM with PostgreSQL for reliable data persistence and caching. The monorepo structure (pnpm + Turbo) enables code sharing between the bot and future web dashboard, with shared UI components and TypeScript configurations.',
+      challenges: [
+        {
+          challenge: 'Optimizing translation costs for large anime libraries',
+          solution:
+            'Implemented OpenAI Batch API for bulk translations, reducing costs by 50%. Created intelligent priority system that translates frequently requested anime in real-time while batching less popular titles for overnight processing',
+        },
+        {
+          challenge: 'Managing rate limits across multiple anime APIs',
+          solution:
+            'Built circuit breaker pattern with configurable concurrency limits and retry logic. AniList allows 3 concurrent requests, Jikan requires 1-second intervals. Implemented intelligent fallback between APIs when one is unavailable',
+        },
+        {
+          challenge:
+            'Scaling pre-cache operations for entire years of anime data',
+          solution:
+            'Developed admin commands with progress tracking and job statistics. Sequential processing with automatic pagination handles thousands of anime entries without overwhelming APIs. Estimated 1-3 hours per year with detailed progress updates',
+        },
+        {
+          challenge: 'Building intelligent caching that learns from usage',
+          solution:
+            'Created priority-based system (1-5) that tracks search metrics and automatically promotes frequently requested anime. Cache prioritizes popular titles for instant responses while maintaining a 24-hour TTL for less popular entries',
+        },
+      ],
+    },
+    completedDate: 'October 2025',
+    duration: '1 week',
+    demoUrl: '',
     featured: false,
   },
 ] as const

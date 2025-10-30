@@ -81,7 +81,6 @@ export const defaultMetadata: Metadata = {
     apple: '/icon.png',
   },
   manifest: `${siteConfig.url}/site.webmanifest`,
-  metadataBase: new URL(siteConfig.url),
 }
 
 // Type for page-specific metadata

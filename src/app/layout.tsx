@@ -11,14 +11,17 @@ import { Navbar } from '@/components/layout/navbar'
 import { RouteLoading } from '@/components/layout/route-loading'
 import { ScrollRestoration } from '@/components/scroll-restoration'
 
-import { defaultMetadata } from '@/lib/metadata-config'
+import { defaultMetadata, siteConfig } from '@/lib/metadata-config'
 
 import Providers from '@/context/providers'
 import '@/styles/globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata: Metadata = defaultMetadata
+export const metadata: Metadata = {
+  ...defaultMetadata,
+  metadataBase: new URL(siteConfig.url),
+}
 
 interface RootLayoutProps {
   children: React.ReactNode

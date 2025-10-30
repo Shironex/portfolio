@@ -4,6 +4,7 @@ import { PageTransition } from '@/components/layout/page-transition'
 import CTASection from '@/components/sections/cta-section'
 import FeaturedProjectsSection from '@/components/sections/featured-projects-section'
 import HeroSection from '@/components/sections/hero-section'
+import InProgressProjectsSection from '@/components/sections/in-progress-projects-section'
 import SkillsSection from '@/components/sections/skills-section'
 
 const HomeClientPage = () => {
@@ -16,6 +17,7 @@ const HomeClientPage = () => {
           showAvailableForNewProjects={true}
           showBottomButtons={true}
         />
+        <InProgressProjectsSection />
         <FeaturedProjectsSection />
         <SkillsSection />
         <CTASection

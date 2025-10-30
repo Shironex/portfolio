@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import React from 'react'
 
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, Zap } from 'lucide-react'
 import { motion } from 'motion/react'
 
 import { projectsData } from '@/data/projects-data'
@@ -19,39 +19,43 @@ import {
   EmptyTitle,
 } from '../ui/empty'
 
-const FeaturedProjectsSection = () => {
-  const featuredProjects = projectsData
-    .filter((project) => project.featured && !project.inProgress)
+const InProgressProjectsSection = () => {
+  const inProgressProjects = projectsData
+    .filter((project) => project.inProgress)
     .slice(0, 3)
 
   return (
     <section className="container mx-auto px-4 py-16 md:px-6 md:py-24">
       <ScrollAnimation>
         <div className="mb-12 flex flex-col items-center text-center">
-          <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
-            What I&apos;ve been working on
-          </h2>
+          <div className="mb-4 flex items-center gap-2">
+            <Zap className="h-8 w-8 text-amber-500" />
+            <h2 className="text-3xl font-bold tracking-tight md:text-4xl">
+              Currently Working On
+            </h2>
+          </div>
           <p className="max-w-2xl text-muted-foreground">
-            A selection of my recent projects and collaborations.
+            Projects that are actively in development and evolving.
           </p>
         </div>
       </ScrollAnimation>
 
-      {featuredProjects.length === 0 ? (
+      {inProgressProjects.length === 0 ? (
         <Empty className="border">
           <EmptyHeader>
-            <EmptyTitle>No featured projects</EmptyTitle>
+            <EmptyTitle>No projects in development</EmptyTitle>
             <EmptyDescription>
-              When projects are featured, they will be highlighted here.
+              When projects are in active development, they will be highlighted
+              here.
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
-            Add featured projects to draw attention to your best work.
+            Check back later to see what I&apos;m currently building.
           </EmptyContent>
         </Empty>
       ) : (
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {featuredProjects.map((project, index) => (
+          {inProgressProjects.map((project, index) => (
             <ProjectCard
               key={project.id}
               project={project}
@@ -99,4 +103,4 @@ const FeaturedProjectsSection = () => {
   )
 }
 
-export default FeaturedProjectsSection
+export default InProgressProjectsSection

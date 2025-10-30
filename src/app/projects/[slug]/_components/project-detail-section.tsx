@@ -106,17 +106,6 @@ const ProjectDetailsSection = ({ project }: ProjectDetailsSectionProps) => {
             )}
           </div>
         </ScrollAnimation>
-
-        {project.outcome && (
-          <ScrollAnimation delay={0.3}>
-            <h2 className="mb-6 text-2xl font-bold md:text-3xl">
-              Outcome & Results
-            </h2>
-            <div className="prose prose-lg dark:prose-invert mb-12 max-w-none">
-              <p className="text-muted-foreground">{project.outcome}</p>
-            </div>
-          </ScrollAnimation>
-        )}
       </div>
     </section>
   )

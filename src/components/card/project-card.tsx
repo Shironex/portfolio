@@ -3,13 +3,14 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { ExternalLink, Github } from 'lucide-react'
+import { ExternalLink, Github, Zap } from 'lucide-react'
 import { motion } from 'motion/react'
 
 import { cardHover } from '@/lib/utils/animations'
 
 import { Project } from '@/types'
 
+import ProjectPlaceholder from '../project-placeholder'
 import { ScrollAnimation } from '../scroll-animation'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
@@ -36,16 +37,45 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
           >
-            <Image
-              src={project.image || '/placeholder.svg'}
-              alt={`${project.title} Project`}
-              width={600}
-              height={400}
-              priority
-              className="h-48 w-full object-cover"
-            />
+            {project.image ? (
+              <Image
+                src={project.image}
+                alt={`${project.title} Project`}
+                width={600}
+                height={400}
+                priority
+                className="h-48 w-full object-cover"
+              />
+            ) : (
+              <ProjectPlaceholder project={project} className="h-48 w-full" />
+            )}
           </motion.div>
         </Link>
+        {project.inProgress && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="mb-3"
+          >
+            <Badge
+              variant="secondary"
+              className="gap-1.5 border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-400"
+            >
+              <motion.div
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{
+                  duration: 2,
+                  repeat: Number.POSITIVE_INFINITY,
+                  repeatType: 'loop',
+                }}
+              >
+                <Zap className="h-3 w-3 fill-current" />
+              </motion.div>
+              In Development
+            </Badge>
+          </motion.div>
+        )}
         <Link href={`/projects/${project.slug}`}>
           <h3 className="mb-2 text-xl font-bold transition-colors hover:text-primary">
             {project.title}
