@@ -1,3 +1,10 @@
+# [1.24.0](https://github.com/Shironex/portfolio/compare/v1.23.3...v1.24.0) (2025-10-30)
+
+
+### Features
+
+* **projects:** add GitHub URL to Next.js SaaS template and update project details ([1583704](https://github.com/Shironex/portfolio/commit/15837049b9bdf2db55bd7af467ee4400f98aa01a))
+
 ## [1.23.3](https://github.com/Shironex/portfolio/compare/v1.23.2...v1.23.3) (2025-10-22)
 
 
