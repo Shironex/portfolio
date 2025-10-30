@@ -740,10 +740,11 @@ export const projectsData: Project[] = [
       ],
     },
     inProgress: true,
-    duration: '6 months',
+    duration: '2 months',
     outcome:
       'Next.js SaaS Template is nearing completion and will serve as a comprehensive foundation for building modern SaaS applications. The template provides developers with a production-ready starting point, significantly reducing development time and ensuring best practices are followed from the beginning of any SaaS project.',
-    demoUrl: '#in-development',
+    demoUrl: '',
+    githubUrl: 'https://github.com/Shironex/next-js-nest-js-template',
     featured: false,
   },
   {
