@@ -1,3 +1,10 @@
+# [1.25.0](https://github.com/Shironex/portfolio/compare/v1.24.0...v1.25.0) (2025-10-30)
+
+
+### Features
+
+* **projects:** add in-development section and dynamic placeholders with new projects ([a5aba37](https://github.com/Shironex/portfolio/commit/a5aba378b76b1a0c0a5308cab39304d6db773dea))
+
 # [1.24.0](https://github.com/Shironex/portfolio/compare/v1.23.3...v1.24.0) (2025-10-30)
 
 
