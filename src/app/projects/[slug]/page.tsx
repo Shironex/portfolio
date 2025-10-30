@@ -50,11 +50,13 @@ export default async function ProjectDetailPage({ params }: PageProps) {
         <HeroSection project={project} />
 
         {/* Project Gallery */}
-        <section className="container mx-auto px-4 py-8 md:px-6 md:py-16">
-          <ScrollAnimation>
-            <ProjectGallery images={project.gallery} />
-          </ScrollAnimation>
-        </section>
+        {project.gallery.length > 0 && (
+          <section className="container mx-auto px-4 py-8 md:px-6 md:py-16">
+            <ScrollAnimation>
+              <ProjectGallery images={project.gallery} />
+            </ScrollAnimation>
+          </section>
+        )}
 
         {/* Project Details */}
         <ProjectDetailsSection project={project} />
