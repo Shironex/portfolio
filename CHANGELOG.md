@@ -1,3 +1,10 @@
+# [1.26.0](https://github.com/Shironex/portfolio/compare/v1.25.0...v1.26.0) (2025-10-30)
+
+
+### Features
+
+* **projects:** add claude code discord bot project details and update project gallery rendering ([56d4202](https://github.com/Shironex/portfolio/commit/56d4202e0d3e1d9ec8fea6de0e9b71304f161388))
+
 # [1.25.0](https://github.com/Shironex/portfolio/compare/v1.24.0...v1.25.0) (2025-10-30)
 
 
