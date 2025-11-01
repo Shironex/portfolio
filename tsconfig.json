@@ -20,6 +20,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@tests/*": ["./tests/*"],
       "@/public/*": ["./public/*"]
     },
     "target": "ES2017"
@@ -31,7 +32,8 @@
     ".next/types/**/*.ts",
     ".next\\dev/types/**/*.ts",
     ".next\\dev/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/dev/types/**/*.ts",
+    ".next\\dev/dev/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

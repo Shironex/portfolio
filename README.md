@@ -40,6 +40,7 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#testing">Testing</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#license">License</a></li>
   </ol>
@@ -64,6 +65,7 @@ This portfolio showcases my skills as a full-stack developer, focusing on modern
 - Form validation with Zod and react-hook-form.
 - MDX for blog posts.
 - Send Discord notification with image snapshot using bullmq and puppeteer
+- Comprehensive testing with Vitest and Playwright
 
 Feel free to explore the code, suggest changes, or get in touch for any questions!
 
@@ -87,6 +89,9 @@ This portfolio is built with a selection of modern tools and libraries f:
 - Bullmq
 - puppeteer
 - axios
+- Vitest
+- Playwright
+- Testing Library
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -123,6 +128,120 @@ To use this project, you need to have pnpm installed.
    ```sh
    pnpm run dev
    ```
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- TESTING -->
+
+## Testing
+
+This project includes comprehensive testing using **Vitest** for unit and integration tests, and **Playwright** for end-to-end tests.
+
+### Test Structure
+
+```
+tests/
+├── unit/              # Unit tests for utilities and validation
+├── integration/       # Integration tests for server actions and services
+├── component/         # Component tests for React components
+├── e2e/              # End-to-end tests with Playwright
+├── fixtures/         # Test data fixtures
+├── mocks/            # Mock implementations for external services
+└── setup/            # Test utilities and helpers
+```
+
+### Running Tests
+
+```sh
+# Run all unit and integration tests
+pnpm test
+
+# Run tests in watch mode
+pnpm test
+
+# Run only unit tests
+pnpm test:unit
+
+# Run only integration tests
+pnpm test:integration
+
+# Run only component tests
+pnpm test:component
+
+# Run tests with coverage report
+pnpm test:coverage
+
+# Run tests with UI interface
+pnpm test:ui
+
+# Run E2E tests with Playwright
+pnpm test:e2e
+
+# Run E2E tests with Playwright UI
+pnpm test:e2e:ui
+```
+
+### Test Coverage
+
+The test suite covers:
+
+- ✅ **Unit Tests**: Utilities (Cloudflare Turnstile, rate limiting), validation schemas, error classes
+- ✅ **Integration Tests**: Mail service, Discord webhook, server actions
+- ✅ **Component Tests**: UI components (Button, Input, Form, etc.)
+- ✅ **E2E Tests**: Contact form flow, navigation, critical user journeys
+
+### Writing Tests
+
+#### Unit Test Example
+
+```typescript
+import { describe, expect, it } from 'vitest'
+
+import { verifyTurnstile } from '@/lib/utils/cloudflare'
+
+describe('verifyTurnstile', () => {
+  it('should verify valid token', async () => {
+    // Your test implementation
+  })
+})
+```
+
+#### Component Test Example
+
+```typescript
+import { Button } from '@/components/ui/button'
+import { render, screen } from '@tests/setup/test-utils'
+import { describe, expect, it } from 'vitest'
+
+describe('Button', () => {
+  it('should render button', () => {
+    render(<Button>Click me</Button>)
+    expect(screen.getByRole('button')).toBeInTheDocument()
+  })
+})
+```
+
+#### E2E Test Example
+
+```typescript
+import { expect, test } from '@playwright/test'
+
+test('should navigate to about page', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('link', { name: /about/i }).click()
+  await expect(page).toHaveURL('/about')
+})
+```
+
+### Mocking External Services
+
+All external services are mocked in tests:
+
+- **Redis**: In-memory mock using `ioredis-mock`
+- **Resend**: Mocked email API responses
+- **Discord**: Mocked webhook calls
+- **Cloudflare Turnstile**: Mocked verification endpoint
+- **Sentry**: Mocked error tracking
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
