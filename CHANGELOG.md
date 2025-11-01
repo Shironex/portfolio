@@ -1,3 +1,10 @@
+# [1.27.0](https://github.com/Shironex/portfolio/compare/v1.26.0...v1.27.0) (2025-11-01)
+
+
+### Features
+
+* **projects:** add AWS SNS Discord Forwarder project details ([2e1e51e](https://github.com/Shironex/portfolio/commit/2e1e51ee7408a8b9801d3c30c1a16277b1e54a4c))
+
 # [1.26.0](https://github.com/Shironex/portfolio/compare/v1.25.0...v1.26.0) (2025-10-30)
 
 
