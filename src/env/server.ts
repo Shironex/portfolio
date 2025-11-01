@@ -22,6 +22,8 @@ export const env = createEnv({
     DISCORD_WEBHOOK_URL: z.string().min(1),
     ANALYTIC_URL: z.string().min(1),
     ANALYTIC_ID: z.string().min(1),
+    DATABASE_URL: z.string().min(1),
+    PAYLOAD_SECRET: z.string().min(32),
   },
   onValidationError: (issues) => {
     console.error('❌ Invalid environment variables:', issues)
