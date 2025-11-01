@@ -9,6 +9,7 @@ import { ghLabelsCli } from './projects/gh-labels-cli'
 import { matmajka } from './projects/matmajka'
 import { nextJsSaasTemplate } from './projects/next-js-saas-template'
 import { perfectCleanCarHouse } from './projects/perfect-clean-car-house'
+import { snsDiscordForwarder } from './projects/sns-discord-forwarder'
 import { sudeko } from './projects/sudeko'
 import { toriime } from './projects/toriime'
 import { writeWiz } from './projects/write-wiz'
@@ -26,4 +27,5 @@ export const projectsData: Project[] = [
   agGdriveGenerator,
   agAnimeBot,
   claudeCodeDiscordBot,
+  snsDiscordForwarder,
 ] as const
