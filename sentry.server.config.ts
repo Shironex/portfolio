@@ -9,8 +9,8 @@ Sentry.init({
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
   tracesSampleRate: 1,
 
-  // Enable logs to be sent to Sentry
-  enabled: process.env.NODE_ENV === 'production',
+  // Disable Sentry in test/CI environments
+  enabled: process.env.NODE_ENV === 'production' && process.env.CI !== 'true',
 
   // Setting this option to true will print useful information to the console while you're setting up Sentry.
   debug: false,

@@ -2,6 +2,9 @@
 import { createEnv } from '@t3-oss/env-nextjs'
 import { z } from 'zod'
 
+// Skip validation in CI/test environments
+const isTestOrCI = process.env.CI === 'true' || process.env.NODE_ENV === 'test'
+
 export const env = createEnv({
   server: {
     NODE_ENV: z.enum(['development', 'production', 'test']),
@@ -23,6 +26,7 @@ export const env = createEnv({
     ANALYTIC_URL: z.string().min(1),
     ANALYTIC_ID: z.string().min(1),
   },
+  skipValidation: isTestOrCI,
   onValidationError: (issues) => {
     console.error('❌ Invalid environment variables:', issues)
     throw new Error('Invalid environment variables')

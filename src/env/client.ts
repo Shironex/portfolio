@@ -2,12 +2,16 @@
 import { createEnv } from '@t3-oss/env-nextjs'
 import { z } from 'zod'
 
+// Skip validation in CI/test environments
+const isTestOrCI = process.env.CI === 'true' || process.env.NODE_ENV === 'test'
+
 export const env = createEnv({
   client: {
     NEXT_PUBLIC_PUBLIC_URL: z.string().min(1),
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().min(1),
     NEXT_PUBLIC_AVAILABLE_FOR: z.string().optional(),
   },
+  skipValidation: isTestOrCI,
   experimental__runtimeEnv: {
     NEXT_PUBLIC_PUBLIC_URL: process.env.NEXT_PUBLIC_PUBLIC_URL,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
