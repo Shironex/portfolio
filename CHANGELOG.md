@@ -1,3 +1,17 @@
+# [2.0.0](https://github.com/Shironex/portfolio/compare/v1.27.0...v2.0.0) (2025-11-09)
+
+
+### Build System
+
+* **tailwind:** migrate from v3 to v4 ([7665c92](https://github.com/Shironex/portfolio/commit/7665c92c08047b2d4d75e82731144025e4fc8649))
+
+
+### BREAKING CHANGES
+
+* **tailwind:** Tailwind CSS v4 introduces CSS-first configuration
+and requires PostCSS plugin setup. Component styles have been updated
+to be compatible with v4 syntax.
+
 # [1.27.0](https://github.com/Shironex/portfolio/compare/v1.26.0...v1.27.0) (2025-11-01)
 
 
