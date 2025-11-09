@@ -94,7 +94,7 @@ export function ProjectGallery({ images }: ProjectGalleryProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-background/90 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-background/90 backdrop-blur-xs"
             onClick={closeViewer}
             onKeyDown={handleKeyDown}
             tabIndex={0}
@@ -119,7 +119,7 @@ export function ProjectGallery({ images }: ProjectGalleryProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute right-2 top-2 rounded-full bg-background/50 backdrop-blur-sm hover:bg-background/70"
+                  className="absolute right-2 top-2 rounded-full bg-background/50 backdrop-blur-xs hover:bg-background/70"
                   onClick={closeViewer}
                 >
                   <X className="h-5 w-5" />
@@ -128,7 +128,7 @@ export function ProjectGallery({ images }: ProjectGalleryProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-background/50 backdrop-blur-sm hover:bg-background/70"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-background/50 backdrop-blur-xs hover:bg-background/70"
                   onClick={(e) => {
                     e.stopPropagation()
                     goToPrevious()
@@ -140,7 +140,7 @@ export function ProjectGallery({ images }: ProjectGalleryProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-background/50 backdrop-blur-sm hover:bg-background/70"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-background/50 backdrop-blur-xs hover:bg-background/70"
                   onClick={(e) => {
                     e.stopPropagation()
                     goToNext()

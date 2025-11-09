@@ -33,7 +33,7 @@ export function LoadingState({
         <LoadingSpinner size={60} />
 
         <motion.h1
-          className="mb-4 mt-8 bg-gradient-to-r from-purple-400 to-primary bg-clip-text text-3xl font-bold text-transparent"
+          className="mb-4 mt-8 bg-linear-to-r from-purple-400 to-primary bg-clip-text text-3xl font-bold text-transparent"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}

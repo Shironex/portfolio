@@ -21,7 +21,7 @@ export function ProjectLoadingSkeleton() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
-              <h1 className="mb-2 bg-gradient-to-r from-purple-400 to-primary bg-clip-text text-3xl font-bold text-transparent">
+              <h1 className="mb-2 bg-linear-to-r from-purple-400 to-primary bg-clip-text text-3xl font-bold text-transparent">
                 Loading Project Details
               </h1>
               <p className="max-w-md text-center text-muted-foreground">
@@ -161,7 +161,7 @@ export function ProjectLoadingSkeleton() {
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="aspect-[4/3] animate-pulse rounded-xl bg-secondary/50"
+                className="aspect-4/3 animate-pulse rounded-xl bg-secondary/50"
               />
             ))}
           </div>

@@ -48,7 +48,7 @@ const ContactVisualization = () => {
   }, [])
 
   return (
-    <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-border bg-gradient-to-br from-background via-secondary/30 to-primary/10 p-8">
+    <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-border bg-linear-to-br from-background via-secondary/30 to-primary/10 p-8">
       {/* Background grid pattern */}
       <div
         className="absolute inset-0 opacity-10"
@@ -68,7 +68,7 @@ const ContactVisualization = () => {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1, ease: 'easeOut' }}
         >
-          <div className="relative flex h-32 w-32 items-center justify-center rounded-full bg-primary/20 backdrop-blur-sm md:h-40 md:w-40 lg:h-48 lg:w-48">
+          <div className="relative flex h-32 w-32 items-center justify-center rounded-full bg-primary/20 backdrop-blur-xs md:h-40 md:w-40 lg:h-48 lg:w-48">
             <Globe className="h-16 w-16 text-primary md:h-20 md:w-20 lg:h-24 lg:w-24" />
             <motion.div
               className="absolute inset-0 rounded-full border-2 border-primary/30"
@@ -87,7 +87,7 @@ const ContactVisualization = () => {
 
         {/* Contact info card */}
         <motion.div
-          className="absolute left-[20%] top-[30%] rounded-xl border border-border bg-card/80 p-4 shadow-lg backdrop-blur-sm"
+          className="absolute left-[20%] top-[30%] rounded-xl border border-border bg-card/80 p-4 shadow-lg backdrop-blur-xs"
           initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.8 }}
@@ -176,7 +176,7 @@ const ContactVisualization = () => {
 
         {/* Phone icon with card */}
         <motion.div
-          className="absolute bottom-[40%] right-[19%] rounded-xl border border-border bg-card/80 p-4 shadow-lg backdrop-blur-sm"
+          className="absolute bottom-[40%] right-[19%] rounded-xl border border-border bg-card/80 p-4 shadow-lg backdrop-blur-xs"
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.7, duration: 0.8 }}
@@ -245,7 +245,7 @@ const ContactVisualization = () => {
           return (
             <motion.div
               key={`humor-${i}`}
-              className="absolute z-10 rounded-md border border-border/40 bg-card/60 px-3 py-1.5 font-mono text-xs shadow-sm backdrop-blur-sm"
+              className="absolute z-10 rounded-md border border-border/40 bg-card/60 px-3 py-1.5 font-mono text-xs shadow-xs backdrop-blur-xs"
               style={positions[i]}
               initial={{ opacity: 0 }}
               // Replace whileInView with direct animation
@@ -270,7 +270,7 @@ const ContactVisualization = () => {
 
         {/* Terminal with cycling messages */}
         <motion.div
-          className="absolute bottom-[15%] left-[15%] z-10 w-64 overflow-hidden rounded-md border border-primary/20 bg-background/80 shadow-md backdrop-blur-sm"
+          className="absolute bottom-[15%] left-[15%] z-10 w-64 overflow-hidden rounded-md border border-primary/20 bg-background/80 shadow-md backdrop-blur-xs"
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.8 }}
@@ -308,7 +308,7 @@ const ContactVisualization = () => {
                   repeatDelay: 7,
                 }}
               >
-                <div className="flex h-10 w-16 items-center justify-center rounded-lg bg-white/10 p-2 backdrop-blur-sm">
+                <div className="flex h-10 w-16 items-center justify-center rounded-lg bg-white/10 p-2 backdrop-blur-xs">
                   <Send className="h-5 w-5 text-primary" />
                 </div>
               </motion.div>
@@ -327,7 +327,7 @@ const ContactVisualization = () => {
                   delay: 3,
                 }}
               >
-                <div className="flex h-10 w-16 items-center justify-center rounded-lg bg-white/10 p-2 backdrop-blur-sm">
+                <div className="flex h-10 w-16 items-center justify-center rounded-lg bg-white/10 p-2 backdrop-blur-xs">
                   <Mail className="h-5 w-5 text-purple-500" />
                 </div>
               </motion.div>

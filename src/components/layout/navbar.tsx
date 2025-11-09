@@ -74,7 +74,7 @@ export function Navbar() {
       variants={navbarVariants}
       className={`fixed top-0 z-50 w-full transition-all duration-300 ${
         scrolled
-          ? 'bg-background/80 shadow-sm backdrop-blur-md'
+          ? 'bg-background/80 shadow-xs backdrop-blur-md'
           : 'bg-transparent'
       }`}
     >
@@ -87,7 +87,7 @@ export function Navbar() {
             eventName="Navigate to Home (Logo)"
           >
             <motion.span
-              className="bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent"
+              className="bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent"
               whileHover={{ scale: 1.05 }}
               transition={{ type: 'spring', stiffness: 400, damping: 10 }}
             >

@@ -57,7 +57,7 @@ const ProjectPlaceholder = ({
 
   return (
     <div
-      className={`flex items-center justify-center bg-gradient-to-br ${config.gradient} ${className}`}
+      className={`flex items-center justify-center bg-linear-to-br ${config.gradient} ${className}`}
     >
       <div className="flex flex-col items-center gap-3">
         <Icon className={`h-16 w-16 ${config.iconColor}`} strokeWidth={1.5} />

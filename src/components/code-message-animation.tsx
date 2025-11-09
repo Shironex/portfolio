@@ -60,7 +60,7 @@ export function CodeMessageAnimation({
       <AnimatePresence mode="wait">
         <motion.div
           key={currentMessage}
-          className={`absolute inset-0 flex items-center rounded-md border px-3 py-1.5 font-mono text-xs shadow-sm backdrop-blur-sm ${getTypeStyles(codeMessages[currentMessage].type)}`}
+          className={`absolute inset-0 flex items-center rounded-md border px-3 py-1.5 font-mono text-xs shadow-xs backdrop-blur-xs ${getTypeStyles(codeMessages[currentMessage].type)}`}
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}

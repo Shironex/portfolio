@@ -19,7 +19,7 @@ export function GradientHeading({
   level = 1,
 }: GradientHeadingProps) {
   const baseClasses =
-    'bg-gradient-to-r from-foreground via-primary to-purple-500 bg-clip-text text-transparent'
+    'bg-linear-to-r from-foreground via-primary to-purple-500 bg-clip-text text-transparent'
   const combinedClasses = `${baseClasses} ${className}`
 
   const variants: Variants = {
