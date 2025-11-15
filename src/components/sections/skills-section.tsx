@@ -104,7 +104,7 @@ const SkillsSection = () => {
           <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
             My Skills & Expertise
           </h2>
-          <p className="max-w-2xl text-muted-foreground">
+          <p className="text-muted-foreground max-w-2xl">
             I specialize in building modern web applications with these
             technologies.
           </p>

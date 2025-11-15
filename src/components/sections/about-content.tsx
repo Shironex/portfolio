@@ -16,7 +16,7 @@ export const AboutContent = () => {
     <ScrollAnimation delay={0.2}>
       <div className="flex flex-col justify-center">
         <h2 className="mb-6 text-3xl font-bold">My Journey</h2>
-        <div className="space-y-4 text-muted-foreground">
+        <div className="text-muted-foreground space-y-4">
           <p>
             From the moment I began my coding journey, I was captivated by the
             magic of building web applications that could genuinely make a

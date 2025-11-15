@@ -62,7 +62,7 @@ const ProjectPlaceholder = ({
       <div className="flex flex-col items-center gap-3">
         <Icon className={`h-16 w-16 ${config.iconColor}`} strokeWidth={1.5} />
         <div className="text-center">
-          <p className="text-sm font-medium text-muted-foreground">
+          <p className="text-muted-foreground text-sm font-medium">
             {projectType.charAt(0).toUpperCase() + projectType.slice(1)} Project
           </p>
         </div>

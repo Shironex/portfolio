@@ -26,7 +26,7 @@ const CTASection = ({
     <section className="container mx-auto px-4 py-16 md:px-6 md:py-24">
       <ScrollAnimation>
         <motion.div
-          className="rounded-xl border border-border bg-card p-8 md:p-12"
+          className="border-border bg-card rounded-xl border p-8 md:p-12"
           whileHover={{ scale: 1.02 }}
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
         >
@@ -34,7 +34,7 @@ const CTASection = ({
             <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
               {title}
             </h2>
-            <p className="mb-8 max-w-2xl text-muted-foreground">
+            <p className="text-muted-foreground mb-8 max-w-2xl">
               {description}
             </p>
 

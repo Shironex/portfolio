@@ -49,7 +49,7 @@ const HeroSection = ({
           </GradientHeading>
 
           <motion.p
-            className="mb-8 max-w-2xl text-xl text-muted-foreground"
+            className="text-muted-foreground mb-8 max-w-2xl text-xl"
             variants={fadeUp}
           >
             {description}
@@ -65,7 +65,7 @@ const HeroSection = ({
 const AvailableForNewProjects = () => {
   return (
     <motion.div
-      className="mb-6 inline-flex items-center rounded-full border border-border bg-secondary px-3 py-1 text-sm"
+      className="border-border bg-secondary mb-6 inline-flex items-center rounded-full border px-3 py-1 text-sm"
       variants={fadeUp}
     >
       <motion.span

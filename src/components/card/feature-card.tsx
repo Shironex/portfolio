@@ -24,11 +24,11 @@ export const FeatureCard = ({
   return (
     <ScrollAnimation delay={delay}>
       <motion.div
-        className="rounded-xl border border-border bg-card p-6 transition-all hover:shadow-lg"
+        className="border-border bg-card rounded-xl border p-6 transition-all hover:shadow-lg"
         whileHover={{ y: -5 }}
       >
         <motion.div
-          className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary"
+          className="bg-primary/10 text-primary mb-4 flex h-12 w-12 items-center justify-center rounded-lg"
           whileHover={{
             rotate: [0, 10, -10, 0],
             transition: { duration: 0.5 },
@@ -37,7 +37,7 @@ export const FeatureCard = ({
           {icon}
         </motion.div>
         <h3 className="mb-2 text-xl font-bold">{title}</h3>
-        <p className="mb-4 text-muted-foreground">{description}</p>
+        <p className="text-muted-foreground mb-4">{description}</p>
         {children}
       </motion.div>
     </ScrollAnimation>

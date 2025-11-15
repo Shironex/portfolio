@@ -87,14 +87,14 @@ export function CodeBlockWithCopy({
   return (
     <div className="group relative my-6">
       <motion.div
-        className="absolute right-3 top-3 z-20 opacity-0 transition-opacity group-hover:opacity-100"
+        className="absolute top-3 right-3 z-20 opacity-0 transition-opacity group-hover:opacity-100"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
         <button
           onClick={copyToClipboard}
-          className="flex h-8 w-8 items-center justify-center rounded-md bg-primary/20 text-primary transition-colors hover:bg-primary/30"
+          className="bg-primary/20 text-primary hover:bg-primary/30 flex h-8 w-8 items-center justify-center rounded-md transition-colors"
           aria-label="Copy code"
           title="Copy code to clipboard"
         >
@@ -112,16 +112,16 @@ export function CodeBlockWithCopy({
         </button>
       </motion.div>
 
-      <div className="absolute right-0 top-0 z-10 rounded-bl rounded-tr bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground">
+      <div className="bg-primary text-primary-foreground absolute top-0 right-0 z-10 rounded-tr rounded-bl px-3 py-1.5 text-xs font-semibold">
         {language.toUpperCase()}
       </div>
 
       <pre
         ref={codeRef}
         className={cn(
-          'overflow-x-auto rounded-lg border border-border bg-[#1e1e2f] p-4 pt-8',
+          'border-border overflow-x-auto rounded-lg border bg-[#1e1e2f] p-4 pt-8',
           'shadow-lg transition-shadow duration-300 hover:shadow-xl',
-          'border-primary/20 transition-colors hover:border-primary/40',
+          'border-primary/20 hover:border-primary/40 transition-colors',
           showLineNumbers && 'line-numbers',
           className
         )}
@@ -131,7 +131,7 @@ export function CodeBlockWithCopy({
 
       {copied && (
         <motion.div
-          className="absolute bottom-3 right-3 rounded-md bg-primary px-3 py-1 text-sm text-primary-foreground"
+          className="bg-primary text-primary-foreground absolute right-3 bottom-3 rounded-md px-3 py-1 text-sm"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}

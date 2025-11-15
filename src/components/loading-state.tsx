@@ -33,7 +33,7 @@ export function LoadingState({
         <LoadingSpinner size={60} />
 
         <motion.h1
-          className="mb-4 mt-8 bg-linear-to-r from-purple-400 to-primary bg-clip-text text-3xl font-bold text-transparent"
+          className="to-primary mt-8 mb-4 bg-linear-to-r from-purple-400 bg-clip-text text-3xl font-bold text-transparent"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.5 }}
@@ -42,7 +42,7 @@ export function LoadingState({
         </motion.h1>
 
         <motion.p
-          className="mx-auto max-w-md text-muted-foreground"
+          className="text-muted-foreground mx-auto max-w-md"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4, duration: 0.5 }}
@@ -52,7 +52,7 @@ export function LoadingState({
 
         {additionalInfo && (
           <motion.p
-            className="mt-4 text-sm italic text-muted-foreground/80"
+            className="text-muted-foreground/80 mt-4 text-sm italic"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6, duration: 0.5 }}
@@ -71,7 +71,7 @@ export function LoadingState({
             {[0, 1, 2].map((i) => (
               <motion.div
                 key={i}
-                className="h-2 w-2 rounded-full bg-primary"
+                className="bg-primary h-2 w-2 rounded-full"
                 animate={{
                   scale: [1, 1.5, 1],
                   opacity: [0.5, 1, 0.5],

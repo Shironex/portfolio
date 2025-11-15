@@ -60,7 +60,7 @@ const ContactForm = () => {
   return (
     <ScrollAnimation delay={0.2}>
       <motion.div
-        className="rounded-xl border border-border bg-card p-6 md:p-8"
+        className="border-border bg-card rounded-xl border p-6 md:p-8"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}

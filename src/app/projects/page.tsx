@@ -67,7 +67,7 @@ export default async function ProjectsPage() {
               </h2>
             </ScrollAnimation>
             {featuredProjects.length === 0 ? (
-              <Empty className="border bg-background">
+              <Empty className="bg-background border">
                 <EmptyHeader>
                   <EmptyTitle>No featured projects</EmptyTitle>
                   <EmptyDescription>

@@ -87,7 +87,7 @@ export function Navbar() {
             eventName="Navigate to Home (Logo)"
           >
             <motion.span
-              className="bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent"
+              className="from-primary bg-linear-to-r to-purple-500 bg-clip-text text-transparent"
               whileHover={{ scale: 1.05 }}
               transition={{ type: 'spring', stiffness: 400, damping: 10 }}
             >
@@ -103,7 +103,7 @@ export function Navbar() {
               <motion.li key={item.name} variants={itemVariants}>
                 <SentryLink
                   href={item.path}
-                  className={`relative px-1 py-2 text-sm font-medium transition-colors hover:text-primary ${
+                  className={`hover:text-primary relative px-1 py-2 text-sm font-medium transition-colors ${
                     pathname === item.path
                       ? 'text-primary'
                       : 'text-muted-foreground'
@@ -115,7 +115,7 @@ export function Navbar() {
                   {pathname === item.path && (
                     <motion.div
                       layoutId="navbar-indicator"
-                      className="absolute -bottom-1 left-0 h-0.5 w-full bg-primary"
+                      className="bg-primary absolute -bottom-1 left-0 h-0.5 w-full"
                       transition={{
                         type: 'spring',
                         stiffness: 400,

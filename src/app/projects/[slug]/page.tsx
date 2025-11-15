@@ -69,7 +69,7 @@ export default async function ProjectDetailPage({ params }: PageProps) {
                 Related Projects
               </h2>
               {relatedProjects.length === 0 ? (
-                <Empty className="mx-auto max-w-2xl border bg-background">
+                <Empty className="bg-background mx-auto max-w-2xl border">
                   <EmptyHeader>
                     <EmptyTitle>No related projects found</EmptyTitle>
                     <EmptyDescription>

@@ -33,7 +33,7 @@ const HeroSection = ({ project }: HeroSectionProps) => {
         >
           <Link href="/projects">
             <motion.div
-              className="mb-8 flex items-center text-sm text-muted-foreground hover:text-foreground"
+              className="text-muted-foreground hover:text-foreground mb-8 flex items-center text-sm"
               variants={fadeUp}
               whileHover={{ x: -5 }}
               transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -51,7 +51,7 @@ const HeroSection = ({ project }: HeroSectionProps) => {
           </GradientHeading>
 
           <motion.p
-            className="mb-8 max-w-2xl text-xl text-muted-foreground"
+            className="text-muted-foreground mb-8 max-w-2xl text-xl"
             variants={fadeUp}
           >
             {project.summary}
@@ -69,7 +69,7 @@ const HeroSection = ({ project }: HeroSectionProps) => {
           </motion.div>
 
           <motion.div
-            className="mb-8 flex flex-wrap justify-center gap-8 text-sm text-muted-foreground"
+            className="text-muted-foreground mb-8 flex flex-wrap justify-center gap-8 text-sm"
             variants={fadeUp}
           >
             <div className="flex items-center gap-2">

@@ -77,11 +77,11 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
           </motion.div>
         )}
         <Link href={`/projects/${project.slug}`}>
-          <h3 className="mb-2 text-xl font-bold transition-colors hover:text-primary">
+          <h3 className="hover:text-primary mb-2 text-xl font-bold transition-colors">
             {project.title}
           </h3>
         </Link>
-        <p className="mb-4 text-muted-foreground">{project.summary}</p>
+        <p className="text-muted-foreground mb-4">{project.summary}</p>
         <div className="mb-6 flex flex-wrap gap-2">
           {project.technologies.slice(0, 5).map((tech) => (
             <Badge key={tech} variant="secondary">

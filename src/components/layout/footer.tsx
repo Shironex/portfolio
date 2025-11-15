@@ -11,16 +11,16 @@ async function getCurrentYear() {
 
 export async function Footer() {
   return (
-    <footer className="border-t border-border bg-card">
+    <footer className="border-border bg-card border-t">
       <div className="container mx-auto px-4 py-8 md:px-6">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <div className="flex flex-col items-center gap-2 md:items-start">
             <Link href="/" className="text-xl font-bold">
-              <span className="bg-linear-to-r from-primary to-purple-500 bg-clip-text text-transparent">
+              <span className="from-primary bg-linear-to-r to-purple-500 bg-clip-text text-transparent">
                 Shirone
               </span>
             </Link>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Full-stack developer building impactful web applications
             </p>
           </div>
@@ -31,7 +31,7 @@ export async function Footer() {
                 <Link
                   key={item.name}
                   href={item.path}
-                  className="text-sm text-muted-foreground hover:text-foreground"
+                  className="text-muted-foreground hover:text-foreground text-sm"
                   data-umami-event={`Click Button Navigate to ${item.name}`}
                 >
                   {item.name}
@@ -41,13 +41,13 @@ export async function Footer() {
 
             <div className="flex items-center gap-4">
               <Link href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
-                <Github className="h-5 w-5 text-muted-foreground hover:text-foreground" />
+                <Github className="text-muted-foreground hover:text-foreground h-5 w-5" />
               </Link>
             </div>
           </div>
         </div>
 
-        <div className="mt-8 text-center text-xs text-muted-foreground">
+        <div className="text-muted-foreground mt-8 text-center text-xs">
           © {await getCurrentYear()} Shirone. All rights reserved.
         </div>
       </div>

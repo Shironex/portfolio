@@ -32,7 +32,7 @@ export default function ContactPage() {
             <ScrollAnimation>
               <div className="flex flex-col justify-center">
                 <h2 className="mb-6 text-3xl font-bold">Get in Touch</h2>
-                <p className="mb-8 text-muted-foreground">
+                <p className="text-muted-foreground mb-8">
                   I&apos;m currently available for freelance work, full-time
                   positions, or collaborations. If you have a project in mind or
                   just want to chat, feel free to reach out!
@@ -45,7 +45,7 @@ export default function ContactPage() {
                     transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                   >
                     <motion.div
-                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"
+                      className="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
                       whileHover={{
                         scale: 1.1,
                         backgroundColor: 'rgba(120,119,198,0.3)',
@@ -65,7 +65,7 @@ export default function ContactPage() {
                     transition={{ type: 'spring', stiffness: 400, damping: 10 }}
                   >
                     <motion.div
-                      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary"
+                      className="bg-primary/10 text-primary flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
                       whileHover={{
                         scale: 1.1,
                         backgroundColor: 'rgba(120,119,198,0.3)',

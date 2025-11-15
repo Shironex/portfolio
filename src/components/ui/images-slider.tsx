@@ -168,7 +168,7 @@ export const ImagesSlider: React.FC<ImagesSliderProps> = ({
       <Button
         variant="ghost"
         size="icon"
-        className="absolute left-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/20 text-white hover:bg-black/30"
+        className="absolute top-1/2 left-2 z-20 -translate-y-1/2 rounded-full bg-black/20 text-white hover:bg-black/30"
         onClick={handlePrevious}
       >
         <ChevronLeft className="h-6 w-6" />
@@ -177,7 +177,7 @@ export const ImagesSlider: React.FC<ImagesSliderProps> = ({
       <Button
         variant="ghost"
         size="icon"
-        className="absolute right-2 top-1/2 z-20 -translate-y-1/2 rounded-full bg-black/20 text-white hover:bg-black/30"
+        className="absolute top-1/2 right-2 z-20 -translate-y-1/2 rounded-full bg-black/20 text-white hover:bg-black/30"
         onClick={handleNext}
       >
         <ChevronRight className="h-6 w-6" />

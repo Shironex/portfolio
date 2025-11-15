@@ -31,7 +31,7 @@ const FeaturedProjectsSection = () => {
           <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
             What I&apos;ve been working on
           </h2>
-          <p className="max-w-2xl text-muted-foreground">
+          <p className="text-muted-foreground max-w-2xl">
             A selection of my recent projects and collaborations.
           </p>
         </div>

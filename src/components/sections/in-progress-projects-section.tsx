@@ -34,7 +34,7 @@ const InProgressProjectsSection = () => {
               Currently Working On
             </h2>
           </div>
-          <p className="max-w-2xl text-muted-foreground">
+          <p className="text-muted-foreground max-w-2xl">
             Projects that are actively in development and evolving.
           </p>
         </div>
