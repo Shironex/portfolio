@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/Shironex/portfolio/compare/v2.0.0...v2.1.0) (2025-11-17)
+
+
+### Features
+
+* add 2 more projects to data folder ([4c71d62](https://github.com/Shironex/portfolio/commit/4c71d623e68ebbbd96a1d13de9dfeb9a81a42147))
+
 # [2.0.0](https://github.com/Shironex/portfolio/compare/v1.27.0...v2.0.0) (2025-11-09)
 
 
