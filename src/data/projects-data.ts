@@ -9,6 +9,8 @@ import { ghLabelsCli } from './projects/gh-labels-cli'
 import { matmajka } from './projects/matmajka'
 import { nextJsSaasTemplate } from './projects/next-js-saas-template'
 import { perfectCleanCarHouse } from './projects/perfect-clean-car-house'
+import { shiniJsLogger } from './projects/shinijs-logger'
+import { shiniJsRateLimit } from './projects/shinijs-rate-limit'
 import { snsDiscordForwarder } from './projects/sns-discord-forwarder'
 import { sudeko } from './projects/sudeko'
 import { toriime } from './projects/toriime'
@@ -23,6 +25,8 @@ export const projectsData: Project[] = [
   nextJsSaasTemplate,
   envVault,
   cliTemplate,
+  shiniJsLogger,
+  shiniJsRateLimit,
   ghLabelsCli,
   agGdriveGenerator,
   agAnimeBot,
