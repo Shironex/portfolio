@@ -60,7 +60,7 @@
     "nextjs-toploader": "^3.9.17",
     "puppeteer": "24.31.0",
     "puppeteer-core": "24.31.0",
-    "react": "^19.2.0",
+    "react": "^19.2.1",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.67.0",
     "react-intersection-observer": "^10.0.0",
