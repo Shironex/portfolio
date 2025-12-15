@@ -42,7 +42,7 @@
     "@react-email/render": "^2.0.0",
     "@sentry/nextjs": "^10.30.0",
     "@t3-oss/env-nextjs": "^0.13.8",
-    "autoprefixer": "^10.4.22",
+    "autoprefixer": "^10.4.23",
     "axios": "^1.13.2",
     "bullmq": "^5.66.0",
     "class-variance-authority": "^0.7.1",
