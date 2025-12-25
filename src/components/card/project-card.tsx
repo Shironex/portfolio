@@ -2,11 +2,12 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { memo } from 'react'
 
 import { ExternalLink, Github, Zap } from 'lucide-react'
 import { motion } from 'motion/react'
 
-import { cardHover } from '@/lib/utils/animations'
+import { buttonScale, cardHover } from '@/lib/utils/animations'
 
 import { Project } from '@/types'
 
@@ -99,10 +100,7 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
             <motion.div
               whileHover="hover"
               whileTap="tap"
-              variants={{
-                hover: { scale: 1.05 },
-                tap: { scale: 0.98 },
-              }}
+              variants={buttonScale}
             >
               <Button
                 variant="default"
@@ -125,10 +123,7 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
                 <motion.div
                   whileHover="hover"
                   whileTap="tap"
-                  variants={{
-                    hover: { scale: 1.05 },
-                    tap: { scale: 0.98 },
-                  }}
+                  variants={buttonScale}
                 >
                   <Button
                     variant="outline"
@@ -173,10 +168,7 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
               <motion.div
                 whileHover="hover"
                 whileTap="tap"
-                variants={{
-                  hover: { scale: 1.05 },
-                  tap: { scale: 0.98 },
-                }}
+                variants={buttonScale}
               >
                 <Button
                   variant="ghost"
@@ -196,4 +188,4 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
   )
 }
 
-export default ProjectCard
+export default memo(ProjectCard)

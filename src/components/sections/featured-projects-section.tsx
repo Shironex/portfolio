@@ -7,6 +7,7 @@ import { ArrowRight } from 'lucide-react'
 import { motion } from 'motion/react'
 
 import { projectsData } from '@/data/projects-data'
+import { buttonScale } from '@/lib/utils/animations'
 import { getFeaturedProjects } from '@/lib/utils/projects'
 
 import ProjectCard from '../card/project-card'
@@ -63,14 +64,7 @@ const FeaturedProjectsSection = () => {
       <ScrollAnimation delay={0.4}>
         <div className="mt-12 flex justify-center">
           <Link href="/projects">
-            <motion.div
-              whileHover="hover"
-              whileTap="tap"
-              variants={{
-                hover: { scale: 1.05 },
-                tap: { scale: 0.98 },
-              }}
-            >
+            <motion.div whileHover="hover" whileTap="tap" variants={buttonScale}>
               <Button
                 variant="outline"
                 className="gap-2"

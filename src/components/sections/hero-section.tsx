@@ -7,8 +7,7 @@ import { ArrowRight } from 'lucide-react'
 import { motion } from 'motion/react'
 
 import { APP_ROUTES } from '@/lib/constants'
-import { fadeUp } from '@/lib/utils/animations'
-import { staggerContainer } from '@/lib/utils/animations'
+import { buttonScale, fadeUp, staggerContainer } from '@/lib/utils/animations'
 
 import { env } from '@/env/client'
 
@@ -95,14 +94,7 @@ const BottomButtons = () => {
   return (
     <motion.div className="flex flex-col gap-4 sm:flex-row" variants={fadeUp}>
       <Link href={APP_ROUTES.toProjects}>
-        <motion.div
-          whileHover="hover"
-          whileTap="tap"
-          variants={{
-            hover: { scale: 1.05 },
-            tap: { scale: 0.98 },
-          }}
-        >
+        <motion.div whileHover="hover" whileTap="tap" variants={buttonScale}>
           <Button
             size="lg"
             className="gap-2"
@@ -125,14 +117,7 @@ const BottomButtons = () => {
         </motion.div>
       </Link>
       <Link href={APP_ROUTES.toContact}>
-        <motion.div
-          whileHover="hover"
-          whileTap="tap"
-          variants={{
-            hover: { scale: 1.05 },
-            tap: { scale: 0.98 },
-          }}
-        >
+        <motion.div whileHover="hover" whileTap="tap" variants={buttonScale}>
           <Button
             size="lg"
             variant="outline"

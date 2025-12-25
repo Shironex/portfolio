@@ -158,6 +158,42 @@ export const buttonHover = {
   hover: { scale: 1.05 },
 }
 
+// Button interaction with tap animation (most common pattern)
+export const buttonScale: Variants = {
+  hover: { scale: 1.05 },
+  tap: { scale: 0.98 },
+}
+
+// Navbar slide in animation
+export const navbarSlideIn: Variants = {
+  hidden: { y: -100, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: 'spring',
+      damping: 20,
+      stiffness: 100,
+      when: 'beforeChildren',
+      staggerChildren: 0.1,
+    },
+  },
+}
+
+// Navbar item animation
+export const navbarItem: Variants = {
+  hidden: { y: -20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      type: 'spring',
+      damping: 20,
+      stiffness: 100,
+    },
+  },
+}
+
 // Gradient animation
 export const gradientAnimation: Variants = {
   hidden: {
