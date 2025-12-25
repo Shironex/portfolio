@@ -6,9 +6,10 @@ import React from 'react'
 import { ArrowRight, Zap } from 'lucide-react'
 import { motion } from 'motion/react'
 
-import { projectsData } from '@/data/projects-data'
 import { arrowPulse, buttonScale } from '@/lib/utils/animations'
 import { useAnimationVisibility } from '@/lib/utils/use-animation-visibility'
+
+import { projectsData } from '@/data/projects-data'
 
 import ProjectCard from '../card/project-card'
 import { ScrollAnimation } from '../scroll-animation'
@@ -72,7 +73,11 @@ const InProgressProjectsSection = () => {
       <ScrollAnimation delay={0.4}>
         <div ref={ref} className="mt-12 flex justify-center">
           <Link href="/projects">
-            <motion.div whileHover="hover" whileTap="tap" variants={buttonScale}>
+            <motion.div
+              whileHover="hover"
+              whileTap="tap"
+              variants={buttonScale}
+            >
               <Button
                 variant="outline"
                 className="gap-2"

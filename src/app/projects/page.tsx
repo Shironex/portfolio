@@ -16,12 +16,13 @@ import { ScrollAnimation } from '@/components/scroll-animation'
 import CTASection from '@/components/sections/cta-section'
 import HeroSection from '@/components/sections/hero-section'
 
-import { projectsData } from '@/data/projects-data'
 import {
   getFeaturedProjects,
   getInProgressProjects,
   getOtherProjects,
 } from '@/lib/utils/projects'
+
+import { projectsData } from '@/data/projects-data'
 
 /**
  * Render the Projects page with a hero, categorized project lists (In Development, Featured, Other), and a call-to-action.

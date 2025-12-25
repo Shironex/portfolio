@@ -32,7 +32,5 @@ export function getFeaturedProjects(
  * @returns An array of projects where `featured` is false and `inProgress` is false
  */
 export function getOtherProjects(projects: Project[]): Project[] {
-  return projects.filter(
-    (project) => !project.featured && !project.inProgress
-  )
+  return projects.filter((project) => !project.featured && !project.inProgress)
 }

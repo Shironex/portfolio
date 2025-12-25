@@ -29,7 +29,11 @@ interface ProjectCardProps {
   priority?: boolean
 }
 
-const ProjectCard = ({ project, delay, priority = false }: ProjectCardProps) => {
+const ProjectCard = ({
+  project,
+  delay,
+  priority = false,
+}: ProjectCardProps) => {
   const [ref, isVisible] = useAnimationVisibility()
 
   return (

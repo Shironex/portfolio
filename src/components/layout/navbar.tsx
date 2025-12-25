@@ -13,8 +13,8 @@ import { SentryLink } from '@/components/sentry-link'
 import { ThemeToggle } from '@/components/theme-toggle'
 
 import { GITHUB_URL, NAV_ITEMS } from '@/lib/constants'
-import { navbarItem, navbarSlideIn } from '@/lib/utils/animations'
 import { throttle } from '@/lib/utils'
+import { navbarItem, navbarSlideIn } from '@/lib/utils/animations'
 
 import MobileNavBar from './mobile-navbar'
 import MobileNavbarToggle from './mobile-navbar-toggle'

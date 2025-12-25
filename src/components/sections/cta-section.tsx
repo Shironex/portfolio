@@ -47,7 +47,11 @@ const CTASection = ({
 
             <div ref={ref} className="flex flex-col gap-4 sm:flex-row">
               <Link href={APP_ROUTES.toContact}>
-                <motion.div whileHover="hover" whileTap="tap" variants={buttonScale}>
+                <motion.div
+                  whileHover="hover"
+                  whileTap="tap"
+                  variants={buttonScale}
+                >
                   <Button
                     size="lg"
                     className="gap-2"
@@ -67,7 +71,11 @@ const CTASection = ({
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <motion.div whileHover="hover" whileTap="tap" variants={buttonScale}>
+                  <motion.div
+                    whileHover="hover"
+                    whileTap="tap"
+                    variants={buttonScale}
+                  >
                     <Button size="lg" variant="outline" className="gap-2">
                       <Github className="h-4 w-4" />
                       Follow on GitHub

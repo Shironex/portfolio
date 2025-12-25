@@ -40,8 +40,11 @@ export function GradientHeading({
       show: {
         ...gradientHeadingVariants.show,
         transition: {
-          ...(gradientHeadingVariants.show as { transition: Record<string, unknown> })
-            .transition,
+          ...(
+            gradientHeadingVariants.show as {
+              transition: Record<string, unknown>
+            }
+          ).transition,
           delay,
         },
       },
