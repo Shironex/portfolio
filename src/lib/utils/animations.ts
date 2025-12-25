@@ -229,3 +229,70 @@ export const scalePulse = {
     ease: 'easeInOut',
   },
 }
+
+// Image hover scale animation
+export const imageHover = {
+  scale: 1.05,
+  transition: {
+    duration: 0.3,
+  },
+}
+
+// Badge entry animation (fade in from top)
+export const badgeEntry: Variants = {
+  hidden: {
+    opacity: 0,
+    y: -10,
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.3,
+    },
+  },
+}
+
+// Subtle card hover animation
+export const cardSubtleHover = {
+  scale: 1.02,
+  transition: {
+    type: 'spring',
+    stiffness: 300,
+    damping: 20,
+  },
+}
+
+// Gradient heading with blur effect
+export const gradientHeadingVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+    filter: 'blur(8px)',
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+}
+
+// Scroll fade up with custom easing
+export const scrollFadeUp: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  },
+}

@@ -14,6 +14,7 @@ import { ThemeToggle } from '@/components/theme-toggle'
 
 import { GITHUB_URL, NAV_ITEMS } from '@/lib/constants'
 import { navbarItem, navbarSlideIn } from '@/lib/utils/animations'
+import { throttle } from '@/lib/utils'
 
 import MobileNavBar from './mobile-navbar'
 import MobileNavbarToggle from './mobile-navbar-toggle'
@@ -24,10 +25,11 @@ export function Navbar() {
   const pathname = usePathname()
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = throttle(() => {
       setScrolled(window.scrollY > 10)
-    }
-    window.addEventListener('scroll', handleScroll)
+    }, 100)
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 

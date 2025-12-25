@@ -2,8 +2,11 @@
 
 import type { ReactNode } from 'react'
 import type { JSX } from 'react'
+import { useMemo } from 'react'
 
 import { type Variants, motion } from 'motion/react'
+
+import { gradientHeadingVariants } from '@/lib/utils/animations'
 
 interface GradientHeadingProps {
   children: ReactNode
@@ -22,28 +25,25 @@ export function GradientHeading({
     'bg-linear-to-r from-foreground via-primary to-purple-500 bg-clip-text text-transparent'
   const combinedClasses = `${baseClasses} ${className}`
 
-  const variants: Variants = {
-    hidden: {
-      opacity: 0,
-      y: 20,
-      filter: 'blur(8px)',
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      filter: 'blur(0px)',
-      transition: {
-        duration: 0.8,
-        ease: [0.22, 1, 0.36, 1],
-        delay,
+  const variants: Variants = useMemo(
+    () => ({
+      ...gradientHeadingVariants,
+      show: {
+        ...gradientHeadingVariants.show,
+        transition: {
+          ...(gradientHeadingVariants.show as { transition: Record<string, unknown> })
+            .transition,
+          delay,
+        },
       },
-    },
-  }
+    }),
+    [delay]
+  )
 
   const Heading = `h${level}` as keyof JSX.IntrinsicElements
 
   return (
-    <motion.div initial="hidden" animate="visible" variants={variants}>
+    <motion.div initial="hidden" animate="show" variants={variants}>
       <Heading className={combinedClasses}>{children}</Heading>
     </motion.div>
   )

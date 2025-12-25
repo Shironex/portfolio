@@ -8,7 +8,11 @@ import { motion } from 'motion/react'
 import { Button } from '@/components/ui/button'
 
 import { APP_ROUTES, GITHUB_URL } from '@/lib/constants'
-import { arrowPulse, buttonScale } from '@/lib/utils/animations'
+import {
+  arrowPulse,
+  buttonScale,
+  cardSubtleHover,
+} from '@/lib/utils/animations'
 import { useAnimationVisibility } from '@/lib/utils/use-animation-visibility'
 
 import { ScrollAnimation } from '../scroll-animation'
@@ -31,8 +35,7 @@ const CTASection = ({
       <ScrollAnimation>
         <motion.div
           className="border-border bg-card rounded-xl border p-8 md:p-12"
-          whileHover={{ scale: 1.02 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          whileHover={cardSubtleHover}
         >
           <div className="flex flex-col items-center text-center">
             <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">

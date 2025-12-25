@@ -1,9 +1,11 @@
 'use client'
 
-import { type ReactNode, useEffect, useState } from 'react'
+import { type ReactNode, useEffect, useMemo, useState } from 'react'
 
 import { type Variants, motion, useAnimation } from 'motion/react'
 import { useInView } from 'react-intersection-observer'
+
+import { scrollFadeUp } from '@/lib/utils/animations'
 
 interface ScrollAnimationProps {
   children: ReactNode
@@ -35,18 +37,20 @@ export function ScrollAnimation({
     }
   }, [controls, inView, hasAnimated, once])
 
-  const defaultVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    show: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: [0.22, 1, 0.36, 1],
-        delay,
+  const defaultVariants: Variants = useMemo(
+    () => ({
+      ...scrollFadeUp,
+      show: {
+        ...scrollFadeUp.show,
+        transition: {
+          ...(scrollFadeUp.show as { transition: Record<string, unknown> })
+            .transition,
+          delay,
+        },
       },
-    },
-  }
+    }),
+    [delay]
+  )
 
   return (
     <motion.div

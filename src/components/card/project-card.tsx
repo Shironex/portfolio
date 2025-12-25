@@ -7,7 +7,13 @@ import { memo } from 'react'
 import { ExternalLink, Github, Zap } from 'lucide-react'
 import { motion } from 'motion/react'
 
-import { buttonScale, cardHover, scalePulse } from '@/lib/utils/animations'
+import {
+  badgeEntry,
+  buttonScale,
+  cardHover,
+  imageHover,
+  scalePulse,
+} from '@/lib/utils/animations'
 import { useAnimationVisibility } from '@/lib/utils/use-animation-visibility'
 
 import { Project } from '@/types'
@@ -39,10 +45,7 @@ const ProjectCard = ({ project, delay, priority = false }: ProjectCardProps) => 
           href={`/projects/${project.slug}`}
           className="mb-6 block overflow-hidden rounded-lg"
         >
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-          >
+          <motion.div whileHover={imageHover}>
             {project.image ? (
               <Image
                 src={project.image}
@@ -59,9 +62,9 @@ const ProjectCard = ({ project, delay, priority = false }: ProjectCardProps) => 
         </Link>
         {project.inProgress && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+            initial="hidden"
+            animate="show"
+            variants={badgeEntry}
             className="mb-3"
           >
             <Badge
