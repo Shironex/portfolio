@@ -1,3 +1,15 @@
+# [2.2.0](https://github.com/Shironex/portfolio/compare/v2.1.0...v2.2.0) (2025-12-25)
+
+
+### Bug Fixes
+
+* address coderabit suggestions ([342a8ab](https://github.com/Shironex/portfolio/commit/342a8abdc1cbe8c8cb0a9a137702ab010ce48a49))
+
+
+### Features
+
+* **animations:** implement visibility-based animation optimization ([76c5ab7](https://github.com/Shironex/portfolio/commit/76c5ab7146304d3b0305810cc338d40f985fe13c))
+
 # [2.1.0](https://github.com/Shironex/portfolio/compare/v2.0.0...v2.1.0) (2025-11-17)
 
 
