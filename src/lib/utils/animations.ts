@@ -209,3 +209,23 @@ export const gradientAnimation: Variants = {
     },
   },
 }
+
+// Infinite arrow pulse animation for CTAs
+export const arrowPulse = {
+  x: [0, 5, 0],
+  transition: {
+    duration: 1.5,
+    repeat: Number.POSITIVE_INFINITY,
+    ease: 'easeInOut',
+  },
+}
+
+// Infinite scale pulse animation for badges and icons
+export const scalePulse = {
+  scale: [1, 1.2, 1],
+  transition: {
+    duration: 2,
+    repeat: Number.POSITIVE_INFINITY,
+    ease: 'easeInOut',
+  },
+}

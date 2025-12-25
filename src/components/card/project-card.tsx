@@ -7,7 +7,8 @@ import { memo } from 'react'
 import { ExternalLink, Github, Zap } from 'lucide-react'
 import { motion } from 'motion/react'
 
-import { buttonScale, cardHover } from '@/lib/utils/animations'
+import { buttonScale, cardHover, scalePulse } from '@/lib/utils/animations'
+import { useAnimationVisibility } from '@/lib/utils/use-animation-visibility'
 
 import { Project } from '@/types'
 
@@ -19,12 +20,16 @@ import { Button } from '../ui/button'
 interface ProjectCardProps {
   project: Project
   delay: number
+  priority?: boolean
 }
 
-const ProjectCard = ({ project, delay }: ProjectCardProps) => {
+const ProjectCard = ({ project, delay, priority = false }: ProjectCardProps) => {
+  const [ref, isVisible] = useAnimationVisibility()
+
   return (
     <ScrollAnimation key={project.id} delay={delay}>
       <motion.div
+        ref={ref}
         className="project-card group"
         whileHover="hover"
         initial="rest"
@@ -44,7 +49,7 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
                 alt={`${project.title} Project`}
                 width={600}
                 height={400}
-                priority
+                priority={priority}
                 className="h-48 w-full object-cover"
               />
             ) : (
@@ -63,14 +68,7 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
               variant="secondary"
               className="gap-1.5 border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-400"
             >
-              <motion.div
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{
-                  duration: 2,
-                  repeat: Number.POSITIVE_INFINITY,
-                  repeatType: 'loop',
-                }}
-              >
+              <motion.div animate={isVisible ? scalePulse : { scale: 1 }}>
                 <Zap className="h-3 w-3 fill-current" />
               </motion.div>
               In Development

@@ -7,7 +7,14 @@ import { ArrowRight } from 'lucide-react'
 import { motion } from 'motion/react'
 
 import { APP_ROUTES } from '@/lib/constants'
-import { buttonScale, fadeUp, staggerContainer } from '@/lib/utils/animations'
+import {
+  arrowPulse,
+  buttonScale,
+  fadeUp,
+  scalePulse,
+  staggerContainer,
+} from '@/lib/utils/animations'
+import { useAnimationVisibility } from '@/lib/utils/use-animation-visibility'
 
 import { env } from '@/env/client'
 
@@ -62,8 +69,11 @@ const HeroSection = ({
 }
 
 const AvailableForNewProjects = () => {
+  const [ref, isVisible] = useAnimationVisibility()
+
   return (
     <motion.div
+      ref={ref}
       className="border-border bg-secondary mb-6 inline-flex items-center rounded-full border px-3 py-1 text-sm"
       variants={fadeUp}
     >
@@ -73,15 +83,11 @@ const AvailableForNewProjects = () => {
             ? 'bg-green-500'
             : 'bg-red-500'
         }`}
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [1, 0.7, 1],
-        }}
-        transition={{
-          duration: 2,
-          repeat: Number.POSITIVE_INFINITY,
-          ease: 'easeInOut',
-        }}
+        animate={
+          isVisible
+            ? { ...scalePulse, opacity: [1, 0.7, 1] }
+            : { scale: 1, opacity: 1 }
+        }
       />
       {env.NEXT_PUBLIC_AVAILABLE_FOR === 'true'
         ? 'Available for new projects'
@@ -91,8 +97,14 @@ const AvailableForNewProjects = () => {
 }
 
 const BottomButtons = () => {
+  const [ref, isVisible] = useAnimationVisibility()
+
   return (
-    <motion.div className="flex flex-col gap-4 sm:flex-row" variants={fadeUp}>
+    <motion.div
+      ref={ref}
+      className="flex flex-col gap-4 sm:flex-row"
+      variants={fadeUp}
+    >
       <Link href={APP_ROUTES.toProjects}>
         <motion.div whileHover="hover" whileTap="tap" variants={buttonScale}>
           <Button
@@ -101,16 +113,7 @@ const BottomButtons = () => {
             data-umami-event="Click Button View My Work"
           >
             View My Work
-            <motion.div
-              animate={{ x: [0, 5, 0] }}
-              transition={{
-                duration: 1.5,
-                repeat: Number.POSITIVE_INFINITY,
-                repeatType: 'loop',
-                ease: 'easeInOut',
-                times: [0, 0.6, 1],
-              }}
-            >
+            <motion.div animate={isVisible ? arrowPulse : { x: 0 }}>
               <ArrowRight className="h-4 w-4" />
             </motion.div>
           </Button>

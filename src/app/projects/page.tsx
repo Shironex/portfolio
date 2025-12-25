@@ -51,6 +51,7 @@ export default async function ProjectsPage() {
                   key={project.id}
                   project={project}
                   delay={0.1 * index}
+                  priority={index < 2}
                 />
               ))}
             </div>
@@ -84,6 +85,7 @@ export default async function ProjectsPage() {
                     key={project.id}
                     project={project}
                     delay={0.1 * index}
+                    priority={index < 2}
                   />
                 ))}
               </div>
@@ -117,6 +119,7 @@ export default async function ProjectsPage() {
                   key={project.id}
                   project={project}
                   delay={0.1 * index}
+                  priority={index < 2}
                 />
               ))}
             </div>

@@ -7,6 +7,8 @@ import { ArrowRight, Zap } from 'lucide-react'
 import { motion } from 'motion/react'
 
 import { projectsData } from '@/data/projects-data'
+import { arrowPulse, buttonScale } from '@/lib/utils/animations'
+import { useAnimationVisibility } from '@/lib/utils/use-animation-visibility'
 
 import ProjectCard from '../card/project-card'
 import { ScrollAnimation } from '../scroll-animation'
@@ -23,6 +25,7 @@ const InProgressProjectsSection = () => {
   const inProgressProjects = projectsData
     .filter((project) => project.inProgress)
     .slice(0, 3)
+  const [ref, isVisible] = useAnimationVisibility()
 
   return (
     <section className="container mx-auto px-4 py-16 md:px-6 md:py-24">
@@ -60,38 +63,23 @@ const InProgressProjectsSection = () => {
               key={project.id}
               project={project}
               delay={0.1 * index}
+              priority={index === 0}
             />
           ))}
         </div>
       )}
 
       <ScrollAnimation delay={0.4}>
-        <div className="mt-12 flex justify-center">
+        <div ref={ref} className="mt-12 flex justify-center">
           <Link href="/projects">
-            <motion.div
-              whileHover="hover"
-              whileTap="tap"
-              variants={{
-                hover: { scale: 1.05 },
-                tap: { scale: 0.98 },
-              }}
-            >
+            <motion.div whileHover="hover" whileTap="tap" variants={buttonScale}>
               <Button
                 variant="outline"
                 className="gap-2"
                 data-umami-event="Click Button View All Projects"
               >
                 View All Projects
-                <motion.div
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: 'loop',
-                    ease: 'easeInOut',
-                    times: [0, 0.6, 1],
-                  }}
-                >
+                <motion.div animate={isVisible ? arrowPulse : { x: 0 }}>
                   <ArrowRight className="h-4 w-4" />
                 </motion.div>
               </Button>
