@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface UseAnimationVisibilityOptions {
   threshold?: number
@@ -18,7 +18,7 @@ export function useAnimationVisibility({
   rootMargin = '50px',
   enabled = true,
 }: UseAnimationVisibilityOptions = {}): [
-  React.RefObject<HTMLDivElement>,
+  React.RefObject<HTMLDivElement | null>,
   boolean,
 ] {
   const ref = useRef<HTMLDivElement>(null)

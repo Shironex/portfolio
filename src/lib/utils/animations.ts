@@ -216,7 +216,7 @@ export const arrowPulse = {
   transition: {
     duration: 1.5,
     repeat: Number.POSITIVE_INFINITY,
-    ease: 'easeInOut',
+    ease: 'easeInOut' as const,
   },
 }
 
@@ -226,7 +226,7 @@ export const scalePulse = {
   transition: {
     duration: 2,
     repeat: Number.POSITIVE_INFINITY,
-    ease: 'easeInOut',
+    ease: 'easeInOut' as const,
   },
 }
 
@@ -257,7 +257,7 @@ export const badgeEntry: Variants = {
 export const cardSubtleHover = {
   scale: 1.02,
   transition: {
-    type: 'spring',
+    type: 'spring' as const,
     stiffness: 300,
     damping: 20,
   },
