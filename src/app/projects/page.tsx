@@ -17,18 +17,17 @@ import CTASection from '@/components/sections/cta-section'
 import HeroSection from '@/components/sections/hero-section'
 
 import { projectsData } from '@/data/projects-data'
+import {
+  getFeaturedProjects,
+  getInProgressProjects,
+  getOtherProjects,
+} from '@/lib/utils/projects'
 
 export default async function ProjectsPage() {
   cacheLife('days')
-  const inProgressProjects = projectsData.filter(
-    (project) => project.inProgress
-  )
-  const featuredProjects = projectsData.filter(
-    (project) => project.featured && !project.inProgress
-  )
-  const otherProjects = projectsData.filter(
-    (project) => !project.featured && !project.inProgress
-  )
+  const inProgressProjects = getInProgressProjects(projectsData)
+  const featuredProjects = getFeaturedProjects(projectsData)
+  const otherProjects = getOtherProjects(projectsData)
 
   return (
     <PageTransition>

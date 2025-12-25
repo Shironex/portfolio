@@ -7,6 +7,7 @@ import { ArrowRight } from 'lucide-react'
 import { motion } from 'motion/react'
 
 import { projectsData } from '@/data/projects-data'
+import { getFeaturedProjects } from '@/lib/utils/projects'
 
 import ProjectCard from '../card/project-card'
 import { ScrollAnimation } from '../scroll-animation'
@@ -20,9 +21,7 @@ import {
 } from '../ui/empty'
 
 const FeaturedProjectsSection = () => {
-  const featuredProjects = projectsData
-    .filter((project) => project.featured && !project.inProgress)
-    .slice(0, 3)
+  const featuredProjects = getFeaturedProjects(projectsData, 3)
 
   return (
     <section className="container mx-auto px-4 py-16 md:px-6 md:py-24">
