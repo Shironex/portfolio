@@ -16,6 +16,22 @@ interface ScrollAnimationProps {
   once?: boolean
 }
 
+/**
+ * Wraps content in a motion-enabled div that animates when scrolled into view.
+ *
+ * Uses the provided `variants` or a default fade-up variant that applies the `delay`
+ * to its show transition. The `threshold` controls the intersection ratio required
+ * to trigger the animation. When `once` is true, the animation runs only the first
+ * time the element becomes visible; when false, it will reset to the hidden state
+ * after leaving the viewport and animate again on re-entry.
+ *
+ * @param variants - Optional Framer Motion variants to override the default animation.
+ * @param className - Optional CSS class to apply to the container element.
+ * @param delay - Delay, in seconds, added to the show transition of the default variants.
+ * @param threshold - Intersection ratio (0–1) required to consider the element "in view."
+ * @param once - If true, animate only the first time the element enters the viewport.
+ * @returns A motion.div element that animates its children based on scroll visibility.
+ */
 export function ScrollAnimation({
   children,
   variants,

@@ -26,9 +26,10 @@ export function getFeaturedProjects(
 }
 
 /**
- * Filters projects that are neither featured nor in progress
- * @param projects - Array of all projects
- * @returns Array of other projects
+ * Selects projects that are neither featured nor in progress.
+ *
+ * @param projects - The list of projects to filter
+ * @returns An array of projects where `featured` is false and `inProgress` is false
  */
 export function getOtherProjects(projects: Project[]): Project[] {
   return projects.filter(
