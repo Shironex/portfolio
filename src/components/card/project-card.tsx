@@ -2,11 +2,19 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { memo } from 'react'
 
 import { ExternalLink, Github, Zap } from 'lucide-react'
 import { motion } from 'motion/react'
 
-import { cardHover } from '@/lib/utils/animations'
+import {
+  badgeEntry,
+  buttonScale,
+  cardHover,
+  imageHover,
+  scalePulse,
+} from '@/lib/utils/animations'
+import { useAnimationVisibility } from '@/lib/utils/use-animation-visibility'
 
 import { Project } from '@/types'
 
@@ -18,12 +26,16 @@ import { Button } from '../ui/button'
 interface ProjectCardProps {
   project: Project
   delay: number
+  priority?: boolean
 }
 
-const ProjectCard = ({ project, delay }: ProjectCardProps) => {
+const ProjectCard = ({ project, delay, priority = false }: ProjectCardProps) => {
+  const [ref, isVisible] = useAnimationVisibility()
+
   return (
     <ScrollAnimation key={project.id} delay={delay}>
       <motion.div
+        ref={ref}
         className="project-card group"
         whileHover="hover"
         initial="rest"
@@ -33,17 +45,14 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
           href={`/projects/${project.slug}`}
           className="mb-6 block overflow-hidden rounded-lg"
         >
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-          >
+          <motion.div whileHover={imageHover}>
             {project.image ? (
               <Image
                 src={project.image}
                 alt={`${project.title} Project`}
                 width={600}
                 height={400}
-                priority
+                priority={priority}
                 className="h-48 w-full object-cover"
               />
             ) : (
@@ -53,23 +62,16 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
         </Link>
         {project.inProgress && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+            initial="hidden"
+            animate="show"
+            variants={badgeEntry}
             className="mb-3"
           >
             <Badge
               variant="secondary"
               className="gap-1.5 border-amber-500/50 bg-amber-500/10 text-amber-600 dark:text-amber-400"
             >
-              <motion.div
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{
-                  duration: 2,
-                  repeat: Number.POSITIVE_INFINITY,
-                  repeatType: 'loop',
-                }}
-              >
+              <motion.div animate={isVisible ? scalePulse : { scale: 1 }}>
                 <Zap className="h-3 w-3 fill-current" />
               </motion.div>
               In Development
@@ -99,10 +101,7 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
             <motion.div
               whileHover="hover"
               whileTap="tap"
-              variants={{
-                hover: { scale: 1.05 },
-                tap: { scale: 0.98 },
-              }}
+              variants={buttonScale}
             >
               <Button
                 variant="default"
@@ -125,10 +124,7 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
                 <motion.div
                   whileHover="hover"
                   whileTap="tap"
-                  variants={{
-                    hover: { scale: 1.05 },
-                    tap: { scale: 0.98 },
-                  }}
+                  variants={buttonScale}
                 >
                   <Button
                     variant="outline"
@@ -173,10 +169,7 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
               <motion.div
                 whileHover="hover"
                 whileTap="tap"
-                variants={{
-                  hover: { scale: 1.05 },
-                  tap: { scale: 0.98 },
-                }}
+                variants={buttonScale}
               >
                 <Button
                   variant="ghost"
@@ -196,4 +189,4 @@ const ProjectCard = ({ project, delay }: ProjectCardProps) => {
   )
 }
 
-export default ProjectCard
+export default memo(ProjectCard)

@@ -17,18 +17,24 @@ import CTASection from '@/components/sections/cta-section'
 import HeroSection from '@/components/sections/hero-section'
 
 import { projectsData } from '@/data/projects-data'
+import {
+  getFeaturedProjects,
+  getInProgressProjects,
+  getOtherProjects,
+} from '@/lib/utils/projects'
 
+/**
+ * Render the Projects page with a hero, categorized project lists (In Development, Featured, Other), and a call-to-action.
+ *
+ * The function sets the page cache lifetime and computes project groups using shared utilities; sections are conditionally rendered based on those groups and display empty-state UI when a group has no items.
+ *
+ * @returns A React element representing the Projects page layout
+ */
 export default async function ProjectsPage() {
   cacheLife('days')
-  const inProgressProjects = projectsData.filter(
-    (project) => project.inProgress
-  )
-  const featuredProjects = projectsData.filter(
-    (project) => project.featured && !project.inProgress
-  )
-  const otherProjects = projectsData.filter(
-    (project) => !project.featured && !project.inProgress
-  )
+  const inProgressProjects = getInProgressProjects(projectsData)
+  const featuredProjects = getFeaturedProjects(projectsData)
+  const otherProjects = getOtherProjects(projectsData)
 
   return (
     <PageTransition>
@@ -52,6 +58,7 @@ export default async function ProjectsPage() {
                   key={project.id}
                   project={project}
                   delay={0.1 * index}
+                  priority={index < 2}
                 />
               ))}
             </div>
@@ -85,6 +92,7 @@ export default async function ProjectsPage() {
                     key={project.id}
                     project={project}
                     delay={0.1 * index}
+                    priority={index < 2}
                   />
                 ))}
               </div>
@@ -118,6 +126,7 @@ export default async function ProjectsPage() {
                   key={project.id}
                   project={project}
                   delay={0.1 * index}
+                  priority={index < 2}
                 />
               ))}
             </div>
