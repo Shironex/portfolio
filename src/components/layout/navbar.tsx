@@ -19,6 +19,13 @@ import { throttle } from '@/lib/utils'
 import MobileNavBar from './mobile-navbar'
 import MobileNavbarToggle from './mobile-navbar-toggle'
 
+/**
+ * Renders the top navigation bar with responsive desktop and mobile layouts, logo, navigation items, GitHub link, and theme toggle.
+ *
+ * The component manages internal state for the mobile menu (open/closed) and tracks page scroll position to adjust header styling.
+ *
+ * @returns The Navbar React element.
+ */
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)

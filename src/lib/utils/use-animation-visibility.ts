@@ -9,9 +9,12 @@ interface UseAnimationVisibilityOptions {
 }
 
 /**
- * Hook that tracks element visibility in viewport to control animations
- * Returns true when element is visible, false otherwise
- * Used to pause infinite animations when elements are off-screen for performance
+ * Track whether an element is visible in the viewport to control animations.
+ *
+ * @param threshold - IntersectionObserver threshold at which the element is considered intersecting (default: 0.1)
+ * @param rootMargin - Margin around the root bounding box used by the observer (default: '50px')
+ * @param enabled - When false, visibility tracking is disabled and the hook reports the element as visible (default: true)
+ * @returns A tuple containing a ref to attach to the observed div and a boolean that is `true` when the element is visible, `false` otherwise
  */
 export function useAnimationVisibility({
   threshold = 0.1,
