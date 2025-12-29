@@ -44,7 +44,7 @@
     "@t3-oss/env-nextjs": "^0.13.10",
     "autoprefixer": "^10.4.23",
     "axios": "^1.13.2",
-    "bullmq": "^5.66.2",
+    "bullmq": "^5.66.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "4.1.0",
