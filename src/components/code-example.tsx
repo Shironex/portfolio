@@ -4,7 +4,6 @@ import { useState } from 'react'
 
 import { Check, Copy } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
-import { useTheme } from 'next-themes'
 
 import { cn } from '@/lib/utils'
 
@@ -24,7 +23,6 @@ export function CodeExample({
   className,
 }: CodeExampleProps) {
   const [copied, setCopied] = useState(false)
-  const { theme } = useTheme()
 
   const copyToClipboard = async () => {
     try {

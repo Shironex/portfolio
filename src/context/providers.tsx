@@ -2,8 +2,6 @@
 
 import NextTopLoader from 'nextjs-toploader'
 
-import { ThemeProvider } from './theme-provider'
-
 interface ProvidersProps {
   children: React.ReactNode
 }
