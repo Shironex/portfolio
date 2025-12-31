@@ -16,9 +16,7 @@ export async function Footer() {
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <div className="flex flex-col items-center gap-2 md:items-start">
             <Link href="/" className="text-xl font-bold">
-              <span className="from-primary bg-linear-to-r to-purple-500 bg-clip-text text-transparent">
-                Shirone
-              </span>
+              <span className="text-primary">Shirone</span>
             </Link>
             <p className="text-muted-foreground text-sm">
               Full-stack developer building impactful web applications

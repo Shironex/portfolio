@@ -10,15 +10,10 @@ interface ProvidersProps {
 
 const Providers = ({ children }: ProvidersProps) => {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="dark"
-      enableSystem={false}
-      disableTransitionOnChange
-    >
+    <>
       <NextTopLoader color="#9B85F6" />
       {children}
-    </ThemeProvider>
+    </>
   )
 }
 

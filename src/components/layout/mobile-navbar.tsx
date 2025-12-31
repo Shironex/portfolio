@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import React from 'react'
 
 import { Github } from 'lucide-react'
 import { type Variants, motion } from 'motion/react'

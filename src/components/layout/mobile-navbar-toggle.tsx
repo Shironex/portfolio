@@ -5,7 +5,6 @@ import React from 'react'
 import { MenuIcon, XIcon } from 'lucide-react'
 import { AnimatePresence, Variants, motion } from 'motion/react'
 
-import { ThemeToggle } from '../theme-toggle'
 import { Button } from '../ui/button'
 
 interface MobileNavbarToggleProps {
@@ -21,9 +20,6 @@ const MobileNavbarToggle = ({
 }: MobileNavbarToggleProps) => {
   return (
     <div className="flex items-center gap-4 md:hidden">
-      <motion.div variants={itemVariants}>
-        <ThemeToggle />
-      </motion.div>
       <motion.div variants={itemVariants} whileTap={{ scale: 0.9 }}>
         <Button
           variant="ghost"

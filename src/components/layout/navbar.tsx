@@ -10,7 +10,6 @@ import { motion } from 'motion/react'
 import { Button } from '@/components/ui/button'
 
 import { SentryLink } from '@/components/sentry-link'
-import { ThemeToggle } from '@/components/theme-toggle'
 
 import { GITHUB_URL, NAV_ITEMS } from '@/lib/constants'
 import { throttle } from '@/lib/utils'
@@ -68,7 +67,7 @@ export function Navbar() {
             eventName="Navigate to Home (Logo)"
           >
             <motion.span
-              className="from-primary bg-linear-to-r to-purple-500 bg-clip-text text-transparent"
+              className="text-primary"
               whileHover={{ scale: 1.05 }}
               transition={{ type: 'spring', stiffness: 400, damping: 10 }}
             >
@@ -131,12 +130,6 @@ export function Navbar() {
                   </Button>
                 </motion.div>
               </Link>
-            </motion.div>
-            <motion.div
-              variants={navbarItem}
-              data-umami-event="Click Button Toggle Theme"
-            >
-              <ThemeToggle />
             </motion.div>
           </div>
         </nav>
