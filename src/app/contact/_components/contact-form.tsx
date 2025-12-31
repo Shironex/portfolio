@@ -4,7 +4,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Send } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useAction } from 'next-safe-action/hooks'
-import { useTheme } from 'next-themes'
 import { useForm } from 'react-hook-form'
 import Turnstile from 'react-turnstile'
 import { toast } from 'sonner'
@@ -29,7 +28,6 @@ import { sendEmailAction } from './action'
 import { ContactFormSchema, contactFormSchema } from './validation'
 
 const ContactForm = () => {
-  const { theme } = useTheme()
   const form = useForm<ContactFormSchema>({
     resolver: zodResolver(contactFormSchema),
     defaultValues: {
@@ -133,7 +131,7 @@ const ContactForm = () => {
             />
             <Turnstile
               aria-label="Captcha"
-              theme={theme === 'dark' ? 'dark' : 'light'}
+              theme={'dark'}
               sitekey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
               onVerify={(token: string) =>
                 form.setValue('turnstileToken', token)

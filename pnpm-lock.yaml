@@ -80,9 +80,6 @@ importers:
       next-safe-action:
         specifier: ^8.0.11
         version: 8.0.11(next@16.1.1(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      next-themes:
-        specifier: ^0.4.6
-        version: 0.4.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       nextjs-toploader:
         specifier: ^3.9.17
         version: 3.9.17(next@16.1.1(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
@@ -2237,9 +2234,6 @@ packages:
 
   '@types/node@22.19.3':
     resolution: {integrity: sha512-1N9SBnWYOJTrNZCdh/yJE+t910Y128BoyY+zBLWhL3r0TYzlTmFdXrPwHL9DyFZmlEXNQQolTZh3KHV31QDhyA==}
-
-  '@types/node@24.10.4':
-    resolution: {integrity: sha512-vnDVpYPMzs4wunl27jHrfmwojOGKya0xyM3sH+UE5iv5uPS6vX7UIoh6m+vQc5LGBq52HBKPIn/zcSZVzeDEZg==}
 
   '@types/node@25.0.3':
     resolution: {integrity: sha512-W609buLVRVmeW693xKfzHeIV6nJGGz98uCPfeXI1ELMLXVeKYZ9m15fAMSaUPBHYLGFsVRcMmSCksQOrZV9BYA==}
@@ -4863,12 +4857,6 @@ packages:
       next: '>= 14.0.0'
       react: '>= 18.2.0'
       react-dom: '>= 18.2.0'
-
-  next-themes@0.4.6:
-    resolution: {integrity: sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA==}
-    peerDependencies:
-      react: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
-      react-dom: ^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc
 
   next@16.0.10:
     resolution: {integrity: sha512-RtWh5PUgI+vxlV3HdR+IfWA1UUHu0+Ram/JBO4vWB54cVPentCD0e+lxyAYEsDTqGGMg7qpjhKh6dc6aW7W/sA==}
@@ -8564,10 +8552,6 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/node@24.10.4':
-    dependencies:
-      undici-types: 7.16.0
-
   '@types/node@25.0.3':
     dependencies:
       undici-types: 7.16.0
@@ -11031,7 +11015,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 24.10.4
+      '@types/node': 25.0.3
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -11442,11 +11426,6 @@ snapshots:
   next-safe-action@8.0.11(next@16.1.1(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
     dependencies:
       next: 16.1.1(@babel/core@7.28.5)(@opentelemetry/api@1.9.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      react: 19.2.3
-      react-dom: 19.2.3(react@19.2.3)
-
-  next-themes@0.4.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3):
-    dependencies:
       react: 19.2.3
       react-dom: 19.2.3(react@19.2.3)
 
