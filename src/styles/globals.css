@@ -160,6 +160,19 @@
     @apply bg-background text-foreground font-mono antialiased;
   }
 
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold tracking-tight;
+  }
+
+  p {
+    @apply leading-relaxed;
+  }
+
   /* Inline code styling - only apply to code not inside pre blocks */
   :not(pre)>code {
     @apply rounded bg-muted px-1.5 py-0.5 text-sm;
