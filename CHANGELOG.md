@@ -1,3 +1,10 @@
+## [2.2.1](https://github.com/Shironex/portfolio/compare/v2.2.0...v2.2.1) (2025-12-31)
+
+
+### Bug Fixes
+
+* set fixed dark theme for Toaster component ([67adfda](https://github.com/Shironex/portfolio/commit/67adfda073b712051841427a92c11bff35c0b91a))
+
 # [2.2.0](https://github.com/Shironex/portfolio/compare/v2.1.0...v2.2.0) (2025-12-25)
 
 
