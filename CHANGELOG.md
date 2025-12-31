@@ -1,3 +1,10 @@
+## [2.2.2](https://github.com/Shironex/portfolio/compare/v2.2.1...v2.2.2) (2025-12-31)
+
+
+### Bug Fixes
+
+* remove any next theme related stuff ([8b6bd55](https://github.com/Shironex/portfolio/commit/8b6bd55943f0ea45d0dbf2c3bfa0b7f72df89c7c))
+
 ## [2.2.1](https://github.com/Shironex/portfolio/compare/v2.2.0...v2.2.1) (2025-12-31)
 
 
