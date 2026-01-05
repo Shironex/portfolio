@@ -61,7 +61,7 @@
     "puppeteer-core": "24.34.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "react-hook-form": "^7.69.0",
+    "react-hook-form": "^7.70.0",
     "react-intersection-observer": "^10.0.0",
     "react-turnstile": "^1.1.4",
     "resend": "^6.6.0",
