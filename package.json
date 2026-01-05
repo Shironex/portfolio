@@ -38,7 +38,7 @@
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.4",
-    "@react-email/components": "^1.0.2",
+    "@react-email/components": "^1.0.3",
     "@react-email/render": "^2.0.0",
     "@sentry/nextjs": "^10.32.1",
     "@t3-oss/env-nextjs": "^0.13.10",
