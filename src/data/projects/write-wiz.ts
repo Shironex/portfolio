@@ -165,6 +165,6 @@ export const writeWiz: Project = {
   },
   inProgress: false,
   duration: '11 months',
-  demoUrl: 'https://writewiz.shirone.dev/',
+  demoUrl: '',
   featured: false,
 }
