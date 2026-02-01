@@ -1,6 +1,52 @@
-# Uruchom lint-staged
-npx lint-staged
+#!/bin/sh
 
-# Sprawdź, czy projekt się buduje
-echo "Checking if the project have no lint errors..."
-pnpm lint || (echo "Linting failed!" && exit 1) 
+# Colors for nice output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+echo "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo "${BLUE}🚀 Running pre-commit checks...${NC}"
+echo "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+
+# Run lint-staged
+echo "\n${YELLOW}📝 Running lint-staged...${NC}"
+npx lint-staged
+if [ $? -ne 0 ]; then
+  echo "${RED}✗ Lint-staged failed!${NC}"
+  exit 1
+fi
+echo "${GREEN}✓ Lint-staged passed${NC}"
+
+# Run ESLint
+echo "\n${YELLOW}🔍 Running ESLint...${NC}"
+pnpm lint
+if [ $? -ne 0 ]; then
+  echo "${RED}✗ Linting failed!${NC}"
+  exit 1
+fi
+echo "${GREEN}✓ Linting passed${NC}"
+
+# Run TypeScript type checking
+echo "\n${YELLOW}🔎 Running TypeScript type checking...${NC}"
+pnpm typecheck
+if [ $? -ne 0 ]; then
+  echo "${RED}✗ Type checking failed!${NC}"
+  exit 1
+fi
+echo "${GREEN}✓ Type checking passed${NC}"
+
+# Build the project
+echo "\n${YELLOW}🏗️  Building the project...${NC}"
+pnpm build
+if [ $? -ne 0 ]; then
+  echo "${RED}✗ Build failed!${NC}"
+  exit 1
+fi
+echo "${GREEN}✓ Build passed${NC}"
+
+echo "\n${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo "${GREEN}✅ All pre-commit checks passed!${NC}"
+echo "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n" 

@@ -4,7 +4,6 @@ import { useState } from 'react'
 
 import { Check, Copy } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
-import { useTheme } from 'next-themes'
 
 import { cn } from '@/lib/utils'
 
@@ -24,7 +23,6 @@ export function CodeExample({
   className,
 }: CodeExampleProps) {
   const [copied, setCopied] = useState(false)
-  const { theme } = useTheme()
 
   const copyToClipboard = async () => {
     try {
@@ -39,18 +37,18 @@ export function CodeExample({
   return (
     <div className={cn('group relative my-6', className)}>
       {title && (
-        <div className="absolute left-0 top-0 z-10 rounded-bl rounded-tr bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary">
+        <div className="bg-primary/10 text-primary absolute top-0 left-0 z-10 rounded-tr rounded-bl px-3 py-1.5 text-xs font-medium">
           {title}
         </div>
       )}
 
-      <div className="absolute right-0 top-0 z-10 rounded-bl rounded-tr bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground">
+      <div className="bg-primary text-primary-foreground absolute top-0 right-0 z-10 rounded-tr rounded-bl px-3 py-1.5 text-xs font-semibold">
         {language.toUpperCase()}
       </div>
 
       <motion.button
         onClick={copyToClipboard}
-        className="absolute right-3 top-10 z-20 flex h-8 w-8 items-center justify-center rounded-md bg-primary/20 text-primary opacity-0 transition-opacity hover:bg-primary/30 group-hover:opacity-100"
+        className="bg-primary/20 text-primary hover:bg-primary/30 absolute top-10 right-3 z-20 flex h-8 w-8 items-center justify-center rounded-md opacity-0 transition-opacity group-hover:opacity-100"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         aria-label="Copy code"
@@ -83,9 +81,9 @@ export function CodeExample({
 
       <pre
         className={cn(
-          'overflow-x-auto rounded-lg border border-primary/20 bg-[#1e1e2f] p-4 pt-10',
+          'border-primary/20 overflow-x-auto rounded-lg border bg-[#1e1e2f] p-4 pt-10',
           'shadow-lg transition-shadow duration-300 hover:shadow-xl',
-          'transition-colors hover:border-primary/40',
+          'hover:border-primary/40 transition-colors',
           showLineNumbers && 'line-numbers'
         )}
       >
@@ -95,7 +93,7 @@ export function CodeExample({
       <AnimatePresence>
         {copied && (
           <motion.div
-            className="absolute bottom-3 right-3 rounded-md bg-primary px-3 py-1 text-sm text-primary-foreground"
+            className="bg-primary text-primary-foreground absolute right-3 bottom-3 rounded-md px-3 py-1 text-sm"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}

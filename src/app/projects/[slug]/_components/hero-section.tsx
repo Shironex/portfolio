@@ -33,7 +33,7 @@ const HeroSection = ({ project }: HeroSectionProps) => {
         >
           <Link href="/projects">
             <motion.div
-              className="mb-8 flex items-center text-sm text-muted-foreground hover:text-foreground"
+              className="text-muted-foreground hover:text-foreground mb-8 flex items-center text-sm"
               variants={fadeUp}
               whileHover={{ x: -5 }}
               transition={{ type: 'spring', stiffness: 400, damping: 10 }}
@@ -51,7 +51,7 @@ const HeroSection = ({ project }: HeroSectionProps) => {
           </GradientHeading>
 
           <motion.p
-            className="mb-8 max-w-2xl text-xl text-muted-foreground"
+            className="text-muted-foreground mb-8 max-w-2xl text-xl"
             variants={fadeUp}
           >
             {project.summary}
@@ -69,7 +69,7 @@ const HeroSection = ({ project }: HeroSectionProps) => {
           </motion.div>
 
           <motion.div
-            className="mb-8 flex flex-wrap justify-center gap-8 text-sm text-muted-foreground"
+            className="text-muted-foreground mb-8 flex flex-wrap justify-center gap-8 text-sm"
             variants={fadeUp}
           >
             <div className="flex items-center gap-2">
@@ -90,29 +90,67 @@ const HeroSection = ({ project }: HeroSectionProps) => {
             className="flex flex-col gap-4 sm:flex-row"
             variants={fadeUp}
           >
-            {project.demoUrl && (
-              <Link
-                href={project.demoUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <motion.div
-                  whileHover="hover"
-                  whileTap="tap"
-                  variants={{
-                    hover: { scale: 1.05 },
-                    tap: { scale: 0.98 },
-                  }}
+            {project.demoUrl &&
+              project.demoUrl !== '#desktop-app' &&
+              project.demoUrl !== '#in-development' && (
+                <Link
+                  href={project.demoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  <Button
-                    className="gap-2"
-                    data-umami-event={`Click Button View Live Demo of Project ${project.title}`}
+                  <motion.div
+                    whileHover="hover"
+                    whileTap="tap"
+                    variants={{
+                      hover: { scale: 1.05 },
+                      tap: { scale: 0.98 },
+                    }}
                   >
-                    <ExternalLink className="h-4 w-4" />
-                    View Live Demo
-                  </Button>
-                </motion.div>
-              </Link>
+                    <Button
+                      className="gap-2"
+                      data-umami-event={`Click Button View Live Demo of Project ${project.title}`}
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      View Live Demo
+                    </Button>
+                  </motion.div>
+                </Link>
+              )}
+            {project.demoUrl === '#desktop-app' && (
+              <motion.div
+                whileHover="hover"
+                whileTap="tap"
+                variants={{
+                  hover: { scale: 1.05 },
+                  tap: { scale: 0.98 },
+                }}
+              >
+                <Button
+                  className="cursor-not-allowed gap-2 opacity-50"
+                  disabled
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  Desktop Application
+                </Button>
+              </motion.div>
+            )}
+            {project.demoUrl === '#in-development' && (
+              <motion.div
+                whileHover="hover"
+                whileTap="tap"
+                variants={{
+                  hover: { scale: 1.05 },
+                  tap: { scale: 0.98 },
+                }}
+              >
+                <Button
+                  className="cursor-not-allowed gap-2 opacity-50"
+                  disabled
+                >
+                  <ExternalLink className="h-4 w-4" />
+                  Coming Soon
+                </Button>
+              </motion.div>
             )}
 
             {project.githubUrl && (

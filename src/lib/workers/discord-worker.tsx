@@ -1,10 +1,13 @@
 import * as Sentry from '@sentry/nextjs'
 import { Worker } from 'bullmq'
+import FormData from 'form-data'
 
 import { ContactFormSchema } from '@/app/contact/_components/validation'
 
 import { sendDiscordWebhook } from '../discord'
 import { generateDefaultEmbed } from '../discord/embeds'
+import { renderContactFormEmail } from '../mail/render'
+import { emailHtmlToImage } from '../mail/snapshot'
 import redisClient from '../redis'
 
 type DiscordJobData = {
@@ -29,18 +32,64 @@ const discordWorker = new Worker(
           const { data } = job.data as DiscordJobData
           console.log('Discord worker started for contact form')
 
-          // const png = await emailFormToPng(data)
+          let form: FormData | undefined = undefined
+          let embedImage: string | undefined = undefined
 
-          // const form = new FormData()
-          // form.append('file', png, { filename: 'contact.png' })
+          // Try to create email snapshot, but don't fail if it doesn't work
+          try {
+            console.log('Attempting to create email snapshot...')
 
+            // Render the email HTML
+            const emailHtml = await renderContactFormEmail({
+              name: data.name,
+              email: data.email,
+              message: data.message,
+            })
+
+            // Convert HTML to PNG with timeout
+            const pngBuffer = await Promise.race([
+              emailHtmlToImage(emailHtml),
+              new Promise<never>((_, reject) =>
+                setTimeout(() => reject(new Error('Snapshot timeout')), 20000)
+              ),
+            ])
+
+            // Create form data with the image
+            form = new FormData()
+            form.append('file', pngBuffer, { filename: 'contact-email.png' })
+            embedImage = 'attachment://contact-email.png'
+
+            console.log('✅ Email snapshot created successfully')
+          } catch (snapshotError) {
+            console.warn(
+              '⚠️ Failed to create email snapshot, proceeding without image:',
+              snapshotError instanceof Error
+                ? snapshotError.message
+                : 'Unknown error'
+            )
+
+            // Log to Sentry but don't fail the job
+            Sentry.captureException(snapshotError, {
+              tags: {
+                source: 'discord_worker',
+                errorType: 'snapshot_fallback',
+              },
+              extra: {
+                jobId: job.id,
+                contactName: data.name,
+                contactEmail: data.email,
+              },
+            })
+          }
+
+          // Create Discord embed (with or without image)
           const embed = generateDefaultEmbed({
             title: 'New contact form submission',
-            message: `new contact form submission`,
-            // image: `attachment://contact.png`,
+            message: `New message from ${data.name}`,
+            image: embedImage,
             fields: [
               {
-                name: 'Name',
+                name: 'From',
                 value: data.name,
                 inline: true,
               },
@@ -50,15 +99,26 @@ const discordWorker = new Worker(
                 inline: true,
               },
               {
-                name: 'Message',
-                value: data.message,
+                name: 'Quick Preview',
+                value:
+                  data.message.substring(0, 200) +
+                  (data.message.length > 200 ? '...' : ''),
                 inline: false,
               },
+              // Add status field if snapshot failed
+              ...(embedImage
+                ? []
+                : [
+                    {
+                      name: 'Status',
+                      value: '⚠️ Email preview not available',
+                      inline: false,
+                    },
+                  ]),
             ],
           })
 
-          // const response = await sendDiscordWebhook(embed, form)
-          const response = await sendDiscordWebhook(embed)
+          const response = await sendDiscordWebhook(embed, form)
 
           if (response.status !== 200 && response.status !== 204) {
             throw new Error(

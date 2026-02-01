@@ -18,7 +18,7 @@ const ProjectDetailsSection = ({ project }: ProjectDetailsSectionProps) => {
           </h2>
           <div className="prose prose-lg dark:prose-invert mb-12 max-w-none">
             {project.description.map((paragraph: string, index: number) => (
-              <p key={index} className="mb-4 text-muted-foreground">
+              <p key={index} className="text-muted-foreground mb-4">
                 {paragraph}
               </p>
             ))}
@@ -30,7 +30,7 @@ const ProjectDetailsSection = ({ project }: ProjectDetailsSectionProps) => {
           <ul className="mb-12 grid gap-4 md:grid-cols-2">
             {project.features.map((feature: string, index: number) => (
               <li key={index} className="flex items-start gap-3">
-                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                <div className="bg-primary/10 text-primary flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -61,9 +61,9 @@ const ProjectDetailsSection = ({ project }: ProjectDetailsSectionProps) => {
               {project.techDetails.stack.map((tech: string, index: number) => (
                 <div
                   key={index}
-                  className="flex items-center gap-3 rounded-lg border border-border bg-card p-3"
+                  className="border-border bg-card flex items-center gap-3 rounded-lg border p-3"
                 >
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
+                  <div className="bg-primary/10 text-primary flex h-8 w-8 shrink-0 items-center justify-center rounded-md">
                     <span className="text-xs font-bold">{tech.charAt(0)}</span>
                   </div>
                   <span className="text-sm">{tech}</span>
@@ -74,7 +74,7 @@ const ProjectDetailsSection = ({ project }: ProjectDetailsSectionProps) => {
             {project.techDetails.architecture && (
               <>
                 <h3 className="mb-4 text-xl font-medium">Architecture</h3>
-                <p className="mb-6 text-muted-foreground">
+                <p className="text-muted-foreground mb-6">
                   {project.techDetails.architecture}
                 </p>
               </>
@@ -90,12 +90,12 @@ const ProjectDetailsSection = ({ project }: ProjectDetailsSectionProps) => {
                     (item: any, index: number) => (
                       <li
                         key={index}
-                        className="rounded-lg border border-border bg-card p-4"
+                        className="border-border bg-card rounded-lg border p-4"
                       >
                         <h4 className="mb-2 font-medium">
                           Challenge: {item.challenge}
                         </h4>
-                        <p className="text-sm text-muted-foreground">
+                        <p className="text-muted-foreground text-sm">
                           Solution: {item.solution}
                         </p>
                       </li>
@@ -106,17 +106,6 @@ const ProjectDetailsSection = ({ project }: ProjectDetailsSectionProps) => {
             )}
           </div>
         </ScrollAnimation>
-
-        {project.outcome && (
-          <ScrollAnimation delay={0.3}>
-            <h2 className="mb-6 text-2xl font-bold md:text-3xl">
-              Outcome & Results
-            </h2>
-            <div className="prose prose-lg dark:prose-invert mb-12 max-w-none">
-              <p className="text-muted-foreground">{project.outcome}</p>
-            </div>
-          </ScrollAnimation>
-        )}
       </div>
     </section>
   )

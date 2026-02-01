@@ -5,28 +5,37 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import { Github, Mail } from 'lucide-react'
-import { Variants, motion } from 'motion/react'
+import { motion } from 'motion/react'
 
 import { Button } from '@/components/ui/button'
 
 import { SentryLink } from '@/components/sentry-link'
-import { ThemeToggle } from '@/components/theme-toggle'
 
 import { GITHUB_URL, NAV_ITEMS } from '@/lib/constants'
+import { throttle } from '@/lib/utils'
+import { navbarItem, navbarSlideIn } from '@/lib/utils/animations'
 
 import MobileNavBar from './mobile-navbar'
 import MobileNavbarToggle from './mobile-navbar-toggle'
 
+/**
+ * Renders the top navigation bar with responsive desktop and mobile layouts, logo, navigation items, GitHub link, and theme toggle.
+ *
+ * The component manages internal state for the mobile menu (open/closed) and tracks page scroll position to adjust header styling.
+ *
+ * @returns The Navbar React element.
+ */
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const pathname = usePathname()
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = throttle(() => {
       setScrolled(window.scrollY > 10)
-    }
-    window.addEventListener('scroll', handleScroll)
+    }, 100)
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -38,48 +47,19 @@ export function Navbar() {
     setIsOpen(false)
   }
 
-  // Animation variants
-  const navbarVariants: Variants = {
-    hidden: { y: -100, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: 'spring',
-        damping: 20,
-        stiffness: 100,
-        when: 'beforeChildren',
-        staggerChildren: 0.1,
-      },
-    },
-  }
-
-  const itemVariants: Variants = {
-    hidden: { y: -20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: 'spring',
-        damping: 20,
-        stiffness: 100,
-      },
-    },
-  }
-
   return (
     <motion.header
       initial="hidden"
       animate="visible"
-      variants={navbarVariants}
+      variants={navbarSlideIn}
       className={`fixed top-0 z-50 w-full transition-all duration-300 ${
         scrolled
-          ? 'bg-background/80 shadow-sm backdrop-blur-md'
+          ? 'bg-background/80 shadow-xs backdrop-blur-md'
           : 'bg-transparent'
       }`}
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
-        <motion.div variants={itemVariants}>
+        <motion.div variants={navbarItem}>
           <SentryLink
             href="/"
             className="flex items-center gap-2 text-xl font-bold"
@@ -87,7 +67,7 @@ export function Navbar() {
             eventName="Navigate to Home (Logo)"
           >
             <motion.span
-              className="bg-gradient-to-r from-primary to-purple-500 bg-clip-text text-transparent"
+              className="text-primary"
               whileHover={{ scale: 1.05 }}
               transition={{ type: 'spring', stiffness: 400, damping: 10 }}
             >
@@ -100,10 +80,10 @@ export function Navbar() {
         <nav className="hidden md:flex md:items-center md:gap-6">
           <ul className="flex items-center gap-6">
             {NAV_ITEMS.map((item) => (
-              <motion.li key={item.name} variants={itemVariants}>
+              <motion.li key={item.name} variants={navbarItem}>
                 <SentryLink
                   href={item.path}
-                  className={`relative px-1 py-2 text-sm font-medium transition-colors hover:text-primary ${
+                  className={`hover:text-primary relative px-1 py-2 text-sm font-medium transition-colors ${
                     pathname === item.path
                       ? 'text-primary'
                       : 'text-muted-foreground'
@@ -115,7 +95,7 @@ export function Navbar() {
                   {pathname === item.path && (
                     <motion.div
                       layoutId="navbar-indicator"
-                      className="absolute -bottom-1 left-0 h-0.5 w-full bg-primary"
+                      className="bg-primary absolute -bottom-1 left-0 h-0.5 w-full"
                       transition={{
                         type: 'spring',
                         stiffness: 400,
@@ -129,7 +109,7 @@ export function Navbar() {
           </ul>
 
           <div className="flex items-center gap-4">
-            <motion.div variants={itemVariants}>
+            <motion.div variants={navbarItem}>
               <Link
                 href={GITHUB_URL}
                 target="_blank"
@@ -151,32 +131,6 @@ export function Navbar() {
                 </motion.div>
               </Link>
             </motion.div>
-            <motion.div variants={itemVariants}>
-              <Link
-                href="/contact"
-                data-umami-event="Click Button View Contact Page"
-              >
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label="Contact"
-                    className="hover:text-primary"
-                  >
-                    <Mail className="h-5 w-5" />
-                  </Button>
-                </motion.div>
-              </Link>
-            </motion.div>
-            <motion.div
-              variants={itemVariants}
-              data-umami-event="Click Button Toggle Theme"
-            >
-              <ThemeToggle />
-            </motion.div>
           </div>
         </nav>
 
@@ -184,7 +138,7 @@ export function Navbar() {
         <MobileNavbarToggle
           isOpen={isOpen}
           toggleMenu={toggleMenu}
-          itemVariants={itemVariants}
+          itemVariants={navbarItem}
         />
       </div>
 
@@ -192,7 +146,7 @@ export function Navbar() {
       <MobileNavBar
         isOpen={isOpen}
         pathname={pathname}
-        itemVariants={itemVariants}
+        itemVariants={navbarItem}
         closeMenu={closeMenu}
         navItems={NAV_ITEMS}
       />

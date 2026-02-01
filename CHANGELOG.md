@@ -1,3 +1,166 @@
+## [2.2.2](https://github.com/Shironex/portfolio/compare/v2.2.1...v2.2.2) (2025-12-31)
+
+
+### Bug Fixes
+
+* remove any next theme related stuff ([8b6bd55](https://github.com/Shironex/portfolio/commit/8b6bd55943f0ea45d0dbf2c3bfa0b7f72df89c7c))
+
+## [2.2.1](https://github.com/Shironex/portfolio/compare/v2.2.0...v2.2.1) (2025-12-31)
+
+
+### Bug Fixes
+
+* set fixed dark theme for Toaster component ([67adfda](https://github.com/Shironex/portfolio/commit/67adfda073b712051841427a92c11bff35c0b91a))
+
+# [2.2.0](https://github.com/Shironex/portfolio/compare/v2.1.0...v2.2.0) (2025-12-25)
+
+
+### Bug Fixes
+
+* address coderabit suggestions ([342a8ab](https://github.com/Shironex/portfolio/commit/342a8abdc1cbe8c8cb0a9a137702ab010ce48a49))
+
+
+### Features
+
+* **animations:** implement visibility-based animation optimization ([76c5ab7](https://github.com/Shironex/portfolio/commit/76c5ab7146304d3b0305810cc338d40f985fe13c))
+
+# [2.1.0](https://github.com/Shironex/portfolio/compare/v2.0.0...v2.1.0) (2025-11-17)
+
+
+### Features
+
+* add 2 more projects to data folder ([4c71d62](https://github.com/Shironex/portfolio/commit/4c71d623e68ebbbd96a1d13de9dfeb9a81a42147))
+
+# [2.0.0](https://github.com/Shironex/portfolio/compare/v1.27.0...v2.0.0) (2025-11-09)
+
+
+### Build System
+
+* **tailwind:** migrate from v3 to v4 ([7665c92](https://github.com/Shironex/portfolio/commit/7665c92c08047b2d4d75e82731144025e4fc8649))
+
+
+### BREAKING CHANGES
+
+* **tailwind:** Tailwind CSS v4 introduces CSS-first configuration
+and requires PostCSS plugin setup. Component styles have been updated
+to be compatible with v4 syntax.
+
+# [1.27.0](https://github.com/Shironex/portfolio/compare/v1.26.0...v1.27.0) (2025-11-01)
+
+
+### Features
+
+* **projects:** add AWS SNS Discord Forwarder project details ([2e1e51e](https://github.com/Shironex/portfolio/commit/2e1e51ee7408a8b9801d3c30c1a16277b1e54a4c))
+
+# [1.26.0](https://github.com/Shironex/portfolio/compare/v1.25.0...v1.26.0) (2025-10-30)
+
+
+### Features
+
+* **projects:** add claude code discord bot project details and update project gallery rendering ([56d4202](https://github.com/Shironex/portfolio/commit/56d4202e0d3e1d9ec8fea6de0e9b71304f161388))
+
+# [1.25.0](https://github.com/Shironex/portfolio/compare/v1.24.0...v1.25.0) (2025-10-30)
+
+
+### Features
+
+* **projects:** add in-development section and dynamic placeholders with new projects ([a5aba37](https://github.com/Shironex/portfolio/commit/a5aba378b76b1a0c0a5308cab39304d6db773dea))
+
+# [1.24.0](https://github.com/Shironex/portfolio/compare/v1.23.3...v1.24.0) (2025-10-30)
+
+
+### Features
+
+* **projects:** add GitHub URL to Next.js SaaS template and update project details ([1583704](https://github.com/Shironex/portfolio/commit/15837049b9bdf2db55bd7af467ee4400f98aa01a))
+
+## [1.23.3](https://github.com/Shironex/portfolio/compare/v1.23.2...v1.23.3) (2025-10-22)
+
+
+### Bug Fixes
+
+* **csp:** update CSP to allow inline scripts and expose nonce for client-side access ([f7cca8b](https://github.com/Shironex/portfolio/commit/f7cca8baf45cd83bbaef8d51c6f5c27d92ffbee7))
+
+## [1.23.2](https://github.com/Shironex/portfolio/compare/v1.23.1...v1.23.2) (2025-10-22)
+
+
+### Bug Fixes
+
+* **route-loading:** adjust loading component to occupy full screen height ([b991e76](https://github.com/Shironex/portfolio/commit/b991e7639c554cecabbf42c8404bb6e769899dba))
+* **csp:** use nonce-based script-src and allow https fonts ([aaeaf3e](https://github.com/Shironex/portfolio/commit/aaeaf3e40bc760ee6b35c1b1d78513b02732b722))
+
+## [1.23.1](https://github.com/Shironex/portfolio/compare/v1.23.0...v1.23.1) (2025-10-22)
+
+
+### Bug Fixes
+
+* **proxy:** update Content Security Policy to allow self-hosted fonts and inline scripts ([2026f81](https://github.com/Shironex/portfolio/commit/2026f81e78294d1349de1e0cd50ac5d26702182b))
+
+# [1.23.0](https://github.com/Shironex/portfolio/compare/v1.22.1...v1.23.0) (2025-10-22)
+
+
+### Bug Fixes
+
+* **footer:** avoid server-time access by caching current year in Server Component ([ce248d7](https://github.com/Shironex/portfolio/commit/ce248d70f5d8db72adc4efb9a9aa2964f4ce5033))
+
+
+### Features
+
+* **ui:** add shadcn Empty and Item primitives ([1fa6162](https://github.com/Shironex/portfolio/commit/1fa6162a0163d9a8d0e4d9001a0fdcf3c2c8570f))
+* **ui:** add shadcn Spinner and RouteLoading; wire Suspense fallbacks + route loading files ([9b18ac2](https://github.com/Shironex/portfolio/commit/9b18ac20b0126604fdd322812419c7777ac302ec))
+* **app:** convert key routes to Server Components with 'use cache' + cacheLife ([4f46b50](https://github.com/Shironex/portfolio/commit/4f46b5013b5d5332972d9c62d28c80643f98f7b1))
+* **about:** extract ImagesGallery client island; keep About page server-rendered ([279faa5](https://github.com/Shironex/portfolio/commit/279faa5074caa2c1c3e94366aeab959258e199a8))
+* **projects:** show Empty states for project lists and related projects ([542a266](https://github.com/Shironex/portfolio/commit/542a266f12c175d035bbbf31527a429efbfa623c))
+
+## [1.22.1](https://github.com/Shironex/portfolio/compare/v1.22.0...v1.22.1) (2025-09-03)
+
+
+### Bug Fixes
+
+* update featured status for Sudeko project to false ([0af9e1d](https://github.com/Shironex/portfolio/commit/0af9e1d1107f9898e15cc2da5e9d6acf845ac8ae))
+
+# [1.22.0](https://github.com/Shironex/portfolio/compare/v1.21.0...v1.22.0) (2025-09-03)
+
+
+### Features
+
+* add Sudeko project with detailed description, images, and technologies ([21a5d00](https://github.com/Shironex/portfolio/commit/21a5d0074686755cd47cfb3452c7d3f122f5dd83))
+
+# [1.21.0](https://github.com/Shironex/portfolio/compare/v1.20.3...v1.21.0) (2025-08-17)
+
+
+### Features
+
+* add ENV Vault project and improve demo URL handling ([4320ff7](https://github.com/Shironex/portfolio/commit/4320ff7fcc41ee103fcd5f47652fe97ef3c33e61))
+
+## [1.20.3](https://github.com/Shironex/portfolio/compare/v1.20.2...v1.20.3) (2025-08-10)
+
+
+### Bug Fixes
+
+* apply Docker-specific Puppeteer fixes for Target closed errors ([38dda95](https://github.com/Shironex/portfolio/commit/38dda95379f2a061514fdb9b90318faab6747551)), closes [puppeteer/puppeteer#6258](https://github.com/puppeteer/puppeteer/issues/6258) [puppeteer/puppeteer#6258](https://github.com/puppeteer/puppeteer/issues/6258)
+
+## [1.20.2](https://github.com/Shironex/portfolio/compare/v1.20.1...v1.20.2) (2025-08-10)
+
+
+### Bug Fixes
+
+* resolve Puppeteer race conditions and connection stability issues ([cb43fdc](https://github.com/Shironex/portfolio/commit/cb43fdcfd453a46648c542fdda4aff5be90e4785))
+
+## [1.20.1](https://github.com/Shironex/portfolio/compare/v1.20.0...v1.20.1) (2025-08-10)
+
+
+### Bug Fixes
+
+* resolve Puppeteer "Target closed" errors in production ([047d11d](https://github.com/Shironex/portfolio/commit/047d11d46310b87bcf524b8f124161d7a90b3000))
+
+# [1.20.0](https://github.com/Shironex/portfolio/compare/v1.19.0...v1.20.0) (2025-08-10)
+
+
+### Features
+
+* add email snapshot to Discord webhook notifications ([c16ddee](https://github.com/Shironex/portfolio/commit/c16ddee178e6c177c45d53b06a4a1cfa22d422db))
+* redesign contact form email to match portfolio design system ([e1aebe6](https://github.com/Shironex/portfolio/commit/e1aebe62af04113e084fe219262498fda34df52c))
+
 # [1.19.0](https://github.com/Shironex/portfolio/compare/v1.18.0...v1.19.0) (2025-08-07)
 
 

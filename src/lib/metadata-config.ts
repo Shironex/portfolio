@@ -81,7 +81,6 @@ export const defaultMetadata: Metadata = {
     apple: '/icon.png',
   },
   manifest: `${siteConfig.url}/site.webmanifest`,
-  metadataBase: new URL(siteConfig.url),
 }
 
 // Type for page-specific metadata
@@ -112,13 +111,6 @@ export const sectionMetadata: Record<string, PageMetadata> = {
       'Explore my portfolio of web development projects and applications',
     path: '/projects',
     ogImage: '/og-projects.png',
-  },
-  articles: {
-    title: 'Articles & Insights',
-    description:
-      'Read my thoughts and tutorials on web development, technology, and programming',
-    path: '/articles',
-    ogImage: '/og-articles.png',
   },
   contact: {
     title: 'Contact Me',

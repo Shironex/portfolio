@@ -1,8 +1,6 @@
 import { Metadata } from 'next'
 import React from 'react'
 
-import SendEventOnLoad from '@/components/send-event-on-load'
-
 import { generateMetadata as generateMeta } from '@/lib/metadata-config'
 
 import { projectsData } from '@/data/projects-data'
@@ -16,6 +14,7 @@ interface SelectedProjectLayoutProps extends Props {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  'use cache'
   const slug = (await params).slug
   const project = projectsData.find((p) => p.slug === slug)
 
@@ -52,12 +51,7 @@ const SelectedProjectLayout = async ({
 }: SelectedProjectLayoutProps) => {
   const slug = (await params).slug
 
-  return (
-    <>
-      <SendEventOnLoad eventKey={`user viewed ${slug} project`} />
-      {children}
-    </>
-  )
+  return <>{children}</>
 }
 
 export default SelectedProjectLayout

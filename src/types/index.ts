@@ -26,7 +26,8 @@ export interface Project {
   title: string
   summary: string
   description: string[]
-  image: string
+  image?: string
+  projectType?: 'web' | 'cli' | 'library' | 'desktop' | 'mobile' | 'api'
   gallery: GalleryItem[]
   technologies: string[]
   features: string[]
@@ -35,7 +36,6 @@ export interface Project {
   startDate?: string
   inProgress?: boolean
   duration: string
-  outcome: string
   demoUrl: string
   githubUrl?: string
   featured: boolean

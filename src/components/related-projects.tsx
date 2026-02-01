@@ -21,7 +21,7 @@ export function RelatedProjects({ projects }: RelatedProjectsProps) {
           data-umami-event={`Click Button View Related Project ${project.title}`}
         >
           <motion.div
-            className="overflow-hidden rounded-xl border border-border bg-card transition-all hover:shadow-lg"
+            className="border-border bg-card overflow-hidden rounded-xl border transition-all hover:shadow-lg"
             whileHover={{ y: -5 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
           >
@@ -41,7 +41,7 @@ export function RelatedProjects({ projects }: RelatedProjectsProps) {
             </div>
             <div className="p-6">
               <h3 className="mb-2 text-xl font-bold">{project.title}</h3>
-              <p className="mb-4 line-clamp-2 text-sm text-muted-foreground">
+              <p className="text-muted-foreground mb-4 line-clamp-2 text-sm">
                 {project.summary}
               </p>
               <div className="flex flex-wrap gap-2">

@@ -12,7 +12,7 @@ export const InterestsSection = () => {
             <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
               My Interests
             </h2>
-            <p className="max-w-2xl text-muted-foreground">
+            <p className="text-muted-foreground max-w-2xl">
               When its comes to my life, here&apos;s what keeps me busy.
             </p>
           </div>

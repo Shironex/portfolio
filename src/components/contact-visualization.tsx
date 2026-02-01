@@ -48,7 +48,7 @@ const ContactVisualization = () => {
   }, [])
 
   return (
-    <div className="relative aspect-video w-full overflow-hidden rounded-xl border border-border bg-gradient-to-br from-background via-secondary/30 to-primary/10 p-8">
+    <div className="border-border from-background via-secondary/30 to-primary/10 relative aspect-video w-full overflow-hidden rounded-xl border bg-linear-to-br p-8">
       {/* Background grid pattern */}
       <div
         className="absolute inset-0 opacity-10"
@@ -63,15 +63,15 @@ const ContactVisualization = () => {
       <div className="relative h-full w-full">
         {/* Central globe */}
         <motion.div
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1, ease: 'easeOut' }}
         >
-          <div className="relative flex h-32 w-32 items-center justify-center rounded-full bg-primary/20 backdrop-blur-sm md:h-40 md:w-40 lg:h-48 lg:w-48">
-            <Globe className="h-16 w-16 text-primary md:h-20 md:w-20 lg:h-24 lg:w-24" />
+          <div className="bg-primary/20 relative flex h-32 w-32 items-center justify-center rounded-full backdrop-blur-xs md:h-40 md:w-40 lg:h-48 lg:w-48">
+            <Globe className="text-primary h-16 w-16 md:h-20 md:w-20 lg:h-24 lg:w-24" />
             <motion.div
-              className="absolute inset-0 rounded-full border-2 border-primary/30"
+              className="border-primary/30 absolute inset-0 rounded-full border-2"
               animate={{
                 scale: [1, 1.1, 1],
                 opacity: [1, 0.5, 1],
@@ -87,21 +87,21 @@ const ContactVisualization = () => {
 
         {/* Contact info card */}
         <motion.div
-          className="absolute left-[20%] top-[30%] rounded-xl border border-border bg-card/80 p-4 shadow-lg backdrop-blur-sm"
+          className="border-border bg-card/80 absolute top-[30%] left-[20%] rounded-xl border p-4 shadow-lg backdrop-blur-xs"
           initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.5, duration: 0.8 }}
         >
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20">
-                <Mail className="h-3 w-3 text-primary" />
+              <div className="bg-primary/20 flex h-6 w-6 items-center justify-center rounded-full">
+                <Mail className="text-primary h-3 w-3" />
               </div>
               <span className="text-xs">{EMAIL_CONTACT}</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/20">
-                <MapPin className="h-3 w-3 text-primary" />
+              <div className="bg-primary/20 flex h-6 w-6 items-center justify-center rounded-full">
+                <MapPin className="text-primary h-3 w-3" />
               </div>
               <span className="text-xs">Gdańsk, Poland</span>
             </div>
@@ -110,7 +110,7 @@ const ContactVisualization = () => {
 
         {/* Orbiting mail icon */}
         <motion.div
-          className="absolute left-1/2 top-1/2"
+          className="absolute top-1/2 left-1/2"
           initial={{ rotate: 0, x: -120, y: -120 }}
           animate={{ rotate: 360 }}
           transition={{
@@ -120,7 +120,7 @@ const ContactVisualization = () => {
           }}
         >
           <motion.div
-            className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/80 text-white shadow-lg"
+            className="bg-primary/80 flex h-12 w-12 items-center justify-center rounded-full text-white shadow-lg"
             whileHover={{ scale: 1.2 }}
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -132,7 +132,7 @@ const ContactVisualization = () => {
 
         {/* Orbiting message icon */}
         <motion.div
-          className="absolute left-1/2 top-1/2"
+          className="absolute top-1/2 left-1/2"
           initial={{ rotate: 60, x: 100, y: -80 }}
           animate={{ rotate: 420 }}
           transition={{
@@ -154,7 +154,7 @@ const ContactVisualization = () => {
 
         {/* Orbiting send icon */}
         <motion.div
-          className="absolute left-1/2 top-1/2"
+          className="absolute top-1/2 left-1/2"
           initial={{ rotate: 180, x: 0, y: 120 }}
           animate={{ rotate: 540 }}
           transition={{
@@ -176,14 +176,14 @@ const ContactVisualization = () => {
 
         {/* Phone icon with card */}
         <motion.div
-          className="absolute bottom-[40%] right-[19%] rounded-xl border border-border bg-card/80 p-4 shadow-lg backdrop-blur-sm"
+          className="border-border bg-card/80 absolute right-[19%] bottom-[40%] rounded-xl border p-4 shadow-lg backdrop-blur-xs"
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.7, duration: 0.8 }}
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/20">
-              <Phone className="h-4 w-4 text-primary" />
+            <div className="bg-primary/20 flex h-8 w-8 items-center justify-center rounded-full">
+              <Phone className="text-primary h-4 w-4" />
             </div>
             <span className="text-sm">Available for calls</span>
           </div>
@@ -218,7 +218,7 @@ const ContactVisualization = () => {
                 repeatDelay: 3 + (i % 4),
               }}
             >
-              <Sparkles className="h-4 w-4 text-primary/80" />
+              <Sparkles className="text-primary/80 h-4 w-4" />
             </motion.div>
           )
         })}
@@ -245,7 +245,7 @@ const ContactVisualization = () => {
           return (
             <motion.div
               key={`humor-${i}`}
-              className="absolute z-10 rounded-md border border-border/40 bg-card/60 px-3 py-1.5 font-mono text-xs shadow-sm backdrop-blur-sm"
+              className="border-border/40 bg-card/60 absolute z-10 rounded-md border px-3 py-1.5 font-mono text-xs shadow-xs backdrop-blur-xs"
               style={positions[i]}
               initial={{ opacity: 0 }}
               // Replace whileInView with direct animation
@@ -261,7 +261,7 @@ const ContactVisualization = () => {
               }}
             >
               <div className="flex items-center gap-1.5">
-                <IconComponent className="h-3 w-3 text-primary" />
+                <IconComponent className="text-primary h-3 w-3" />
                 <span>{item.text}</span>
               </div>
             </motion.div>
@@ -270,14 +270,14 @@ const ContactVisualization = () => {
 
         {/* Terminal with cycling messages */}
         <motion.div
-          className="absolute bottom-[15%] left-[15%] z-10 w-64 overflow-hidden rounded-md border border-primary/20 bg-background/80 shadow-md backdrop-blur-sm"
+          className="border-primary/20 bg-background/80 absolute bottom-[15%] left-[15%] z-10 w-64 overflow-hidden rounded-md border shadow-md backdrop-blur-xs"
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 1.2, duration: 0.8 }}
         >
-          <div className="flex items-center justify-between bg-primary/20 px-3 py-1.5">
+          <div className="bg-primary/20 flex items-center justify-between px-3 py-1.5">
             <div className="flex items-center gap-1.5">
-              <Terminal className="h-3.5 w-3.5 text-primary" />
+              <Terminal className="text-primary h-3.5 w-3.5" />
               <span className="text-xs font-medium">terminal</span>
             </div>
             <div className="flex gap-1.5">
@@ -308,8 +308,8 @@ const ContactVisualization = () => {
                   repeatDelay: 7,
                 }}
               >
-                <div className="flex h-10 w-16 items-center justify-center rounded-lg bg-white/10 p-2 backdrop-blur-sm">
-                  <Send className="h-5 w-5 text-primary" />
+                <div className="flex h-10 w-16 items-center justify-center rounded-lg bg-white/10 p-2 backdrop-blur-xs">
+                  <Send className="text-primary h-5 w-5" />
                 </div>
               </motion.div>
 
@@ -327,7 +327,7 @@ const ContactVisualization = () => {
                   delay: 3,
                 }}
               >
-                <div className="flex h-10 w-16 items-center justify-center rounded-lg bg-white/10 p-2 backdrop-blur-sm">
+                <div className="flex h-10 w-16 items-center justify-center rounded-lg bg-white/10 p-2 backdrop-blur-xs">
                   <Mail className="h-5 w-5 text-purple-500" />
                 </div>
               </motion.div>
@@ -377,9 +377,9 @@ const ContactVisualization = () => {
       </div>
 
       {/* Text overlay */}
-      <div className="absolute bottom-4 left-0 right-0 text-center">
+      <div className="absolute right-0 bottom-4 left-0 text-center">
         <motion.p
-          className="text-sm text-muted-foreground"
+          className="text-muted-foreground text-sm"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.5, duration: 0.8 }}

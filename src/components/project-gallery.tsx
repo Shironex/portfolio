@@ -57,7 +57,7 @@ export function ProjectGallery({ images }: ProjectGalleryProps) {
         {images.map((image, index) => (
           <motion.div
             key={index}
-            className="overflow-hidden rounded-lg border border-border bg-card"
+            className="border-border bg-card overflow-hidden rounded-lg border"
             whileHover={{ y: -5 }}
             transition={{ type: 'spring', stiffness: 300, damping: 20 }}
           >
@@ -80,7 +80,7 @@ export function ProjectGallery({ images }: ProjectGalleryProps) {
             </div>
             {image.caption && (
               <div className="p-3">
-                <p className="text-sm text-muted-foreground">{image.caption}</p>
+                <p className="text-muted-foreground text-sm">{image.caption}</p>
               </div>
             )}
           </motion.div>
@@ -94,7 +94,7 @@ export function ProjectGallery({ images }: ProjectGalleryProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-background/90 backdrop-blur-sm"
+            className="bg-background/90 fixed inset-0 z-50 flex items-center justify-center backdrop-blur-xs"
             onClick={closeViewer}
             onKeyDown={handleKeyDown}
             tabIndex={0}
@@ -119,7 +119,7 @@ export function ProjectGallery({ images }: ProjectGalleryProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute right-2 top-2 rounded-full bg-background/50 backdrop-blur-sm hover:bg-background/70"
+                  className="bg-background/50 hover:bg-background/70 absolute top-2 right-2 rounded-full backdrop-blur-xs"
                   onClick={closeViewer}
                 >
                   <X className="h-5 w-5" />
@@ -128,7 +128,7 @@ export function ProjectGallery({ images }: ProjectGalleryProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-background/50 backdrop-blur-sm hover:bg-background/70"
+                  className="bg-background/50 hover:bg-background/70 absolute top-1/2 left-2 -translate-y-1/2 rounded-full backdrop-blur-xs"
                   onClick={(e) => {
                     e.stopPropagation()
                     goToPrevious()
@@ -140,7 +140,7 @@ export function ProjectGallery({ images }: ProjectGalleryProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-background/50 backdrop-blur-sm hover:bg-background/70"
+                  className="bg-background/50 hover:bg-background/70 absolute top-1/2 right-2 -translate-y-1/2 rounded-full backdrop-blur-xs"
                   onClick={(e) => {
                     e.stopPropagation()
                     goToNext()

@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import React from 'react'
 
 import { Github } from 'lucide-react'
 import { type Variants, motion } from 'motion/react'
@@ -59,7 +58,7 @@ const MobileNavBar = ({
           animate="visible"
           exit="exit"
           variants={mobileMenuVariants}
-          className="absolute left-0 top-16 z-50 w-full overflow-hidden bg-background/95 backdrop-blur-md md:hidden"
+          className="bg-background/95 absolute top-16 left-0 z-50 w-full overflow-hidden backdrop-blur-md md:hidden"
         >
           <nav className="container mx-auto px-4 py-6">
             <ul className="flex flex-col gap-4">
@@ -71,7 +70,7 @@ const MobileNavBar = ({
                 >
                   <Link
                     href={item.path}
-                    className={`block py-2 text-lg font-medium transition-colors hover:text-primary ${
+                    className={`hover:text-primary block py-2 text-lg font-medium transition-colors ${
                       pathname === item.path
                         ? 'text-primary'
                         : 'text-muted-foreground'

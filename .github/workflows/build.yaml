@@ -29,13 +29,21 @@ jobs:
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-pnpm
 
-      - name: Create .env file with secrets
-        run: |
-          cp .env.example .env
-          echo "SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}" >> .env
-          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
-          echo "SENTRY_URL=${{ secrets.SENTRY_URL }}" >> .env
-          echo "CI=true" >> .env
-
       - name: Next Build 🔧
         run: pnpm run build
+        env:
+          CI: true
+          # Sentry (real secrets for source maps upload)
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          SENTRY_URL: ${{ secrets.SENTRY_URL }}
+          # Mock values for build validation
+          NEXT_PUBLIC_PUBLIC_URL: http://localhost:3000
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
+          RESEND_API_KEY: mock-resend-api-key
+          RESEND_MAIL_TO: mock@example.com
+          TURNSTILE_SECRET_KEY: 1x0000000000000000000000000000000AA
+          REDIS_HOST: redis://localhost:6379
+          DISCORD_WEBHOOK_URL: https://discord.com/api/webhooks/mock
+          ANALYTIC_URL: https://mock-analytics.com
+          ANALYTIC_ID: mock-id
