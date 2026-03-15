@@ -31,31 +31,14 @@ const unauthenticatedAction = createSafeActionClient({
       return 'Something went wrong'
     }
   },
-}).use(async ({ next, clientInput, metadata }) => {
-  console.log('LOGGING MIDDLEWARE')
-
-  const startTime = performance.now()
-
+}).use(async ({ next, metadata }) => {
   return await Sentry.startSpan(
     {
       name: `Server Action: ${metadata?.actionName || 'Unknown Action'}`,
       op: 'server.action',
     },
     async () => {
-      try {
-        const result = await next()
-
-        const endTime = performance.now()
-        console.log('Result ->', result)
-        console.log('Client input ->', clientInput)
-        console.log('Metadata ->', metadata)
-        console.log('Action execution took', endTime - startTime, 'ms')
-
-        return result
-      } catch (error) {
-        // Błędy są przechwytywane przez handleServerError
-        throw error
-      }
+      return await next()
     }
   )
 })

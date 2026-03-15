@@ -2,10 +2,11 @@
 
 import * as Sentry from '@sentry/nextjs'
 
+import { sendDiscordWebhook } from '@/lib/discord'
+import { generateDefaultEmbed } from '@/lib/discord/embeds'
 import { PublicError } from '@/lib/errors'
 import { sendMail } from '@/lib/mail'
 import ContactFormEmail from '@/lib/mail/templates/contact-form'
-import { discordQueue } from '@/lib/queue'
 import { rateLimitBot, rateLimitByKey } from '@/lib/ratelimit'
 import { unauthenticatedAction } from '@/lib/safe-action'
 import { verifyTurnstile } from '@/lib/utils/cloudflare'
@@ -62,9 +63,38 @@ export const sendEmailAction = unauthenticatedAction
         body,
       })
 
-      //? Add to queue to send to discord notification
-      await discordQueue.add('contact-form-webhook', {
-        data: parsedInput,
+      // Send Discord notification (fire-and-forget, don't block the response)
+      const embed = generateDefaultEmbed({
+        title: 'New contact form submission',
+        message: `New message from ${parsedInput.name}`,
+        fields: [
+          {
+            name: 'From',
+            value: parsedInput.name,
+            inline: true,
+          },
+          {
+            name: 'Email',
+            value: parsedInput.email,
+            inline: true,
+          },
+          {
+            name: 'Quick Preview',
+            value:
+              parsedInput.message.substring(0, 200) +
+              (parsedInput.message.length > 200 ? '...' : ''),
+            inline: false,
+          },
+        ],
+      })
+
+      sendDiscordWebhook(embed).catch((error) => {
+        Sentry.captureException(error, {
+          tags: {
+            source: 'discord_webhook',
+            feature: 'contact_form',
+          },
+        })
       })
     } catch (error) {
       Sentry.captureException(error, {
@@ -85,7 +115,7 @@ export const sendEmailAction = unauthenticatedAction
       console.error(error)
 
       throw new PublicError(
-        'There was an error when sending email. Plase try again later.'
+        'There was an error when sending email. Please try again later.'
       )
     }
   })

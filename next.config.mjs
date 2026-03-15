@@ -19,17 +19,6 @@ const nextConfig = {
     hours: { stale: 3600, revalidate: 900, expire: 86400 },
     days: { stale: 86400, revalidate: 3600, expire: 604800 },
   },
-  webpack: (config, { isServer }) => {
-    if (isServer) {
-      // Ensure bullmq/ioredis are bundled to avoid serverExternalPackages warnings
-      config.externals = (config.externals || []).filter(
-        (ext) =>
-          !(typeof ext === 'string' && (ext === 'bullmq' || ext === 'ioredis'))
-      )
-    }
-
-    return config
-  },
   output: 'standalone',
 }
 

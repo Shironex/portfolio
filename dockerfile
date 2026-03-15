@@ -41,15 +41,6 @@ RUN pnpm build
 ### Runner ###
 FROM base AS runner
 
-# Install Chromium + dependencies for Puppeteer
-RUN apk add --no-cache \
-    chromium \
-    nss \
-    freetype \
-    harfbuzz \
-    ttf-freefont \
-    dumb-init
-
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
@@ -68,6 +59,4 @@ USER nextjs
 
 EXPOSE 3000
 
-# Use dumb-init to handle signals properly for Puppeteer
-ENTRYPOINT ["dumb-init", "--"]
 CMD ["node", "server.js"]
