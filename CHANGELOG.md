@@ -1,3 +1,10 @@
+## [2.2.3](https://github.com/Shironex/portfolio/compare/v2.2.2...v2.2.3) (2026-03-15)
+
+
+### Bug Fixes
+
+* address PR review comments ([b219cf3](https://github.com/Shironex/portfolio/commit/b219cf31d3ba1afc869459aac56e837d9da5d34d))
+
 ## [2.2.2](https://github.com/Shironex/portfolio/compare/v2.2.1...v2.2.2) (2025-12-31)
 
 
