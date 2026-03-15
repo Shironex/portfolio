@@ -39,7 +39,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Form Handling**: React Hook Form + Zod validation
 - **State Management**: Next Safe Action for server actions
 - **Email**: Resend + React Email templates
-- **Queue**: BullMQ with Redis for background jobs
 - **Monitoring**: Sentry for error tracking
 - **Security**: Cloudflare Turnstile for bot protection
 
@@ -54,9 +53,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `/src/lib/` - Core utilities and integrations
   - `/discord/` - Discord webhook integration
   - `/mail/` - Email templates and rendering
-  - `/queue/` - BullMQ job queue setup
   - `/ratelimit/` - Redis-based rate limiting
-  - `/workers/` - Background job workers
 - `/src/content/` - MDX content for articles
 - `/src/env/` - Type-safe environment variables (client.ts, server.ts)
 
@@ -65,9 +62,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 1. **Server Actions**: Uses Next Safe Action for type-safe server mutations
 2. **Environment Variables**: Validated with Zod through @t3-oss/env-nextjs
 3. **Error Handling**: Custom error classes in `/lib/errors/`
-4. **Background Jobs**: Discord notifications sent via BullMQ queue
-5. **MDX Processing**: Articles use MDX with syntax highlighting and custom components
-6. **Image Optimization**: Project screenshots stored in `/public/projects/`
+4. **MDX Processing**: Articles use MDX with syntax highlighting and custom components
+5. **Image Optimization**: Project screenshots stored in `/public/projects/`
 
 ### Important Considerations
 

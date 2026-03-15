@@ -40,16 +40,6 @@ export const sendDiscordWebhook = async (embed: FullDiscordEmbed) => {
             error instanceof Error ? error.message : 'Unknown error',
         })
 
-        Sentry.captureException(error, {
-          tags: {
-            source: 'discord_webhook',
-            errorType: 'api_call_failed',
-          },
-          extra: {
-            embedTitle: embed.title,
-          },
-        })
-
         throw error
       }
     }

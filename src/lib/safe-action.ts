@@ -32,22 +32,13 @@ const unauthenticatedAction = createSafeActionClient({
     }
   },
 }).use(async ({ next, metadata }) => {
-  const startTime = performance.now()
-
   return await Sentry.startSpan(
     {
       name: `Server Action: ${metadata?.actionName || 'Unknown Action'}`,
       op: 'server.action',
     },
     async () => {
-      const result = await next()
-
-      const endTime = performance.now()
-      console.log(
-        `Action "${metadata?.actionName}" completed in ${Math.round(endTime - startTime)}ms`
-      )
-
-      return result
+      return await next()
     }
   )
 })
