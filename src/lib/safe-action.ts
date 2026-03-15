@@ -31,9 +31,7 @@ const unauthenticatedAction = createSafeActionClient({
       return 'Something went wrong'
     }
   },
-}).use(async ({ next, clientInput, metadata }) => {
-  console.log('LOGGING MIDDLEWARE')
-
+}).use(async ({ next, metadata }) => {
   const startTime = performance.now()
 
   return await Sentry.startSpan(
@@ -42,20 +40,14 @@ const unauthenticatedAction = createSafeActionClient({
       op: 'server.action',
     },
     async () => {
-      try {
-        const result = await next()
+      const result = await next()
 
-        const endTime = performance.now()
-        console.log('Result ->', result)
-        console.log('Client input ->', clientInput)
-        console.log('Metadata ->', metadata)
-        console.log('Action execution took', endTime - startTime, 'ms')
+      const endTime = performance.now()
+      console.log(
+        `Action "${metadata?.actionName}" completed in ${Math.round(endTime - startTime)}ms`
+      )
 
-        return result
-      } catch (error) {
-        // Błędy są przechwytywane przez handleServerError
-        throw error
-      }
+      return result
     }
   )
 })

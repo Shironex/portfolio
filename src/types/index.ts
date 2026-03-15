@@ -62,9 +62,6 @@ export interface FullDiscordEmbed {
   url?: string
   description?: string
   fields: EmbedField[]
-  image?: {
-    url?: string
-  }
   color: number
   timestamp: string
   footer: {

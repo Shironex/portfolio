@@ -6,23 +6,18 @@ import { AUTHOR_NAME } from '../constants'
 
 interface DefaultEmbedProps {
   title: string
-  image?: string
   message: string
   fields?: EmbedField[]
 }
 
 export const generateDefaultEmbed = ({
   title,
-  image,
   message,
   fields,
 }: DefaultEmbedProps): FullDiscordEmbed => {
   return {
     author: {
       name: AUTHOR_NAME,
-    },
-    image: {
-      url: image,
     },
     title: title,
     description: message,
