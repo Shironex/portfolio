@@ -41,3 +41,6 @@ next-env.d.ts
 .env.sentry-build-plugin
 
 .automaker
+
+# Claude Code
+.claude/
