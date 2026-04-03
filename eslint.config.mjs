@@ -6,7 +6,7 @@ import eslintConfigPrettier from 'eslint-config-prettier'
 import checkFilePlugin from 'eslint-plugin-check-file'
 import nPlugin from 'eslint-plugin-n'
 
-/** @type {import('eslint').Linter.FlatConfig[]} */
+/** @type {import('eslint').Linter.Config[]} */
 const eslintConfig = [
   {
     ignores: [
