@@ -20,9 +20,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Get all project routes
   const projectRoutes = projectsData.map((project) => ({
     url: `${baseUrl}/projects/${project.slug}`,
-    lastModified: project.completedDate
-      ? new Date(project.completedDate).toISOString()
-      : currentDate,
+    lastModified:
+      project.completedDate && !isNaN(Date.parse(project.completedDate))
+        ? new Date(project.completedDate).toISOString()
+        : currentDate,
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }))
