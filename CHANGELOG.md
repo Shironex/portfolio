@@ -1,3 +1,10 @@
+## [2.2.4](https://github.com/Shironex/portfolio/compare/v2.2.3...v2.2.4) (2026-04-03)
+
+
+### Bug Fixes
+
+* add security overrides and fix sitemap invalid date bug ([9ff9a6d](https://github.com/Shironex/portfolio/commit/9ff9a6de85e658226d95007cdca37efc641dcf7d))
+
 ## [2.2.3](https://github.com/Shironex/portfolio/compare/v2.2.2...v2.2.3) (2026-03-15)
 
 
