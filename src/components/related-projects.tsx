@@ -15,10 +15,7 @@ export function RelatedProjects({ projects }: RelatedProjectsProps) {
   return (
     <div className="grid gap-8 md:grid-cols-3">
       {projects.map((project, index) => (
-        <Link
-          key={project.id}
-          href={`/projects/${project.slug}`}
-        >
+        <Link key={project.id} href={`/projects/${project.slug}`}>
           <motion.div
             className="border-border bg-card overflow-hidden rounded-xl border transition-all hover:shadow-lg"
             whileHover={{ y: -5 }}

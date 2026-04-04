@@ -60,6 +60,8 @@
     "next": "16.2.2",
     "next-safe-action": "^8.3.0",
     "nextjs-toploader": "^3.9.17",
+    "posthog-js": "^1.364.7",
+    "posthog-node": "^5.28.11",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-hook-form": "^7.72.1",

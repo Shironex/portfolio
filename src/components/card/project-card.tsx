@@ -6,6 +6,7 @@ import { memo } from 'react'
 
 import { ExternalLink, Github, Zap } from 'lucide-react'
 import { motion } from 'motion/react'
+import posthog from 'posthog-js'
 
 import {
   badgeEntry,
@@ -101,7 +102,15 @@ const ProjectCard = ({
           )}
         </div>
         <div className="flex items-center gap-4">
-          <Link href={`/projects/${project.slug}`}>
+          <Link
+            href={`/projects/${project.slug}`}
+            onClick={() =>
+              posthog.capture('project_card_clicked', {
+                project_slug: project.slug,
+                project_title: project.title,
+              })
+            }
+          >
             <motion.div
               whileHover="hover"
               whileTap="tap"
@@ -119,6 +128,13 @@ const ProjectCard = ({
                 href={project.demoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  posthog.capture('project_demo_clicked', {
+                    project_slug: project.slug,
+                    project_title: project.title,
+                    demo_url: project.demoUrl,
+                  })
+                }
               >
                 <motion.div
                   whileHover="hover"
@@ -159,6 +175,13 @@ const ProjectCard = ({
               href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() =>
+                posthog.capture('project_github_clicked', {
+                  project_slug: project.slug,
+                  project_title: project.title,
+                  github_url: project.githubUrl,
+                })
+              }
             >
               <motion.div
                 whileHover="hover"

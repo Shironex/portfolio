@@ -4,6 +4,7 @@ import Link from 'next/link'
 
 import { ArrowRight, Github } from 'lucide-react'
 import { motion } from 'motion/react'
+import posthog from 'posthog-js'
 
 import { Button } from '@/components/ui/button'
 
@@ -46,7 +47,12 @@ const CTASection = ({
             </p>
 
             <div ref={ref} className="flex flex-col gap-4 sm:flex-row">
-              <Link href={APP_ROUTES.toContact}>
+              <Link
+                href={APP_ROUTES.toContact}
+                onClick={() =>
+                  posthog.capture('cta_contact_clicked', { cta_title: title })
+                }
+              >
                 <motion.div
                   whileHover="hover"
                   whileTap="tap"

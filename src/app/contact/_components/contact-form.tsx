@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Send } from 'lucide-react'
 import { motion } from 'motion/react'
 import { useAction } from 'next-safe-action/hooks'
+import posthog from 'posthog-js'
 import { useForm } from 'react-hook-form'
 import Turnstile from 'react-turnstile'
 import { toast } from 'sonner'
@@ -41,9 +42,13 @@ const ContactForm = () => {
     onSuccess: () => {
       form.reset()
       toast('Email sent successfully')
+      posthog.capture('contact_form_submitted')
     },
     onError: ({ error }) => {
       toast(error.serverError)
+      posthog.capture('contact_form_error', {
+        error_message: error.serverError,
+      })
     },
   })
 
@@ -145,11 +150,7 @@ const ContactForm = () => {
               aria-label="Verify"
             />
 
-            <Button
-              type="submit"
-              className="w-full gap-2"
-              disabled={isPending}
-            >
+            <Button type="submit" className="w-full gap-2" disabled={isPending}>
               {isPending ? 'Sending...' : 'Submit'}
               <motion.div
                 animate={isPending ? { rotate: 360 } : { x: [0, 5, 0] }}

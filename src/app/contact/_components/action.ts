@@ -7,6 +7,7 @@ import { generateDefaultEmbed } from '@/lib/discord/embeds'
 import { PublicError } from '@/lib/errors'
 import { sendMail } from '@/lib/mail'
 import ContactFormEmail from '@/lib/mail/templates/contact-form'
+import { getPostHogClient } from '@/lib/posthog-server'
 import { rateLimitBot, rateLimitByKey } from '@/lib/ratelimit'
 import { unauthenticatedAction } from '@/lib/safe-action'
 import { verifyTurnstile } from '@/lib/utils/cloudflare'
@@ -87,6 +88,17 @@ export const sendEmailAction = unauthenticatedAction
           },
         ],
       })
+
+      const posthog = getPostHogClient()
+      posthog.capture({
+        distinctId: parsedInput.email,
+        event: 'contact_form_sent',
+        properties: {
+          name: parsedInput.name,
+          message_length: parsedInput.message.length,
+        },
+      })
+      await posthog.flush()
 
       sendDiscordWebhook(embed).catch((error) => {
         Sentry.captureException(error, {

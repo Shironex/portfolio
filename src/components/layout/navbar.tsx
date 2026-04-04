@@ -116,11 +116,7 @@ export function Navbar() {
 
           <div className="flex items-center gap-4">
             <motion.div variants={navbarItem}>
-              <Link
-                href={GITHUB_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link href={GITHUB_URL} target="_blank" rel="noopener noreferrer">
                 <motion.div
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}

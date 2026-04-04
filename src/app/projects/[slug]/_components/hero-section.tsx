@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Github } from 'lucide-react'
 import { ArrowLeft, Calendar, Clock, ExternalLink } from 'lucide-react'
 import { motion } from 'motion/react'
+import posthog from 'posthog-js'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -97,6 +98,13 @@ const HeroSection = ({ project }: HeroSectionProps) => {
                   href={project.demoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() =>
+                    posthog.capture('project_detail_demo_clicked', {
+                      project_slug: project.slug,
+                      project_title: project.title,
+                      demo_url: project.demoUrl,
+                    })
+                  }
                 >
                   <motion.div
                     whileHover="hover"
@@ -155,6 +163,13 @@ const HeroSection = ({ project }: HeroSectionProps) => {
                 href={project.githubUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  posthog.capture('project_detail_github_clicked', {
+                    project_slug: project.slug,
+                    project_title: project.title,
+                    github_url: project.githubUrl,
+                  })
+                }
               >
                 <motion.div
                   whileHover="hover"
