@@ -52,11 +52,7 @@ const CTASection = ({
                   whileTap="tap"
                   variants={buttonScale}
                 >
-                  <Button
-                    size="lg"
-                    className="gap-2"
-                    data-umami-event="Click Button Get in Touch"
-                  >
+                  <Button size="lg" className="gap-2">
                     Get in Touch
                     <motion.div animate={isVisible ? arrowPulse : { x: 0 }}>
                       <ArrowRight className="h-4 w-4" />

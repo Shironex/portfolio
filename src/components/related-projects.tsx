@@ -18,7 +18,6 @@ export function RelatedProjects({ projects }: RelatedProjectsProps) {
         <Link
           key={project.id}
           href={`/projects/${project.slug}`}
-          data-umami-event={`Click Button View Related Project ${project.title}`}
         >
           <motion.div
             className="border-border bg-card overflow-hidden rounded-xl border transition-all hover:shadow-lg"

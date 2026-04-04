@@ -107,11 +107,7 @@ const BottomButtons = () => {
     >
       <Link href={APP_ROUTES.toProjects}>
         <motion.div whileHover="hover" whileTap="tap" variants={buttonScale}>
-          <Button
-            size="lg"
-            className="gap-2"
-            data-umami-event="Click Button View My Work"
-          >
+          <Button size="lg" className="gap-2">
             View My Work
             <motion.div animate={isVisible ? arrowPulse : { x: 0 }}>
               <ArrowRight className="h-4 w-4" />
@@ -121,11 +117,7 @@ const BottomButtons = () => {
       </Link>
       <Link href={APP_ROUTES.toContact}>
         <motion.div whileHover="hover" whileTap="tap" variants={buttonScale}>
-          <Button
-            size="lg"
-            variant="outline"
-            data-umami-event="Click Button Get in Touch"
-          >
+          <Button size="lg" variant="outline">
             Get in Touch
           </Button>
         </motion.div>

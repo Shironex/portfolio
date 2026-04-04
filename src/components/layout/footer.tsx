@@ -36,7 +36,6 @@ export async function Footer() {
                       rel: 'noopener noreferrer',
                     })}
                     className="text-muted-foreground hover:text-foreground text-sm"
-                    data-umami-event={`Click Button Navigate to ${item.name}`}
                   >
                     {item.name}
                   </Link>

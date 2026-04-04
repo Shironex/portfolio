@@ -25,7 +25,7 @@ export function proxy(req: NextRequest) {
       const csp = [
         `base-uri 'none'`,
         `child-src 'none'`,
-        `connect-src 'self' https://analytics.shirone.dev ${env.SENTRY_URL} https://*.ingest.sentry.io`,
+        `connect-src 'self' ${env.SENTRY_URL} https://*.ingest.sentry.io`,
         `default-src 'self'`,
         // Allow self-hosted fonts, data URLs, and trusted HTTPS origins (covers CDNs)
         `font-src 'self' data: https:`,
@@ -38,8 +38,8 @@ export function proxy(req: NextRequest) {
         `object-src 'none'`,
         // Use a nonce for any inline scripts; allow dev eval if needed
         // Temporarily allow inline to unblock hydration while keeping nonce for critical tags
-        `script-src 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com https://analytics.shirone.dev`,
-        `script-src-elem 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com https://analytics.shirone.dev`,
+        `script-src 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com`,
+        `script-src-elem 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com`,
         `style-src 'self' 'unsafe-inline'`,
         `worker-src 'self' blob:`,
       ].join('; ')

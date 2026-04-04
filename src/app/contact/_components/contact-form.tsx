@@ -149,7 +149,6 @@ const ContactForm = () => {
               type="submit"
               className="w-full gap-2"
               disabled={isPending}
-              data-umami-event="Click Button Submit Contact Form"
             >
               {isPending ? 'Sending...' : 'Submit'}
               <motion.div

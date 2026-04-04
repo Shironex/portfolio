@@ -73,11 +73,7 @@ const FeaturedProjectsSection = () => {
               whileTap="tap"
               variants={buttonScale}
             >
-              <Button
-                variant="outline"
-                className="gap-2"
-                data-umami-event="Click Button View All Projects"
-              >
+              <Button variant="outline" className="gap-2">
                 View All Projects
                 <motion.div animate={isVisible ? arrowPulse : { x: 0 }}>
                   <ArrowRight className="h-4 w-4" />

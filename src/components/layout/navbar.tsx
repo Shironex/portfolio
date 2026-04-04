@@ -94,7 +94,6 @@ export function Navbar() {
                         ? 'text-primary'
                         : 'text-muted-foreground'
                     }`}
-                    data-umami-event={`Click Button Navigate to ${item.name}`}
                     eventName={`Navigate to ${item.name}`}
                   >
                     {item.name}
@@ -121,7 +120,6 @@ export function Navbar() {
                 href={GITHUB_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                data-umami-event="Click Button View GitHub Profile"
               >
                 <motion.div
                   whileHover={{ scale: 1.1 }}

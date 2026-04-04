@@ -5,7 +5,6 @@ import { Suspense } from 'react'
 
 import { Toaster } from '@/components/ui/sonner'
 
-import AnalyticsScript from '@/components/analytics-script'
 import { Footer } from '@/components/layout/footer'
 import { Navbar } from '@/components/layout/navbar'
 import { RouteLoading } from '@/components/layout/route-loading'
@@ -77,10 +76,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
               >
                 <Navbar />
               </Suspense>
-              <main className="flex-1">
-                {children}
-                <AnalyticsScript />
-              </main>
+              <main className="flex-1">{children}</main>
               <Footer />
             </div>
             <Toaster />

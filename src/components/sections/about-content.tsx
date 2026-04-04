@@ -53,10 +53,7 @@ export const AboutContent = () => {
                 tap: { scale: 0.98 },
               }}
             >
-              <Button
-                className="gap-2"
-                data-umami-event="Click Button Contact Me"
-              >
+              <Button className="gap-2">
                 Contact Me
                 <Mail className="h-4 w-4" />
               </Button>
@@ -70,12 +67,7 @@ export const AboutContent = () => {
               tap: { scale: 0.98 },
             }}
           >
-            <Button
-              variant="outline"
-              className="gap-2"
-              disabled
-              data-umami-event="Click Button Download Resume"
-            >
+            <Button variant="outline" className="gap-2" disabled>
               Download Resume
               <Download className="h-4 w-4" />
             </Button>

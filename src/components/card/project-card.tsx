@@ -107,12 +107,7 @@ const ProjectCard = ({
               whileTap="tap"
               variants={buttonScale}
             >
-              <Button
-                variant="default"
-                size="sm"
-                className="gap-2"
-                data-umami-event={`Click Button View Details of Project ${project.title}`}
-              >
+              <Button variant="default" size="sm" className="gap-2">
                 View Details
               </Button>
             </motion.div>
@@ -130,12 +125,7 @@ const ProjectCard = ({
                   whileTap="tap"
                   variants={buttonScale}
                 >
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="gap-2"
-                    data-umami-event={`Click Button View Live Demo of Project ${project.title}`}
-                  >
+                  <Button variant="outline" size="sm" className="gap-2">
                     <ExternalLink className="h-4 w-4" />
                     Live Demo
                   </Button>
@@ -175,12 +165,7 @@ const ProjectCard = ({
                 whileTap="tap"
                 variants={buttonScale}
               >
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="gap-2"
-                  data-umami-event={`Click Button View Code of Project ${project.title}`}
-                >
+                <Button variant="ghost" size="sm" className="gap-2">
                   <Github className="h-4 w-4" />
                   Code
                 </Button>

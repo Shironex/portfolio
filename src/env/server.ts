@@ -20,8 +20,6 @@ export const env = createEnv({
     SENTRY_ORG: z.string().min(1).optional(),
     SENTRY_PROJECT: z.string().min(1).optional(),
     DISCORD_WEBHOOK_URL: z.string().min(1),
-    ANALYTIC_URL: z.string().min(1),
-    ANALYTIC_ID: z.string().min(1),
   },
   onValidationError: (issues) => {
     console.error('❌ Invalid environment variables:', issues)
