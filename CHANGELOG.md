@@ -1,3 +1,10 @@
+## [2.3.1](https://github.com/Shironex/portfolio/compare/v2.3.0...v2.3.1) (2026-04-04)
+
+
+### Bug Fixes
+
+* resolve CSP violations, manifest 404, and hydration errors ([32322f0](https://github.com/Shironex/portfolio/commit/32322f078176cf5e952b3c1b01bcaac90c7302d6))
+
 # [2.3.0](https://github.com/Shironex/portfolio/compare/v2.2.4...v2.3.0) (2026-04-04)
 
 
