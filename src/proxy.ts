@@ -25,7 +25,7 @@ export function proxy(req: NextRequest) {
       const csp = [
         `base-uri 'none'`,
         `child-src 'none'`,
-        `connect-src 'self' ${env.SENTRY_URL} https://*.ingest.sentry.io`,
+        `connect-src 'self' ${env.SENTRY_URL} https://*.ingest.sentry.io https://mk.shirone.dev`,
         `default-src 'self'`,
         `font-src 'self' data: https:`,
         `form-action 'self'`,
@@ -75,7 +75,7 @@ export const config = {
      * - favicon.ico (favicon file)
      */
     {
-      source: '/((?!api|ingest|_next/static|_next/image|favicon.ico).*)',
+      source: '/((?!api|_next/static|_next/image|favicon.ico).*)',
       missing: [
         { type: 'header', key: 'next-router-prefetch' },
         { type: 'header', key: 'purpose', value: 'prefetch' },
