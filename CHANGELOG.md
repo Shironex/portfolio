@@ -1,3 +1,11 @@
+# [2.3.0](https://github.com/Shironex/portfolio/compare/v2.2.4...v2.3.0) (2026-04-04)
+
+
+### Features
+
+* add new projects and blog navigation ([3e7f964](https://github.com/Shironex/portfolio/commit/3e7f9649152f107291c4a5d3531807a9d320498d))
+* integrate PostHog analytics ([3fd6b79](https://github.com/Shironex/portfolio/commit/3fd6b79b99ed14076ced2f17b4c78d738005b6f1))
+
 ## [2.2.4](https://github.com/Shironex/portfolio/compare/v2.2.3...v2.2.4) (2026-04-03)
 
 
