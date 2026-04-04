@@ -57,5 +57,5 @@ export const matmajka: Project = {
   completedDate: 'November 2024',
   duration: '1 month',
   demoUrl: 'https://matmajka.com',
-  featured: true,
+  featured: false,
 }

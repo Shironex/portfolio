@@ -106,5 +106,5 @@ export const perfectCleanCarHouse: Project = {
   completedDate: 'August 2025',
   duration: '2 weeks',
   demoUrl: 'https://perfectcleancarhouse.pl',
-  featured: true,
+  featured: false,
 }

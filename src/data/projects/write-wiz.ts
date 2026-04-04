@@ -164,6 +164,7 @@ export const writeWiz: Project = {
     ],
   },
   inProgress: false,
+  completedDate: 'Archived',
   duration: '11 months',
   demoUrl: '',
   featured: false,

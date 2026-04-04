@@ -114,5 +114,5 @@ export const sudeko: Project = {
   completedDate: 'September 2025',
   duration: '3 days',
   demoUrl: 'https://sudekospzoo.pl/',
-  featured: true,
+  featured: false,
 }

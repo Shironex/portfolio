@@ -79,33 +79,40 @@ export function Navbar() {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex md:items-center md:gap-6">
           <ul className="flex items-center gap-6">
-            {NAV_ITEMS.map((item) => (
-              <motion.li key={item.name} variants={navbarItem}>
-                <SentryLink
-                  href={item.path}
-                  className={`hover:text-primary relative px-1 py-2 text-sm font-medium transition-colors ${
-                    pathname === item.path
-                      ? 'text-primary'
-                      : 'text-muted-foreground'
-                  }`}
-                  data-umami-event={`Click Button Navigate to ${item.name}`}
-                  eventName={`Navigate to ${item.name}`}
-                >
-                  {item.name}
-                  {pathname === item.path && (
-                    <motion.div
-                      layoutId="navbar-indicator"
-                      className="bg-primary absolute -bottom-1 left-0 h-0.5 w-full"
-                      transition={{
-                        type: 'spring',
-                        stiffness: 400,
-                        damping: 30,
-                      }}
-                    />
-                  )}
-                </SentryLink>
-              </motion.li>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              const isExternal = item.path.startsWith('http')
+              return (
+                <motion.li key={item.name} variants={navbarItem}>
+                  <SentryLink
+                    href={item.path}
+                    {...(isExternal && {
+                      target: '_blank',
+                      rel: 'noopener noreferrer',
+                    })}
+                    className={`hover:text-primary relative px-1 py-2 text-sm font-medium transition-colors ${
+                      !isExternal && pathname === item.path
+                        ? 'text-primary'
+                        : 'text-muted-foreground'
+                    }`}
+                    data-umami-event={`Click Button Navigate to ${item.name}`}
+                    eventName={`Navigate to ${item.name}`}
+                  >
+                    {item.name}
+                    {!isExternal && pathname === item.path && (
+                      <motion.div
+                        layoutId="navbar-indicator"
+                        className="bg-primary absolute -bottom-1 left-0 h-0.5 w-full"
+                        transition={{
+                          type: 'spring',
+                          stiffness: 400,
+                          damping: 30,
+                        }}
+                      />
+                    )}
+                  </SentryLink>
+                </motion.li>
+              )
+            })}
           </ul>
 
           <div className="flex items-center gap-4">

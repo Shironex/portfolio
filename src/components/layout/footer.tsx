@@ -25,16 +25,23 @@ export async function Footer() {
 
           <div className="flex flex-col items-center gap-4 md:flex-row">
             <nav className="flex flex-wrap gap-6 sm:flex-nowrap">
-              {NAV_ITEMS.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.path}
-                  className="text-muted-foreground hover:text-foreground text-sm"
-                  data-umami-event={`Click Button Navigate to ${item.name}`}
-                >
-                  {item.name}
-                </Link>
-              ))}
+              {NAV_ITEMS.map((item) => {
+                const isExternal = item.path.startsWith('http')
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.path}
+                    {...(isExternal && {
+                      target: '_blank',
+                      rel: 'noopener noreferrer',
+                    })}
+                    className="text-muted-foreground hover:text-foreground text-sm"
+                    data-umami-event={`Click Button Navigate to ${item.name}`}
+                  >
+                    {item.name}
+                  </Link>
+                )
+              })}
             </nav>
 
             <div className="flex items-center gap-4">

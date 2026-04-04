@@ -62,25 +62,32 @@ const MobileNavBar = ({
         >
           <nav className="container mx-auto px-4 py-6">
             <ul className="flex flex-col gap-4">
-              {navItems.map((item, index) => (
-                <motion.li
-                  key={item.name}
-                  variants={itemVariants}
-                  custom={index}
-                >
-                  <Link
-                    href={item.path}
-                    className={`hover:text-primary block py-2 text-lg font-medium transition-colors ${
-                      pathname === item.path
-                        ? 'text-primary'
-                        : 'text-muted-foreground'
-                    }`}
-                    onClick={closeMenu}
+              {navItems.map((item, index) => {
+                const isExternal = item.path.startsWith('http')
+                return (
+                  <motion.li
+                    key={item.name}
+                    variants={itemVariants}
+                    custom={index}
                   >
-                    {item.name}
-                  </Link>
-                </motion.li>
-              ))}
+                    <Link
+                      href={item.path}
+                      {...(isExternal && {
+                        target: '_blank',
+                        rel: 'noopener noreferrer',
+                      })}
+                      className={`hover:text-primary block py-2 text-lg font-medium transition-colors ${
+                        !isExternal && pathname === item.path
+                          ? 'text-primary'
+                          : 'text-muted-foreground'
+                      }`}
+                      onClick={closeMenu}
+                    >
+                      {item.name}
+                    </Link>
+                  </motion.li>
+                )
+              })}
             </ul>
             <div className="mt-6 flex items-center gap-4">
               <motion.div variants={itemVariants} className="w-full">
