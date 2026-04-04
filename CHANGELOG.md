@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/Shironex/portfolio/compare/v2.3.1...v2.4.0) (2026-04-04)
+
+
+### Features
+
+* switch PostHog to managed reverse proxy and update CSP ([61f4b16](https://github.com/Shironex/portfolio/commit/61f4b16b884e7974990d59624c01cdf835784de8))
+
 ## [2.3.1](https://github.com/Shironex/portfolio/compare/v2.3.0...v2.3.1) (2026-04-04)
 
 
