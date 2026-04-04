@@ -18,16 +18,15 @@ export function proxy(req: NextRequest) {
     () => {
       const res = NextResponse.next()
 
-      // Generate a nonce (16 bytes → base64 string)
-      const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
-
-      // Construct CSP with dynamic nonce
+      // Construct CSP
+      // Note: nonce is intentionally omitted — when a nonce is present,
+      // browsers ignore 'unsafe-inline' per the CSP spec, which breaks
+      // Next.js hydration inline scripts that don't carry the nonce.
       const csp = [
         `base-uri 'none'`,
         `child-src 'none'`,
         `connect-src 'self' ${env.SENTRY_URL} https://*.ingest.sentry.io`,
         `default-src 'self'`,
-        // Allow self-hosted fonts, data URLs, and trusted HTTPS origins (covers CDNs)
         `font-src 'self' data: https:`,
         `form-action 'self'`,
         `frame-ancestors 'none'`,
@@ -36,10 +35,8 @@ export function proxy(req: NextRequest) {
         `manifest-src 'self'`,
         `media-src 'self'`,
         `object-src 'none'`,
-        // Use a nonce for any inline scripts; allow dev eval if needed
-        // Temporarily allow inline to unblock hydration while keeping nonce for critical tags
-        `script-src 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com`,
-        `script-src-elem 'self' 'nonce-${nonce}' 'unsafe-inline' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com`,
+        `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com`,
+        `script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com`,
         `style-src 'self' 'unsafe-inline'`,
         `worker-src 'self' blob:`,
       ].join('; ')
@@ -62,9 +59,6 @@ export function proxy(req: NextRequest) {
       res.headers.set('X-Permitted-Cross-Domain-Policies', 'none')
       res.headers.set('X-XSS-Protection', '0')
       res.headers.set('Cache-Control', 'no-store, must-revalidate')
-
-      // Expose nonce for Next.js to apply to its inline scripts
-      res.headers.set('x-nonce', nonce)
 
       return res
     }

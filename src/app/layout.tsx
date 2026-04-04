@@ -49,22 +49,13 @@ interface RootLayoutProps {
   children: React.ReactNode
 }
 
-export default async function RootLayout({ children }: RootLayoutProps) {
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body
         className={`${jetbrainsMono.variable} font-mono`}
         suppressHydrationWarning
       >
-        {/* Pass nonce to the document using a meta tag so client code can discover it if needed */}
-        <meta
-          name="csp-nonce"
-          content={
-            (await import('next/headers'))
-              .headers()
-              .then((h) => h.get('x-nonce') || '') as any
-          }
-        />
         <Suspense fallback={<RouteLoading message="Preparing app..." />}>
           <Providers>
             <Suspense fallback={<RouteLoading message="Restoring scroll..." />}>

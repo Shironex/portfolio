@@ -80,7 +80,7 @@ export const defaultMetadata: Metadata = {
     shortcut: '/icon.png',
     apple: '/icon.png',
   },
-  manifest: `${siteConfig.url}/site.webmanifest`,
+  manifest: '/manifest.webmanifest',
 }
 
 // Type for page-specific metadata
