@@ -57,7 +57,7 @@
     "jiti": "^2.6.1",
     "lucide-react": "^0.577.0",
     "motion": "^12.38.0",
-    "next": "16.2.2",
+    "next": "16.2.3",
     "next-safe-action": "^8.3.0",
     "nextjs-toploader": "^3.9.17",
     "posthog-js": "^1.364.7",
