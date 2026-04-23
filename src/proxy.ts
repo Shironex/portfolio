@@ -1,68 +1,51 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-import * as Sentry from '@sentry/nextjs'
+export function proxy(_req: NextRequest) {
+  const res = NextResponse.next()
 
-import { env } from './env/server'
+  // Construct CSP
+  // Note: nonce is intentionally omitted — when a nonce is present,
+  // browsers ignore 'unsafe-inline' per the CSP spec, which breaks
+  // Next.js hydration inline scripts that don't carry the nonce.
+  const csp = [
+    `base-uri 'none'`,
+    `child-src 'none'`,
+    `connect-src 'self' https://mk.shirone.dev https://us.i.posthog.com https://us-assets.i.posthog.com`,
+    `default-src 'self'`,
+    `font-src 'self' data: https:`,
+    `form-action 'self'`,
+    `frame-ancestors 'none'`,
+    `frame-src https://challenges.cloudflare.com`,
+    `img-src 'self' blob: data:`,
+    `manifest-src 'self'`,
+    `media-src 'self'`,
+    `object-src 'none'`,
+    `script-src 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://mk.shirone.dev https://us-assets.i.posthog.com`,
+    `script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' https://challenges.cloudflare.com https://mk.shirone.dev https://us-assets.i.posthog.com`,
+    `style-src 'self' 'unsafe-inline'`,
+    `worker-src 'self' blob:`,
+  ].join('; ')
 
-export function proxy(req: NextRequest) {
-  return Sentry.startSpan(
-    {
-      name: `Middleware: ${req.method} ${req.nextUrl.pathname}`,
-      op: 'middleware.nextjs',
-      attributes: {
-        'http.method': req.method,
-        'http.route': req.nextUrl.pathname,
-        'http.host': req.nextUrl.host,
-      },
-    },
-    () => {
-      const res = NextResponse.next()
-
-      // Construct CSP
-      // Note: nonce is intentionally omitted — when a nonce is present,
-      // browsers ignore 'unsafe-inline' per the CSP spec, which breaks
-      // Next.js hydration inline scripts that don't carry the nonce.
-      const csp = [
-        `base-uri 'none'`,
-        `child-src 'none'`,
-        `connect-src 'self' ${env.SENTRY_URL} https://*.ingest.sentry.io https://mk.shirone.dev https://us.i.posthog.com https://us-assets.i.posthog.com`,
-        `default-src 'self'`,
-        `font-src 'self' data: https:`,
-        `form-action 'self'`,
-        `frame-ancestors 'none'`,
-        `frame-src https://challenges.cloudflare.com`,
-        `img-src 'self' blob: data:`,
-        `manifest-src 'self'`,
-        `media-src 'self'`,
-        `object-src 'none'`,
-        `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com https://us-assets.i.posthog.com`,
-        `script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com https://us-assets.i.posthog.com`,
-        `style-src 'self' 'unsafe-inline'`,
-        `worker-src 'self' blob:`,
-      ].join('; ')
-
-      // Inject security headers
-      res.headers.set('Content-Security-Policy', csp)
-      res.headers.set('Cross-Origin-Embedder-Policy', 'credentialless')
-      res.headers.set('Cross-Origin-Opener-Policy', 'same-origin')
-      res.headers.set('Cross-Origin-Resource-Policy', 'same-origin')
-      res.headers.set('Origin-Agent-Cluster', '?1')
-      res.headers.set('Referrer-Policy', 'no-referrer')
-      res.headers.set(
-        'Strict-Transport-Security',
-        'max-age=31536000; includeSubDomains'
-      )
-      res.headers.set('X-Content-Type-Options', 'nosniff')
-      res.headers.set('X-DNS-Prefetch-Control', 'off')
-      res.headers.set('X-Download-Options', 'noopen')
-      res.headers.set('X-Frame-Options', 'SAMEORIGIN')
-      res.headers.set('X-Permitted-Cross-Domain-Policies', 'none')
-      res.headers.set('X-XSS-Protection', '0')
-      res.headers.set('Cache-Control', 'no-store, must-revalidate')
-
-      return res
-    }
+  // Inject security headers
+  res.headers.set('Content-Security-Policy', csp)
+  res.headers.set('Cross-Origin-Embedder-Policy', 'credentialless')
+  res.headers.set('Cross-Origin-Opener-Policy', 'same-origin')
+  res.headers.set('Cross-Origin-Resource-Policy', 'same-origin')
+  res.headers.set('Origin-Agent-Cluster', '?1')
+  res.headers.set('Referrer-Policy', 'no-referrer')
+  res.headers.set(
+    'Strict-Transport-Security',
+    'max-age=31536000; includeSubDomains'
   )
+  res.headers.set('X-Content-Type-Options', 'nosniff')
+  res.headers.set('X-DNS-Prefetch-Control', 'off')
+  res.headers.set('X-Download-Options', 'noopen')
+  res.headers.set('X-Frame-Options', 'SAMEORIGIN')
+  res.headers.set('X-Permitted-Cross-Domain-Policies', 'none')
+  res.headers.set('X-XSS-Protection', '0')
+  res.headers.set('Cache-Control', 'no-store, must-revalidate')
+
+  return res
 }
 
 export const config = {

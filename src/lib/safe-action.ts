@@ -1,4 +1,3 @@
-import * as Sentry from '@sentry/nextjs'
 import { createSafeActionClient } from 'next-safe-action'
 import { z } from 'zod'
 
@@ -13,7 +12,7 @@ const unauthenticatedAction = createSafeActionClient({
       actionName: z.string(),
     })
   },
-  async handleServerError(err, utils) {
+  async handleServerError(err) {
     const isAllowedError = err instanceof PublicError
     const isDev = env.NODE_ENV === 'development'
 
@@ -22,25 +21,9 @@ const unauthenticatedAction = createSafeActionClient({
       return `${!isAllowedError && isDev ? 'DEV ONLY ENABLED - ' : ''}${err.message}`
     } else {
       console.error(err)
-      Sentry.captureException(err, {
-        tags: {
-          source: 'server_action',
-          actionName: utils?.metadata?.actionName || 'unknown',
-        },
-      })
       return 'Something went wrong'
     }
   },
-}).use(async ({ next, metadata }) => {
-  return await Sentry.startSpan(
-    {
-      name: `Server Action: ${metadata?.actionName || 'Unknown Action'}`,
-      op: 'server.action',
-    },
-    async () => {
-      return await next()
-    }
-  )
 })
 
 export { unauthenticatedAction }

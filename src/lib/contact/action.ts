@@ -1,7 +1,5 @@
 'use server'
 
-import * as Sentry from '@sentry/nextjs'
-
 import { sendDiscordWebhook } from '@/lib/discord'
 import { generateDefaultEmbed } from '@/lib/discord/embeds'
 import { PublicError } from '@/lib/errors'
@@ -36,18 +34,10 @@ export const sendEmailAction = unauthenticatedAction
     await verifyTurnstile(parsedInput.turnstileToken)
 
     if (parsedInput.verify) {
-      Sentry.captureMessage('Bot detection - honeypot field filled', {
-        level: 'warning',
-        tags: {
-          type: 'security_alert',
-          feature: 'contact_form',
-          action: 'bot_detected',
-        },
-        extra: {
-          name: parsedInput.name,
-          email: parsedInput.email,
-          messageLength: parsedInput.message?.length || 0,
-        },
+      console.warn('Bot detection - honeypot field filled', {
+        name: parsedInput.name,
+        email: parsedInput.email,
+        messageLength: parsedInput.message?.length || 0,
       })
 
       await rateLimitBot(`${parsedInput.name}-${parsedInput.email}-contact`, 1)
@@ -101,29 +91,9 @@ export const sendEmailAction = unauthenticatedAction
       await posthog.flush()
 
       sendDiscordWebhook(embed).catch((error) => {
-        Sentry.captureException(error, {
-          tags: {
-            source: 'discord_webhook',
-            feature: 'contact_form',
-          },
-        })
+        console.error(error)
       })
     } catch (error) {
-      Sentry.captureException(error, {
-        tags: {
-          feature: 'contact_form',
-          action: 'send_mail',
-          errorType: 'mail_service_error',
-        },
-        extra: {
-          hasName: !!parsedInput.name,
-          hasEmail: !!parsedInput.email,
-          hasMessage: !!parsedInput.message,
-          hasCaptcha: !!parsedInput.turnstileToken,
-          hasVerify: !!parsedInput.verify,
-        },
-      })
-
       console.error(error)
 
       throw new PublicError(

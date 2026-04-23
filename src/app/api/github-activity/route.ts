@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
 
-import * as Sentry from '@sentry/nextjs'
-
 import { getGithubActivity } from '@/lib/github/fetch-activity'
 
 import { env } from '@/env/server'
@@ -21,7 +19,7 @@ export async function GET() {
       },
     })
   } catch (error) {
-    Sentry.captureException(error)
+    console.error(error)
     return NextResponse.json({ error: 'fetch-failed' }, { status: 502 })
   }
 }
