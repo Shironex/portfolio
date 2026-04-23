@@ -1,3 +1,10 @@
+## [2.8.3](https://github.com/Shironex/portfolio/compare/v2.8.2...v2.8.3) (2026-04-23)
+
+
+### Performance Improvements
+
+* server-render static hero above OsShell ([06798cd](https://github.com/Shironex/portfolio/commit/06798cdd0e35294b00e899225d26e4cc84e487c7))
+
 ## [2.8.2](https://github.com/Shironex/portfolio/compare/v2.8.1...v2.8.2) (2026-04-23)
 
 
