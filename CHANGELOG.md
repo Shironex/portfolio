@@ -1,3 +1,10 @@
+# [2.8.0](https://github.com/Shironex/portfolio/compare/v2.7.0...v2.8.0) (2026-04-23)
+
+
+### Features
+
+* add @next/bundle-analyzer for chunk inspection ([a829c3a](https://github.com/Shironex/portfolio/commit/a829c3a137c0a8ccd262d3363c420cbd113593c3))
+
 # [2.7.0](https://github.com/Shironex/portfolio/compare/v2.6.0...v2.7.0) (2026-04-23)
 
 
