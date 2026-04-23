@@ -1,3 +1,10 @@
+## [2.8.2](https://github.com/Shironex/portfolio/compare/v2.8.1...v2.8.2) (2026-04-23)
+
+
+### Performance Improvements
+
+* lazy-load contact form, OS overlays, and posthog init ([f18f260](https://github.com/Shironex/portfolio/commit/f18f260632e8d01a4d9af071a40dc9724b48bc9b))
+
 ## [2.8.1](https://github.com/Shironex/portfolio/compare/v2.8.0...v2.8.1) (2026-04-23)
 
 
