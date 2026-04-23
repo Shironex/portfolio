@@ -2,8 +2,8 @@
 
 import { Search } from 'lucide-react'
 
-import { APPS } from './constants'
 import { Clock } from './clock'
+import { APPS } from './constants'
 import type { AppId, WindowId } from './types'
 
 interface TaskbarProps {
@@ -30,33 +30,33 @@ export function Taskbar({
     <div
       role="toolbar"
       aria-label="Taskbar"
-      className="fixed bottom-2 left-1/2 -translate-x-1/2 z-[200] flex items-center gap-2 px-3 py-2 rounded-2xl border border-rule-2 bg-surf-2 backdrop-blur-xl shadow-elev-2 font-body"
+      className="border-rule-2 bg-surf-2 shadow-elev-2 font-body fixed bottom-2 left-1/2 z-[200] flex -translate-x-1/2 items-center gap-2 rounded-2xl border px-3 py-2 backdrop-blur-xl"
     >
       <button
         type="button"
         onClick={onOpenStart}
         aria-label="Open Start menu"
-        className="focus-ring bg-miku hover:bg-miku-2 transition-colors px-3 py-1.5 rounded-lg text-cloud font-semibold text-xs"
+        className="focus-ring bg-miku hover:bg-miku-2 text-cloud rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors"
       >
         Start
       </button>
 
-      <span aria-hidden className="h-6 w-px bg-rule-2" />
+      <span aria-hidden className="bg-rule-2 h-6 w-px" />
 
       <button
         type="button"
         onClick={onOpenCmd}
         aria-label="Open command palette"
-        className="focus-ring flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surf-0 text-ink-3 hover:bg-surf-1 text-xs min-w-[220px]"
+        className="focus-ring bg-surf-0 text-ink-3 hover:bg-surf-1 flex min-w-[220px] items-center gap-2 rounded-lg px-3 py-1.5 text-xs"
       >
         <Search aria-hidden size={14} />
         <span>search apps &amp; projects…</span>
-        <kbd className="ml-auto px-1.5 py-0.5 rounded border border-rule bg-surf-solid/60 text-[11px] font-mono">
+        <kbd className="border-rule bg-surf-solid/60 ml-auto rounded border px-1.5 py-0.5 font-mono text-[11px]">
           ⌘K
         </kbd>
       </button>
 
-      <span aria-hidden className="h-6 w-px bg-rule-2" />
+      <span aria-hidden className="bg-rule-2 h-6 w-px" />
 
       <div className="flex items-center gap-1">
         {APPS.map((app) => {
@@ -73,10 +73,8 @@ export function Taskbar({
               <button
                 type="button"
                 aria-label={label}
-                onClick={() =>
-                  isOpen ? onRestore(app.id) : onLaunch(app.id)
-                }
-                className="focus-ring relative flex items-center justify-center size-9 pointer-coarse:size-11 rounded-lg transition-colors hover:bg-surf-0"
+                onClick={() => (isOpen ? onRestore(app.id) : onLaunch(app.id))}
+                className="focus-ring hover:bg-surf-0 relative flex size-9 items-center justify-center rounded-lg transition-colors pointer-coarse:size-11"
               >
                 <span aria-hidden style={{ color: app.color }}>
                   <Icon size={18} strokeWidth={1.75} />
@@ -84,7 +82,7 @@ export function Taskbar({
                 {isOpen && (
                   <span
                     aria-hidden
-                    className={`absolute -bottom-0.5 left-1/2 -translate-x-1/2 size-1 rounded-full ${
+                    className={`absolute -bottom-0.5 left-1/2 size-1 -translate-x-1/2 rounded-full ${
                       isMinimized ? 'bg-miku/40' : 'bg-miku'
                     }`}
                   />
@@ -92,7 +90,7 @@ export function Taskbar({
               </button>
               <span
                 aria-hidden
-                className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md border border-rule-2 bg-surf-solid text-ink text-[10px] font-mono px-2 py-1 shadow-sm opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+                className="border-rule-2 bg-surf-solid text-ink pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded-md border px-2 py-1 font-mono text-[10px] whitespace-nowrap opacity-0 shadow-sm transition-opacity group-focus-within:opacity-100 group-hover:opacity-100"
               >
                 {app.name}
               </span>
@@ -101,9 +99,9 @@ export function Taskbar({
         })}
       </div>
 
-      <span aria-hidden className="h-6 w-px bg-rule-2" />
+      <span aria-hidden className="bg-rule-2 h-6 w-px" />
 
-      <div className="flex items-center gap-2 font-mono text-[11px] text-ink-3 px-1">
+      <div className="text-ink-3 flex items-center gap-2 px-1 font-mono text-[11px]">
         <Clock />
       </div>
     </div>

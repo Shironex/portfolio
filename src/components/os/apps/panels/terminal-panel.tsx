@@ -25,14 +25,14 @@ export function TerminalPanel() {
   let cursor = 0
 
   return (
-    <div className="rounded-2xl border border-rule-2 bg-surf-solid overflow-hidden">
-      <div className="flex items-center gap-3 px-3 py-2 border-b border-rule bg-surf-soft">
-        <span className="flex-1 font-mono text-xs font-bold text-ink">
+    <div className="border-rule-2 bg-surf-solid overflow-hidden rounded-2xl border">
+      <div className="border-rule bg-surf-soft flex items-center gap-3 border-b px-3 py-2">
+        <span className="text-ink flex-1 font-mono text-xs font-bold">
           ~/kacper — zsh
         </span>
       </div>
 
-      <div className="p-4 font-mono text-xs text-ink-2 min-h-[200px]">
+      <div className="text-ink-2 min-h-[200px] p-4 font-mono text-xs">
         {TERMINAL_BLOCKS.map((block, blockIdx) => {
           const promptIdx = cursor
           cursor += 1
@@ -46,7 +46,7 @@ export function TerminalPanel() {
               {revealed > promptIdx && (
                 <div className="motion-safe:animate-term-in">
                   <span className="text-miku-2 font-bold">~/kacper</span>
-                  <span className="mx-1.5 text-miku font-bold">❯</span>
+                  <span className="text-miku mx-1.5 font-bold">❯</span>
                   <span className="text-ink">{block.prompt}</span>
                 </div>
               )}
@@ -63,10 +63,10 @@ export function TerminalPanel() {
               {isLast && revealed >= totalLines && (
                 <div className="mt-3">
                   <span className="text-miku-2 font-bold">~/kacper</span>
-                  <span className="mx-1.5 text-miku font-bold">❯</span>
+                  <span className="text-miku mx-1.5 font-bold">❯</span>
                   <span
                     aria-hidden
-                    className="animate-blink motion-reduce:animate-none ml-0.5 text-miku"
+                    className="animate-blink text-miku ml-0.5 motion-reduce:animate-none"
                   >
                     ▌
                   </span>

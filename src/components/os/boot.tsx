@@ -67,7 +67,11 @@ export function Boot() {
     if (!ready) return
     skipButtonRef.current?.focus()
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' || event.key === 'Enter' || event.key === ' ') {
+      if (
+        event.key === 'Escape' ||
+        event.key === 'Enter' ||
+        event.key === ' '
+      ) {
         event.preventDefault()
         setGone(true)
       }
@@ -83,11 +87,11 @@ export function Boot() {
       role="dialog"
       aria-modal="true"
       aria-label="ShiroOS boot sequence"
-      className="fixed inset-0 z-[9999] overflow-hidden bg-sky-1 animate-boot-out motion-reduce:animate-none"
+      className="bg-sky-1 animate-boot-out fixed inset-0 z-[9999] overflow-hidden motion-reduce:animate-none"
     >
       <span
         aria-hidden
-        className="pointer-events-none absolute -top-[8vh] -right-[4vw] select-none font-display text-[48vh] font-bold leading-none text-ink/[0.06] dark:text-ink/[0.08]"
+        className="font-display text-ink/[0.06] dark:text-ink/[0.08] pointer-events-none absolute -top-[8vh] -right-[4vw] text-[48vh] leading-none font-bold select-none"
       >
         白
       </span>
@@ -118,7 +122,7 @@ export function Boot() {
               animation: 'spinSlow 2.6s linear infinite reverse',
             }}
           />
-          <div className="relative flex size-[110px] items-center justify-center animate-logo-pop motion-reduce:animate-none">
+          <div className="animate-logo-pop relative flex size-[110px] items-center justify-center motion-reduce:animate-none">
             <Image
               src="/mascot.png"
               alt="ShiroOS mascot"
@@ -131,25 +135,25 @@ export function Boot() {
           </div>
           <span
             aria-hidden
-            className="pointer-events-none absolute -top-5 -right-5 text-[28px] text-pink-2 [text-shadow:0_2px_6px_color-mix(in_oklab,var(--color-surf-solid)_80%,transparent)] animate-bob-note motion-reduce:animate-none"
+            className="text-pink-2 animate-bob-note pointer-events-none absolute -top-5 -right-5 text-[28px] [text-shadow:0_2px_6px_color-mix(in_oklab,var(--color-surf-solid)_80%,transparent)] motion-reduce:animate-none"
           >
             ♪
           </span>
         </div>
 
         <div className="text-center">
-          <div className="font-display text-[22px] font-semibold tracking-tight text-ink">
-            <b className="font-bold text-miku-2">ShiroOS</b>
+          <div className="font-display text-ink text-[22px] font-semibold tracking-tight">
+            <b className="text-miku-2 font-bold">ShiroOS</b>
             <span className="mx-1">·</span>
             <span>booting with love</span>
             <span
               aria-hidden
-              className="ml-1 inline-block animate-bob-note text-pink-2 motion-reduce:animate-none"
+              className="animate-bob-note text-pink-2 ml-1 inline-block motion-reduce:animate-none"
             >
               ♪
             </span>
           </div>
-          <div className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.28em] text-ink-4">
+          <div className="text-ink-4 mt-1.5 font-mono text-[10px] tracking-[0.28em] uppercase">
             シロOS · portfolio build
           </div>
         </div>
@@ -161,22 +165,22 @@ export function Boot() {
             return (
               <div
                 key={s.label}
-                className="grid grid-cols-[16px_1fr_auto] items-center gap-2 rounded-md border border-rule bg-surf-0 px-2.5 py-1.5 font-body text-[11px] text-ink-2"
+                className="border-rule bg-surf-0 font-body text-ink-2 grid grid-cols-[16px_1fr_auto] items-center gap-2 rounded-md border px-2.5 py-1.5 text-[11px]"
               >
                 <span
                   aria-hidden
                   className={`flex size-4 items-center justify-center rounded-full text-[9px] font-bold ${
                     state === 'done'
-                      ? 'border border-mint bg-mint/30 text-ink-2'
+                      ? 'border-mint bg-mint/30 text-ink-2 border'
                       : state === 'run'
-                        ? 'border border-miku bg-miku/20 text-miku animate-blink motion-reduce:animate-none'
-                        : 'border border-rule bg-ink/5 text-ink-4'
+                        ? 'border-miku bg-miku/20 text-miku animate-blink border motion-reduce:animate-none'
+                        : 'border-rule bg-ink/5 text-ink-4 border'
                   }`}
                 >
                   {state === 'done' ? '✓' : state === 'run' ? '●' : '○'}
                 </span>
                 <span>{s.label}</span>
-                <span className="font-mono text-[9px] tracking-[0.1em] text-ink-4">
+                <span className="text-ink-4 font-mono text-[9px] tracking-[0.1em]">
                   {state === 'wait' ? '—' : s.detail}
                 </span>
               </div>
@@ -188,7 +192,7 @@ export function Boot() {
           ref={skipButtonRef}
           type="button"
           onClick={() => setGone(true)}
-          className="focus-ring rounded-full border border-rule-2 bg-surf-0 px-4 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-ink-3 transition-colors hover:bg-surf-1 hover:text-ink"
+          className="focus-ring border-rule-2 bg-surf-0 text-ink-3 hover:bg-surf-1 hover:text-ink rounded-full border px-4 py-1.5 font-mono text-[11px] tracking-[0.2em] uppercase transition-colors"
         >
           skip · esc
         </button>

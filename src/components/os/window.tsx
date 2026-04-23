@@ -83,51 +83,50 @@ export function Window({
     window.addEventListener('mouseup', handleUp)
   }
 
-  const startResize =
-    (dir: ResizeDir) => (e: MouseEvent<HTMLDivElement>) => {
-      e.stopPropagation()
-      e.preventDefault()
-      onFocus(win.id)
+  const startResize = (dir: ResizeDir) => (e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation()
+    e.preventDefault()
+    onFocus(win.id)
 
-      const start = {
-        x: win.x,
-        y: win.y,
-        w: win.w,
-        h: win.h,
-        mouseX: e.clientX,
-        mouseY: e.clientY,
-      }
-
-      const handleMove = (event: globalThis.MouseEvent) => {
-        const dx = event.clientX - start.mouseX
-        const dy = event.clientY - start.mouseY
-        const patch: Partial<{
-          x: number
-          y: number
-          w: number
-          h: number
-        }> = {}
-        if (dir.includes('e')) patch.w = start.w + dx
-        if (dir.includes('s')) patch.h = start.h + dy
-        if (dir.includes('w')) {
-          patch.x = start.x + dx
-          patch.w = start.w - dx
-        }
-        if (dir.includes('n')) {
-          patch.y = start.y + dy
-          patch.h = start.h - dy
-        }
-        onResize(win.id, patch)
-      }
-
-      const handleUp = () => {
-        window.removeEventListener('mousemove', handleMove)
-        window.removeEventListener('mouseup', handleUp)
-      }
-
-      window.addEventListener('mousemove', handleMove)
-      window.addEventListener('mouseup', handleUp)
+    const start = {
+      x: win.x,
+      y: win.y,
+      w: win.w,
+      h: win.h,
+      mouseX: e.clientX,
+      mouseY: e.clientY,
     }
+
+    const handleMove = (event: globalThis.MouseEvent) => {
+      const dx = event.clientX - start.mouseX
+      const dy = event.clientY - start.mouseY
+      const patch: Partial<{
+        x: number
+        y: number
+        w: number
+        h: number
+      }> = {}
+      if (dir.includes('e')) patch.w = start.w + dx
+      if (dir.includes('s')) patch.h = start.h + dy
+      if (dir.includes('w')) {
+        patch.x = start.x + dx
+        patch.w = start.w - dx
+      }
+      if (dir.includes('n')) {
+        patch.y = start.y + dy
+        patch.h = start.h - dy
+      }
+      onResize(win.id, patch)
+    }
+
+    const handleUp = () => {
+      window.removeEventListener('mousemove', handleMove)
+      window.removeEventListener('mouseup', handleUp)
+    }
+
+    window.addEventListener('mousemove', handleMove)
+    window.addEventListener('mouseup', handleUp)
+  }
 
   const handleTitleKey = (event: KeyboardEvent<HTMLDivElement>) => {
     const ctrlish = event.ctrlKey || event.metaKey
@@ -187,9 +186,9 @@ export function Window({
         zIndex: win.z,
       }}
       className={[
-        'absolute flex flex-col overflow-hidden rounded-xl border border-rule-2 bg-surf-2 backdrop-blur-xl',
+        'border-rule-2 bg-surf-2 absolute flex flex-col overflow-hidden rounded-xl border backdrop-blur-xl',
         'shadow-elev-3 animate-win-open motion-reduce:animate-none',
-        isFocused ? 'ring-1 ring-miku/30' : '',
+        isFocused ? 'ring-miku/30 ring-1' : '',
       ]
         .filter(Boolean)
         .join(' ')}
@@ -200,13 +199,13 @@ export function Window({
         aria-label={`${win.title} window controls. Arrow keys move, Shift+Arrow resizes, Ctrl+W closes, Ctrl+M minimizes, Ctrl+Shift+M toggles maximize.`}
         onMouseDown={startDrag}
         onKeyDown={handleTitleKey}
-        className="focus-ring flex h-9 pointer-coarse:h-11 cursor-grab items-center justify-between gap-3 border-b border-rule bg-surf-1 px-3 select-none active:cursor-grabbing"
+        className="focus-ring border-rule bg-surf-1 flex h-9 cursor-grab items-center justify-between gap-3 border-b px-3 select-none active:cursor-grabbing pointer-coarse:h-11"
       >
         <div className="flex items-center gap-2">
-          <span aria-hidden className="text-sm text-miku-2">
+          <span aria-hidden className="text-miku-2 text-sm">
             {win.icon}
           </span>
-          <span className="font-mono text-xs text-ink-2">{win.title}</span>
+          <span className="text-ink-2 font-mono text-xs">{win.title}</span>
         </div>
         <WindowControls
           onMinimize={() => onMinimize(win.id)}
@@ -214,7 +213,7 @@ export function Window({
           onClose={() => onClose(win.id)}
         />
       </div>
-      <div className="flex-1 overflow-auto p-6 font-body text-ink">
+      <div className="font-body text-ink flex-1 overflow-auto p-6">
         {children}
       </div>
 
@@ -223,42 +222,42 @@ export function Window({
           <div
             aria-hidden
             onMouseDown={startResize('n')}
-            className="absolute top-0 right-2 left-2 z-10 h-1 cursor-n-resize hover:bg-miku/20"
+            className="hover:bg-miku/20 absolute top-0 right-2 left-2 z-10 h-1 cursor-n-resize"
           />
           <div
             aria-hidden
             onMouseDown={startResize('s')}
-            className="absolute right-2 bottom-0 left-2 z-10 h-1 cursor-s-resize hover:bg-miku/20"
+            className="hover:bg-miku/20 absolute right-2 bottom-0 left-2 z-10 h-1 cursor-s-resize"
           />
           <div
             aria-hidden
             onMouseDown={startResize('e')}
-            className="absolute top-2 right-0 bottom-2 z-10 w-1 cursor-e-resize hover:bg-miku/20"
+            className="hover:bg-miku/20 absolute top-2 right-0 bottom-2 z-10 w-1 cursor-e-resize"
           />
           <div
             aria-hidden
             onMouseDown={startResize('w')}
-            className="absolute top-2 bottom-2 left-0 z-10 w-1 cursor-w-resize hover:bg-miku/20"
+            className="hover:bg-miku/20 absolute top-2 bottom-2 left-0 z-10 w-1 cursor-w-resize"
           />
           <div
             aria-hidden
             onMouseDown={startResize('ne')}
-            className="absolute top-0 right-0 z-10 size-3 cursor-ne-resize hover:bg-miku/20"
+            className="hover:bg-miku/20 absolute top-0 right-0 z-10 size-3 cursor-ne-resize"
           />
           <div
             aria-hidden
             onMouseDown={startResize('nw')}
-            className="absolute top-0 left-0 z-10 size-3 cursor-nw-resize hover:bg-miku/20"
+            className="hover:bg-miku/20 absolute top-0 left-0 z-10 size-3 cursor-nw-resize"
           />
           <div
             aria-hidden
             onMouseDown={startResize('se')}
-            className="absolute right-0 bottom-0 z-10 size-3 cursor-se-resize hover:bg-miku/20"
+            className="hover:bg-miku/20 absolute right-0 bottom-0 z-10 size-3 cursor-se-resize"
           />
           <div
             aria-hidden
             onMouseDown={startResize('sw')}
-            className="absolute bottom-0 left-0 z-10 size-3 cursor-sw-resize hover:bg-miku/20"
+            className="hover:bg-miku/20 absolute bottom-0 left-0 z-10 size-3 cursor-sw-resize"
           />
         </>
       )}

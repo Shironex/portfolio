@@ -18,8 +18,7 @@ export function NoscriptFallback() {
           background: '#f5efe0',
           padding: '2rem',
           zIndex: 10_000,
-          fontFamily:
-            'system-ui, -apple-system, "Segoe UI", Geist, sans-serif',
+          fontFamily: 'system-ui, -apple-system, "Segoe UI", Geist, sans-serif',
         }}
       >
         <div
@@ -67,10 +66,7 @@ export function NoscriptFallback() {
             </li>
             <li>
               Email:{' '}
-              <a
-                href={`mailto:${EMAIL_CONTACT}`}
-                style={{ color: '#0f7c74' }}
-              >
+              <a href={`mailto:${EMAIL_CONTACT}`} style={{ color: '#0f7c74' }}>
                 {EMAIL_CONTACT}
               </a>
             </li>

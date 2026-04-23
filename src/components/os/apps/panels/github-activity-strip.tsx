@@ -119,32 +119,32 @@ export function GithubActivityStrip() {
   return (
     <div
       ref={containerRef}
-      className="relative mt-4 rounded-2xl border border-rule bg-surf-0 p-3"
+      className="border-rule bg-surf-0 relative mt-4 rounded-2xl border p-3"
     >
       <div className="mb-2 flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-miku">
+          <div className="text-miku font-mono text-[10px] tracking-[0.22em] uppercase">
             Activity
           </div>
-          <div className="font-display text-sm font-bold text-ink">
+          <div className="font-display text-ink text-sm font-bold">
             {total !== null
               ? `${total.toLocaleString()} contributions`
               : 'recent contributions'}
           </div>
         </div>
-        <div className="font-mono text-[10px] text-ink-4">last 6 months</div>
+        <div className="text-ink-4 font-mono text-[10px]">last 6 months</div>
       </div>
 
       {state.kind === 'unconfigured' ? (
-        <div className="font-mono text-[11px] text-ink-3">
+        <div className="text-ink-3 font-mono text-[11px]">
           github widget · set{' '}
-          <code className="rounded bg-surf-1 px-1 py-0.5 text-ink-2">
+          <code className="bg-surf-1 text-ink-2 rounded px-1 py-0.5">
             GITHUB_TOKEN
           </code>{' '}
           to enable
         </div>
       ) : state.kind === 'error' ? (
-        <div className="font-mono text-[11px] text-ink-3">
+        <div className="text-ink-3 font-mono text-[11px]">
           couldn&apos;t reach github · try again later
         </div>
       ) : (
@@ -167,9 +167,7 @@ export function GithubActivityStrip() {
                           key={d.date}
                           type="button"
                           aria-label={describeDay(d)}
-                          onMouseEnter={(e) =>
-                            handleEnter(d, e.currentTarget)
-                          }
+                          onMouseEnter={(e) => handleEnter(d, e.currentTarget)}
                           onFocus={(e) => handleEnter(d, e.currentTarget)}
                           onMouseLeave={handleLeave}
                           onBlur={handleLeave}
@@ -180,7 +178,7 @@ export function GithubActivityStrip() {
                         <div
                           key={j}
                           aria-hidden
-                          className="size-[11px] rounded-[2px] bg-rule animate-pulse-slow motion-reduce:animate-none"
+                          className="bg-rule animate-pulse-slow size-[11px] rounded-[2px] motion-reduce:animate-none"
                         />
                       ))}
                 </div>
@@ -193,7 +191,7 @@ export function GithubActivityStrip() {
       {hover && (
         <div
           aria-hidden
-          className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full rounded-md border border-rule-2 bg-surf-solid px-2 py-1 font-mono text-[10px] text-ink shadow-elev-2"
+          className="border-rule-2 bg-surf-solid text-ink shadow-elev-2 pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full rounded-md border px-2 py-1 font-mono text-[10px]"
           style={{ left: hover.x, top: hover.y - 6 }}
         >
           {describeDay(hover.day)}
@@ -201,13 +199,13 @@ export function GithubActivityStrip() {
       )}
 
       {state.kind === 'ready' && (
-        <div className="mt-2 flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-widest text-ink-4">
+        <div className="text-ink-4 mt-2 flex items-center gap-1.5 font-mono text-[9px] tracking-widest uppercase">
           <span>less</span>
-          <span aria-hidden className="size-2 rounded-[2px] bg-rule" />
-          <span aria-hidden className="size-2 rounded-[2px] bg-miku/25" />
-          <span aria-hidden className="size-2 rounded-[2px] bg-miku/50" />
-          <span aria-hidden className="size-2 rounded-[2px] bg-miku/75" />
-          <span aria-hidden className="size-2 rounded-[2px] bg-miku" />
+          <span aria-hidden className="bg-rule size-2 rounded-[2px]" />
+          <span aria-hidden className="bg-miku/25 size-2 rounded-[2px]" />
+          <span aria-hidden className="bg-miku/50 size-2 rounded-[2px]" />
+          <span aria-hidden className="bg-miku/75 size-2 rounded-[2px]" />
+          <span aria-hidden className="bg-miku size-2 rounded-[2px]" />
           <span>more</span>
         </div>
       )}

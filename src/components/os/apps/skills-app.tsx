@@ -7,12 +7,12 @@ export default function SkillsApp() {
   return (
     <div className="font-body space-y-6">
       <header>
-        <h2 className="font-display text-3xl text-ink font-semibold tracking-tight">
+        <h2 className="font-display text-ink text-3xl font-semibold tracking-tight">
           Skills &amp; tools
         </h2>
-        <p className="mt-1 font-body text-sm text-ink-3 max-w-prose">
-          What I reach for daily, grouped by layer of the stack. The first
-          item in each group is what I live in; the rest are tools I&apos;m
+        <p className="font-body text-ink-3 mt-1 max-w-prose text-sm">
+          What I reach for daily, grouped by layer of the stack. The first item
+          in each group is what I live in; the rest are tools I&apos;m
           comfortable with.
         </p>
       </header>
@@ -20,14 +20,14 @@ export default function SkillsApp() {
       <div className="space-y-5">
         {skillsData.map((col) => (
           <section key={col.group}>
-            <h3 className="font-display text-lg text-ink font-semibold mb-3">
+            <h3 className="font-display text-ink mb-3 text-lg font-semibold">
               {col.group}
             </h3>
             <div className="flex flex-wrap gap-1.5">
               {col.items.map((item) => (
                 <span
                   key={item.n}
-                  className="px-2.5 py-1 rounded-full border border-rule-2 bg-surf-0 text-xs font-mono text-ink-2"
+                  className="border-rule-2 bg-surf-0 text-ink-2 rounded-full border px-2.5 py-1 font-mono text-xs"
                 >
                   {item.n}
                 </span>

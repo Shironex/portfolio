@@ -145,14 +145,11 @@ export function ContactForm({
         <Button
           type="submit"
           disabled={isPending}
-          className="w-full gap-2 bg-miku text-cloud font-semibold shadow-sm hover:bg-miku-2 disabled:opacity-70"
+          className="bg-miku text-cloud hover:bg-miku-2 w-full gap-2 font-semibold shadow-sm disabled:opacity-70"
         >
           {isPending ? 'Sending…' : 'Send message'}
           {isPending ? (
-            <Loader2
-              aria-hidden
-              className="h-4 w-4 motion-safe:animate-spin"
-            />
+            <Loader2 aria-hidden className="h-4 w-4 motion-safe:animate-spin" />
           ) : (
             <Send aria-hidden className="h-4 w-4" />
           )}
@@ -163,7 +160,7 @@ export function ContactForm({
 
   if (surface === 'card') {
     return (
-      <div className="rounded-2xl border border-rule-2 bg-surf-2 backdrop-blur-xl p-6 md:p-8">
+      <div className="border-rule-2 bg-surf-2 rounded-2xl border p-6 backdrop-blur-xl md:p-8">
         {formInner}
       </div>
     )

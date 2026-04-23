@@ -11,7 +11,6 @@ import { Fragment, useMemo, useState } from 'react'
 import { accentFor } from '@/components/os/accent-map'
 
 import { projectsData } from '@/data/projects-data'
-
 import type { Project } from '@/types'
 
 type Filter = 'all' | 'featured' | 'in-progress' | 'shipped' | 'archived'
@@ -72,22 +71,24 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
 
   const shown = useMemo(
     () =>
-      projectsData.filter((p) => matchesFilter(p, filter) && matchesQuery(p, q)),
+      projectsData.filter(
+        (p) => matchesFilter(p, filter) && matchesQuery(p, q)
+      ),
     [filter, q]
   )
 
   return (
     <div className="font-body">
       <div className="mb-6">
-        <h2 className="font-display text-3xl text-ink font-bold mb-1">
+        <h2 className="font-display text-ink mb-1 text-3xl font-bold">
           {projectsData.length} projects
         </h2>
-        <p className="text-sm text-ink-3">
+        <p className="text-ink-3 text-sm">
           Pick one — each opens in its own window.
         </p>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 mb-2">
+      <div className="mb-2 flex flex-wrap items-center gap-2">
         {FILTERS.map((f) => {
           const isActive = filter === f.id
           return (
@@ -96,7 +97,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
               type="button"
               onClick={() => setFilter(f.id)}
               aria-pressed={isActive}
-              className={`focus-ring rounded-full px-3 py-1 text-xs font-mono ${
+              className={`focus-ring rounded-full px-3 py-1 font-mono text-xs ${
                 isActive
                   ? 'bg-miku text-cloud'
                   : 'bg-surf-0 text-ink-2 hover:bg-surf-1'
@@ -113,14 +114,14 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="search projects…"
-          className="focus-ring ml-auto px-3 py-1.5 rounded-lg border border-rule-2 bg-surf-0 text-sm min-w-[200px] outline-none focus:border-miku"
+          className="focus-ring border-rule-2 bg-surf-0 focus:border-miku ml-auto min-w-[200px] rounded-lg border px-3 py-1.5 text-sm outline-none"
           aria-label="Search projects"
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-6">
+      <div className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-2">
         {shown.length === 0 ? (
-          <div className="col-span-full text-center py-12 text-ink-3 font-mono text-sm flex flex-col items-center gap-3">
+          <div className="text-ink-3 col-span-full flex flex-col items-center gap-3 py-12 text-center font-mono text-sm">
             <p>
               {q && filter !== 'all'
                 ? `No ${filter} projects match “${q}”.`
@@ -133,7 +134,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                 <button
                   type="button"
                   onClick={() => setQ('')}
-                  className="focus-ring rounded-full bg-surf-0 px-3 py-1 text-xs text-ink-2 hover:bg-surf-1"
+                  className="focus-ring bg-surf-0 text-ink-2 hover:bg-surf-1 rounded-full px-3 py-1 text-xs"
                 >
                   clear search
                 </button>
@@ -142,7 +143,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                 <button
                   type="button"
                   onClick={() => setFilter('all')}
-                  className="focus-ring rounded-full bg-surf-0 px-3 py-1 text-xs text-ink-2 hover:bg-surf-1"
+                  className="focus-ring bg-surf-0 text-ink-2 hover:bg-surf-1 rounded-full px-3 py-1 text-xs"
                 >
                   show all projects
                 </button>
@@ -158,11 +159,11 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                 type="button"
                 onClick={() => onOpenProject(p)}
                 aria-label={`Open ${p.title}`}
-                className="focus-ring group relative text-left rounded-xl border border-rule-2 bg-surf-solid p-4 transition-all hover:-translate-y-0.5 hover:border-miku/40 hover:shadow-elev-2"
+                className="focus-ring group border-rule-2 bg-surf-solid hover:border-miku/40 hover:shadow-elev-2 relative rounded-xl border p-4 text-left transition-all hover:-translate-y-0.5"
               >
                 <div className="flex items-start gap-3">
                   <span
-                    className="flex size-10 items-center justify-center rounded-lg font-display text-lg font-bold shrink-0"
+                    className="font-display flex size-10 shrink-0 items-center justify-center rounded-lg text-lg font-bold"
                     style={{
                       backgroundColor: `${accent}25`,
                       color: accent,
@@ -170,30 +171,28 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                   >
                     {p.title[0]}
                   </span>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5 font-display text-sm text-ink">
+                  <div className="min-w-0 flex-1">
+                    <div className="font-display text-ink flex items-center gap-1.5 text-sm">
                       <span className="truncate">{p.title}</span>
                       {p.featured && (
-                        <span className="px-1.5 py-0.5 rounded bg-miku/15 text-miku text-[10px] font-mono shrink-0">
+                        <span className="bg-miku/15 text-miku shrink-0 rounded px-1.5 py-0.5 font-mono text-[10px]">
                           FEATURED
                         </span>
                       )}
                       {p.inProgress && (
-                        <span className="px-1.5 py-0.5 rounded bg-peach/20 text-peach text-[10px] font-mono shrink-0">
+                        <span className="bg-peach/20 text-peach shrink-0 rounded px-1.5 py-0.5 font-mono text-[10px]">
                           WIP
                         </span>
                       )}
                     </div>
-                    <div className="font-body text-xs text-ink-3 mt-0.5 line-clamp-2">
+                    <div className="font-body text-ink-3 mt-0.5 line-clamp-2 text-xs">
                       {p.summary}
                     </div>
                     <div className="mt-2 flex flex-wrap items-center gap-1">
                       {p.technologies.slice(0, 4).map((tech, i) => (
                         <Fragment key={tech}>
-                          {i > 0 && (
-                            <span className="text-ink-4">·</span>
-                          )}
-                          <span className="text-[10px] font-mono text-ink-4">
+                          {i > 0 && <span className="text-ink-4">·</span>}
+                          <span className="text-ink-4 font-mono text-[10px]">
                             {tech}
                           </span>
                         </Fragment>

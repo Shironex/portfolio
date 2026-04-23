@@ -1,17 +1,18 @@
 'use client'
 
-import { Search, X } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useMemo, useRef } from 'react'
 
-import { useFocusTrap } from '@/hooks/use-focus-trap'
+import { Search, X } from 'lucide-react'
 
-import { projectsData } from '@/data/projects-data'
 import { AUTHOR_NAME, EMAIL_CONTACT } from '@/lib/constants'
 import {
   getFeaturedProjects,
   getInProgressProjects,
 } from '@/lib/utils/projects'
+
+import { projectsData } from '@/data/projects-data'
+import { useFocusTrap } from '@/hooks/use-focus-trap'
 import type { Project } from '@/types'
 
 import { accentFor } from './accent-map'
@@ -74,7 +75,7 @@ export function StartMenu({
 
   return (
     <div
-      className="fixed inset-0 z-[450] bg-ink/20 backdrop-blur-sm"
+      className="bg-ink/20 fixed inset-0 z-[450] backdrop-blur-sm"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose()
       }}
@@ -84,7 +85,7 @@ export function StartMenu({
         role="dialog"
         aria-modal="true"
         aria-label="Start menu"
-        className="absolute bottom-20 left-4 md:left-8 w-[min(640px,calc(100vw-2rem))] rounded-2xl border border-rule-2 bg-surf-solid/95 backdrop-blur-xl shadow-elev-4 overflow-hidden animate-cp-in motion-reduce:animate-none font-body"
+        className="border-rule-2 bg-surf-solid/95 shadow-elev-4 animate-cp-in font-body absolute bottom-20 left-4 w-[min(640px,calc(100vw-2rem))] overflow-hidden rounded-2xl border backdrop-blur-xl motion-reduce:animate-none md:left-8"
       >
         <button
           ref={searchRef}
@@ -93,16 +94,16 @@ export function StartMenu({
             onOpenCmd()
             onClose()
           }}
-          className="focus-ring flex w-full items-center gap-3 border-b border-rule bg-surf-soft px-5 py-3 text-left text-sm text-ink-3 hover:bg-surf-1 transition-colors"
+          className="focus-ring border-rule bg-surf-soft text-ink-3 hover:bg-surf-1 flex w-full items-center gap-3 border-b px-5 py-3 text-left text-sm transition-colors"
         >
           <Search aria-hidden size={16} />
           <span className="flex-1">Type to search apps &amp; projects…</span>
-          <kbd className="rounded border border-rule bg-surf-solid px-1.5 py-0.5 text-[11px] font-mono">
+          <kbd className="border-rule bg-surf-solid rounded border px-1.5 py-0.5 font-mono text-[11px]">
             ⌘K
           </kbd>
         </button>
 
-        <div className="px-5 pt-4 pb-1 font-mono text-[10px] uppercase tracking-widest text-ink-4">
+        <div className="text-ink-4 px-5 pt-4 pb-1 font-mono text-[10px] tracking-widest uppercase">
           Pinned
         </div>
         <div className="grid grid-cols-3 gap-2 p-5 pt-2">
@@ -117,7 +118,7 @@ export function StartMenu({
                   onLaunch(app.id)
                   onClose()
                 }}
-                className="focus-ring flex flex-col items-center justify-center gap-2 rounded-xl border border-rule bg-surf-0 px-3 py-4 text-center transition-colors hover:bg-surf-1 hover:border-miku/40"
+                className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 hover:border-miku/40 flex flex-col items-center justify-center gap-2 rounded-xl border px-3 py-4 text-center transition-colors"
               >
                 <span
                   aria-hidden
@@ -129,7 +130,7 @@ export function StartMenu({
                 >
                   <Icon size={20} strokeWidth={1.75} />
                 </span>
-                <span className="font-body text-sm font-medium text-ink">
+                <span className="font-body text-ink text-sm font-medium">
                   {app.name}
                 </span>
               </button>
@@ -137,7 +138,7 @@ export function StartMenu({
           })}
         </div>
 
-        <div className="px-5 pt-2 pb-1 font-mono text-[10px] uppercase tracking-widest text-ink-4">
+        <div className="text-ink-4 px-5 pt-2 pb-1 font-mono text-[10px] tracking-widest uppercase">
           Recent
         </div>
         <div className="pb-3">
@@ -149,11 +150,11 @@ export function StartMenu({
                 onOpenProject(p)
                 onClose()
               }}
-              className="focus-ring flex w-full items-center gap-3 px-5 py-2 text-left transition-colors hover:bg-surf-soft"
+              className="focus-ring hover:bg-surf-soft flex w-full items-center gap-3 px-5 py-2 text-left transition-colors"
             >
               <span
                 aria-hidden
-                className="flex size-8 items-center justify-center rounded-lg font-display text-sm font-bold"
+                className="font-display flex size-8 items-center justify-center rounded-lg text-sm font-bold"
                 style={{
                   backgroundColor: accentFor(p.slug) + '25',
                   color: accentFor(p.slug),
@@ -161,11 +162,11 @@ export function StartMenu({
               >
                 {p.title[0]}
               </span>
-              <div className="flex-1 min-w-0">
-                <div className="font-body text-sm text-ink truncate">
+              <div className="min-w-0 flex-1">
+                <div className="font-body text-ink truncate text-sm">
                   {p.title}
                 </div>
-                <div className="font-mono text-[10px] text-ink-4 truncate">
+                <div className="text-ink-4 truncate font-mono text-[10px]">
                   {p.projectType ?? 'project'} ·{' '}
                   {p.technologies.slice(0, 3).join(' · ')}
                 </div>
@@ -174,8 +175,8 @@ export function StartMenu({
           ))}
         </div>
 
-        <div className="flex items-center gap-3 border-t border-rule bg-surf-soft px-5 py-3">
-          <div className="relative size-10 shrink-0 overflow-hidden rounded-full border border-rule-2 bg-miku/15">
+        <div className="border-rule bg-surf-soft flex items-center gap-3 border-t px-5 py-3">
+          <div className="border-rule-2 bg-miku/15 relative size-10 shrink-0 overflow-hidden rounded-full border">
             <Image
               src="/mascot.png"
               alt=""
@@ -184,13 +185,13 @@ export function StartMenu({
               className="size-full object-cover object-top"
             />
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="font-display text-sm text-ink truncate">
+          <div className="min-w-0 flex-1">
+            <div className="font-display text-ink truncate text-sm">
               {AUTHOR_NAME}
             </div>
             <a
               href={`mailto:${EMAIL_CONTACT}`}
-              className="focus-ring rounded font-mono text-[10px] text-ink-3 hover:text-miku-2"
+              className="focus-ring text-ink-3 hover:text-miku-2 rounded font-mono text-[10px]"
             >
               {EMAIL_CONTACT}
             </a>
@@ -199,7 +200,7 @@ export function StartMenu({
             type="button"
             onClick={onClose}
             aria-label="Close start menu"
-            className="focus-ring rounded p-1 text-ink-3 hover:bg-rule hover:text-ink"
+            className="focus-ring text-ink-3 hover:bg-rule hover:text-ink rounded p-1"
           >
             <X aria-hidden size={14} />
           </button>

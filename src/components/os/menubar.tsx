@@ -1,12 +1,14 @@
 'use client'
 
-import { Moon, Sun } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
+
+import { Moon, Sun } from 'lucide-react'
 import { toast } from 'sonner'
 
-import type { Theme } from '@/hooks/use-theme'
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
+
+import type { Theme } from '@/hooks/use-theme'
 
 import { Clock } from './clock'
 import { MenuDropdown, type MenuDropdownSection } from './menu-dropdown'
@@ -80,9 +82,7 @@ export function MenuBar({
       items: [
         {
           label:
-            theme === 'dark'
-              ? 'Switch to light theme'
-              : 'Switch to dark theme',
+            theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme',
           icon: theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />,
           onClick: onToggleTheme,
         },
@@ -103,15 +103,14 @@ export function MenuBar({
         { label: 'About ShiroOS', onClick: () => onLaunchApp('readme') },
         {
           label: 'Keyboard shortcuts',
-          onClick: () =>
-            toast('⌘K — command palette · Esc — close window'),
+          onClick: () => toast('⌘K — command palette · Esc — close window'),
         },
       ],
     },
   ]
 
   return (
-    <div className="fixed inset-x-0 top-0 z-[100] flex h-11 items-center gap-3 border-b border-rule bg-surf-1 px-3 backdrop-blur-md">
+    <div className="border-rule bg-surf-1 fixed inset-x-0 top-0 z-[100] flex h-11 items-center gap-3 border-b px-3 backdrop-blur-md">
       {/* Left: logo chip */}
       <div className="flex items-center gap-2">
         <Image
@@ -121,9 +120,9 @@ export function MenuBar({
           width={44}
           height={44}
           priority
-          className="size-5 rounded-full border border-rule bg-miku/10 object-cover object-top"
+          className="border-rule bg-miku/10 size-5 rounded-full border object-cover object-top"
         />
-        <span className="font-display text-sm font-semibold text-ink">
+        <span className="font-display text-ink text-sm font-semibold">
           ShiroOS
         </span>
       </div>
@@ -155,7 +154,7 @@ export function MenuBar({
           type="button"
           onClick={onOpenCmd}
           aria-label="Open command palette"
-          className="focus-ring rounded-md px-2 py-1 font-body text-sm text-ink-2 transition-colors hover:bg-surf-0 hover:text-ink"
+          className="focus-ring font-body text-ink-2 hover:bg-surf-0 hover:text-ink rounded-md px-2 py-1 text-sm transition-colors"
         >
           Go
         </button>
@@ -169,14 +168,14 @@ export function MenuBar({
       </div>
 
       {/* Right: theme toggle + status + date + time */}
-      <div className="ml-auto flex items-center gap-4 font-mono text-xs text-ink-3">
+      <div className="text-ink-3 ml-auto flex items-center gap-4 font-mono text-xs">
         <button
           type="button"
           onClick={onToggleTheme}
           aria-label={
             theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
           }
-          className="focus-ring rounded p-1 text-ink-3 transition-colors hover:bg-surf-0 hover:text-miku-2"
+          className="focus-ring text-ink-3 hover:bg-surf-0 hover:text-miku-2 rounded p-1 transition-colors"
         >
           {theme === 'dark' ? (
             <Sun aria-hidden size={14} />

@@ -9,11 +9,10 @@
 
 import { Clock, Github, Mail, MapPin } from 'lucide-react'
 
-import { useTheme } from '@/hooks/use-theme'
-
+import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
 import { ContactForm } from '@/lib/contact/contact-form'
 
-import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
+import { useTheme } from '@/hooks/use-theme'
 
 type ReachRow = {
   icon: React.ReactNode
@@ -51,32 +50,32 @@ export default function ContactApp() {
   const { theme } = useTheme()
 
   return (
-    <div className="max-w-4xl font-body">
-      <h2 className="font-display text-3xl text-ink font-bold mb-2">
+    <div className="font-body max-w-4xl">
+      <h2 className="font-display text-ink mb-2 text-3xl font-bold">
         Get in touch
       </h2>
       <p className="font-body text-ink-2 mb-6">
         Freelance, full-time, or just to talk. I reply within 24 hours.
       </p>
 
-      <div className="grid md:grid-cols-[1fr_320px] gap-6">
+      <div className="grid gap-6 md:grid-cols-[1fr_320px]">
         <ContactForm theme={theme} surface="card" />
 
-        <aside className="rounded-2xl border border-rule-2 bg-surf-solid p-5 flex flex-col gap-3 h-fit">
-          <div className="font-display text-sm font-bold text-ink mb-1">
+        <aside className="border-rule-2 bg-surf-solid flex h-fit flex-col gap-3 rounded-2xl border p-5">
+          <div className="font-display text-ink mb-1 text-sm font-bold">
             Reach me
           </div>
           {rows.map((row) => {
             const inner = (
               <>
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-miku/15 text-miku-2">
+                <span className="bg-miku/15 text-miku-2 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg">
                   {row.icon}
                 </span>
-                <div className="flex flex-col min-w-0">
-                  <span className="font-body text-xs text-ink-4">
+                <div className="flex min-w-0 flex-col">
+                  <span className="font-body text-ink-4 text-xs">
                     {row.label}
                   </span>
-                  <span className="font-body text-sm text-ink truncate">
+                  <span className="font-body text-ink truncate text-sm">
                     {row.value}
                   </span>
                 </div>
@@ -89,11 +88,9 @@ export default function ContactApp() {
                   key={row.label}
                   href={row.href}
                   target={row.href.startsWith('http') ? '_blank' : undefined}
-                  rel={
-                    row.href.startsWith('http') ? 'noreferrer' : undefined
-                  }
+                  rel={row.href.startsWith('http') ? 'noreferrer' : undefined}
                   aria-label={`${row.label}: ${row.value}`}
-                  className="focus-ring flex items-center gap-3 rounded-xl border border-rule bg-surf-0 p-3 transition-colors hover:border-miku/40 hover:bg-surf-soft"
+                  className="focus-ring border-rule bg-surf-0 hover:border-miku/40 hover:bg-surf-soft flex items-center gap-3 rounded-xl border p-3 transition-colors"
                 >
                   {inner}
                 </a>
@@ -103,7 +100,7 @@ export default function ContactApp() {
             return (
               <div
                 key={row.label}
-                className="flex items-center gap-3 rounded-xl border border-rule bg-surf-0 p-3"
+                className="border-rule bg-surf-0 flex items-center gap-3 rounded-xl border p-3"
               >
                 {inner}
               </div>

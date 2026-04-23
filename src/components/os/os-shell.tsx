@@ -77,7 +77,7 @@ export default function OsShell() {
   )
 
   return (
-    <div className="fixed inset-0 overflow-hidden text-ink">
+    <div className="text-ink fixed inset-0 overflow-hidden">
       <NoscriptFallback />
       <Boot />
       {isMobile ? (
@@ -95,7 +95,7 @@ export default function OsShell() {
           <DesktopCanvas>
             <DesktopIcons onLaunch={os.openApp} />
 
-            <div className="relative flex min-h-screen flex-col px-6 pt-14 pb-24 md:pl-32 md:pr-8 lg:pl-36 lg:pr-16 xl:pl-40 xl:pr-24">
+            <div className="relative flex min-h-screen flex-col px-6 pt-14 pb-24 md:pr-8 md:pl-32 lg:pr-16 lg:pl-36 xl:pr-24 xl:pl-40">
               <div className="grid flex-1 gap-6 md:grid-cols-[minmax(0,1.3fr)_minmax(340px,1fr)]">
                 <HeroPlate onOpenCmd={openCmd} onOpenContact={openContact} />
                 <div className="flex flex-col gap-3">

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, type ReactNode } from 'react'
+import { type ReactNode, useEffect, useRef } from 'react'
 
 import { cn } from '@/lib/utils'
 
@@ -73,7 +73,7 @@ export function MenuDropdown({
         aria-haspopup="menu"
         aria-expanded={isOpen}
         className={cn(
-          'focus-ring rounded-md px-2 py-1 font-body text-sm text-ink-2 transition-colors hover:bg-surf-0 hover:text-ink',
+          'focus-ring font-body text-ink-2 hover:bg-surf-0 hover:text-ink rounded-md px-2 py-1 text-sm transition-colors',
           isOpen && 'bg-surf-0 text-ink'
         )}
       >
@@ -84,12 +84,12 @@ export function MenuDropdown({
         <div
           role="menu"
           aria-label={label}
-          className="absolute left-0 top-full z-[150] mt-1 min-w-[200px] animate-cp-in motion-reduce:animate-none rounded-lg border border-rule-2 bg-surf-solid py-1 shadow-elev-3"
+          className="animate-cp-in border-rule-2 bg-surf-solid shadow-elev-3 absolute top-full left-0 z-[150] mt-1 min-w-[200px] rounded-lg border py-1 motion-reduce:animate-none"
         >
           {sections.map((section, sectionIndex) => (
             <div key={sectionIndex}>
               {section.divider && (
-                <div role="separator" className="my-1 h-px bg-rule" />
+                <div role="separator" className="bg-rule my-1 h-px" />
               )}
               {section.items.map((item, itemIndex) => (
                 <button
@@ -101,16 +101,16 @@ export function MenuDropdown({
                     item.onClick()
                     onClose()
                   }}
-                  className="focus-ring flex w-full items-center gap-3 px-3 py-1.5 text-sm text-ink hover:bg-surf-soft disabled:cursor-not-allowed disabled:opacity-50"
+                  className="focus-ring text-ink hover:bg-surf-soft flex w-full items-center gap-3 px-3 py-1.5 text-sm disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {item.icon && (
-                    <span aria-hidden className="size-4 text-ink-3">
+                    <span aria-hidden className="text-ink-3 size-4">
                       {item.icon}
                     </span>
                   )}
                   <span className="flex-1 text-left">{item.label}</span>
                   {item.kbd && (
-                    <kbd className="font-mono text-[11px] text-ink-3">
+                    <kbd className="text-ink-3 font-mono text-[11px]">
                       {item.kbd}
                     </kbd>
                   )}

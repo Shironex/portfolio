@@ -1,11 +1,13 @@
 'use client'
 
 import { accentFor } from '@/components/os/accent-map'
-import { projectsData } from '@/data/projects-data'
+
 import {
   getFeaturedProjects,
   getInProgressProjects,
 } from '@/lib/utils/projects'
+
+import { projectsData } from '@/data/projects-data'
 import type { Project } from '@/types'
 
 /**
@@ -36,12 +38,12 @@ export function FeaturedPanel({ onOpenProject }: FeaturedPanelProps) {
   }
 
   return (
-    <div className="rounded-2xl border border-rule-2 bg-surf-solid overflow-hidden">
-      <div className="flex items-center gap-3 px-3 py-2 border-b border-rule bg-surf-soft">
-        <span className="flex-1 font-display text-sm font-bold text-ink">
+    <div className="border-rule-2 bg-surf-solid overflow-hidden rounded-2xl border">
+      <div className="border-rule bg-surf-soft flex items-center gap-3 border-b px-3 py-2">
+        <span className="font-display text-ink flex-1 text-sm font-bold">
           Featured work
         </span>
-        <span className="font-mono text-[10px] text-ink-4">
+        <span className="text-ink-4 font-mono text-[10px]">
           {pinned.length} pinned
         </span>
       </div>
@@ -55,10 +57,10 @@ export function FeaturedPanel({ onOpenProject }: FeaturedPanelProps) {
               type="button"
               onClick={() => onOpenProject(p)}
               aria-label={`Open ${p.title}`}
-              className="focus-ring group relative flex items-start gap-3 w-full text-left px-4 py-3 border-b border-rule last:border-b-0 transition-colors hover:bg-surf-0"
+              className="focus-ring group border-rule hover:bg-surf-0 relative flex w-full items-start gap-3 border-b px-4 py-3 text-left transition-colors last:border-b-0"
             >
               <span
-                className="flex size-10 items-center justify-center rounded-lg font-display text-lg font-bold shrink-0"
+                className="font-display flex size-10 shrink-0 items-center justify-center rounded-lg text-lg font-bold"
                 style={{
                   backgroundColor: `${accent}25`,
                   color: accent,
@@ -66,14 +68,14 @@ export function FeaturedPanel({ onOpenProject }: FeaturedPanelProps) {
               >
                 {p.title[0]}
               </span>
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-1.5 font-display text-sm text-ink">
+              <div className="min-w-0 flex-1">
+                <div className="font-display text-ink flex items-center gap-1.5 text-sm">
                   {p.title}
-                  <span className="px-1.5 py-0.5 rounded bg-surf-0 text-[10px] font-mono text-ink-3">
+                  <span className="bg-surf-0 text-ink-3 rounded px-1.5 py-0.5 font-mono text-[10px]">
                     {(p.projectType ?? 'project').toUpperCase()}
                   </span>
                 </div>
-                <div className="font-body text-xs text-ink-3 mt-0.5 line-clamp-2">
+                <div className="font-body text-ink-3 mt-0.5 line-clamp-2 text-xs">
                   {p.summary}
                 </div>
               </div>

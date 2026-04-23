@@ -17,15 +17,16 @@ interface DesktopIconsProps {
 export function DesktopIcons({ onLaunch }: DesktopIconsProps) {
   const [selectedId, setSelectedId] = useState<AppId | null>(null)
 
-  const handleKey = (appId: AppId) => (event: KeyboardEvent<HTMLButtonElement>) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault()
-      onLaunch(appId)
+  const handleKey =
+    (appId: AppId) => (event: KeyboardEvent<HTMLButtonElement>) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault()
+        onLaunch(appId)
+      }
     }
-  }
 
   return (
-    <div className="absolute left-4 top-16 z-10 flex flex-col gap-4">
+    <div className="absolute top-16 left-4 z-10 flex flex-col gap-4">
       {APPS.map((app) => {
         const isSelected = selectedId === app.id
         const Icon = app.icon
@@ -39,13 +40,13 @@ export function DesktopIcons({ onLaunch }: DesktopIconsProps) {
             onKeyDown={handleKey(app.id)}
             className={`focus-ring flex w-20 flex-col items-center gap-1.5 rounded-lg p-2 transition-colors ${
               isSelected
-                ? 'ring-2 ring-miku/60 bg-surf-0/80'
+                ? 'ring-miku/60 bg-surf-0/80 ring-2'
                 : 'hover:bg-surf-0/40'
             }`}
           >
             <span
               aria-hidden
-              className="flex size-12 items-center justify-center rounded-xl shadow-elev-1"
+              className="shadow-elev-1 flex size-12 items-center justify-center rounded-xl"
               style={{
                 backgroundColor: `${app.color}25`,
                 color: app.color,
@@ -53,7 +54,7 @@ export function DesktopIcons({ onLaunch }: DesktopIconsProps) {
             >
               <Icon size={22} strokeWidth={1.75} />
             </span>
-            <span className="font-body text-xs text-ink">{app.name}</span>
+            <span className="font-body text-ink text-xs">{app.name}</span>
           </button>
         )
       })}

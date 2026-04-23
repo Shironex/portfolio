@@ -1,8 +1,9 @@
 'use client'
 
-import { Menu, Search, X } from 'lucide-react'
 import Image from 'next/image'
 import { useCallback, useState } from 'react'
+
+import { Menu, Search, X } from 'lucide-react'
 
 import type { OsWindowsApi } from '@/hooks/use-os-windows'
 
@@ -48,15 +49,14 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
   // topmost non-minimized window by z-order and render just that.
   const topSheet = os.windows
     .filter((w) => !w.minimized)
-    .reduce<(typeof os.windows)[number] | null>(
-      (top, w) => (top === null || w.z > top.z ? w : top),
-      null
-    )
+    .reduce<
+      (typeof os.windows)[number] | null
+    >((top, w) => (top === null || w.z > top.z ? w : top), null)
 
   return (
     <>
       {/* Top bar */}
-      <div className="fixed inset-x-0 top-0 z-[100] flex h-12 items-center justify-between gap-3 border-b border-rule bg-surf-1 px-4 backdrop-blur-md">
+      <div className="border-rule bg-surf-1 fixed inset-x-0 top-0 z-[100] flex h-12 items-center justify-between gap-3 border-b px-4 backdrop-blur-md">
         <div className="flex items-center gap-2">
           <Image
             aria-hidden
@@ -65,9 +65,9 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
             width={44}
             height={44}
             priority
-            className="size-5 rounded-full border border-rule bg-miku/10 object-cover object-top"
+            className="border-rule bg-miku/10 size-5 rounded-full border object-cover object-top"
           />
-          <span className="font-display text-sm font-semibold text-ink">
+          <span className="font-display text-ink text-sm font-semibold">
             ShiroOS
           </span>
         </div>
@@ -75,7 +75,7 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
           type="button"
           onClick={() => setLauncherOpen(true)}
           aria-label="Open app launcher"
-          className="focus-ring flex size-11 items-center justify-center rounded-md text-ink-2 hover:bg-surf-0 hover:text-ink"
+          className="focus-ring text-ink-2 hover:bg-surf-0 hover:text-ink flex size-11 items-center justify-center rounded-md"
         >
           <Menu aria-hidden size={18} />
         </button>
@@ -87,7 +87,7 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
           <HeroPlate onOpenCmd={onOpenCmd} onOpenContact={openContact} />
           <FeaturedPanel onOpenProject={os.openProject} />
 
-          <div className="relative overflow-hidden rounded-2xl border border-rule-2 bg-surf-solid p-5 shadow-elev-2">
+          <div className="border-rule-2 bg-surf-solid shadow-elev-2 relative overflow-hidden rounded-2xl border p-5">
             <span
               aria-hidden
               className="pointer-events-none absolute -top-12 -right-8 size-40 rounded-full opacity-50 blur-3xl"
@@ -97,24 +97,24 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
               }}
             />
             <div className="relative">
-              <div className="font-display text-lg font-bold text-ink">
+              <div className="font-display text-ink text-lg font-bold">
                 Hiring, freelance, or a bug I can help with
               </div>
-              <p className="mt-2 font-body text-sm text-ink-2">
+              <p className="font-body text-ink-2 mt-2 text-sm">
                 Open to full-time roles from Q2 2026 and freelance work before
                 then. I reply within 24 hours.
               </p>
               <button
                 type="button"
                 onClick={openContact}
-                className="focus-ring mt-4 inline-flex items-center gap-2 rounded-lg bg-miku text-cloud px-4 py-2 text-sm font-semibold hover:bg-miku-2 transition-colors"
+                className="focus-ring bg-miku text-cloud hover:bg-miku-2 mt-4 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
               >
                 Get in touch
               </button>
             </div>
           </div>
 
-          <div className="pt-2 pb-4 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-ink-4">
+          <div className="text-ink-4 pt-2 pb-4 text-center font-mono text-[10px] tracking-[0.22em] uppercase">
             ShiroOS · シロOS
           </div>
         </div>
@@ -122,19 +122,19 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
 
       {/* Bottom dock */}
       <div
-        className="fixed inset-x-0 bottom-0 z-[200] border-t border-rule bg-surf-1/95 backdrop-blur-md"
+        className="border-rule bg-surf-1/95 fixed inset-x-0 bottom-0 z-[200] border-t backdrop-blur-md"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
         <div className="flex h-14 items-center gap-2 px-3">
           <button
             type="button"
             onClick={onOpenCmd}
-            className="focus-ring flex h-11 flex-1 items-center gap-2 rounded-lg bg-surf-0 px-3 text-xs text-ink-3"
+            className="focus-ring bg-surf-0 text-ink-3 flex h-11 flex-1 items-center gap-2 rounded-lg px-3 text-xs"
             aria-label="Open command palette"
           >
             <Search aria-hidden size={14} />
             <span className="truncate">search apps &amp; projects…</span>
-            <kbd className="ml-auto rounded border border-rule bg-surf-solid/60 px-1.5 py-0.5 font-mono text-[11px]">
+            <kbd className="border-rule bg-surf-solid/60 ml-auto rounded border px-1.5 py-0.5 font-mono text-[11px]">
               ⌘K
             </kbd>
           </button>
@@ -148,7 +148,7 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
                   type="button"
                   onClick={() => openApp(app.id)}
                   aria-label={`Open ${app.name}`}
-                  className="focus-ring relative flex size-11 items-center justify-center rounded-lg transition-colors hover:bg-surf-0"
+                  className="focus-ring hover:bg-surf-0 relative flex size-11 items-center justify-center rounded-lg transition-colors"
                 >
                   <span aria-hidden style={{ color: app.color }}>
                     <Icon size={18} strokeWidth={1.75} />
@@ -156,7 +156,7 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
                   {isOpen && (
                     <span
                       aria-hidden
-                      className="absolute -bottom-0.5 left-1/2 size-1 -translate-x-1/2 rounded-full bg-miku"
+                      className="bg-miku absolute -bottom-0.5 left-1/2 size-1 -translate-x-1/2 rounded-full"
                     />
                   )}
                 </button>
@@ -169,18 +169,18 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
       {/* App launcher sheet */}
       {launcherOpen && (
         <div
-          className="fixed inset-0 z-[350] flex flex-col bg-surf-solid text-ink animate-sheet-up"
+          className="bg-surf-solid text-ink animate-sheet-up fixed inset-0 z-[350] flex flex-col"
           role="dialog"
           aria-modal="true"
           aria-label="App launcher"
         >
-          <div className="flex h-12 shrink-0 items-center justify-between gap-3 border-b border-rule bg-surf-1 px-4">
-            <span className="font-mono text-xs text-ink-2">launcher</span>
+          <div className="border-rule bg-surf-1 flex h-12 shrink-0 items-center justify-between gap-3 border-b px-4">
+            <span className="text-ink-2 font-mono text-xs">launcher</span>
             <button
               type="button"
               onClick={() => setLauncherOpen(false)}
               aria-label="Close launcher"
-              className="focus-ring -mr-1 flex size-11 items-center justify-center rounded-md text-ink-3 transition-colors hover:bg-surf-0 hover:text-ink"
+              className="focus-ring text-ink-3 hover:bg-surf-0 hover:text-ink -mr-1 flex size-11 items-center justify-center rounded-md transition-colors"
             >
               <X aria-hidden size={18} />
             </button>
@@ -195,7 +195,7 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
                     type="button"
                     onClick={() => openApp(app.id)}
                     aria-label={`Open ${app.name}`}
-                    className="focus-ring flex flex-col items-center gap-2 rounded-xl border border-rule bg-surf-0 px-2 py-4 transition-colors hover:bg-surf-1"
+                    className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 flex flex-col items-center gap-2 rounded-xl border px-2 py-4 transition-colors"
                   >
                     <span
                       aria-hidden
@@ -207,7 +207,7 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
                     >
                       <Icon size={22} strokeWidth={1.75} />
                     </span>
-                    <span className="font-display text-sm text-ink">
+                    <span className="font-display text-ink text-sm">
                       {app.name}
                     </span>
                   </button>

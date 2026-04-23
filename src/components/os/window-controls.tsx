@@ -29,7 +29,7 @@ export function WindowControls({
         aria-label="Minimize window"
         onMouseDown={stopMouseDown}
         onClick={onMinimize}
-        className="focus-ring flex h-8 w-10 pointer-coarse:h-11 pointer-coarse:w-12 items-center justify-center text-xs text-ink-2 transition-colors hover:bg-rule hover:text-ink"
+        className="focus-ring text-ink-2 hover:bg-rule hover:text-ink flex h-8 w-10 items-center justify-center text-xs transition-colors pointer-coarse:h-11 pointer-coarse:w-12"
       >
         <span aria-hidden>⎯</span>
       </button>
@@ -38,7 +38,7 @@ export function WindowControls({
         aria-label="Toggle maximize window"
         onMouseDown={stopMouseDown}
         onClick={onMaximize}
-        className="focus-ring flex h-8 w-10 pointer-coarse:h-11 pointer-coarse:w-12 items-center justify-center text-xs text-ink-2 transition-colors hover:bg-rule hover:text-ink"
+        className="focus-ring text-ink-2 hover:bg-rule hover:text-ink flex h-8 w-10 items-center justify-center text-xs transition-colors pointer-coarse:h-11 pointer-coarse:w-12"
       >
         <span aria-hidden>▢</span>
       </button>
@@ -47,7 +47,7 @@ export function WindowControls({
         aria-label="Close window"
         onMouseDown={stopMouseDown}
         onClick={onClose}
-        className="focus-ring flex h-8 w-10 pointer-coarse:h-11 pointer-coarse:w-12 items-center justify-center text-xs text-ink-2 transition-colors hover:bg-danger hover:text-cloud"
+        className="focus-ring text-ink-2 hover:bg-danger hover:text-cloud flex h-8 w-10 items-center justify-center text-xs transition-colors pointer-coarse:h-11 pointer-coarse:w-12"
       >
         <span aria-hidden>✕</span>
       </button>

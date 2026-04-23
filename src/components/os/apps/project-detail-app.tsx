@@ -48,53 +48,53 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
   return (
     <div className="font-body max-w-3xl">
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-2xl border border-rule-2 bg-surf-soft p-6 md:p-8 mb-8">
+      <section className="border-rule-2 bg-surf-soft relative mb-8 overflow-hidden rounded-2xl border p-6 md:p-8">
         <div
           aria-hidden
-          className="pointer-events-none absolute -top-16 -right-16 h-48 w-48 rounded-full blur-3xl opacity-60"
+          className="pointer-events-none absolute -top-16 -right-16 h-48 w-48 rounded-full opacity-60 blur-3xl"
           style={{ backgroundColor: accent }}
         />
         <div className="relative">
-          <div className="flex items-center gap-2 mb-3">
+          <div className="mb-3 flex items-center gap-2">
             {project.projectType && (
               <span
-                className="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase tracking-widest"
+                className="rounded-full px-2 py-0.5 font-mono text-[10px] tracking-widest uppercase"
                 style={{ backgroundColor: `${accent}22`, color: accent }}
               >
                 {project.projectType}
               </span>
             )}
             {project.featured && (
-              <span className="px-2 py-0.5 rounded-full bg-miku/15 text-miku text-[10px] font-mono uppercase tracking-widest">
+              <span className="bg-miku/15 text-miku rounded-full px-2 py-0.5 font-mono text-[10px] tracking-widest uppercase">
                 FEATURED
               </span>
             )}
           </div>
 
-          <h1 className="font-display text-4xl text-ink font-bold">
+          <h1 className="font-display text-ink text-4xl font-bold">
             {project.title}
           </h1>
-          <p className="font-body text-lg text-ink-2 max-w-2xl mt-3">
+          <p className="font-body text-ink-2 mt-3 max-w-2xl text-lg">
             {project.summary}
           </p>
 
-          <div className="flex flex-wrap gap-4 mt-4 font-mono text-xs text-ink-3">
+          <div className="text-ink-3 mt-4 flex flex-wrap gap-4 font-mono text-xs">
             <span>⏱ {project.duration}</span>
             {completed && <span>📅 {completed}</span>}
             {project.inProgress && (
-              <span className="px-2 py-0.5 rounded bg-peach/20 text-peach uppercase tracking-widest">
+              <span className="bg-peach/20 text-peach rounded px-2 py-0.5 tracking-widest uppercase">
                 in progress
               </span>
             )}
           </div>
 
-          <div className="flex gap-2 mt-6">
+          <div className="mt-6 flex gap-2">
             {showDemo && (
               <a
                 href={project.demoUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="focus-ring inline-flex items-center gap-2 bg-miku text-cloud rounded-lg px-4 py-2 text-sm font-semibold hover:brightness-110 transition"
+                className="focus-ring bg-miku text-cloud inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition hover:brightness-110"
               >
                 <ExternalLink className="h-4 w-4" />
                 demo ↗
@@ -105,7 +105,7 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
                 href={project.githubUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="focus-ring inline-flex items-center gap-2 bg-surf-0 border border-rule-2 text-ink rounded-lg px-4 py-2 text-sm font-semibold hover:bg-surf-soft transition"
+                className="focus-ring bg-surf-0 border-rule-2 text-ink hover:bg-surf-soft inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold transition"
               >
                 <Github className="h-4 w-4" />
                 source ↗
@@ -118,11 +118,11 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
       {/* Overview */}
       {project.description.length > 0 && (
         <section>
-          <h2 className="font-display text-lg text-ink mt-8 mb-3">overview</h2>
+          <h2 className="font-display text-ink mt-8 mb-3 text-lg">overview</h2>
           {project.description.map((paragraph, i) => (
             <p
               key={i}
-              className="font-body text-ink-2 leading-relaxed mb-3 max-w-2xl"
+              className="font-body text-ink-2 mb-3 max-w-2xl leading-relaxed"
             >
               {paragraph}
             </p>
@@ -133,12 +133,12 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
       {/* Features */}
       {project.features.length > 0 && (
         <section>
-          <h2 className="font-display text-lg text-ink mt-8 mb-3">features</h2>
+          <h2 className="font-display text-ink mt-8 mb-3 text-lg">features</h2>
           <ul className="flex flex-col gap-2">
             {project.features.map((feature) => (
               <li
                 key={feature}
-                className="flex items-start gap-2 font-body text-ink-2"
+                className="font-body text-ink-2 flex items-start gap-2"
               >
                 <span className="text-miku mt-0.5">✓</span>
                 <span>{feature}</span>
@@ -151,14 +151,14 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
       {/* Tech stack */}
       {stack.length > 0 && (
         <section>
-          <h2 className="font-display text-lg text-ink mt-8 mb-3">
+          <h2 className="font-display text-ink mt-8 mb-3 text-lg">
             tech stack
           </h2>
           <div className="flex flex-wrap gap-1.5">
             {stack.map((tech) => (
               <span
                 key={tech}
-                className="rounded-full px-2.5 py-1 text-xs font-mono border"
+                className="rounded-full border px-2.5 py-1 font-mono text-xs"
                 style={{
                   borderColor: `${accent}40`,
                   color: accent,
@@ -175,12 +175,12 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
       {/* Gallery */}
       {project.gallery.length > 0 && (
         <section>
-          <h2 className="font-display text-lg text-ink mt-8 mb-3">gallery</h2>
-          <div className="grid grid-cols-2 gap-2 mt-3">
+          <h2 className="font-display text-ink mt-8 mb-3 text-lg">gallery</h2>
+          <div className="mt-3 grid grid-cols-2 gap-2">
             {project.gallery.map((item) => (
               <div
                 key={item.src}
-                className="relative aspect-video rounded-lg overflow-hidden border border-rule"
+                className="border-rule relative aspect-video overflow-hidden rounded-lg border"
               >
                 <Image
                   src={item.src}
@@ -189,7 +189,7 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
                   className="object-cover"
                 />
                 {item.caption && (
-                  <div className="absolute bottom-0 inset-x-0 bg-ink/70 text-cloud text-xs px-2 py-1">
+                  <div className="bg-ink/70 text-cloud absolute inset-x-0 bottom-0 px-2 py-1 text-xs">
                     {item.caption}
                   </div>
                 )}
