@@ -98,6 +98,18 @@ const eslintConfig = [
         __dirname: 'readonly',
         __filename: 'readonly',
         process: 'readonly',
+        console: 'readonly',
+      },
+    },
+  },
+  // Node ESM globals for tooling scripts (generate-icons, etc.)
+  {
+    files: ['scripts/**/*.mjs'],
+    languageOptions: {
+      sourceType: 'module',
+      globals: {
+        process: 'readonly',
+        console: 'readonly',
       },
     },
   },

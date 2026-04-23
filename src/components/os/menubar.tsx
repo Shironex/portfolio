@@ -1,6 +1,7 @@
 'use client'
 
 import { Moon, Sun } from 'lucide-react'
+import Image from 'next/image'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -113,15 +114,14 @@ export function MenuBar({
     <div className="fixed inset-x-0 top-0 z-[100] flex h-11 items-center gap-3 border-b border-rule bg-surf-1 px-3 backdrop-blur-md">
       {/* Left: logo chip */}
       <div className="flex items-center gap-2">
-        <span
+        <Image
           aria-hidden
-          className="size-5 rounded-md"
-          style={{
-            backgroundImage:
-              'linear-gradient(140deg, var(--color-miku) 0%, var(--color-pink) 100%)',
-            boxShadow:
-              '0 2px 8px -2px color-mix(in oklab, var(--color-miku) 50%, transparent)',
-          }}
+          src="/mascot.png"
+          alt=""
+          width={44}
+          height={44}
+          priority
+          className="size-5 rounded-full border border-rule bg-miku/10 object-cover object-top"
         />
         <span className="font-display text-sm font-semibold text-ink">
           ShiroOS

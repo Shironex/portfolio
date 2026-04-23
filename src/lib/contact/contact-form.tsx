@@ -1,8 +1,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Send } from 'lucide-react'
-import { motion } from 'motion/react'
+import { Loader2, Send } from 'lucide-react'
 import { useAction } from 'next-safe-action/hooks'
 import posthog from 'posthog-js'
 import { useForm } from 'react-hook-form'
@@ -146,29 +145,17 @@ export function ContactForm({
         <Button
           type="submit"
           disabled={isPending}
-          className="w-full gap-2 bg-gradient-to-r from-miku to-pink text-cloud font-semibold shadow-sm hover:brightness-110 disabled:opacity-70"
+          className="w-full gap-2 bg-miku text-cloud font-semibold shadow-sm hover:bg-miku-2 disabled:opacity-70"
         >
-          {isPending ? 'Sending...' : 'Submit'}
-          <motion.div
-            animate={isPending ? { rotate: 360 } : { x: [0, 5, 0] }}
-            transition={
-              isPending
-                ? {
-                    duration: 1,
-                    repeat: Number.POSITIVE_INFINITY,
-                    ease: 'linear',
-                  }
-                : {
-                    duration: 1.5,
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: 'loop',
-                    ease: 'easeInOut',
-                    times: [0, 0.6, 1],
-                  }
-            }
-          >
-            <Send className="h-4 w-4" />
-          </motion.div>
+          {isPending ? 'Sending…' : 'Send message'}
+          {isPending ? (
+            <Loader2
+              aria-hidden
+              className="h-4 w-4 motion-safe:animate-spin"
+            />
+          ) : (
+            <Send aria-hidden className="h-4 w-4" />
+          )}
         </Button>
       </form>
     </Form>

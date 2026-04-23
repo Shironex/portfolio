@@ -12,11 +12,13 @@ interface HeroPlateProps {
 /**
  * HeroPlate — large hero card that sits on the desktop canvas behind the
  * windows. Carries the name, the one-line what-I-build, the primary CTAs,
- * and the GitHub contribution strip underneath.
+ * and the GitHub contribution strip underneath. Vertical density is tight
+ * on purpose — the activity strip needs to stay above the fold on 1080p
+ * at 100% zoom.
  */
 export function HeroPlate({ onOpenCmd, onOpenContact }: HeroPlateProps) {
   return (
-    <div className="relative flex h-full w-full flex-col overflow-hidden rounded-3xl border border-rule-2 bg-surf-solid px-5 py-7 md:px-8 md:py-10 shadow-elev-3">
+    <div className="relative flex h-full w-full flex-col overflow-hidden rounded-3xl border border-rule-2 bg-surf-solid px-5 py-6 md:px-8 md:py-7 shadow-elev-3">
       <span
         aria-hidden
         className="pointer-events-none absolute -top-16 -right-10 size-56 rounded-full opacity-60 blur-3xl animate-floaty motion-reduce:animate-none"
@@ -25,35 +27,23 @@ export function HeroPlate({ onOpenCmd, onOpenContact }: HeroPlateProps) {
             'radial-gradient(circle, var(--color-miku-3), transparent 70%)',
         }}
       />
-      <span
-        aria-hidden
-        className="pointer-events-none absolute -bottom-10 -left-8 size-44 rounded-full opacity-55 blur-3xl animate-floaty motion-reduce:animate-none"
-        style={{
-          background:
-            'radial-gradient(circle, var(--color-pink), transparent 70%)',
-          animationDelay: '1s',
-          animationDirection: 'reverse',
-        }}
-      />
 
-      <div className="relative font-mono text-[11px] text-ink-3 mb-4">
+      <div className="relative font-mono text-[11px] text-ink-3 mb-3">
         Junior full-stack · Gdańsk, PL
       </div>
 
-      <h1 className="relative font-display text-[clamp(32px,9vw,48px)] md:text-[clamp(44px,5.4vw,72px)] leading-tight tracking-[-0.02em] text-ink font-bold">
-        hi, I&apos;m{' '}
-        <em className="gradient-text-miku not-italic">Kacper</em>.
-        <br />I build Electron apps
-        <br />and typed full-stack systems.
+      <h1 className="relative font-display text-[clamp(32px,8vw,44px)] md:text-[clamp(40px,4.6vw,60px)] leading-[1.05] tracking-[-0.02em] text-ink font-bold">
+        hi, I&apos;m Kacper.
+        <br />I build Electron apps and typed full-stack systems.
       </h1>
 
-      <p className="relative font-body text-ink-2 text-base leading-relaxed max-w-xl mt-4">
+      <p className="relative font-body text-ink-2 text-[15px] leading-relaxed max-w-xl mt-3">
         AutoMaker passed 3k stars with a team of four. Omniscribe runs twelve
         parallel Claude sessions on my laptop without setting it on fire. This
         portfolio is the third tool in that line.
       </p>
 
-      <div className="relative flex flex-wrap gap-2 mt-6">
+      <div className="relative flex flex-wrap gap-2 mt-4">
         <button
           type="button"
           onClick={onOpenContact}
@@ -76,13 +66,13 @@ export function HeroPlate({ onOpenCmd, onOpenContact }: HeroPlateProps) {
         </button>
       </div>
 
-      <div className="relative flex items-center gap-3 mt-6 pt-5 border-t border-rule">
-        <div className="relative size-10 shrink-0 overflow-hidden rounded-full border border-rule-2 bg-miku/15">
+      <div className="relative flex items-center gap-3 mt-4 pt-4 border-t border-rule">
+        <div className="relative size-9 shrink-0 overflow-hidden rounded-full border border-rule-2 bg-miku/15">
           <Image
             src="/mascot.png"
             alt=""
-            width={80}
-            height={80}
+            width={72}
+            height={72}
             className="size-full object-cover object-top"
           />
         </div>

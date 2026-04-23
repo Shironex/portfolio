@@ -139,7 +139,7 @@ export function Boot() {
 
         <div className="text-center">
           <div className="font-display text-[22px] font-semibold tracking-tight text-ink">
-            <b className="gradient-text-miku font-bold">ShiroOS</b>
+            <b className="font-bold text-miku-2">ShiroOS</b>
             <span className="mx-1">·</span>
             <span>booting with love</span>
             <span

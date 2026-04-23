@@ -119,12 +119,12 @@ export function GithubActivityStrip() {
   return (
     <div
       ref={containerRef}
-      className="relative mt-5 rounded-2xl border border-rule bg-surf-0 p-4"
+      className="relative mt-4 rounded-2xl border border-rule bg-surf-0 p-3"
     >
-      <div className="mb-3 flex items-center justify-between gap-3">
+      <div className="mb-2 flex items-center justify-between gap-3">
         <div className="min-w-0">
           <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-miku">
-            ✧ activity
+            Activity
           </div>
           <div className="font-display text-sm font-bold text-ink">
             {total !== null
@@ -157,10 +157,10 @@ export function GithubActivityStrip() {
           }
           className="relative overflow-x-auto"
         >
-          <div className="flex gap-[3px]">
+          <div className="flex gap-[2px]">
             {(weeks ?? Array.from({ length: WEEKS_SHOWN }, () => null)).map(
               (w, i) => (
-                <div key={i} className="flex flex-col gap-[3px]">
+                <div key={i} className="flex flex-col gap-[2px]">
                   {w
                     ? w.map((d) => (
                         <button
@@ -173,14 +173,14 @@ export function GithubActivityStrip() {
                           onFocus={(e) => handleEnter(d, e.currentTarget)}
                           onMouseLeave={handleLeave}
                           onBlur={handleLeave}
-                          className={`focus-ring size-[12px] rounded-[2px] ${LEVEL_BG[d.level]}`}
+                          className={`focus-ring size-[11px] rounded-[2px] ${LEVEL_BG[d.level]}`}
                         />
                       ))
                     : Array.from({ length: 7 }).map((_, j) => (
                         <div
                           key={j}
                           aria-hidden
-                          className="size-[12px] rounded-[2px] bg-rule animate-pulse-slow motion-reduce:animate-none"
+                          className="size-[11px] rounded-[2px] bg-rule animate-pulse-slow motion-reduce:animate-none"
                         />
                       ))}
                 </div>
@@ -201,13 +201,13 @@ export function GithubActivityStrip() {
       )}
 
       {state.kind === 'ready' && (
-        <div className="mt-3 flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-widest text-ink-4">
+        <div className="mt-2 flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-widest text-ink-4">
           <span>less</span>
-          <span aria-hidden className="size-2.5 rounded-[2px] bg-rule" />
-          <span aria-hidden className="size-2.5 rounded-[2px] bg-miku/25" />
-          <span aria-hidden className="size-2.5 rounded-[2px] bg-miku/50" />
-          <span aria-hidden className="size-2.5 rounded-[2px] bg-miku/75" />
-          <span aria-hidden className="size-2.5 rounded-[2px] bg-miku" />
+          <span aria-hidden className="size-2 rounded-[2px] bg-rule" />
+          <span aria-hidden className="size-2 rounded-[2px] bg-miku/25" />
+          <span aria-hidden className="size-2 rounded-[2px] bg-miku/50" />
+          <span aria-hidden className="size-2 rounded-[2px] bg-miku/75" />
+          <span aria-hidden className="size-2 rounded-[2px] bg-miku" />
           <span>more</span>
         </div>
       )}

@@ -1,12 +1,28 @@
+import Image from 'next/image'
+
 /**
  * readme.md window — short welcome note for ShiroOS.
  */
 export default function ReadmeApp() {
   return (
     <div className="font-body text-[14px] text-ink-2 leading-relaxed max-w-[720px]">
-      <h2 className="font-display text-3xl text-ink font-semibold mb-4 tracking-tight">
-        Welcome to ShiroOS
-      </h2>
+      <div className="flex items-center gap-4 mb-4">
+        <Image
+          src="/mascot.png"
+          alt=""
+          width={80}
+          height={80}
+          className="size-16 shrink-0 rounded-full border border-rule-2 bg-miku/10 object-cover object-top shadow-elev-1"
+        />
+        <div>
+          <h2 className="font-display text-3xl text-ink font-semibold tracking-tight">
+            Welcome to ShiroOS
+          </h2>
+          <p className="mt-0.5 font-mono text-[11px] text-ink-4">
+            シロOS · portfolio build
+          </p>
+        </div>
+      </div>
 
       <p>
         This is my portfolio, reimagined as a small desktop. Click the icons on
