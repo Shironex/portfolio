@@ -1,3 +1,10 @@
+# [2.6.0](https://github.com/Shironex/portfolio/compare/v2.5.0...v2.6.0) (2026-04-23)
+
+
+### Features
+
+* mascot branding, hero compaction, email repalette ([9a760af](https://github.com/Shironex/portfolio/commit/9a760af0c70db3ec52984c519bba9ace9665486d)), closes [#eadfc1](https://github.com/Shironex/portfolio/issues/eadfc1) [#fbf7](https://github.com/Shironex/portfolio/issues/fbf7) [#f5ecd4](https://github.com/Shironex/portfolio/issues/f5ecd4) [#0f7c74](https://github.com/Shironex/portfolio/issues/0f7c74) [#0a5954](https://github.com/Shironex/portfolio/issues/0a5954) [#5d6e88](https://github.com/Shironex/portfolio/issues/5d6e88) [#1b2a1](https://github.com/Shironex/portfolio/issues/1b2a1)
+
 # [2.5.0](https://github.com/Shironex/portfolio/compare/v2.4.0...v2.5.0) (2026-04-23)
 
 
