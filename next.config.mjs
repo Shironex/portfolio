@@ -1,7 +1,12 @@
 /* eslint-disable no-undef */
 /* eslint-disable n/no-process-env */
+import bundleAnalyzer from '@next/bundle-analyzer'
 import { createJiti } from 'jiti'
 import { fileURLToPath } from 'url'
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+})
 
 const jiti = createJiti(fileURLToPath(import.meta.url))
 await jiti.import('./src/env/server.ts', { default: true })
@@ -21,4 +26,4 @@ const nextConfig = {
   output: 'standalone',
 }
 
-export default nextConfig
+export default withBundleAnalyzer(nextConfig)
