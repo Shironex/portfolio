@@ -31,15 +31,6 @@ export const shiroku: Project = {
   ],
   techDetails: {
     stack: ['TypeScript', 'React', 'Electron', 'SQLite', 'Tailwind CSS'],
-    architecture:
-      'Shiroku stores all data in a local SQLite database, providing fast full-text search and reliable persistence without any network dependency. The rich text editor integrates with the storage layer for real-time saving.',
-    challenges: [
-      {
-        challenge: 'Full-text search performance across thousands of notes',
-        solution:
-          'Leveraged SQLite FTS5 extension for fast, indexed full-text search that works instantly even with large note collections',
-      },
-    ],
   },
   inProgress: true,
   duration: 'Ongoing',

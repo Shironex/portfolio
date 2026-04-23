@@ -9,15 +9,8 @@ export interface GalleryItem {
   caption: string
 }
 
-export interface Challenge {
-  challenge: string
-  solution: string
-}
-
 export interface TechDetails {
   stack: string[]
-  architecture?: string
-  challenges: Challenge[]
 }
 
 export interface Project {

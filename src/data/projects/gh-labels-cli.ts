@@ -62,30 +62,6 @@ export const ghLabelsCli: Project = {
       'Husky',
       'Commitizen',
     ],
-    architecture:
-      'GitHub Labels CLI follows a modular command-based architecture using Commander.js for command routing and argument parsing. The tool integrates with GitHub API via Octokit for repository and label operations, and OpenAI API for intelligent label suggestions. Interactive prompts are powered by Inquirer, providing a user-friendly CLI experience. The codebase uses Zod for runtime validation of API responses and user input, ensuring type safety throughout the application.',
-    challenges: [
-      {
-        challenge: 'Integrating AI for intelligent label suggestions',
-        solution:
-          'Implemented OpenAI API integration that analyzes PR context including title, description, changed files, and code diff to provide relevant label suggestions with confidence scores',
-      },
-      {
-        challenge: 'Managing complex GitHub API interactions',
-        solution:
-          'Used Octokit REST client with proper error handling and rate limiting, implementing retry logic for failed requests and clear error messages for users',
-      },
-      {
-        challenge: 'Creating reusable label templates',
-        solution:
-          'Built a template system that allows users to export labels from any repository and save them as JSON templates for quick application to other repositories',
-      },
-      {
-        challenge: 'Providing excellent user experience in the terminal',
-        solution:
-          'Combined Inquirer for interactive prompts, Chalk for colored output, and Ora for loading indicators to create an intuitive and visually appealing CLI interface',
-      },
-    ],
   },
   completedDate: 'May 2025',
   duration: '2 months',

@@ -86,30 +86,6 @@ export const sudeko: Project = {
       'Next Themes',
       'Sonner Toast',
     ],
-    architecture:
-      'Sudeko follows a modern Next.js architecture with server-side rendering for optimal SEO performance. The application uses a component-based structure with reusable UI components from Radix UI, form handling with React Hook Form and Zod validation, email integration through Resend, and comprehensive security through Arcjet rate limiting and Cloudflare Turnstile bot protection.',
-    challenges: [
-      {
-        challenge: 'Creating a professional and trustworthy brand presentation',
-        solution:
-          'Developed a clean, professional design with consistent blue and yellow branding, clear service categorization, and prominent display of company credentials and statistics',
-      },
-      {
-        challenge: 'Showcasing technical services effectively to clients',
-        solution:
-          'Implemented detailed service sections with clear descriptions, visual icons, and organized categorization of electrical and construction services',
-      },
-      {
-        challenge: 'Ensuring accessibility and user experience',
-        solution:
-          'Used Radix UI primitives for accessibility compliance and implemented responsive design with Tailwind CSS for optimal viewing across all devices',
-      },
-      {
-        challenge: 'Protecting contact forms from spam and abuse',
-        solution:
-          'Implemented multi-layered security with Arcjet for rate limiting, honeypot fields for bot detection, and Cloudflare Turnstile for human verification',
-      },
-    ],
   },
   completedDate: 'September 2025',
   duration: '3 days',

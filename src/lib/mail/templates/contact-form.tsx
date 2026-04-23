@@ -13,7 +13,7 @@ import {
   Text,
 } from '@react-email/components'
 
-import { ContactFormSchema } from '@/app/contact/_components/validation'
+import { ContactFormSchema } from '@/lib/contact/validation'
 
 export interface ContactFormEmailProps {
   data: Omit<ContactFormSchema, 'turnstileToken' | 'verify'>

@@ -45,26 +45,6 @@ export const shiroani: Project = {
       'Tailwind CSS',
       'Vite',
     ],
-    architecture:
-      'ShiroAni follows a monorepo structure with an Electron main process running a NestJS backend, a React renderer for the UI, and a separate Discord bot service. The built-in browser uses Electron webview with custom session management and CSP handling.',
-    challenges: [
-      {
-        challenge: 'Embedding a browser inside Electron with proper isolation',
-        solution:
-          'Went through multiple iterations. Tried native overlays, DOM elements, and the deprecated webview tag. The "deprecated" approach turned out to be the most reliable for session management and CSP compliance.',
-      },
-      {
-        challenge:
-          'Real-time Discord Rich Presence synced with viewing activity',
-        solution:
-          'Built a bridge between the Electron main process and Discord RPC to update presence automatically when the user starts or stops watching anime',
-      },
-      {
-        challenge: 'Managing community features alongside the desktop app',
-        solution:
-          'Separated the Discord bot into its own service within the monorepo, sharing types and utilities with the main app while running independently',
-      },
-    ],
   },
   inProgress: true,
   duration: 'Ongoing',

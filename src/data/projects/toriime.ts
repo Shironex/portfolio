@@ -83,15 +83,6 @@ export const toriime: Project = {
       'React Hook Form',
       'BullMQ',
     ],
-    architecture:
-      'Toriime uses a microservices architecture with Next.js for the frontend and dedicated services for backend and subtitle management. Content is stored in MongoDB with media files hosted on AWS S3 and delivered via CloudFront CDN.',
-    challenges: [
-      {
-        challenge: 'Use one account across other services',
-        solution:
-          'Used Nest js to create own oauth server and used it to authenticate users and give access to other services in the future',
-      },
-    ],
   },
   inProgress: true,
   duration: '2 years',

@@ -17,6 +17,31 @@
   }
 }
 
+@utility gradient-text-miku {
+  background: linear-gradient(90deg, var(--color-miku), var(--color-pink-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Hoisted outside @theme so Tailwind v4 doesn't tree-shake it when the
+   animation is applied via inline style / arbitrary value. */
+@keyframes spinSlow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@utility grain-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
 @theme {
   /*
    * Typography: JetBrains Mono
@@ -96,6 +121,204 @@
       background-position: right center;
     }
   }
+
+  /* =================== ShiroOS colors (from new-design/styles.css :root) =================== */
+  --color-miku: #39c5bb;
+  --color-miku-2: #00b8d4;
+  --color-miku-3: #6ae3da;
+  --color-pink: #ff8ecf;
+  --color-pink-2: #ff5fa8;
+  --color-lav: #b79dff;
+  --color-peach: #ffd36e;
+  --color-mint: #9ef0c2;
+  --color-cloud: #ffffff;
+  --color-sky-0: var(--shiro-sky-0);
+  --color-sky-1: var(--shiro-sky-1);
+  --color-sky-2: var(--shiro-sky-2);
+  --color-sky-3: var(--shiro-sky-3);
+  --color-surf-0: var(--shiro-surf-0);
+  --color-surf-1: var(--shiro-surf-1);
+  --color-surf-2: var(--shiro-surf-2);
+  --color-surf-solid: var(--shiro-surf-solid);
+  --color-surf-soft: var(--shiro-surf-soft);
+  --color-ink: var(--shiro-ink);
+  --color-ink-2: var(--shiro-ink-2);
+  --color-ink-3: var(--shiro-ink-3);
+  --color-ink-4: var(--shiro-ink-4);
+  --color-rule: var(--shiro-rule);
+  --color-rule-2: var(--shiro-rule-2);
+  --color-danger: #ff5b6a;
+
+  /* =================== ShiroOS fonts =================== */
+  --font-display: var(--font-fredoka), ui-rounded, 'Segoe UI', system-ui, sans-serif;
+  --font-body: var(--font-nunito), system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-hand: var(--font-caveat), 'Bradley Hand', cursive;
+
+  /* =================== ShiroOS animations =================== */
+  --animate-drift: drift 16s linear infinite;
+  --animate-floaty: floaty 8s ease-in-out infinite;
+  --animate-spin-slow: spinSlow 22s linear infinite;
+  --animate-sparkle: sparkle 4s ease-in-out infinite;
+  --animate-blink: blink 1s steps(2) infinite;
+  --animate-eq-bar: eqBar 0.8s ease-in-out infinite;
+  --animate-win-open: winOpen 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-sheet-up: sheetUp 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
+  --animate-cp-in: cpIn 0.22s ease;
+  --animate-pulse-slow: pulse 1.8s ease-in-out infinite;
+  --animate-bob-note: bobNote 1.4s ease-in-out infinite;
+  --animate-logo-pop: logoPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-boot-out: bootOut 0.5s ease 3.2s forwards;
+  --animate-boot-fill: bootFill 3s ease-out forwards;
+  --animate-term-in: termIn 0.3s ease forwards;
+  --animate-fade-in: fadeIn 0.3s ease;
+  --animate-ring-fast: spinSlow 1.8s linear infinite;
+  --animate-ring-slow: spinSlow 2.6s linear infinite reverse;
+
+  /* ShiroOS keyframes — ported from new-design/styles.css */
+  @keyframes bootOut {
+    to {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  @keyframes bootFill {
+    to {
+      width: 100%;
+    }
+  }
+
+  @keyframes logoPop {
+    from {
+      transform: scale(0.3) rotate(-20deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes bobNote {
+
+    0%,
+    100% {
+      transform: rotate(-10deg) translateY(0);
+    }
+
+    50% {
+      transform: rotate(10deg) translateY(-6px);
+    }
+  }
+
+  @keyframes drift {
+
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(-10deg);
+    }
+
+    25% {
+      transform: translate(20px, -18px) rotate(8deg);
+    }
+
+    50% {
+      transform: translate(-10px, -32px) rotate(-6deg);
+    }
+
+    75% {
+      transform: translate(-24px, -12px) rotate(12deg);
+    }
+  }
+
+  @keyframes floaty {
+
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+
+    50% {
+      transform: translate(20px, -15px);
+    }
+  }
+
+  @keyframes sparkle {
+
+    0%,
+    100% {
+      opacity: 0.4;
+    }
+
+    50% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes eqBar {
+
+    0%,
+    100% {
+      transform: scaleY(0.4);
+    }
+
+    50% {
+      transform: scaleY(1);
+    }
+  }
+
+  @keyframes termIn {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes winOpen {
+    from {
+      opacity: 0;
+      transform: scale(0.92) translateY(10px);
+    }
+  }
+
+  @keyframes sheetUp {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+  }
+
+  @keyframes cpIn {
+    from {
+      transform: translateY(-20px) scale(0.96);
+      opacity: 0;
+    }
+  }
+
+  @keyframes pulse {
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+  }
 }
 
 /*
@@ -149,6 +372,81 @@
     --ring: 265 89% 66%;
 
     --radius: 0.5rem;
+
+    /* ShiroOS light theme (default) */
+    --shiro-sky-0: #eaf7ff;
+    --shiro-sky-1: #d7efff;
+    --shiro-sky-2: #c6ecff;
+    --shiro-sky-3: #a9dcff;
+    --shiro-surf-0: rgba(255, 255, 255, 0.55);
+    --shiro-surf-1: rgba(255, 255, 255, 0.75);
+    --shiro-surf-2: rgba(255, 255, 255, 0.92);
+    --shiro-surf-solid: #ffffff;
+    --shiro-surf-soft: #f5fbff;
+    --shiro-ink: #0d1b2a;
+    --shiro-ink-2: #2b3b51;
+    --shiro-ink-3: #4b5e78;
+    --shiro-ink-4: #7d8aa0;
+    --shiro-rule: rgba(13, 27, 42, 0.08);
+    --shiro-rule-2: rgba(13, 27, 42, 0.14);
+    --shiro-scrollbar-track: rgba(13, 27, 42, 0.04);
+    --shiro-scrollbar-thumb: rgba(13, 27, 42, 0.18);
+    --shiro-scrollbar-thumb-hover: rgba(57, 197, 187, 0.5);
+  }
+
+  .dark {
+    /* ShiroOS dark theme */
+    --shiro-sky-0: #081322;
+    --shiro-sky-1: #0c1b30;
+    --shiro-sky-2: #112540;
+    --shiro-sky-3: #173258;
+    --shiro-surf-0: rgba(18, 34, 56, 0.55);
+    --shiro-surf-1: rgba(22, 40, 66, 0.75);
+    --shiro-surf-2: rgba(26, 46, 74, 0.92);
+    --shiro-surf-solid: #162a44;
+    --shiro-surf-soft: #0f1f35;
+    --shiro-ink: #e4f0ff;
+    --shiro-ink-2: #b3c5dc;
+    --shiro-ink-3: #829ab9;
+    --shiro-ink-4: #5c7491;
+    --shiro-rule: rgba(255, 255, 255, 0.08);
+    --shiro-rule-2: rgba(255, 255, 255, 0.14);
+    --shiro-scrollbar-track: rgba(255, 255, 255, 0.04);
+    --shiro-scrollbar-thumb: rgba(255, 255, 255, 0.22);
+    --shiro-scrollbar-thumb-hover: rgba(57, 197, 187, 0.6);
+  }
+
+  /* Custom scrollbar — webkit (Chrome, Safari, Edge) */
+  *::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: var(--shiro-scrollbar-track);
+    border-radius: 10px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: var(--shiro-scrollbar-thumb);
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: var(--shiro-scrollbar-thumb-hover);
+    background-clip: content-box;
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--shiro-scrollbar-thumb) var(--shiro-scrollbar-track);
   }
 }
 
@@ -178,32 +476,4 @@
   :not(pre)>code {
     @apply rounded bg-muted px-1.5 py-0.5 text-sm;
   }
-}
-
-.animate-in {
-  animation: animate-in 0.5s ease-out;
-}
-
-@keyframes animate-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.project-card {
-  @apply relative overflow-hidden rounded-xl border border-border bg-card p-6 transition-all hover:shadow-lg;
-}
-
-.project-card:hover {
-  transform: translateY(-5px);
-}
-
-.tech-tag {
-  @apply inline-flex items-center rounded-full border border-border bg-secondary px-2.5 py-0.5 text-xs font-semibold transition-colors;
 }

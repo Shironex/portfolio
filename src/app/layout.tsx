@@ -1,42 +1,40 @@
 import type { Metadata } from 'next'
-import { JetBrains_Mono } from 'next/font/google'
+import { Caveat, Fredoka, JetBrains_Mono, Nunito } from 'next/font/google'
 import type React from 'react'
 import { Suspense } from 'react'
 
 import { Toaster } from '@/components/ui/sonner'
-
-import { Footer } from '@/components/layout/footer'
-import { Navbar } from '@/components/layout/navbar'
-import { RouteLoading } from '@/components/layout/route-loading'
-import { ScrollRestoration } from '@/components/scroll-restoration'
 
 import { defaultMetadata, siteConfig } from '@/lib/metadata-config'
 
 import Providers from '@/context/providers'
 import '@/styles/globals.css'
 
-/**
- * JetBrains Mono font configuration for the portfolio.
- *
- * This monospace font provides a professional, developer-focused aesthetic.
- * The font is self-hosted via Next.js font optimization (no runtime Google Fonts requests).
- *
- * @see https://www.jetbrains.com/lp/mono/
- *
- * Available weights:
- * - 100: Thin
- * - 200: Extra Light
- * - 300: Light
- * - 400: Regular (default body text)
- * - 500: Medium (subheadings)
- * - 600: Semi Bold
- * - 700: Bold (headings)
- * - 800: Extra Bold
- */
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   weight: ['100', '200', '300', '400', '500', '600', '700', '800'] as const,
   variable: '--font-jetbrains-mono',
+  display: 'swap',
+})
+
+const fredoka = Fredoka({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-fredoka',
+  display: 'swap',
+})
+
+const nunito = Nunito({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-nunito',
+  display: 'swap',
+})
+
+const caveat = Caveat({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-caveat',
   display: 'swap',
 })
 
@@ -51,25 +49,14 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${jetbrainsMono.variable} font-mono`}
+        className={`${fredoka.variable} ${nunito.variable} ${caveat.variable} ${jetbrainsMono.variable} font-body antialiased`}
         suppressHydrationWarning
       >
-        <Suspense fallback={<RouteLoading message="Preparing app..." />}>
+        <Suspense fallback={null}>
           <Providers>
-            <Suspense fallback={<RouteLoading message="Restoring scroll..." />}>
-              <ScrollRestoration />
-            </Suspense>
-            <div className="flex min-h-screen flex-col">
-              <Suspense
-                fallback={<RouteLoading message="Loading navigation..." />}
-              >
-                <Navbar />
-              </Suspense>
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
+            {children}
             <Toaster />
           </Providers>
         </Suspense>

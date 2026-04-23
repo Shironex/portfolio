@@ -48,25 +48,6 @@ export const omniscribe: Project = {
       'MCP Protocol',
       'Terminal PTY',
     ],
-    architecture:
-      'Omniscribe uses an Electron shell with a NestJS backend running in the main process, communicating with a React frontend via Socket.io. Each AI session is managed as an isolated workspace with its own terminal PTY, git worktree, and MCP configuration. The architecture mirrors the patterns used in GitChorus but scaled to handle 12 concurrent sessions.',
-    challenges: [
-      {
-        challenge: 'Running 12 terminal sessions without freezing the UI',
-        solution:
-          'Implemented buffered output handling and virtualized rendering to keep the interface responsive even with 12 terminals generating output simultaneously',
-      },
-      {
-        challenge: 'Isolating git state across concurrent sessions',
-        solution:
-          'Leveraged git worktrees to give each session its own working directory and branch, preventing conflicts between parallel coding tasks',
-      },
-      {
-        challenge: 'Managing MCP configurations per session',
-        solution:
-          'Built a configuration layer that allows each session to have its own MCP server setup, enabling different tool configurations for different tasks',
-      },
-    ],
   },
   duration: 'Ongoing',
   demoUrl: '#desktop-app',

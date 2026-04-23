@@ -47,28 +47,6 @@ export const gitchorus: Project = {
       'Vite',
       'electron-store',
     ],
-    architecture:
-      'GitChorus used a monorepo structure with an Electron main process running a NestJS backend, communicating with a React frontend via Socket.io over dynamically allocated ports. The AI agent ran in read-only mode with bypass permissions, only able to use Read, Grep, Glob, and Bash tools.',
-    challenges: [
-      {
-        challenge:
-          'AI SDK spawns child processes that fail inside Electron asar archives',
-        solution:
-          'Configured asarUnpack to extract the Claude Agent SDK files to the filesystem, allowing child process spawning to work correctly in packaged builds',
-      },
-      {
-        challenge:
-          'Dynamic port allocation to avoid conflicts with other Electron apps',
-        solution:
-          'Used NestJS listen(0) for OS-assigned ports with a port flow that propagates through CSP headers, CORS config, and IPC handlers to the renderer',
-      },
-      {
-        challenge:
-          'Electron subprocess inheriting sensitive environment variables',
-        solution:
-          'Implemented environment variable sanitization to prevent leaking API keys, tokens, and passwords to spawned AI agent processes',
-      },
-    ],
   },
   completedDate: 'April 2026 (discontinued)',
   duration: '5 months',

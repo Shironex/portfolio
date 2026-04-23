@@ -31,20 +31,6 @@ export const shiranami: Project = {
   ],
   techDetails: {
     stack: ['TypeScript', 'React', 'Electron', 'Tailwind CSS', 'Web Audio API'],
-    architecture:
-      'Shiranami is built as an Electron desktop application with a React-based UI. All music data is stored locally. No cloud services or accounts required. The audio pipeline uses the Web Audio API for playback with custom controls and visualization.',
-    challenges: [
-      {
-        challenge: 'Handling large music libraries without performance issues',
-        solution:
-          'Implemented efficient indexing and virtualized list rendering to handle libraries with thousands of tracks smoothly',
-      },
-      {
-        challenge: 'Providing a polished listening experience',
-        solution:
-          'Focused on UI details: smooth transitions, responsive controls, and a visual design that makes listening feel intentional rather than utilitarian',
-      },
-    ],
   },
   inProgress: true,
   duration: 'Ongoing',

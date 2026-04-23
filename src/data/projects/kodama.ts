@@ -21,15 +21,6 @@ export const kodama: Project = {
   ],
   techDetails: {
     stack: ['TypeScript', 'Electron', '2D Game Engine'],
-    architecture:
-      'Kodama uses a monorepo structure with a game core and an Electron desktop shell, sharing packages for code reuse between the game logic and application layers.',
-    challenges: [
-      {
-        challenge: 'Learning game development patterns as a web developer',
-        solution:
-          'Leveraged existing TypeScript and Electron expertise as a foundation, gradually introducing game-specific concepts like game loops, sprite management, and collision detection',
-      },
-    ],
   },
   inProgress: true,
   duration: 'Ongoing',
