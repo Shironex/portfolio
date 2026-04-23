@@ -55,30 +55,6 @@ export const cliTemplate: Project = {
       'cli-progress',
       'inquirer',
     ],
-    architecture:
-      'CLI Template follows a modular architecture with clear separation of concerns. Commands are organized in the commands/ directory, utilities are isolated in utils/, and type definitions are centralized in types/. The build process uses tsup for fast, optimized bundling with support for both CommonJS and ES modules. The testing setup uses Vitest for unit testing with coverage reporting.',
-    challenges: [
-      {
-        challenge: 'Creating a flexible and extensible command structure',
-        solution:
-          'Implemented a modular command system using Commander.js subcommands, allowing easy addition of new commands without modifying the core structure',
-      },
-      {
-        challenge: 'Providing comprehensive examples for common CLI patterns',
-        solution:
-          'Built example commands for tables, progress bars, and interactive modes, demonstrating best practices for each pattern with multiple variations',
-      },
-      {
-        challenge: 'Setting up automated CI/CD for CLI tools',
-        solution:
-          'Configured GitHub Actions workflows for testing, code quality checks with CodeQL, and automated semantic versioning releases',
-      },
-      {
-        challenge: 'Making the template documentation-ready',
-        solution:
-          'Integrated VitePress for documentation with pre-configured guides, API references, and examples that can be easily customized',
-      },
-    ],
   },
   completedDate: 'April 2025',
   duration: '1 month',

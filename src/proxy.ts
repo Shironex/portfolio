@@ -25,7 +25,7 @@ export function proxy(req: NextRequest) {
       const csp = [
         `base-uri 'none'`,
         `child-src 'none'`,
-        `connect-src 'self' ${env.SENTRY_URL} https://*.ingest.sentry.io https://mk.shirone.dev`,
+        `connect-src 'self' ${env.SENTRY_URL} https://*.ingest.sentry.io https://mk.shirone.dev https://us.i.posthog.com https://us-assets.i.posthog.com`,
         `default-src 'self'`,
         `font-src 'self' data: https:`,
         `form-action 'self'`,
@@ -35,8 +35,8 @@ export function proxy(req: NextRequest) {
         `manifest-src 'self'`,
         `media-src 'self'`,
         `object-src 'none'`,
-        `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com`,
-        `script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com`,
+        `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com https://us-assets.i.posthog.com`,
+        `script-src-elem 'self' 'unsafe-inline' 'unsafe-eval' ${env.SENTRY_URL} https://challenges.cloudflare.com https://us-assets.i.posthog.com`,
         `style-src 'self' 'unsafe-inline'`,
         `worker-src 'self' blob:`,
       ].join('; ')

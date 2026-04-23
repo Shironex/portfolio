@@ -18,7 +18,12 @@ export const sendDiscordWebhook = async (embed: FullDiscordEmbed) => {
         const response = await fetch(env.DISCORD_WEBHOOK_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ embeds: [embed] }),
+          body: JSON.stringify({
+            embeds: [embed],
+            // Prevent `@everyone`, `@here`, role, and user mentions from
+            // being triggered by attacker-controlled embed text.
+            allowed_mentions: { parse: [] },
+          }),
         })
 
         span.setAttributes({

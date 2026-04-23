@@ -1,0 +1,86 @@
+import { Project } from '@/types'
+
+export const kireiManga: Project = {
+  id: 'kirei-manga',
+  slug: 'kirei-manga',
+  title: 'KireiManga',
+  summary:
+    'Local-first desktop manga reader. Browses MangaDex, keeps a personal library in SQLite, reads CBZ/folder manga from disk — and v0.3 adds a C++/OpenCV + manga-ocr translation overlay for raw Japanese pages.',
+  description: [
+    "KireiManga is a manga reader built around the way I actually read — half of it lives on MangaDex, the other half lives as CBZs on disk, and both should open in the same reader with the same shortcuts. The app wraps MangaDex's official API with three discovery tabs (Popular / Latest / Top Rated) and a filter-chip search, and pairs that with a local importer that detects flat, nested, or single-series folder layouts and ingests them transactionally.",
+    'The shell is Electron 40 with NestJS 11 embedded in the main process, talking to the React 18 + Vite 7 + Tailwind v4 renderer over Socket.IO. Data lives in better-sqlite3 (10 migrations applied so far) and downloaded covers and pages are served over custom `kirei-cover://` and `kirei-page://` protocols so offline reading is first-class.',
+    'v0.2.0 "Local Library" shipped on 2026-04-17. v0.3 is in active development on the current branch and adds a native C++ bubble detector (OpenCV via node-addon-api) plus a packaged manga-ocr Python sidecar to build a real-time translation overlay for raw Japanese pages.',
+  ],
+  image: '/projects/kirei-manga/thumbnail.png',
+  projectType: 'desktop',
+  gallery: [
+    {
+      src: '/projects/kirei-manga/library.png',
+      alt: 'KireiManga library grid',
+      caption:
+        'Unified library — MangaDex follows and local series side by side',
+    },
+    {
+      src: '/projects/kirei-manga/series-detail.png',
+      alt: 'KireiManga series detail',
+      caption: 'Series detail with chapters, statuses, and offline cache state',
+    },
+    {
+      src: '/projects/kirei-manga/import.png',
+      alt: 'KireiManga local import flow',
+      caption: 'Local import — pick a folder, the scanner handles the rest',
+    },
+    {
+      src: '/projects/kirei-manga/reader.png',
+      alt: 'KireiManga full-screen reader',
+      caption: 'Reader with single / double / webtoon modes and per-series RTL',
+    },
+  ],
+  technologies: [
+    'Electron',
+    'NestJS',
+    'React',
+    'Vite',
+    'TypeScript',
+    'Tailwind CSS',
+    'better-sqlite3',
+    'Zustand',
+    'Socket.IO',
+    'C++ (OpenCV)',
+    'Python (manga-ocr)',
+  ],
+  features: [
+    'MangaDex browse — Popular / Latest / Top Rated tabs, filter chips, infinite search',
+    'Unified library with 5 reading statuses across MangaDex and local series',
+    'Local CBZ / ZIP / folder importer with transactional scan + flat/nested detection',
+    'Full-screen reader — single, double, and webtoon modes; per-series RTL; bookmarks',
+    'Offline cache served via custom `kirei-cover://` and `kirei-page://` protocols',
+    'Background new-chapter polling and on-demand rescan',
+    'i18n: English and Polish',
+    'v0.3 in progress — OpenCV bubble detector + manga-ocr sidecar for translation overlay',
+  ],
+  techDetails: {
+    stack: [
+      'Electron 40',
+      'NestJS 11',
+      'React 18',
+      'Vite 7',
+      'TypeScript',
+      'Tailwind CSS v4',
+      'better-sqlite3',
+      'Zustand',
+      'Radix UI',
+      'Socket.IO',
+      'node-stream-zip',
+      'node-addon-api + OpenCV',
+      'Python manga-ocr (PyInstaller)',
+      'Astro (landing)',
+      'electron-builder',
+    ],
+  },
+  inProgress: true,
+  duration: 'Ongoing',
+  demoUrl: 'https://kireimanga.app',
+  githubUrl: 'https://github.com/Shironex/kirei-manga',
+  featured: true,
+}

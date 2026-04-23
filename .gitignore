@@ -45,3 +45,5 @@ next-env.d.ts
 # Claude Code
 .claude/
 .mcp.json
+.omniscribe/
+.playwright-mcp/

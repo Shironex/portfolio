@@ -5,8 +5,10 @@ import { claudeCodeDiscordBot } from './projects/claude-code-discord-bot'
 import { cliTemplate } from './projects/cli-template'
 import { ghLabelsCli } from './projects/gh-labels-cli'
 import { gitchorus } from './projects/gitchorus'
+import { kireiManga } from './projects/kirei-manga'
 import { kodama } from './projects/kodama'
 import { matmajka } from './projects/matmajka'
+import { moekoder } from './projects/moekoder'
 import { omniscribe } from './projects/omniscribe'
 import { shiniJsLogger } from './projects/shinijs-logger'
 import { shiniJsRateLimit } from './projects/shinijs-rate-limit'
@@ -22,6 +24,8 @@ export const projectsData: Project[] = [
   omniscribe,
   shiroani,
   shiranami,
+  kireiManga,
+  moekoder,
   kodama,
   shiroku,
   toriime,

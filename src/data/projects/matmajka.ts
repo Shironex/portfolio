@@ -52,7 +52,6 @@ export const matmajka: Project = {
   ],
   techDetails: {
     stack: ['Next.js', 'Tailwind CSS', 'Docker', 'Resend', 'Framer Motion'],
-    challenges: [],
   },
   completedDate: 'November 2024',
   duration: '1 month',

@@ -1,0 +1,72 @@
+import { Project } from '@/types'
+
+export const moekoder: Project = {
+  id: 'moekoder',
+  slug: 'moekoder',
+  title: 'Moekoder',
+  summary:
+    'Cozy desktop hardsub tool — drop in an MKV + ASS, pick NVENC/QSV/AMF or libx264, and get a playable MP4 out. v0.1 is content-complete; website lands once the domain is set up.',
+  description: [
+    'Moekoder is a desktop hardsub tool for anime archivists who already know what NVENC and CQ mean. It takes an MKV plus an ASS subtitle track, runs them through ffmpeg with libass for rendering, smart-passes audio streams (copy when the container allows it, AAC 192k fallback for TrueHD/DTS/FLAC/PCM), and burns out an MP4 ready to play anywhere — all wrapped in a dark-plum UI with six themes.',
+    'The shell is Electron 41 with a React 18 + Vite 7 + Tailwind v4 renderer, an Astro 6 landing page, and a shared `@moekoder/shared` package for IPC channel types and theme tokens. ffmpeg is not bundled — a small installer fetches the right build for the host OS on first launch (BtbN on Windows, evermeet.cx on macOS) with SHA-256 verification, keeping the app distributable under 50 MB.',
+    'v0.1.0 is content-complete (CHANGELOG dated 2026-04-20) and waiting on the domain purchase to cut the tag, publish the GitHub release, and put the landing site live. This is the only Shiro-suite project that is pre-release in the portfolio.',
+  ],
+  image: '/projects/moekoder/thumbnail.png',
+  projectType: 'desktop',
+  gallery: [
+    {
+      src: '/projects/moekoder/preview.png',
+      alt: 'Moekoder home / idle state',
+      caption: 'Home screen — drop an MKV, point at an ASS, pick a target',
+    },
+    {
+      src: '/projects/moekoder/encoding.png',
+      alt: 'Moekoder active encoding view',
+      caption: 'Live encode UI — progress ring, filmstrip, fps / speed / ETA',
+    },
+  ],
+  technologies: [
+    'Electron',
+    'React',
+    'TypeScript',
+    'Vite',
+    'Tailwind CSS',
+    'Zustand',
+    'Astro',
+    'Zod',
+    'FFmpeg',
+    'libass',
+  ],
+  features: [
+    'MKV + ASS → MP4 / MKV hardsub via ffmpeg `subtitles` filter + libass',
+    'Hardware encoder auto-probe — NVENC / QSV / AMF detection with libx264 CPU fallback',
+    'Zero-touch ffmpeg installer fetches the right build on first launch (SHA-256 verified)',
+    '9-step first-run wizard: Welcome → Theme → Engine → Hardware → Preset → Save → Container → Privacy → Done',
+    'Smart audio — stream-copy by default, AAC 192k fallback only when source codec cannot be muxed',
+    'Live encode UI — progress ring, filmstrip preview, rolling log, fps / speed / bitrate / ETA',
+    '6 themes (Plum, Midnight, Matcha, Cosmic, Void, Paper) with live switching',
+    'Disk-space preflight, cancel without leaking partial files, opt-in auto-updater',
+  ],
+  techDetails: {
+    stack: [
+      'Electron 41',
+      'React 18',
+      'TypeScript',
+      'Vite 7',
+      'Tailwind CSS v4',
+      'Zustand 5',
+      'Radix UI',
+      'Astro 6 (landing)',
+      'Zod',
+      'yauzl',
+      'electron-store',
+      'electron-updater',
+      'FFmpeg + libass',
+    ],
+  },
+  inProgress: true,
+  duration: 'Ongoing',
+  demoUrl: '#in-development',
+  githubUrl: 'https://github.com/Shironex/moekoder',
+  featured: true,
+}

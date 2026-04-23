@@ -1,42 +1,44 @@
 import type { Metadata } from 'next'
-import { JetBrains_Mono } from 'next/font/google'
+import { Fraunces, Geist, JetBrains_Mono } from 'next/font/google'
 import type React from 'react'
 import { Suspense } from 'react'
 
 import { Toaster } from '@/components/ui/sonner'
-
-import { Footer } from '@/components/layout/footer'
-import { Navbar } from '@/components/layout/navbar'
-import { RouteLoading } from '@/components/layout/route-loading'
-import { ScrollRestoration } from '@/components/scroll-restoration'
 
 import { defaultMetadata, siteConfig } from '@/lib/metadata-config'
 
 import Providers from '@/context/providers'
 import '@/styles/globals.css'
 
-/**
- * JetBrains Mono font configuration for the portfolio.
- *
- * This monospace font provides a professional, developer-focused aesthetic.
- * The font is self-hosted via Next.js font optimization (no runtime Google Fonts requests).
- *
- * @see https://www.jetbrains.com/lp/mono/
- *
- * Available weights:
- * - 100: Thin
- * - 200: Extra Light
- * - 300: Light
- * - 400: Regular (default body text)
- * - 500: Medium (subheadings)
- * - 600: Semi Bold
- * - 700: Bold (headings)
- * - 800: Extra Bold
+/*
+ * Typography:
+ *   - Display: Fraunces — variable serif with optical sizing. Used for
+ *     headlines and the brand mark. Carries more character than the
+ *     previous rounded-friendly pairing.
+ *   - Body: Geist — distinctive neutral sans from Vercel. Replaces the
+ *     generic Nunito for copy.
+ *   - Mono: JetBrains Mono — unchanged, used in terminal and kbd.
+ * Weights trimmed to what's actually rendered.
  */
+
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800'] as const,
+  weight: ['400', '700'],
   variable: '--font-jetbrains-mono',
+  display: 'swap',
+})
+
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  variable: '--font-fraunces',
+  display: 'swap',
+})
+
+const geist = Geist({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-geist',
   display: 'swap',
 })
 
@@ -51,25 +53,14 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${jetbrainsMono.variable} font-mono`}
+        className={`${fraunces.variable} ${geist.variable} ${jetbrainsMono.variable} font-body antialiased`}
         suppressHydrationWarning
       >
-        <Suspense fallback={<RouteLoading message="Preparing app..." />}>
+        <Suspense fallback={null}>
           <Providers>
-            <Suspense fallback={<RouteLoading message="Restoring scroll..." />}>
-              <ScrollRestoration />
-            </Suspense>
-            <div className="flex min-h-screen flex-col">
-              <Suspense
-                fallback={<RouteLoading message="Loading navigation..." />}
-              >
-                <Navbar />
-              </Suspense>
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
+            {children}
             <Toaster />
           </Providers>
         </Suspense>

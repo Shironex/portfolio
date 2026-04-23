@@ -50,32 +50,6 @@ export const shiniJsRateLimit: Project = {
       'VitePress',
       'Jest',
     ],
-    architecture:
-      '@shinijs/rate-limit is architected as a NestJS global module with a sophisticated fallback mechanism. The primary storage backend uses ioredis for distributed rate limiting across horizontal scaling scenarios, with an in-memory Map as a fallback when Redis is unavailable. The module exposes three integration patterns: decorator + guard pattern for declarative route protection, interceptor pattern for automatic rate limit headers, and direct service injection for programmatic control. Configuration is environment-based using REDIS_URL, with automatic detection and fallback. The health check system continuously monitors Redis connectivity, allowing the application to respond appropriately to infrastructure failures. Time window parsing supports flexible formats (10s, 5m, 1h, 7d) for intuitive rate limit configuration.',
-    challenges: [
-      {
-        challenge:
-          'Implementing distributed rate limiting that works across multiple application instances',
-        solution:
-          'Built the core storage layer on Redis with atomic operations using ioredis, ensuring accurate rate limit tracking across horizontally scaled deployments while maintaining high performance with efficient key-value operations',
-      },
-      {
-        challenge: 'Providing graceful degradation when Redis is unavailable',
-        solution:
-          'Implemented automatic fallback to in-memory storage with the same interface, detecting Redis failures during initialization and runtime, allowing developers to work without Redis in development and providing resilience in production',
-      },
-      {
-        challenge:
-          'Supporting multiple integration patterns for different use cases',
-        solution:
-          'Designed three distinct patterns: decorators with guards for declarative route protection, interceptors for automatic response headers, and direct service usage for complex scenarios, all sharing the same underlying rate limiting logic',
-      },
-      {
-        challenge: 'Testing rate limiting behavior with Redis dependencies',
-        solution:
-          'Created comprehensive test suite with 33+ tests using mocked Redis clients and in-memory storage, validating distributed behavior, fallback mechanisms, time window parsing, and health monitoring across all integration patterns',
-      },
-    ],
   },
   completedDate: 'November 2025',
   duration: '1 day',

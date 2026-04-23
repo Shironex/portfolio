@@ -49,34 +49,6 @@ export const shiniJsLogger: Project = {
       'VitePress',
       'Jest',
     ],
-    architecture:
-      '@shinijs/logger follows a modular architecture designed for the NestJS ecosystem. The core LoggerModule is a global module that can be imported once in your root module and used throughout your application. It provides two primary patterns: a traditional dependency injection approach using the LoggerService interface, and a factory pattern using LoggerFactory for more flexible use cases. The library uses environment variables for configuration (LOG_LEVEL, LOG_PRETTY_PRINT, LOG_FILE_ENABLED, LOG_FILE_PATH), allowing seamless transitions between development and production environments. File logging uses daily rotation to prevent log files from growing unbounded, with timestamps in filenames for easy organization.',
-    challenges: [
-      {
-        challenge:
-          'Balancing performance with feature richness in NestJS logging',
-        solution:
-          'Chose Pino as the underlying engine for its exceptional performance (low overhead and fast JSON serialization) while building an ergonomic NestJS wrapper around it with features like context support and pretty printing',
-      },
-      {
-        challenge:
-          'Providing both pretty development logs and structured production logs',
-        solution:
-          'Implemented environment-based configuration that automatically switches between pino-pretty colorized output for development and raw JSON structured logging for production, with all settings controlled via environment variables',
-      },
-      {
-        challenge:
-          'Creating a flexible logger that works with different NestJS patterns',
-        solution:
-          'Designed dual integration patterns: LoggerService for traditional dependency injection (following NestJS conventions) and LoggerFactory for factory pattern usage, giving developers flexibility in how they consume the logger',
-      },
-      {
-        challenge:
-          'Managing log file growth in long-running production applications',
-        solution:
-          'Implemented automatic daily log file rotation with timestamp-based filenames, preventing unbounded file growth while maintaining organized historical logs that can be archived or cleaned up based on retention policies',
-      },
-    ],
   },
   completedDate: 'November 2025',
   duration: '1 day',

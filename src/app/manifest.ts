@@ -4,12 +4,12 @@ import { siteConfig } from '@/lib/metadata-config'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: siteConfig.name,
-    short_name: 'Shirone',
+    name: "ShiroOS — Kacper's desktop",
+    short_name: 'ShiroOS',
     description: siteConfig.description,
     start_url: '/',
     display: 'standalone',
-    background_color: '#1e1e2f',
+    background_color: '#f5efe0',
     theme_color: siteConfig.themeColor,
     icons: [
       {

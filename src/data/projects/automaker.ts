@@ -64,28 +64,6 @@ export const automaker: Project = {
       'Playwright',
       'Vitest',
     ],
-    architecture:
-      'npm workspace monorepo with 2 apps (React+Electron frontend, Express+WebSocket backend) and 8 shared libraries (types, utils, prompts, platform, model-resolver, dependency-resolver, git-utils, spec-parser). AI agents run through the Claude Agent SDK with autonomous tool use. Each feature executes in its own git worktree for isolation. File-based JSON storage in .automaker/ directory, no database required.',
-    challenges: [
-      {
-        challenge:
-          'Keeping the codebase stable when 4 contributors push rapid changes every day',
-        solution:
-          'Set up CI pipelines, code review processes, and clear contribution guidelines. Learned the hard way that moving fast without process leads to breakage, but too much process kills momentum.',
-      },
-      {
-        challenge:
-          'Supporting macOS, Windows, Linux, and web browser from a single codebase',
-        solution:
-          'Built a platform abstraction layer (libs/platform) for path management and security, with Electron builds via electron-builder and Docker support for multi-arch deployments.',
-      },
-      {
-        challenge:
-          'Preventing AI agents from corrupting the working directory during execution',
-        solution:
-          'Each feature runs in its own git worktree, giving the agent a completely isolated copy of the repo. Users review changes before anything touches the main branch.',
-      },
-    ],
   },
   duration: 'Ongoing',
   demoUrl: '',

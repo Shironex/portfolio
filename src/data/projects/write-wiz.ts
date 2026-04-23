@@ -122,46 +122,6 @@ export const writeWiz: Project = {
       'OpenAI API',
       'Cypress',
     ],
-    architecture:
-      'Write-Wiz follows a modern architecture with a Next.js frontend and API routes for backend functionality. The application uses PostgreSQL for persistent storage, Redis for caching and real-time features, and Docker for containerization and easy deployment.',
-    challenges: [
-      {
-        challenge: 'Caching system for faster response times',
-        solution:
-          'Used Redis for caching system to store frequently accessed data, reducing the load on the database and improving response times',
-      },
-      {
-        challenge: 'Clean architecture for scalability and maintainability',
-        solution:
-          'Used a Use-Case Driven Architecture for scalability and maintainability',
-      },
-
-      {
-        challenge: 'Handling permission structures for team collaboration',
-        solution:
-          'Developed a granular role-based access control system with inheritance and custom permission sets',
-      },
-      {
-        challenge:
-          'Securing sensitive secrets like OpenAI API Key or Github App configuration',
-        solution:
-          'Implemented AES-GCM encryption for storing sensitive secrets',
-      },
-      {
-        challenge: 'Integrating with external services like Github APP',
-        solution:
-          'Implemented a class-based system to receive data from Github and integrate them with the application',
-      },
-      {
-        challenge: 'Move heavy computations to the background',
-        solution: 'Used BullMQ for background processing of heavy computations',
-      },
-      {
-        challenge: 'Testing the application',
-        solution:
-          'Used Cypress for testing the application and make sure that it is working as expected using E2E testing and Component testing',
-      },
-    ],
   },
   inProgress: false,
   completedDate: 'Archived',

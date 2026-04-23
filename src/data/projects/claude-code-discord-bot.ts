@@ -60,30 +60,6 @@ export const claudeCodeDiscordBot: Project = {
       'ESLint',
       'Prettier',
     ],
-    architecture:
-      'Claude Code Discord Bot follows NestJS modular architecture with clear separation between commands, interactions, and services. The bot uses Necord for type-safe Discord.js integration, with dedicated modules for slash commands, button interactions, modal submissions, and select menu handlers. Services handle business logic including GitHub API interactions via Octokit, workflow dispatching, and session management. The Turborepo monorepo structure enables future package sharing and scalability. Automated CI/CD pipelines handle quality checks, versioning, and releases using changesets and GitHub Actions.',
-    challenges: [
-      {
-        challenge: 'Building agentic coding workflow from Discord to GitHub',
-        solution:
-          'Created end-to-end automation that dispatches GitHub Actions workflows with user prompts and images, allowing Claude Code to autonomously implement changes and create PRs without manual repository access',
-      },
-      {
-        challenge: 'Managing Discord interaction state across async workflows',
-        solution:
-          'Implemented session management and modal-based forms to maintain context across multi-step Discord interactions, with real-time polling to update users on long-running Claude Code execution status',
-      },
-      {
-        challenge: 'Rapid prototyping with production-ready patterns',
-        solution:
-          "Built the core functionality in a couple of days while maintaining clean architecture with NestJS modules, automated CI/CD with Changesets, and comprehensive error handling - proving fast iteration doesn't require sacrificing code quality",
-      },
-      {
-        challenge: 'Making Claude Code accessible via chat interface',
-        solution:
-          'Designed custom GitHub Actions workflow templates that users can easily add to repositories, enabling Claude Code execution through simple Discord commands with prompt and image support',
-      },
-    ],
   },
   inProgress: false,
   duration: 'Few days (core)',

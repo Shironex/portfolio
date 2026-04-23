@@ -27,7 +27,7 @@ export const siteConfig = {
     'nodejs',
   ],
   author: 'Shirone',
-  themeColor: '#7c77c6',
+  themeColor: '#0f7c74',
 }
 
 // Default metadata that will be used as fallback
@@ -94,30 +94,9 @@ export const sectionMetadata: Record<string, PageMetadata> = {
   home: {
     title: 'Home',
     description:
-      'Full-stack developer building impactful web applications with modern technologies',
+      "Kacper's desktop-metaphor portfolio — 16 projects, one interface.",
     path: '/',
     ogImage: '/og-image.png',
-  },
-  about: {
-    title: 'About Me',
-    description:
-      'Learn about my journey, skills, and experience as a full-stack developer',
-    path: '/about',
-    ogImage: '/og-about.png',
-  },
-  projects: {
-    title: 'Projects',
-    description:
-      'Explore my portfolio of web development projects and applications',
-    path: '/projects',
-    ogImage: '/og-projects.png',
-  },
-  contact: {
-    title: 'Contact Me',
-    description:
-      'Get in touch with me for collaborations, job opportunities, or just to say hello',
-    path: '/contact',
-    ogImage: '/og-contact.png',
   },
 }
 

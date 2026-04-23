@@ -16,6 +16,7 @@ const eslintConfig = [
       'out/**',
       'dist/**',
       '.github/**',
+      'new-design/**',
       'pnpm-lock.yaml',
     ],
   },
