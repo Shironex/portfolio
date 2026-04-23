@@ -153,7 +153,7 @@ export function MenuBar({
         <button
           type="button"
           onClick={onOpenCmd}
-          aria-label="Open command palette"
+          aria-label="Go to command palette"
           className="focus-ring font-body text-ink-2 hover:bg-surf-0 hover:text-ink rounded-md px-2 py-1 text-sm transition-colors"
         >
           Go

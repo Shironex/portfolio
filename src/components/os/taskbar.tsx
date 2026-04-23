@@ -46,7 +46,6 @@ export function Taskbar({
       <button
         type="button"
         onClick={onOpenCmd}
-        aria-label="Open command palette"
         className="focus-ring bg-surf-0 text-ink-3 hover:bg-surf-1 flex min-w-[220px] items-center gap-2 rounded-lg px-3 py-1.5 text-xs"
       >
         <Search aria-hidden size={14} />

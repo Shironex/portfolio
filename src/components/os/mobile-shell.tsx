@@ -130,7 +130,6 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
             type="button"
             onClick={onOpenCmd}
             className="focus-ring bg-surf-0 text-ink-3 flex h-11 flex-1 items-center gap-2 rounded-lg px-3 text-xs"
-            aria-label="Open command palette"
           >
             <Search aria-hidden size={14} />
             <span className="truncate">search apps &amp; projects…</span>
