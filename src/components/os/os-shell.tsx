@@ -1,5 +1,6 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { useCallback, useMemo, useState } from 'react'
 
 import { useHotkeys } from '@/hooks/use-hotkeys'
@@ -11,16 +12,25 @@ import { AppBody } from './app-registry'
 import { FeaturedPanel } from './apps/panels/featured-panel'
 import { HeroPlate } from './apps/panels/hero-plate'
 import { TerminalPanel } from './apps/panels/terminal-panel'
-import { Boot } from './boot'
-import { CmdPalette } from './cmd-palette'
 import { DesktopCanvas } from './desktop-canvas'
 import { DesktopIcons } from './desktop-icons'
 import { MenuBar } from './menubar'
 import { MobileShell } from './mobile-shell'
 import { NoscriptFallback } from './noscript-fallback'
-import { StartMenu } from './start-menu'
 import { Taskbar } from './taskbar'
 import { Window } from './window'
+
+const Boot = dynamic(() => import('./boot').then((m) => m.Boot), {
+  ssr: false,
+})
+const CmdPalette = dynamic(
+  () => import('./cmd-palette').then((m) => m.CmdPalette),
+  { ssr: false }
+)
+const StartMenu = dynamic(
+  () => import('./start-menu').then((m) => m.StartMenu),
+  { ssr: false }
+)
 
 /**
  * Root ShiroOS shell.

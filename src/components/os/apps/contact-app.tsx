@@ -8,11 +8,24 @@
 'use client'
 
 import { Clock, Github, Mail, MapPin } from 'lucide-react'
+import dynamic from 'next/dynamic'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
-import { ContactForm } from '@/lib/contact/contact-form'
 
 import { useTheme } from '@/hooks/use-theme'
+
+const ContactForm = dynamic(
+  () => import('@/lib/contact/contact-form').then((m) => m.ContactForm),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        aria-hidden
+        className="border-rule-2 bg-surf-solid h-[420px] animate-pulse rounded-2xl border"
+      />
+    ),
+  }
+)
 
 type ReachRow = {
   icon: React.ReactNode

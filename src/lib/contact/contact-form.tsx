@@ -3,7 +3,17 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, Send } from 'lucide-react'
 import { useAction } from 'next-safe-action/hooks'
-import posthog from 'posthog-js'
+const capturePosthogEvent = async (
+  event: string,
+  props?: Record<string, unknown>
+) => {
+  try {
+    const { default: posthog } = await import('posthog-js')
+    posthog.capture(event, props)
+  } catch {
+    // posthog capture is best-effort; never break the form flow
+  }
+}
 import { useForm } from 'react-hook-form'
 import Turnstile from 'react-turnstile'
 import { toast } from 'sonner'
@@ -47,11 +57,11 @@ export function ContactForm({
     onSuccess: () => {
       form.reset()
       toast('Email sent successfully')
-      posthog.capture('contact_form_submitted')
+      void capturePosthogEvent('contact_form_submitted')
     },
     onError: ({ error }) => {
       toast(error.serverError)
-      posthog.capture('contact_form_error', {
+      void capturePosthogEvent('contact_form_error', {
         error_message: error.serverError,
       })
     },

@@ -7,7 +7,6 @@ import { Toaster } from '@/components/ui/sonner'
 
 import { defaultMetadata, siteConfig } from '@/lib/metadata-config'
 
-import Providers from '@/context/providers'
 import '@/styles/globals.css'
 
 /*
@@ -59,10 +58,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
         suppressHydrationWarning
       >
         <Suspense fallback={null}>
-          <Providers>
-            {children}
-            <Toaster />
-          </Providers>
+          {children}
+          <Toaster />
         </Suspense>
       </body>
     </html>
