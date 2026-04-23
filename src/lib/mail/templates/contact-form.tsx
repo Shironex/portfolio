@@ -92,7 +92,7 @@ export const ContactFormEmail = ({ data }: ContactFormEmailProps) => {
           {/* Footer */}
           <Section style={footer}>
             <Text style={footerText}>
-              © {currentYear} ShiroOS · Kacper Kozakiewicz
+              © {currentYear} ShiroOS · Kacper Lachowicz
             </Text>
             <Text style={footerText}>
               Sent because someone submitted the contact form on your portfolio.

@@ -1,32 +1,33 @@
 import { Metadata } from 'next'
 
+import { projectsData } from '@/data/projects-data'
+
 // Base URL for the website (used for absolute URLs in metadata)
 export const siteConfig = {
-  name: 'Shirone | Developer Portfolio',
+  name: "ShiroOS — Kacper's desktop",
   url: process.env.NEXT_PUBLIC_PUBLIC_URL || 'https://shirone.dev',
   ogImage: '/og-image.png', // Default Open Graph image
   description:
-    'Personal portfolio of Shirone, a full-stack developer specializing in Next.js and modern web technologies',
+    'Desktop-metaphor portfolio of Kacper Lachowicz — junior full-stack in Gdańsk, building Electron apps and typed full-stack systems.',
   twitter: {
     handle: '@shirone_dev',
     site: '@shirone_dev',
     cardType: 'summary_large_image',
   },
   keywords: [
-    'web developer',
-    'full-stack developer',
-    'Next.js developer',
-    'React developer',
+    'Kacper Lachowicz',
+    'Shirone',
+    'Electron',
+    'Next.js',
     'TypeScript',
-    'portfolio',
-    'react',
-    'nextjs',
-    'tailwindcss',
-    'typescript',
-    'javascript',
-    'nodejs',
+    'React',
+    'Tailwind CSS',
+    'NestJS',
+    'desktop apps',
+    'full-stack developer',
+    'Gdańsk',
   ],
-  author: 'Shirone',
+  author: 'Shironex',
   themeColor: '#0f7c74',
 }
 
@@ -75,12 +76,11 @@ export const defaultMetadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  icons: {
-    icon: '/icon.png',
-    shortcut: '/icon.png',
-    apple: '/icon.png',
-  },
-  manifest: '/manifest.webmanifest',
+  // Icons + manifest are auto-discovered from:
+  //   src/app/icon.png        → /icon.png         (favicon)
+  //   src/app/apple-icon.png  → /apple-icon.png   (iOS touch)
+  //   src/app/manifest.ts     → /manifest.webmanifest
+  // Declaring them manually here would pin Apple touch to the wrong size.
 }
 
 // Type for page-specific metadata
@@ -93,8 +93,7 @@ export interface PageMetadata extends Partial<Metadata> {
 export const sectionMetadata: Record<string, PageMetadata> = {
   home: {
     title: 'Home',
-    description:
-      "Kacper's desktop-metaphor portfolio — 16 projects, one interface.",
+    description: `Kacper's desktop-metaphor portfolio — ${projectsData.length} projects, one interface.`,
     path: '/',
     ogImage: '/og-image.png',
   },
