@@ -44,22 +44,6 @@ const hobbyTint: Record<Hobby['tint'], string> = {
   ochre: 'text-peach',
 }
 
-const timeline: Array<[string, string, string]> = [
-  ['2022', 'First line shipped', 'A button that did a thing. I was hooked.'],
-  [
-    '2023',
-    'Junior at a Next.js shop',
-    'Client work, real users, real deadlines.',
-  ],
-  ['2024', 'Started open-sourcing', 'AutoMaker hit 3k stars. Team of 4.'],
-  [
-    '2025',
-    'Daily driver: Omniscribe',
-    '12 parallel Claude sessions. No terminal chaos.',
-  ],
-  ['now', 'Available Q2 2026', 'Freelance, full-time, or just to talk.'],
-]
-
 export default function AboutApp() {
   return (
     <div className="font-body max-w-3xl">
@@ -101,7 +85,7 @@ export default function AboutApp() {
         </p>
       </section>
 
-      <section className="mb-8">
+      <section>
         <h3 className="font-display text-ink mb-3 text-lg font-semibold">
           Outside the editor
         </h3>
@@ -125,28 +109,6 @@ export default function AboutApp() {
               </div>
             )
           })}
-        </div>
-      </section>
-
-      <section>
-        <h3 className="font-display text-ink mb-3 text-lg font-semibold">
-          Timeline
-        </h3>
-        <div className="flex flex-col gap-3 font-mono text-[13px]">
-          {timeline.map(([year, title, desc]) => (
-            <div
-              key={year}
-              className="grid grid-cols-[60px_1fr] items-baseline gap-4"
-            >
-              <div className="text-miku-2 font-bold">{year}</div>
-              <div>
-                <strong className="text-ink font-semibold">{title}</strong>
-                <p className="text-ink-2 mt-0.5 text-xs leading-relaxed">
-                  {desc}
-                </p>
-              </div>
-            </div>
-          ))}
         </div>
       </section>
     </div>
