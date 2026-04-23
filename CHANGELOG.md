@@ -1,3 +1,17 @@
+# [2.5.0](https://github.com/Shironex/portfolio/compare/v2.4.0...v2.5.0) (2026-04-23)
+
+
+### Bug Fixes
+
+* **security:** cap contact payload + neutralize Discord mentions ([990a041](https://github.com/Shironex/portfolio/commit/990a0414013c29792d9b0f8d3ff363ab44baabdf))
+
+
+### Features
+
+* **os:** audit fixes, teal palette, and add KireiManga + Moekoder ([5fa7140](https://github.com/Shironex/portfolio/commit/5fa7140f2fbf5649574f1216ce5521586c3b8dc9))
+* **404:** on-brand ShiroOS error page ([f37df0f](https://github.com/Shironex/portfolio/commit/f37df0f2e25d44610b3fdbf3b64ded69d0a0dce7))
+* port portfolio to ShiroOS desktop/mobile shell ([d340d2d](https://github.com/Shironex/portfolio/commit/d340d2d4e0b081f4561a8e0ce1f89c4239093f1d))
+
 # [2.4.0](https://github.com/Shironex/portfolio/compare/v2.3.1...v2.4.0) (2026-04-04)
 
 
