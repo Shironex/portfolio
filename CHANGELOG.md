@@ -1,3 +1,10 @@
+## [2.8.1](https://github.com/Shironex/portfolio/compare/v2.8.0...v2.8.1) (2026-04-23)
+
+
+### Bug Fixes
+
+* **a11y:** align command-palette trigger labels with visible text ([9d2a9c1](https://github.com/Shironex/portfolio/commit/9d2a9c1446a7909d81430bc36f25600c221c6042))
+
 # [2.8.0](https://github.com/Shironex/portfolio/compare/v2.7.0...v2.8.0) (2026-04-23)
 
 
