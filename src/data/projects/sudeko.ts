@@ -72,7 +72,7 @@ export const sudeko: Project = {
   ],
   techDetails: {
     stack: [
-      'Next.js 15',
+      'Next.js 16',
       'TypeScript',
       'Tailwind CSS',
       'Radix UI Primitives',

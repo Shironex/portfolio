@@ -8,7 +8,6 @@ import type { OsWindowsApi } from '@/hooks/use-os-windows'
 import { AppBody } from './app-registry'
 import { FeaturedPanel } from './apps/panels/featured-panel'
 import { HeroPlate } from './apps/panels/hero-plate'
-import { NowPlaying } from './apps/panels/now-playing'
 import { APPS } from './constants'
 import { MobileSheet } from './mobile-sheet'
 import type { AppId } from './types'
@@ -43,9 +42,15 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
 
   const openContact = useCallback(() => os.openApp('contact'), [os])
 
-  // Render only the topmost non-minimized window as a sheet. The feed
-  // keeps rendering underneath; the sheet covers it fully.
-  const visibleWindows = os.windows.filter((w) => !w.minimized)
+  // Only one sheet is ever visible on mobile. Mounting every open window
+  // wastes work and creates competing `body.overflow` effects. We pick the
+  // topmost non-minimized window by z-order and render just that.
+  const topSheet = os.windows
+    .filter((w) => !w.minimized)
+    .reduce<(typeof os.windows)[number] | null>(
+      (top, w) => (top === null || w.z > top.z ? w : top),
+      null
+    )
 
   return (
     <>
@@ -58,7 +63,8 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
             style={{
               backgroundImage:
                 'linear-gradient(140deg, var(--color-miku) 0%, var(--color-pink) 100%)',
-              boxShadow: '0 2px 8px -2px rgba(57,197,187,0.5)',
+              boxShadow:
+                '0 2px 8px -2px color-mix(in oklab, var(--color-miku) 50%, transparent)',
             }}
           />
           <span className="font-display text-sm font-semibold text-ink">
@@ -69,20 +75,19 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
           type="button"
           onClick={() => setLauncherOpen(true)}
           aria-label="Open app launcher"
-          className="rounded-md p-2 text-ink-2 hover:bg-surf-0 hover:text-ink"
+          className="focus-ring flex size-11 items-center justify-center rounded-md text-ink-2 hover:bg-surf-0 hover:text-ink"
         >
-          <Menu size={18} />
+          <Menu aria-hidden size={18} />
         </button>
       </div>
 
       {/* Feed */}
       <div className="fixed inset-0 overflow-y-auto pt-12 pb-[calc(56px+env(safe-area-inset-bottom)+16px)]">
         <div className="flex flex-col gap-4 px-4 pt-4">
-          <HeroPlate onOpenCmd={onOpenCmd} onOpenProjects={() => openApp('projects')} />
+          <HeroPlate onOpenCmd={onOpenCmd} onOpenContact={openContact} />
           <FeaturedPanel onOpenProject={os.openProject} />
-          <NowPlaying />
 
-          <div className="relative overflow-hidden rounded-2xl border border-rule-2 bg-surf-1 p-5 shadow-[0_10px_30px_-10px_rgba(13,27,42,0.18)]">
+          <div className="relative overflow-hidden rounded-2xl border border-rule-2 bg-surf-solid p-5 shadow-elev-2">
             <span
               aria-hidden
               className="pointer-events-none absolute -top-12 -right-8 size-40 rounded-full opacity-50 blur-3xl"
@@ -92,29 +97,25 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
               }}
             />
             <div className="relative">
-              <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-miku">
-                ✉ send a signal
-              </div>
-              <div className="mt-1 font-display text-lg font-bold text-ink">
-                say hi, talk shop, trade cat photos
+              <div className="font-display text-lg font-bold text-ink">
+                Hiring, freelance, or a bug I can help with
               </div>
               <p className="mt-2 font-body text-sm text-ink-2">
-                I reply within a day — usually sooner. If you&apos;ve got an
-                idea brewing, a bug biting, or a freelance project, drop a
-                line.
+                Open to full-time roles from Q2 2026 and freelance work before
+                then. I reply within 24 hours.
               </p>
               <button
                 type="button"
                 onClick={openContact}
-                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-miku to-pink px-4 py-2 text-sm font-semibold text-cloud"
+                className="focus-ring mt-4 inline-flex items-center gap-2 rounded-lg bg-miku text-cloud px-4 py-2 text-sm font-semibold hover:bg-miku-2 transition-colors"
               >
-                open contact ✉
+                Get in touch
               </button>
             </div>
           </div>
 
           <div className="pt-2 pb-4 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-ink-4">
-            ShiroOS v4.2.6 · シロOS
+            ShiroOS · シロOS
           </div>
         </div>
       </div>
@@ -128,29 +129,35 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
           <button
             type="button"
             onClick={onOpenCmd}
-            className="flex h-9 flex-1 items-center gap-2 rounded-lg bg-surf-0 px-3 text-xs text-ink-3"
+            className="focus-ring flex h-11 flex-1 items-center gap-2 rounded-lg bg-surf-0 px-3 text-xs text-ink-3"
             aria-label="Open command palette"
           >
-            <Search size={14} />
+            <Search aria-hidden size={14} />
             <span className="truncate">search apps &amp; projects…</span>
-            <kbd className="ml-auto rounded border border-rule bg-surf-solid/60 px-1.5 py-0.5 font-mono text-[10px]">
+            <kbd className="ml-auto rounded border border-rule bg-surf-solid/60 px-1.5 py-0.5 font-mono text-[11px]">
               ⌘K
             </kbd>
           </button>
           <div className="flex items-center gap-1">
             {APPS.map((app) => {
               const isOpen = os.isOpen(app.id)
+              const Icon = app.icon
               return (
                 <button
                   key={app.id}
                   type="button"
                   onClick={() => openApp(app.id)}
                   aria-label={`Open ${app.name}`}
-                  className="relative flex size-9 items-center justify-center rounded-lg transition-colors hover:bg-surf-0"
+                  className="focus-ring relative flex size-11 items-center justify-center rounded-lg transition-colors hover:bg-surf-0"
                 >
-                  <span style={{ color: app.color }}>{app.icon}</span>
+                  <span aria-hidden style={{ color: app.color }}>
+                    <Icon size={18} strokeWidth={1.75} />
+                  </span>
                   {isOpen && (
-                    <span className="absolute -bottom-0.5 left-1/2 size-1 -translate-x-1/2 rounded-full bg-miku" />
+                    <span
+                      aria-hidden
+                      className="absolute -bottom-0.5 left-1/2 size-1 -translate-x-1/2 rounded-full bg-miku"
+                    />
                   )}
                 </button>
               )
@@ -173,51 +180,56 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
               type="button"
               onClick={() => setLauncherOpen(false)}
               aria-label="Close launcher"
-              className="-mr-1 rounded-md p-2 text-ink-3 transition-colors hover:bg-surf-0 hover:text-ink"
+              className="focus-ring -mr-1 flex size-11 items-center justify-center rounded-md text-ink-3 transition-colors hover:bg-surf-0 hover:text-ink"
             >
-              <X size={18} />
+              <X aria-hidden size={18} />
             </button>
           </div>
           <div className="flex-1 overflow-y-auto px-4 py-6">
             <div className="grid grid-cols-3 gap-3">
-              {APPS.map((app) => (
-                <button
-                  key={app.id}
-                  type="button"
-                  onClick={() => openApp(app.id)}
-                  className="flex flex-col items-center gap-2 rounded-xl border border-rule bg-surf-0 px-2 py-4 transition-colors hover:bg-surf-1"
-                >
-                  <span
-                    className="flex size-12 items-center justify-center rounded-xl text-xl"
-                    style={{
-                      backgroundColor: `${app.color}25`,
-                      color: app.color,
-                    }}
+              {APPS.map((app) => {
+                const Icon = app.icon
+                return (
+                  <button
+                    key={app.id}
+                    type="button"
+                    onClick={() => openApp(app.id)}
+                    aria-label={`Open ${app.name}`}
+                    className="focus-ring flex flex-col items-center gap-2 rounded-xl border border-rule bg-surf-0 px-2 py-4 transition-colors hover:bg-surf-1"
                   >
-                    {app.icon}
-                  </span>
-                  <span className="font-display text-sm text-ink">
-                    {app.name}
-                  </span>
-                </button>
-              ))}
+                    <span
+                      aria-hidden
+                      className="flex size-12 items-center justify-center rounded-xl"
+                      style={{
+                        backgroundColor: `${app.color}25`,
+                        color: app.color,
+                      }}
+                    >
+                      <Icon size={22} strokeWidth={1.75} />
+                    </span>
+                    <span className="font-display text-sm text-ink">
+                      {app.name}
+                    </span>
+                  </button>
+                )
+              })}
             </div>
           </div>
         </div>
       )}
 
-      {/* Stacked mobile sheets (one per open window). */}
-      {visibleWindows.map((w) => (
+      {/* Top mobile sheet only — the rest of the window stack waits behind it. */}
+      {topSheet && (
         <MobileSheet
-          key={w.id}
-          title={w.title}
-          icon={w.icon}
-          zIndex={400 + w.z}
-          onClose={() => os.close(w.id)}
+          key={topSheet.id}
+          title={topSheet.title}
+          icon={topSheet.icon}
+          zIndex={400 + topSheet.z}
+          onClose={() => os.close(topSheet.id)}
         >
-          <AppBody window={w} onOpenProject={os.openProject} />
+          <AppBody window={topSheet} onOpenProject={os.openProject} />
         </MobileSheet>
-      ))}
+      )}
     </>
   )
 }

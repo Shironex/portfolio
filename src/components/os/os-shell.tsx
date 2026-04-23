@@ -2,7 +2,6 @@
 
 import { useCallback, useMemo, useState } from 'react'
 
-import { useClock } from '@/hooks/use-clock'
 import { useHotkeys } from '@/hooks/use-hotkeys'
 import { useIsMobile } from '@/hooks/use-is-mobile'
 import { useOsWindows } from '@/hooks/use-os-windows'
@@ -11,7 +10,6 @@ import { useTheme } from '@/hooks/use-theme'
 import { AppBody } from './app-registry'
 import { FeaturedPanel } from './apps/panels/featured-panel'
 import { HeroPlate } from './apps/panels/hero-plate'
-import { NowPlaying } from './apps/panels/now-playing'
 import { TerminalPanel } from './apps/panels/terminal-panel'
 import { Boot } from './boot'
 import { CmdPalette } from './cmd-palette'
@@ -44,7 +42,6 @@ export default function OsShell() {
   const os = useOsWindows()
   const { theme, toggleTheme } = useTheme()
   const isMobile = useIsMobile()
-  useClock()
 
   const toggleCmd = useCallback(() => {
     setStartOpen(false)
@@ -54,7 +51,7 @@ export default function OsShell() {
   const openCmd = useCallback(() => setCmdOpen(true), [])
   const openStart = useCallback(() => setStartOpen(true), [])
   const closeStart = useCallback(() => setStartOpen(false), [])
-  const openProjects = useCallback(() => os.openApp('projects'), [os])
+  const openContact = useCallback(() => os.openApp('contact'), [os])
 
   const handleEscape = useCallback(() => {
     if (cmdOpen) {
@@ -100,11 +97,10 @@ export default function OsShell() {
 
             <div className="relative flex min-h-screen flex-col px-6 pt-14 pb-24 md:pl-32 md:pr-8 lg:pl-36 lg:pr-16 xl:pl-40 xl:pr-24">
               <div className="grid flex-1 gap-6 md:grid-cols-[minmax(0,1.3fr)_minmax(340px,1fr)]">
-                <HeroPlate onOpenCmd={openCmd} onOpenProjects={openProjects} />
+                <HeroPlate onOpenCmd={openCmd} onOpenContact={openContact} />
                 <div className="flex flex-col gap-3">
                   <TerminalPanel />
                   <FeaturedPanel onOpenProject={os.openProject} />
-                  <NowPlaying />
                 </div>
               </div>
             </div>

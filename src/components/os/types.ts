@@ -1,3 +1,5 @@
+import type { LucideIcon } from 'lucide-react'
+
 import type { Project } from '@/types'
 
 export type AppId = 'projects' | 'about' | 'skills' | 'contact' | 'readme'
@@ -24,7 +26,7 @@ export interface WindowState {
 export interface AppDescriptor {
   id: AppId
   name: string
-  icon: string
+  icon: LucideIcon
   color: string
 }
 

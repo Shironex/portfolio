@@ -9,6 +9,8 @@
 
 import { Clock, Github, Mail, MapPin } from 'lucide-react'
 
+import { useTheme } from '@/hooks/use-theme'
+
 import { ContactForm } from '@/lib/contact/contact-form'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
@@ -18,76 +20,60 @@ type ReachRow = {
   label: string
   value: string
   href?: string
-  accent: 'miku' | 'pink' | 'lav' | 'peach'
-}
-
-const accentChip: Record<ReachRow['accent'], string> = {
-  miku: 'bg-miku/15 text-miku',
-  pink: 'bg-pink/15 text-pink-2',
-  lav: 'bg-lav/20 text-lav',
-  peach: 'bg-peach/20 text-peach',
 }
 
 const rows: ReachRow[] = [
   {
     icon: <Mail className="h-4 w-4" />,
-    label: 'email',
+    label: 'Email',
     value: EMAIL_CONTACT,
     href: `mailto:${EMAIL_CONTACT}`,
-    accent: 'miku',
   },
   {
     icon: <Github className="h-4 w-4" />,
-    label: 'github',
+    label: 'GitHub',
     value: GITHUB_URL.replace(/^https?:\/\//, ''),
     href: GITHUB_URL,
-    accent: 'pink',
   },
   {
     icon: <MapPin className="h-4 w-4" />,
-    label: 'location',
+    label: 'Location',
     value: 'Gdańsk, PL',
-    accent: 'lav',
   },
   {
     icon: <Clock className="h-4 w-4" />,
-    label: 'timezone',
+    label: 'Timezone',
     value: 'UTC+1 · CET',
-    accent: 'peach',
   },
 ]
 
 export default function ContactApp() {
+  const { theme } = useTheme()
+
   return (
     <div className="max-w-4xl font-body">
-      <div className="font-mono text-xs text-miku tracking-widest uppercase mb-3">
-        # contact.app
-      </div>
       <h2 className="font-display text-3xl text-ink font-bold mb-2">
-        send a{' '}
-        <em className="gradient-text-miku not-italic font-bold">signal</em>
+        Get in touch
       </h2>
       <p className="font-body text-ink-2 mb-6">
-        Freelance, full-time, or just to talk. I reply within a day ♪
+        Freelance, full-time, or just to talk. I reply within 24 hours.
       </p>
 
       <div className="grid md:grid-cols-[1fr_320px] gap-6">
-        <ContactForm theme="light" surface="card" />
+        <ContactForm theme={theme} surface="card" />
 
-        <aside className="rounded-2xl border border-rule-2 bg-surf-1 backdrop-blur-xl p-5 flex flex-col gap-3 h-fit">
-          <div className="font-mono text-xs text-ink-3 tracking-widest uppercase mb-1">
-            ✦ reach me
+        <aside className="rounded-2xl border border-rule-2 bg-surf-solid p-5 flex flex-col gap-3 h-fit">
+          <div className="font-display text-sm font-bold text-ink mb-1">
+            Reach me
           </div>
           {rows.map((row) => {
             const inner = (
               <>
-                <span
-                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${accentChip[row.accent]}`}
-                >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-miku/15 text-miku-2">
                   {row.icon}
                 </span>
                 <div className="flex flex-col min-w-0">
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-ink-4">
+                  <span className="font-body text-xs text-ink-4">
                     {row.label}
                   </span>
                   <span className="font-body text-sm text-ink truncate">
@@ -106,7 +92,8 @@ export default function ContactApp() {
                   rel={
                     row.href.startsWith('http') ? 'noreferrer' : undefined
                   }
-                  className="flex items-center gap-3 rounded-xl border border-rule bg-surf-0 p-3 transition-colors hover:border-miku/40 hover:bg-surf-soft"
+                  aria-label={`${row.label}: ${row.value}`}
+                  className="focus-ring flex items-center gap-3 rounded-xl border border-rule bg-surf-0 p-3 transition-colors hover:border-miku/40 hover:bg-surf-soft"
                 >
                   {inner}
                 </a>

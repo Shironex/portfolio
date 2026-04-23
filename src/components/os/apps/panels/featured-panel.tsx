@@ -1,7 +1,6 @@
 'use client'
 
 import { accentFor } from '@/components/os/accent-map'
-import { PanelControls } from '@/components/os/apps/panels/panel-controls'
 import { projectsData } from '@/data/projects-data'
 import {
   getFeaturedProjects,
@@ -37,15 +36,14 @@ export function FeaturedPanel({ onOpenProject }: FeaturedPanelProps) {
   }
 
   return (
-    <div className="rounded-2xl border border-rule-2 bg-surf-2 backdrop-blur-xl overflow-hidden">
-      <div className="flex items-center gap-3 px-3 py-2 border-b border-rule bg-surf-1">
-        <span className="flex-1 font-mono text-xs font-bold text-ink">
-          featured.work
+    <div className="rounded-2xl border border-rule-2 bg-surf-solid overflow-hidden">
+      <div className="flex items-center gap-3 px-3 py-2 border-b border-rule bg-surf-soft">
+        <span className="flex-1 font-display text-sm font-bold text-ink">
+          Featured work
         </span>
         <span className="font-mono text-[10px] text-ink-4">
           {pinned.length} pinned
         </span>
-        <PanelControls />
       </div>
 
       <div className="flex flex-col">
@@ -56,7 +54,8 @@ export function FeaturedPanel({ onOpenProject }: FeaturedPanelProps) {
               key={p.slug}
               type="button"
               onClick={() => onOpenProject(p)}
-              className="group relative flex items-start gap-3 w-full text-left px-4 py-3 border-b border-rule last:border-b-0 transition-colors hover:bg-surf-0"
+              aria-label={`Open ${p.title}`}
+              className="focus-ring group relative flex items-start gap-3 w-full text-left px-4 py-3 border-b border-rule last:border-b-0 transition-colors hover:bg-surf-0"
             >
               <span
                 className="flex size-10 items-center justify-center rounded-lg font-display text-lg font-bold shrink-0"

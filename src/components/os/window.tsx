@@ -1,6 +1,6 @@
 'use client'
 
-import type { MouseEvent, ReactNode } from 'react'
+import type { KeyboardEvent, MouseEvent, ReactNode } from 'react'
 import { useEffect, useRef } from 'react'
 
 import { WindowControls } from '@/components/os/window-controls'
@@ -24,14 +24,16 @@ interface WindowProps {
 
 type ResizeDir = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw'
 
+const KEYBOARD_MOVE_STEP = 20
+const KEYBOARD_RESIZE_STEP = 24
+
 /**
- * Draggable OS window. Ported from new-design/index.html `function Window()`.
- * - Absolute-positioned from the window state (left, top, width, height, z).
- * - Title bar drags the window via mouse (viewport clamping is handled by
- *   the parent hook).
- * - 8 edge/corner handles resize the window (hidden unless maximized).
- * - Renders `null` when minimized; the taskbar (not this component) surfaces
- *   minimized windows.
+ * Draggable OS window with keyboard parity.
+ * - Mouse: drag via title bar, resize via 8 edge/corner handles, control buttons.
+ * - Keyboard: title bar is a focusable toolbar. Arrow keys nudge the window,
+ *   Shift+Arrow resizes from the bottom-right, Ctrl+W closes, Ctrl+M minimizes,
+ *   Ctrl+Shift+M maximizes.
+ * - Renders `null` when minimized; the taskbar surfaces minimized windows.
  */
 export function Window({
   window: win,
@@ -47,7 +49,6 @@ export function Window({
   const rootRef = useRef<HTMLDivElement | null>(null)
   const dragRef = useRef<{ dx: number; dy: number } | null>(null)
 
-  // Ensure listeners never leak if the window unmounts mid-drag.
   useEffect(() => {
     return () => {
       dragRef.current = null
@@ -128,11 +129,55 @@ export function Window({
       window.addEventListener('mouseup', handleUp)
     }
 
+  const handleTitleKey = (event: KeyboardEvent<HTMLDivElement>) => {
+    const ctrlish = event.ctrlKey || event.metaKey
+    if (ctrlish && event.key.toLowerCase() === 'w') {
+      event.preventDefault()
+      onClose(win.id)
+      return
+    }
+    if (ctrlish && event.key.toLowerCase() === 'm') {
+      event.preventDefault()
+      if (event.shiftKey) onMaximize(win.id)
+      else onMinimize(win.id)
+      return
+    }
+    if (
+      event.key === 'ArrowUp' ||
+      event.key === 'ArrowDown' ||
+      event.key === 'ArrowLeft' ||
+      event.key === 'ArrowRight'
+    ) {
+      event.preventDefault()
+      onFocus(win.id)
+      const step = event.shiftKey ? KEYBOARD_RESIZE_STEP : KEYBOARD_MOVE_STEP
+      if (event.shiftKey) {
+        const patch: Partial<{ w: number; h: number }> = {}
+        if (event.key === 'ArrowRight') patch.w = win.w + step
+        if (event.key === 'ArrowLeft') patch.w = Math.max(1, win.w - step)
+        if (event.key === 'ArrowDown') patch.h = win.h + step
+        if (event.key === 'ArrowUp') patch.h = Math.max(1, win.h - step)
+        onResize(win.id, patch)
+      } else {
+        let nx = win.x
+        let ny = win.y
+        if (event.key === 'ArrowRight') nx += step
+        if (event.key === 'ArrowLeft') nx -= step
+        if (event.key === 'ArrowDown') ny += step
+        if (event.key === 'ArrowUp') ny -= step
+        onMove(win.id, nx, ny)
+      }
+    }
+  }
+
   const showHandles = !win.maximized
 
   return (
     <div
       ref={rootRef}
+      role="dialog"
+      aria-label={win.title}
+      aria-modal={false}
       onMouseDown={() => onFocus(win.id)}
       style={{
         left: win.x,
@@ -143,15 +188,19 @@ export function Window({
       }}
       className={[
         'absolute flex flex-col overflow-hidden rounded-xl border border-rule-2 bg-surf-2 backdrop-blur-xl',
-        'shadow-[0_20px_60px_-10px_rgba(13,27,42,0.25)] animate-win-open',
+        'shadow-elev-3 animate-win-open motion-reduce:animate-none',
         isFocused ? 'ring-1 ring-miku/30' : '',
       ]
         .filter(Boolean)
         .join(' ')}
     >
       <div
+        role="toolbar"
+        tabIndex={0}
+        aria-label={`${win.title} window controls. Arrow keys move, Shift+Arrow resizes, Ctrl+W closes, Ctrl+M minimizes, Ctrl+Shift+M toggles maximize.`}
         onMouseDown={startDrag}
-        className="flex h-9 cursor-grab items-center justify-between gap-3 border-b border-rule bg-surf-1 px-3 select-none active:cursor-grabbing"
+        onKeyDown={handleTitleKey}
+        className="focus-ring flex h-9 pointer-coarse:h-11 cursor-grab items-center justify-between gap-3 border-b border-rule bg-surf-1 px-3 select-none active:cursor-grabbing"
       >
         <div className="flex items-center gap-2">
           <span aria-hidden className="text-sm text-miku-2">
@@ -171,7 +220,6 @@ export function Window({
 
       {showHandles && (
         <>
-          {/* Edges */}
           <div
             aria-hidden
             onMouseDown={startResize('n')}
@@ -192,7 +240,6 @@ export function Window({
             onMouseDown={startResize('w')}
             className="absolute top-2 bottom-2 left-0 z-10 w-1 cursor-w-resize hover:bg-miku/20"
           />
-          {/* Corners */}
           <div
             aria-hidden
             onMouseDown={startResize('ne')}

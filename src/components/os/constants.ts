@@ -1,11 +1,18 @@
+import { Activity, BookOpen, FolderKanban, Mail, UserRound } from 'lucide-react'
+
 import type { AppDescriptor, AppId } from './types'
 
+/*
+ * App accents collapse to a two-tone teal + ochre system. Icons are from
+ * lucide-react (instead of single Unicode glyphs) so they read as
+ * intentional instead of placeholder-y.
+ */
 export const APPS: AppDescriptor[] = [
-  { id: 'projects', name: 'Projects', icon: '◆', color: '#39c5bb' },
-  { id: 'about', name: 'About', icon: '♡', color: '#ff8ecf' },
-  { id: 'skills', name: 'Monitor', icon: '✧', color: '#b79dff' },
-  { id: 'contact', name: 'Contact', icon: '✉', color: '#ffd36e' },
-  { id: 'readme', name: 'Readme', icon: '♪', color: '#9ef0c2' },
+  { id: 'projects', name: 'Projects', icon: FolderKanban, color: '#0f7c74' },
+  { id: 'about', name: 'About', icon: UserRound, color: '#1ca59b' },
+  { id: 'skills', name: 'Monitor', icon: Activity, color: '#0a5954' },
+  { id: 'contact', name: 'Contact', icon: Mail, color: '#b87a1e' },
+  { id: 'readme', name: 'Readme', icon: BookOpen, color: '#1ca59b' },
 ]
 
 export const APP_WINDOW_DEFAULTS: Record<
@@ -19,19 +26,25 @@ export const APP_WINDOW_DEFAULTS: Record<
   readme: { title: 'readme.md', icon: '¶', x: 300, y: 150, w: 640, h: 500 },
 }
 
-export const BOOT_LINES: string[] = [
-  '[ ok ] shironex.os v4.2.6 — booting into portfolio mode',
-  '[ ok ] mounting /dev/ideas  ............... done',
-  '[ ok ] loading ~/.config/coffee.conf  ..... strong',
-  '[ ok ] starting services: react, node, redis, worktrees',
-  '[ ok ] opening daily driver: omniscribe',
-  '[ ok ] available-for-freelance : true',
-  '[ ok ] ready.',
-]
-
-export const QUIPS: string[] = [
-  'move fast, leave footnotes',
-  'small software, carefully made',
-  'type-safe, sleep-safe',
-  'ship it, then read the changelog',
+/*
+ * Three short, factual lines shown in the TerminalPanel. Not a fake boot
+ * sequence — just a real-enough shell transcript that surfaces concrete
+ * claims about the work, location, and availability.
+ */
+export const TERMINAL_BLOCKS: Array<{ prompt: string; output: string[] }> = [
+  {
+    prompt: 'cat about.md',
+    output: [
+      'Junior full-stack, Gdańsk, PL.',
+      'Four years of TypeScript, mostly Electron and Next.js.',
+    ],
+  },
+  {
+    prompt: 'ls projects/ | wc -l',
+    output: ['16 — two featured, five in-progress, eight shipped.'],
+  },
+  {
+    prompt: 'cat availability.txt',
+    output: ['Open to freelance now · full-time from Q2 2026.'],
+  },
 ]

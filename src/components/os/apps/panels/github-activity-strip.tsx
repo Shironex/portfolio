@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 interface Day {
   date: string
@@ -45,14 +45,26 @@ function describeDay(d: Day) {
   return `${count} ${plural} on ${formatDate(d.date)}`
 }
 
+interface HoverState {
+  day: Day
+  x: number
+  y: number
+}
+
 /**
  * GitHub contribution heatmap strip. Fetches from `/api/github-activity`
  * (which hits GitHub's GraphQL API with a 6h `unstable_cache`). Shows the
  * last ~26 weeks as a 7-row grid. Gracefully degrades when `GITHUB_TOKEN`
  * isn't set (returns 501 → "not configured" copy).
+ *
+ * A single tooltip is shared across all cells — hover/focus on a cell
+ * updates its position + content. Beats rendering ~182 always-mounted
+ * tooltip nodes.
  */
 export function GithubActivityStrip() {
   const [state, setState] = useState<FetchState>({ kind: 'loading' })
+  const [hover, setHover] = useState<HoverState | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -90,8 +102,25 @@ export function GithubActivityStrip() {
 
   const total = state.kind === 'ready' ? state.data.total : null
 
+  const handleEnter = (day: Day, target: HTMLElement) => {
+    const container = containerRef.current
+    if (!container) return
+    const containerRect = container.getBoundingClientRect()
+    const rect = target.getBoundingClientRect()
+    setHover({
+      day,
+      x: rect.left + rect.width / 2 - containerRect.left,
+      y: rect.top - containerRect.top,
+    })
+  }
+
+  const handleLeave = () => setHover(null)
+
   return (
-    <div className="relative mt-5 rounded-2xl border border-rule bg-surf-0 p-4">
+    <div
+      ref={containerRef}
+      className="relative mt-5 rounded-2xl border border-rule bg-surf-0 p-4"
+    >
       <div className="mb-3 flex items-center justify-between gap-3">
         <div className="min-w-0">
           <div className="font-mono text-[10px] uppercase tracking-[0.22em] text-miku">
@@ -119,51 +148,66 @@ export function GithubActivityStrip() {
           couldn&apos;t reach github · try again later
         </div>
       ) : (
-        <div className="flex gap-[3px]">
-          {(weeks ?? Array.from({ length: WEEKS_SHOWN }, () => null)).map(
-            (w, i) => (
-              <div key={i} className="flex flex-col gap-[3px]">
-                {w
-                  ? w.map((d) => {
-                      const tooltipPos =
-                        i < 5
-                          ? 'left-0'
-                          : i > WEEKS_SHOWN - 6
-                            ? 'right-0'
-                            : 'left-1/2 -translate-x-1/2'
-                      return (
-                        <div key={d.date} className="group relative">
-                          <div
-                            className={`size-[12px] rounded-[2px] ${LEVEL_BG[d.level]}`}
-                          />
-                          <div
-                            className={`pointer-events-none absolute bottom-full z-20 mb-1.5 whitespace-nowrap rounded-md border border-rule-2 bg-surf-solid px-2 py-1 font-mono text-[10px] text-ink opacity-0 shadow-lg transition-opacity duration-75 group-hover:opacity-100 ${tooltipPos}`}
-                          >
-                            {describeDay(d)}
-                          </div>
-                        </div>
-                      )
-                    })
-                  : Array.from({ length: 7 }).map((_, j) => (
-                      <div
-                        key={j}
-                        className="size-[12px] rounded-[2px] bg-rule animate-pulse-slow"
-                      />
-                    ))}
-              </div>
-            )
-          )}
+        <div
+          role="img"
+          aria-label={
+            total !== null
+              ? `${total.toLocaleString()} contributions in the last 6 months`
+              : 'GitHub contribution graph'
+          }
+          className="relative overflow-x-auto"
+        >
+          <div className="flex gap-[3px]">
+            {(weeks ?? Array.from({ length: WEEKS_SHOWN }, () => null)).map(
+              (w, i) => (
+                <div key={i} className="flex flex-col gap-[3px]">
+                  {w
+                    ? w.map((d) => (
+                        <button
+                          key={d.date}
+                          type="button"
+                          aria-label={describeDay(d)}
+                          onMouseEnter={(e) =>
+                            handleEnter(d, e.currentTarget)
+                          }
+                          onFocus={(e) => handleEnter(d, e.currentTarget)}
+                          onMouseLeave={handleLeave}
+                          onBlur={handleLeave}
+                          className={`focus-ring size-[12px] rounded-[2px] ${LEVEL_BG[d.level]}`}
+                        />
+                      ))
+                    : Array.from({ length: 7 }).map((_, j) => (
+                        <div
+                          key={j}
+                          aria-hidden
+                          className="size-[12px] rounded-[2px] bg-rule animate-pulse-slow motion-reduce:animate-none"
+                        />
+                      ))}
+                </div>
+              )
+            )}
+          </div>
+        </div>
+      )}
+
+      {hover && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full rounded-md border border-rule-2 bg-surf-solid px-2 py-1 font-mono text-[10px] text-ink shadow-elev-2"
+          style={{ left: hover.x, top: hover.y - 6 }}
+        >
+          {describeDay(hover.day)}
         </div>
       )}
 
       {state.kind === 'ready' && (
         <div className="mt-3 flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-widest text-ink-4">
           <span>less</span>
-          <span className="size-2.5 rounded-[2px] bg-rule" />
-          <span className="size-2.5 rounded-[2px] bg-miku/25" />
-          <span className="size-2.5 rounded-[2px] bg-miku/50" />
-          <span className="size-2.5 rounded-[2px] bg-miku/75" />
-          <span className="size-2.5 rounded-[2px] bg-miku" />
+          <span aria-hidden className="size-2.5 rounded-[2px] bg-rule" />
+          <span aria-hidden className="size-2.5 rounded-[2px] bg-miku/25" />
+          <span aria-hidden className="size-2.5 rounded-[2px] bg-miku/50" />
+          <span aria-hidden className="size-2.5 rounded-[2px] bg-miku/75" />
+          <span aria-hidden className="size-2.5 rounded-[2px] bg-miku" />
           <span>more</span>
         </div>
       )}

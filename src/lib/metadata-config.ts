@@ -27,7 +27,7 @@ export const siteConfig = {
     'nodejs',
   ],
   author: 'Shirone',
-  themeColor: '#39c5bb',
+  themeColor: '#0f7c74',
 }
 
 // Default metadata that will be used as fallback

@@ -79,15 +79,11 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
   return (
     <div className="font-body">
       <div className="mb-6">
-        <div className="font-mono text-xs text-miku tracking-widest uppercase mb-2">
-          # projects.app
-        </div>
         <h2 className="font-display text-3xl text-ink font-bold mb-1">
-          16{' '}
-          <em className="gradient-text-miku not-italic font-bold">projects</em>
+          {projectsData.length} projects
         </h2>
         <p className="text-sm text-ink-3">
-          pick one — each opens in its own window
+          Pick one — each opens in its own window.
         </p>
       </div>
 
@@ -99,14 +95,17 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
               key={f.id}
               type="button"
               onClick={() => setFilter(f.id)}
-              className={
+              aria-pressed={isActive}
+              className={`focus-ring rounded-full px-3 py-1 text-xs font-mono ${
                 isActive
-                  ? 'bg-miku text-cloud rounded-full px-3 py-1 text-xs font-mono'
-                  : 'bg-surf-0 text-ink-2 rounded-full px-3 py-1 text-xs font-mono hover:bg-surf-1'
-              }
+                  ? 'bg-miku text-cloud'
+                  : 'bg-surf-0 text-ink-2 hover:bg-surf-1'
+              }`}
             >
               {f.label}{' '}
-              <span className="opacity-60">{counts[f.id]}</span>
+              <span aria-hidden className="opacity-60">
+                {counts[f.id]}
+              </span>
             </button>
           )
         })}
@@ -114,15 +113,41 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="search projects…"
-          className="ml-auto px-3 py-1.5 rounded-lg border border-rule-2 bg-surf-0 text-sm min-w-[200px] outline-none focus:border-miku"
+          className="focus-ring ml-auto px-3 py-1.5 rounded-lg border border-rule-2 bg-surf-0 text-sm min-w-[200px] outline-none focus:border-miku"
           aria-label="Search projects"
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-6">
         {shown.length === 0 ? (
-          <div className="col-span-full text-center py-12 text-ink-4 font-mono text-sm">
-            no matches — try &quot;web&quot; or &quot;cli&quot;
+          <div className="col-span-full text-center py-12 text-ink-3 font-mono text-sm flex flex-col items-center gap-3">
+            <p>
+              {q && filter !== 'all'
+                ? `No ${filter} projects match “${q}”.`
+                : q
+                  ? `No projects match “${q}”.`
+                  : `No ${filter} projects yet.`}
+            </p>
+            <div className="flex gap-2">
+              {q && (
+                <button
+                  type="button"
+                  onClick={() => setQ('')}
+                  className="focus-ring rounded-full bg-surf-0 px-3 py-1 text-xs text-ink-2 hover:bg-surf-1"
+                >
+                  clear search
+                </button>
+              )}
+              {filter !== 'all' && (
+                <button
+                  type="button"
+                  onClick={() => setFilter('all')}
+                  className="focus-ring rounded-full bg-surf-0 px-3 py-1 text-xs text-ink-2 hover:bg-surf-1"
+                >
+                  show all projects
+                </button>
+              )}
+            </div>
           </div>
         ) : (
           shown.map((p) => {
@@ -132,7 +157,8 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                 key={p.id}
                 type="button"
                 onClick={() => onOpenProject(p)}
-                className="group relative text-left rounded-xl border border-rule-2 bg-surf-1 backdrop-blur-xl p-4 transition-all hover:-translate-y-0.5 hover:border-miku/40 hover:shadow-lg"
+                aria-label={`Open ${p.title}`}
+                className="focus-ring group relative text-left rounded-xl border border-rule-2 bg-surf-solid p-4 transition-all hover:-translate-y-0.5 hover:border-miku/40 hover:shadow-elev-2"
               >
                 <div className="flex items-start gap-3">
                   <span

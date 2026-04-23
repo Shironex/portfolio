@@ -1,60 +1,78 @@
 /**
- * readme.md window — welcome note for ShiroOS.
- * Ported from new-design/index.html `function ReadmeApp()`.
+ * readme.md window — short welcome note for ShiroOS.
  */
 export default function ReadmeApp() {
   return (
-    <div className="font-mono text-[13px] text-ink-2 leading-relaxed max-w-[720px]">
-      <div className="font-mono text-xs text-miku tracking-[0.14em] uppercase mb-3">
-        # readme.md
-      </div>
-
+    <div className="font-body text-[14px] text-ink-2 leading-relaxed max-w-[720px]">
       <h2 className="font-display text-3xl text-ink font-semibold mb-4 tracking-tight">
-        welcome to{' '}
-        <em className="gradient-text-miku not-italic font-bold">ShiroOS</em> ♪
+        Welcome to ShiroOS
       </h2>
 
       <p>
-        This is my portfolio, reimagined as a tiny desktop. Click taskbar icons
-        to open apps, or hit{' '}
+        This is my portfolio, reimagined as a small desktop. Click the icons on
+        the side to open apps, or press{' '}
         <kbd className="font-mono font-bold px-1.5 py-0.5 text-xs bg-miku/15 border border-rule text-miku-2 rounded">
           ⌘K
         </kbd>{' '}
-        to summon the command palette.
+        for the command palette.
       </p>
 
-      <h3 className="font-display text-lg text-ink mt-7 mb-2">
-        ## what&apos;s inside
+      <h3 className="font-display text-lg text-ink font-semibold mt-7 mb-2">
+        What&apos;s inside
       </h3>
-      <ul className="pl-5 list-disc">
+      <ul className="pl-5 list-disc space-y-1">
         <li>
-          <span className="text-miku">Projects</span> — 16 things I made,
-          filterable
+          <span className="font-semibold text-ink">Projects</span> — 16 things I
+          made, filterable by status.
         </li>
         <li>
-          <span className="text-pink">About</span> — who I am, what I care about
+          <span className="font-semibold text-ink">About</span> — bio, things I
+          do outside the editor, a rough timeline.
         </li>
         <li>
-          <span className="text-lav">Monitor</span> — my skills as a system
-          monitor
+          <span className="font-semibold text-ink">Monitor</span> — skills and
+          tools I use daily.
         </li>
         <li>
-          <span className="text-peach">Contact</span> — send a signal
-        </li>
-      </ul>
-
-      <h3 className="font-display text-lg text-ink mt-7 mb-2">## shortcuts</h3>
-      <ul className="pl-5 list-disc">
-        <li>
-          <span className="text-miku">⌘K</span> — command palette
-        </li>
-        <li>
-          <span className="text-miku">esc</span> — close focused window
+          <span className="font-semibold text-ink">Contact</span> — form + my
+          email and GitHub.
         </li>
       </ul>
 
-      <p className="font-mono text-xs text-ink-4 mt-8">
-        // built with curiosity, caffeine, and too many electron shells
+      <h3 className="font-display text-lg text-ink font-semibold mt-7 mb-2">
+        Shortcuts
+      </h3>
+      <ul className="pl-5 list-disc space-y-1">
+        <li>
+          <kbd className="font-mono font-bold px-1.5 py-0.5 text-xs bg-surf-soft border border-rule text-ink-2 rounded">
+            ⌘K
+          </kbd>{' '}
+          — command palette
+        </li>
+        <li>
+          <kbd className="font-mono font-bold px-1.5 py-0.5 text-xs bg-surf-soft border border-rule text-ink-2 rounded">
+            Esc
+          </kbd>{' '}
+          — close the focused window
+        </li>
+        <li>
+          Arrow keys on a focused title bar — move the window;{' '}
+          <kbd className="font-mono font-bold px-1.5 py-0.5 text-xs bg-surf-soft border border-rule text-ink-2 rounded">
+            Shift
+          </kbd>{' '}
+          + arrows to resize.
+        </li>
+      </ul>
+
+      <p className="mt-8 text-ink-3 text-sm">
+        Built with Next.js 16 and Tailwind v4. Source is on{' '}
+        <a
+          href="https://github.com/shironex"
+          className="focus-ring text-miku-2 underline underline-offset-2 rounded-sm"
+        >
+          GitHub
+        </a>
+        .
       </p>
     </div>
   )

@@ -1,49 +1,46 @@
+import { Bike, Film, Music, Puzzle } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import Image from 'next/image'
 
-/**
- * about.me window — bio, hobby cards, timeline.
- * Ported from new-design/components/apps.jsx `function AboutApp()`.
- */
-
 interface Hobby {
-  icon: string
+  icon: LucideIcon
   title: string
   desc: string
-  accent: 'pink' | 'lav' | 'peach' | 'miku'
+  tint: 'teal' | 'teal-deep' | 'teal-light' | 'ochre'
 }
 
 const hobbies: Hobby[] = [
   {
-    icon: '♪',
+    icon: Music,
     title: 'Music',
-    desc: 'lofi to black metal. always shuffling.',
-    accent: 'pink',
+    desc: 'Lofi to black metal. Always shuffling.',
+    tint: 'teal',
   },
   {
-    icon: '◆',
+    icon: Puzzle,
     title: "Rubik's cubes",
-    desc: 'sub-2-minute on a good day.',
-    accent: 'lav',
+    desc: 'Sub-2-minute on a good day.',
+    tint: 'teal-deep',
   },
   {
-    icon: '🏍',
+    icon: Bike,
     title: 'CFMoto 450 SSR',
-    desc: "saving up. one day she's mine.",
-    accent: 'peach',
+    desc: "Saving up. One day she's mine.",
+    tint: 'ochre',
   },
   {
-    icon: '▣',
+    icon: Film,
     title: 'Anime',
-    desc: 'enough that I built a tracker for it.',
-    accent: 'miku',
+    desc: 'Enough that I built a tracker for it.',
+    tint: 'teal-light',
   },
 ]
 
-const hobbyAccent: Record<Hobby['accent'], string> = {
-  pink: 'text-pink-2',
-  lav: 'text-lav',
-  peach: 'text-peach',
-  miku: 'text-miku-2',
+const hobbyTint: Record<Hobby['tint'], string> = {
+  teal: 'text-miku',
+  'teal-deep': 'text-miku-2',
+  'teal-light': 'text-miku-3',
+  ochre: 'text-peach',
 }
 
 const timeline: Array<[string, string, string]> = [
@@ -66,7 +63,7 @@ export default function AboutApp() {
   return (
     <div className="max-w-3xl font-body">
       <div className="flex items-start gap-5 mb-8">
-        <div className="relative size-20 shrink-0 overflow-hidden rounded-3xl border border-rule-2 bg-miku/15 shadow-[0_10px_30px_-8px_rgba(255,95,168,0.5)]">
+        <div className="relative size-20 shrink-0 overflow-hidden rounded-3xl border border-rule-2 bg-miku/15 shadow-elev-2">
           <Image
             src="/mascot.png"
             alt=""
@@ -76,61 +73,64 @@ export default function AboutApp() {
           />
         </div>
         <div>
-          <div className="font-mono text-xs text-miku tracking-[0.1em] uppercase mb-1">
-            ✧ hello, friend
-          </div>
           <h2 className="font-display text-2xl text-ink font-semibold tracking-tight mb-2">
-            I&apos;m{' '}
-            <em className="gradient-text-miku not-italic font-bold">Kacper</em>{' '}
-            — I make small software
+            I&apos;m <em className="not-italic font-bold text-ink">Kacper</em>{' '}
+            — junior full-stack, Gdańsk, PL
           </h2>
           <p className="text-sm text-ink-2 leading-relaxed">
-            A junior full-stack developer in Gdańsk, PL. I turn ideas into tools
-            for myself, my friends, and my family.
+            Four years in, mostly TypeScript, with a soft spot for Electron.
+            I build the tools I wanted to use: a file renamer that turned into
+            AutoMaker, a multi-session CLI that turned into Omniscribe.
           </p>
         </div>
       </div>
 
       <section className="mb-8">
-        <h3 className="font-display text-lg text-ink mb-2">
-          ♪ what I care about
+        <h3 className="font-display text-lg font-semibold text-ink mb-2">
+          What I ship
         </h3>
         <p className="text-sm text-ink-2 leading-relaxed">
-          Electron shells, typed backends, careful empty states. The focus ring,
-          the 404 page, the second click.{' '}
+          Desktop apps with Electron, typed backends on Node and NestJS,
+          Next.js App Router for the web. I spend more than the usual amount
+          of time on the parts most people skip —{' '}
           <em className="not-italic font-semibold text-ink">
-            Small, opinionated software
-          </em>{' '}
-          — the kind you can hold in your head.
+            empty states, 404s, focus rings
+          </em>
+          . The second click matters.
         </p>
       </section>
 
       <section className="mb-8">
-        <h3 className="font-display text-lg text-ink mb-3">
-          ✧ things that make me go
+        <h3 className="font-display text-lg font-semibold text-ink mb-3">
+          Outside the editor
         </h3>
         <div className="grid grid-cols-2 gap-2.5">
-          {hobbies.map((h) => (
-            <div
-              key={h.title}
-              className="rounded-2xl border border-rule bg-surf-0 p-4 shadow-[0_2px_6px_rgba(57,197,187,0.08)]"
-            >
-              <div className={`text-xl mb-1 ${hobbyAccent[h.accent]}`}>
-                {h.icon}
+          {hobbies.map((h) => {
+            const Icon = h.icon
+            return (
+              <div
+                key={h.title}
+                className="rounded-2xl border border-rule bg-surf-0 p-4 shadow-elev-1"
+              >
+                <div className={`mb-2 ${hobbyTint[h.tint]}`}>
+                  <Icon size={20} strokeWidth={1.75} />
+                </div>
+                <div className="font-display text-sm font-bold text-ink">
+                  {h.title}
+                </div>
+                <div className="text-xs text-ink-3 font-medium mt-0.5">
+                  {h.desc}
+                </div>
               </div>
-              <div className="font-display text-sm font-bold text-ink">
-                {h.title}
-              </div>
-              <div className="text-xs text-ink-3 font-medium mt-0.5">
-                {h.desc}
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </section>
 
       <section>
-        <h3 className="font-display text-lg text-ink mb-3">♪ the timeline</h3>
+        <h3 className="font-display text-lg font-semibold text-ink mb-3">
+          Timeline
+        </h3>
         <div className="flex flex-col gap-3 font-mono text-[13px]">
           {timeline.map(([year, title, desc]) => (
             <div

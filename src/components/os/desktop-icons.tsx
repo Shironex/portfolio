@@ -1,5 +1,6 @@
 'use client'
 
+import type { KeyboardEvent } from 'react'
 import { useState } from 'react'
 
 import { APPS } from './constants'
@@ -10,36 +11,47 @@ interface DesktopIconsProps {
 }
 
 /**
- * PostHog-inspired desktop icons rendered on the wallpaper.
- * Single-click selects, double-click launches the app.
+ * Desktop icons. Mouse: single-click selects, double-click launches.
+ * Keyboard: Enter or Space launches the focused icon directly.
  */
 export function DesktopIcons({ onLaunch }: DesktopIconsProps) {
   const [selectedId, setSelectedId] = useState<AppId | null>(null)
+
+  const handleKey = (appId: AppId) => (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault()
+      onLaunch(appId)
+    }
+  }
 
   return (
     <div className="absolute left-4 top-16 z-10 flex flex-col gap-4">
       {APPS.map((app) => {
         const isSelected = selectedId === app.id
+        const Icon = app.icon
         return (
           <button
             key={app.id}
             type="button"
+            aria-label={`${app.name} — press Enter to open`}
             onClick={() => setSelectedId(app.id)}
             onDoubleClick={() => onLaunch(app.id)}
-            className={`flex w-20 flex-col items-center gap-1.5 rounded-lg p-2 transition-colors ${
+            onKeyDown={handleKey(app.id)}
+            className={`focus-ring flex w-20 flex-col items-center gap-1.5 rounded-lg p-2 transition-colors ${
               isSelected
                 ? 'ring-2 ring-miku/60 bg-surf-0/80'
                 : 'hover:bg-surf-0/40'
             }`}
           >
             <span
-              className="flex size-12 items-center justify-center rounded-xl shadow-md"
+              aria-hidden
+              className="flex size-12 items-center justify-center rounded-xl shadow-elev-1"
               style={{
                 backgroundColor: `${app.color}25`,
                 color: app.color,
               }}
             >
-              <span className="text-2xl">{app.icon}</span>
+              <Icon size={22} strokeWidth={1.75} />
             </span>
             <span className="font-body text-xs text-ink">{app.name}</span>
           </button>

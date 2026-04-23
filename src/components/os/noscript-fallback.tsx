@@ -15,11 +15,11 @@ export function NoscriptFallback() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: '#c6ecff',
+          background: '#f5efe0',
           padding: '2rem',
           zIndex: 10_000,
           fontFamily:
-            'system-ui, -apple-system, "Segoe UI", Nunito, sans-serif',
+            'system-ui, -apple-system, "Segoe UI", Geist, sans-serif',
         }}
       >
         <div
@@ -28,15 +28,15 @@ export function NoscriptFallback() {
             padding: '2rem',
             borderRadius: 16,
             background: '#ffffff',
-            border: '1px solid rgba(13, 27, 42, 0.14)',
-            boxShadow: '0 10px 40px -5px rgba(13, 27, 42, 0.2)',
+            border: '1px solid rgba(26, 23, 20, 0.16)',
+            boxShadow: '0 10px 40px -5px rgba(26, 23, 20, 0.2)',
           }}
         >
           <h1
             style={{
               margin: 0,
               fontSize: 24,
-              color: '#0d1b2a',
+              color: '#1a1714',
               fontWeight: 700,
             }}
           >
@@ -45,7 +45,7 @@ export function NoscriptFallback() {
           <p
             style={{
               marginTop: 12,
-              color: '#2b3b51',
+              color: '#3a3530',
               fontSize: 14,
               lineHeight: 1.6,
             }}
@@ -57,7 +57,7 @@ export function NoscriptFallback() {
             style={{
               marginTop: 16,
               paddingLeft: 20,
-              color: '#2b3b51',
+              color: '#3a3530',
               fontSize: 14,
               lineHeight: 1.8,
             }}
@@ -69,7 +69,7 @@ export function NoscriptFallback() {
               Email:{' '}
               <a
                 href={`mailto:${EMAIL_CONTACT}`}
-                style={{ color: '#00b8d4' }}
+                style={{ color: '#0f7c74' }}
               >
                 {EMAIL_CONTACT}
               </a>

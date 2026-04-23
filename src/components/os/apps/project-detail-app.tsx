@@ -48,7 +48,7 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
   return (
     <div className="font-body max-w-3xl">
       {/* Hero */}
-      <section className="relative overflow-hidden rounded-2xl border border-rule-2 bg-surf-1 p-6 md:p-8 mb-8">
+      <section className="relative overflow-hidden rounded-2xl border border-rule-2 bg-surf-soft p-6 md:p-8 mb-8">
         <div
           aria-hidden
           className="pointer-events-none absolute -top-16 -right-16 h-48 w-48 rounded-full blur-3xl opacity-60"
@@ -71,7 +71,7 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
             )}
           </div>
 
-          <h1 className="font-display text-4xl text-ink font-bold gradient-text-miku">
+          <h1 className="font-display text-4xl text-ink font-bold">
             {project.title}
           </h1>
           <p className="font-body text-lg text-ink-2 max-w-2xl mt-3">
@@ -94,7 +94,7 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
                 href={project.demoUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 bg-miku text-cloud rounded-lg px-4 py-2 text-sm font-semibold hover:brightness-110 transition"
+                className="focus-ring inline-flex items-center gap-2 bg-miku text-cloud rounded-lg px-4 py-2 text-sm font-semibold hover:brightness-110 transition"
               >
                 <ExternalLink className="h-4 w-4" />
                 demo ↗
@@ -105,7 +105,7 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
                 href={project.githubUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 bg-surf-0 border border-rule-2 text-ink rounded-lg px-4 py-2 text-sm font-semibold hover:bg-surf-soft transition"
+                className="focus-ring inline-flex items-center gap-2 bg-surf-0 border border-rule-2 text-ink rounded-lg px-4 py-2 text-sm font-semibold hover:bg-surf-soft transition"
               >
                 <Github className="h-4 w-4" />
                 source ↗

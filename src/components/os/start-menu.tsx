@@ -4,6 +4,8 @@ import { Search, X } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useMemo, useRef } from 'react'
 
+import { useFocusTrap } from '@/hooks/use-focus-trap'
+
 import { projectsData } from '@/data/projects-data'
 import { AUTHOR_NAME, EMAIL_CONTACT } from '@/lib/constants'
 import {
@@ -26,10 +28,9 @@ interface StartMenuProps {
 /**
  * Windows-11-inspired start menu overlay.
  *
- * Anchored above the taskbar's Start button. Contains a search-pill that
- * hands off to the ⌘K command palette, a 3-column grid of pinned apps,
- * a compact recent-projects list (featured + in-progress), and a profile
- * footer with mailto + close.
+ * Modeled as a dialog (not an ARIA menu) because children include a mix of
+ * buttons, links, and static content that don't fit the strict menuitem
+ * pattern. Traps focus, restores it on close, dismisses on Esc or backdrop.
  */
 export function StartMenu({
   onClose,
@@ -37,7 +38,10 @@ export function StartMenu({
   onOpenProject,
   onOpenCmd,
 }: StartMenuProps) {
+  const panelRef = useRef<HTMLDivElement>(null)
   const searchRef = useRef<HTMLButtonElement>(null)
+
+  useFocusTrap(panelRef, true)
 
   const recentProjects = useMemo<Project[]>(() => {
     const featured = getFeaturedProjects(projectsData)
@@ -71,13 +75,16 @@ export function StartMenu({
   return (
     <div
       className="fixed inset-0 z-[450] bg-ink/20 backdrop-blur-sm"
-      onClick={onClose}
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose()
+      }}
     >
       <div
-        role="menu"
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
         aria-label="Start menu"
-        className="absolute bottom-20 left-[calc(50%-340px)] md:left-8 w-[min(640px,96vw)] rounded-2xl border border-rule-2 bg-surf-solid/95 backdrop-blur-xl shadow-[0_40px_80px_-20px_rgba(13,27,42,0.3)] overflow-hidden animate-cp-in font-body"
-        onClick={(e) => e.stopPropagation()}
+        className="absolute bottom-20 left-4 md:left-8 w-[min(640px,calc(100vw-2rem))] rounded-2xl border border-rule-2 bg-surf-solid/95 backdrop-blur-xl shadow-elev-4 overflow-hidden animate-cp-in motion-reduce:animate-none font-body"
       >
         <button
           ref={searchRef}
@@ -86,11 +93,11 @@ export function StartMenu({
             onOpenCmd()
             onClose()
           }}
-          className="flex w-full items-center gap-3 border-b border-rule bg-surf-soft px-5 py-3 text-left text-sm text-ink-3 hover:bg-surf-1 transition-colors"
+          className="focus-ring flex w-full items-center gap-3 border-b border-rule bg-surf-soft px-5 py-3 text-left text-sm text-ink-3 hover:bg-surf-1 transition-colors"
         >
-          <Search size={16} />
+          <Search aria-hidden size={16} />
           <span className="flex-1">Type to search apps &amp; projects…</span>
-          <kbd className="rounded border border-rule bg-surf-solid px-1.5 py-0.5 text-[10px] font-mono">
+          <kbd className="rounded border border-rule bg-surf-solid px-1.5 py-0.5 text-[11px] font-mono">
             ⌘K
           </kbd>
         </button>
@@ -99,27 +106,35 @@ export function StartMenu({
           Pinned
         </div>
         <div className="grid grid-cols-3 gap-2 p-5 pt-2">
-          {APPS.map((app) => (
-            <button
-              key={app.id}
-              type="button"
-              onClick={() => {
-                onLaunch(app.id)
-                onClose()
-              }}
-              className="flex flex-col items-center justify-center gap-2 rounded-xl border border-rule bg-surf-0 px-3 py-4 text-center transition-colors hover:bg-surf-1 hover:border-miku/40"
-            >
-              <span
-                className="flex size-11 items-center justify-center rounded-xl text-2xl"
-                style={{ backgroundColor: app.color + '25', color: app.color }}
+          {APPS.map((app) => {
+            const Icon = app.icon
+            return (
+              <button
+                key={app.id}
+                type="button"
+                aria-label={`Open ${app.name}`}
+                onClick={() => {
+                  onLaunch(app.id)
+                  onClose()
+                }}
+                className="focus-ring flex flex-col items-center justify-center gap-2 rounded-xl border border-rule bg-surf-0 px-3 py-4 text-center transition-colors hover:bg-surf-1 hover:border-miku/40"
               >
-                {app.icon}
-              </span>
-              <span className="font-body text-sm font-medium text-ink">
-                {app.name}
-              </span>
-            </button>
-          ))}
+                <span
+                  aria-hidden
+                  className="flex size-11 items-center justify-center rounded-xl"
+                  style={{
+                    backgroundColor: app.color + '25',
+                    color: app.color,
+                  }}
+                >
+                  <Icon size={20} strokeWidth={1.75} />
+                </span>
+                <span className="font-body text-sm font-medium text-ink">
+                  {app.name}
+                </span>
+              </button>
+            )
+          })}
         </div>
 
         <div className="px-5 pt-2 pb-1 font-mono text-[10px] uppercase tracking-widest text-ink-4">
@@ -134,9 +149,10 @@ export function StartMenu({
                 onOpenProject(p)
                 onClose()
               }}
-              className="flex w-full items-center gap-3 px-5 py-2 text-left transition-colors hover:bg-surf-soft"
+              className="focus-ring flex w-full items-center gap-3 px-5 py-2 text-left transition-colors hover:bg-surf-soft"
             >
               <span
+                aria-hidden
                 className="flex size-8 items-center justify-center rounded-lg font-display text-sm font-bold"
                 style={{
                   backgroundColor: accentFor(p.slug) + '25',
@@ -174,7 +190,7 @@ export function StartMenu({
             </div>
             <a
               href={`mailto:${EMAIL_CONTACT}`}
-              className="font-mono text-[10px] text-ink-3 hover:text-miku-2"
+              className="focus-ring rounded font-mono text-[10px] text-ink-3 hover:text-miku-2"
             >
               {EMAIL_CONTACT}
             </a>
@@ -183,9 +199,9 @@ export function StartMenu({
             type="button"
             onClick={onClose}
             aria-label="Close start menu"
-            className="rounded p-1 text-ink-3 hover:bg-rule hover:text-ink"
+            className="focus-ring rounded p-1 text-ink-3 hover:bg-rule hover:text-ink"
           >
-            <X size={14} />
+            <X aria-hidden size={14} />
           </button>
         </div>
       </div>

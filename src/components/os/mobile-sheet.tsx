@@ -2,7 +2,10 @@
 
 import { X } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+
+import { useFocusTrap } from '@/hooks/use-focus-trap'
+import { useScrollLock } from '@/hooks/use-scroll-lock'
 
 interface MobileSheetProps {
   title: string
@@ -14,12 +17,8 @@ interface MobileSheetProps {
 
 /**
  * Full-screen slide-up sheet — the mobile replacement for the desktop
- * `<Window>`. No drag, no resize, no min/max; just a title bar with a close
- * button and a scrollable body.
- *
- * Multiple sheets can be stacked by `zIndex` (derived from the owning
- * window's z-order), which keeps the existing `useOsWindows` state model
- * working without changes.
+ * `<Window>`. Traps focus, locks body scroll via a ref-counted helper so
+ * stacking multiple sheets doesn't fight over `overflow`, and closes on Esc.
  */
 export function MobileSheet({
   title,
@@ -28,18 +27,26 @@ export function MobileSheet({
   zIndex = 400,
   children,
 }: MobileSheetProps) {
-  // Prevent the page behind the sheet from scrolling while it's open.
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  useScrollLock(true)
+  useFocusTrap(panelRef, true)
+
   useEffect(() => {
-    const previous = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    return () => {
-      document.body.style.overflow = previous
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        onClose()
+      }
     }
-  }, [])
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
 
   return (
     <div
-      className="fixed inset-0 flex flex-col bg-surf-solid text-ink animate-sheet-up"
+      ref={panelRef}
+      className="fixed inset-0 flex flex-col bg-surf-solid text-ink animate-sheet-up motion-reduce:animate-none"
       style={{ zIndex }}
       role="dialog"
       aria-modal="true"
@@ -58,9 +65,9 @@ export function MobileSheet({
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="-mr-1 rounded-md p-2 text-ink-3 transition-colors hover:bg-surf-0 hover:text-ink"
+          className="focus-ring -mr-1 flex size-11 items-center justify-center rounded-md text-ink-3 transition-colors hover:bg-surf-0 hover:text-ink"
         >
-          <X size={18} />
+          <X aria-hidden size={18} />
         </button>
       </div>
       <div className="flex-1 overflow-y-auto px-4 py-5 font-body text-ink">

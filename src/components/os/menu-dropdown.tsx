@@ -73,7 +73,7 @@ export function MenuDropdown({
         aria-haspopup="menu"
         aria-expanded={isOpen}
         className={cn(
-          'rounded-md px-2 py-1 font-body text-sm text-ink-2 transition-colors hover:bg-surf-0 hover:text-ink',
+          'focus-ring rounded-md px-2 py-1 font-body text-sm text-ink-2 transition-colors hover:bg-surf-0 hover:text-ink',
           isOpen && 'bg-surf-0 text-ink'
         )}
       >
@@ -83,11 +83,14 @@ export function MenuDropdown({
       {isOpen && (
         <div
           role="menu"
-          className="absolute left-0 top-full z-[150] mt-1 min-w-[200px] animate-cp-in rounded-lg border border-rule-2 bg-surf-solid py-1 shadow-[0_20px_40px_-10px_rgba(13,27,42,0.2)]"
+          aria-label={label}
+          className="absolute left-0 top-full z-[150] mt-1 min-w-[200px] animate-cp-in motion-reduce:animate-none rounded-lg border border-rule-2 bg-surf-solid py-1 shadow-elev-3"
         >
           {sections.map((section, sectionIndex) => (
             <div key={sectionIndex}>
-              {section.divider && <div className="my-1 h-px bg-rule" />}
+              {section.divider && (
+                <div role="separator" className="my-1 h-px bg-rule" />
+              )}
               {section.items.map((item, itemIndex) => (
                 <button
                   key={`${sectionIndex}-${itemIndex}-${item.label}`}
@@ -98,14 +101,16 @@ export function MenuDropdown({
                     item.onClick()
                     onClose()
                   }}
-                  className="flex w-full items-center gap-3 px-3 py-1.5 text-sm text-ink hover:bg-surf-soft disabled:cursor-not-allowed disabled:opacity-50"
+                  className="focus-ring flex w-full items-center gap-3 px-3 py-1.5 text-sm text-ink hover:bg-surf-soft disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {item.icon && (
-                    <span className="size-4 text-ink-3">{item.icon}</span>
+                    <span aria-hidden className="size-4 text-ink-3">
+                      {item.icon}
+                    </span>
                   )}
                   <span className="flex-1 text-left">{item.label}</span>
                   {item.kbd && (
-                    <kbd className="font-mono text-[10px] text-ink-4">
+                    <kbd className="font-mono text-[11px] text-ink-3">
                       {item.kbd}
                     </kbd>
                   )}

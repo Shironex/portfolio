@@ -32,7 +32,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         classNames: {
           toast:
-            'group toast font-body !rounded-xl !backdrop-blur-xl !shadow-[0_10px_40px_-5px_rgba(13,27,42,0.2)]',
+            'group toast font-body !rounded-xl !backdrop-blur-xl !shadow-elev-2',
           description: '!text-ink-3',
           actionButton: '!bg-miku !text-cloud !rounded-md',
           cancelButton: '!bg-surf-0 !text-ink-2 !rounded-md',

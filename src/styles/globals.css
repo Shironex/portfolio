@@ -32,6 +32,22 @@
   }
 }
 
+@utility shadow-elev-1 {
+  box-shadow: var(--shiro-elev-1);
+}
+
+@utility shadow-elev-2 {
+  box-shadow: var(--shiro-elev-2);
+}
+
+@utility shadow-elev-3 {
+  box-shadow: var(--shiro-elev-3);
+}
+
+@utility shadow-elev-4 {
+  box-shadow: var(--shiro-elev-4);
+}
+
 @utility grain-layer {
   position: fixed;
   inset: 0;
@@ -122,16 +138,23 @@
     }
   }
 
-  /* =================== ShiroOS colors (from new-design/styles.css :root) =================== */
-  --color-miku: #39c5bb;
-  --color-miku-2: #00b8d4;
-  --color-miku-3: #6ae3da;
-  --color-pink: #ff8ecf;
-  --color-pink-2: #ff5fa8;
-  --color-lav: #b79dff;
-  --color-peach: #ffd36e;
-  --color-mint: #9ef0c2;
-  --color-cloud: #ffffff;
+  /*
+   * Palette: confident teal on warm paper. The former pastel cyan/pink/lav/peach/mint
+   * rainbow collapses to a single teal accent family plus one warm ochre (peach)
+   * for secondary emphasis. Legacy token names (miku, pink, lav, peach, mint)
+   * are preserved so component code stays intact — their values are just
+   * remapped. pink/pink-2 are now teal aliases, so the remaining
+   * `from-miku to-pink` gradients read as a subtle teal-to-teal shift.
+   */
+  --color-miku: #0f7c74;
+  --color-miku-2: #0a5954;
+  --color-miku-3: #1ca59b;
+  --color-pink: #0f7c74;
+  --color-pink-2: #0a5954;
+  --color-lav: #6b645a;
+  --color-peach: #b87a1e;
+  --color-mint: #1ca59b;
+  --color-cloud: #fbf7ed;
   --color-sky-0: var(--shiro-sky-0);
   --color-sky-1: var(--shiro-sky-1);
   --color-sky-2: var(--shiro-sky-2);
@@ -150,9 +173,8 @@
   --color-danger: #ff5b6a;
 
   /* =================== ShiroOS fonts =================== */
-  --font-display: var(--font-fredoka), ui-rounded, 'Segoe UI', system-ui, sans-serif;
-  --font-body: var(--font-nunito), system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-hand: var(--font-caveat), 'Bradley Hand', cursive;
+  --font-display: var(--font-fraunces), 'Iowan Old Style', 'Palatino Linotype', Palatino, 'URW Palladio L', Georgia, serif;
+  --font-body: var(--font-geist), -apple-system, 'Segoe UI', system-ui, sans-serif;
 
   /* =================== ShiroOS animations =================== */
   --animate-drift: drift 16s linear infinite;
@@ -160,13 +182,16 @@
   --animate-spin-slow: spinSlow 22s linear infinite;
   --animate-sparkle: sparkle 4s ease-in-out infinite;
   --animate-blink: blink 1s steps(2) infinite;
-  --animate-eq-bar: eqBar 0.8s ease-in-out infinite;
-  --animate-win-open: winOpen 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /*
+   * Easing tokens: ease-out-quart (0.25, 1, 0.5, 1) for calm deceleration.
+   * Intentionally not using bounce/overshoot curves — they read as dated.
+   */
+  --animate-win-open: winOpen 0.28s cubic-bezier(0.25, 1, 0.5, 1);
   --animate-sheet-up: sheetUp 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
-  --animate-cp-in: cpIn 0.22s ease;
+  --animate-cp-in: cpIn 0.22s cubic-bezier(0.25, 1, 0.5, 1);
   --animate-pulse-slow: pulse 1.8s ease-in-out infinite;
   --animate-bob-note: bobNote 1.4s ease-in-out infinite;
-  --animate-logo-pop: logoPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-logo-pop: logoPop 0.6s cubic-bezier(0.25, 1, 0.5, 1);
   --animate-boot-out: bootOut 0.5s ease 3.2s forwards;
   --animate-boot-fill: bootFill 3s ease-out forwards;
   --animate-term-in: termIn 0.3s ease forwards;
@@ -254,18 +279,6 @@
   @keyframes blink {
     50% {
       opacity: 0;
-    }
-  }
-
-  @keyframes eqBar {
-
-    0%,
-    100% {
-      transform: scaleY(0.4);
-    }
-
-    50% {
-      transform: scaleY(1);
     }
   }
 
@@ -373,47 +386,80 @@
 
     --radius: 0.5rem;
 
-    /* ShiroOS light theme (default) */
-    --shiro-sky-0: #eaf7ff;
-    --shiro-sky-1: #d7efff;
-    --shiro-sky-2: #c6ecff;
-    --shiro-sky-3: #a9dcff;
-    --shiro-surf-0: rgba(255, 255, 255, 0.55);
-    --shiro-surf-1: rgba(255, 255, 255, 0.75);
-    --shiro-surf-2: rgba(255, 255, 255, 0.92);
-    --shiro-surf-solid: #ffffff;
-    --shiro-surf-soft: #f5fbff;
-    --shiro-ink: #0d1b2a;
-    --shiro-ink-2: #2b3b51;
-    --shiro-ink-3: #4b5e78;
-    --shiro-ink-4: #7d8aa0;
-    --shiro-rule: rgba(13, 27, 42, 0.08);
-    --shiro-rule-2: rgba(13, 27, 42, 0.14);
-    --shiro-scrollbar-track: rgba(13, 27, 42, 0.04);
-    --shiro-scrollbar-thumb: rgba(13, 27, 42, 0.18);
-    --shiro-scrollbar-thumb-hover: rgba(57, 197, 187, 0.5);
+    /*
+     * Neutrals are tinted toward warm paper — the former cool-blue sky
+     * palette is replaced with a washi-inspired cream/off-white. Ink tones
+     * are warm near-black (sumi), not cool navy, so the teal accent reads
+     * as a confident accent instead of fighting a blue ground.
+     */
+    --shiro-sky-0: #fbf7ed;
+    --shiro-sky-1: #f5efe0;
+    --shiro-sky-2: #ece4d0;
+    --shiro-sky-3: #ddd2b8;
+    --shiro-surf-0: rgba(253, 249, 237, 0.6);
+    --shiro-surf-1: rgba(253, 249, 237, 0.8);
+    --shiro-surf-2: rgba(253, 249, 237, 0.95);
+    --shiro-surf-solid: #fdfaf0;
+    --shiro-surf-soft: #f7f2e3;
+    --shiro-ink: #1a1714;
+    --shiro-ink-2: #3a3530;
+    --shiro-ink-3: #5f564b;
+    /* ink-4 tuned for WCAG AA (~4.6:1) on sky-1 */
+    --shiro-ink-4: #7a6f60;
+    --shiro-rule: rgba(26, 23, 20, 0.1);
+    --shiro-rule-2: rgba(26, 23, 20, 0.16);
+    --shiro-scrollbar-track: rgba(26, 23, 20, 0.05);
+    --shiro-scrollbar-thumb: rgba(26, 23, 20, 0.2);
+    --shiro-scrollbar-thumb-hover: rgba(15, 124, 116, 0.5);
+
+    /* Warm shadows, tinted toward ink rather than a cool navy. */
+    --shiro-elev-1: 0 2px 8px -2px rgba(26, 23, 20, 0.1);
+    --shiro-elev-2: 0 10px 30px -10px rgba(26, 23, 20, 0.18);
+    --shiro-elev-3: 0 20px 60px -10px rgba(26, 23, 20, 0.22);
+    --shiro-elev-4: 0 40px 80px -20px rgba(26, 23, 20, 0.3);
   }
 
   .dark {
-    /* ShiroOS dark theme */
-    --shiro-sky-0: #081322;
-    --shiro-sky-1: #0c1b30;
-    --shiro-sky-2: #112540;
-    --shiro-sky-3: #173258;
-    --shiro-surf-0: rgba(18, 34, 56, 0.55);
-    --shiro-surf-1: rgba(22, 40, 66, 0.75);
-    --shiro-surf-2: rgba(26, 46, 74, 0.92);
-    --shiro-surf-solid: #162a44;
-    --shiro-surf-soft: #0f1f35;
-    --shiro-ink: #e4f0ff;
-    --shiro-ink-2: #b3c5dc;
-    --shiro-ink-3: #829ab9;
-    --shiro-ink-4: #5c7491;
-    --shiro-rule: rgba(255, 255, 255, 0.08);
-    --shiro-rule-2: rgba(255, 255, 255, 0.14);
-    --shiro-scrollbar-track: rgba(255, 255, 255, 0.04);
-    --shiro-scrollbar-thumb: rgba(255, 255, 255, 0.22);
-    --shiro-scrollbar-thumb-hover: rgba(57, 197, 187, 0.6);
+    /*
+     * Dark theme is a deep-teal ground — monochrome-teal, not sumi or
+     * navy or dark-gray-with-neon. Everything sits on a darker version of
+     * the accent itself; the accent brightens so it still pops.
+     */
+    --color-miku: #42ccc2;
+    --color-miku-2: #22a097;
+    --color-miku-3: #6fdfd6;
+    --color-pink: #42ccc2;
+    --color-pink-2: #22a097;
+    --color-lav: #93afa5;
+    --color-peach: #e8b055;
+    --color-mint: #6fdfd6;
+    --color-cloud: #f2ead8;
+
+    --shiro-sky-0: #02110f;
+    --shiro-sky-1: #041816;
+    --shiro-sky-2: #06211e;
+    --shiro-sky-3: #082a26;
+    --shiro-surf-0: rgba(10, 34, 31, 0.5);
+    --shiro-surf-1: rgba(12, 42, 38, 0.7);
+    --shiro-surf-2: rgba(14, 50, 45, 0.9);
+    --shiro-surf-solid: #0a2a26;
+    --shiro-surf-soft: #061d1a;
+    --shiro-ink: #eaf4ec;
+    --shiro-ink-2: #bfd4cc;
+    --shiro-ink-3: #93afa5;
+    /* ink-4 tuned for dark-mode AA on the deep-teal ground */
+    --shiro-ink-4: #7aa096;
+    --shiro-rule: rgba(234, 244, 236, 0.08);
+    --shiro-rule-2: rgba(234, 244, 236, 0.16);
+    --shiro-scrollbar-track: rgba(234, 244, 236, 0.04);
+    --shiro-scrollbar-thumb: rgba(234, 244, 236, 0.22);
+    --shiro-scrollbar-thumb-hover: rgba(66, 204, 194, 0.65);
+
+    /* Deeper shadows so elevation is still readable on the teal ground. */
+    --shiro-elev-1: 0 2px 8px -2px rgba(0, 0, 0, 0.45);
+    --shiro-elev-2: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+    --shiro-elev-3: 0 20px 60px -10px rgba(0, 0, 0, 0.65);
+    --shiro-elev-4: 0 40px 80px -20px rgba(0, 0, 0, 0.75);
   }
 
   /* Custom scrollbar — webkit (Chrome, Safari, Edge) */
@@ -457,6 +503,35 @@
 
   body {
     @apply bg-background text-foreground font-mono antialiased;
+  }
+
+  /*
+   * Honor prefers-reduced-motion by neutering decorative infinite loops and
+   * bounce/overshoot curves. Individual components can still override with
+   * `motion-safe:` utilities for motion that is critical to comprehension.
+   */
+  @media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Consistent keyboard focus ring across ShiroOS chrome. Apply via the
+     `focus-ring` utility class rather than repeating the ring each site. */
+  .focus-ring {
+    outline: none;
+  }
+
+  .focus-ring:focus-visible {
+    outline: 2px solid var(--color-miku);
+    outline-offset: 2px;
+    border-radius: inherit;
   }
 
   h1,

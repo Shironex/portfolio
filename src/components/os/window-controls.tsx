@@ -26,28 +26,28 @@ export function WindowControls({
     <div className="flex items-center">
       <button
         type="button"
-        aria-label="Minimize"
+        aria-label="Minimize window"
         onMouseDown={stopMouseDown}
         onClick={onMinimize}
-        className="flex h-6 w-8 items-center justify-center text-xs text-ink-2 transition-colors hover:bg-rule hover:text-ink"
+        className="focus-ring flex h-8 w-10 pointer-coarse:h-11 pointer-coarse:w-12 items-center justify-center text-xs text-ink-2 transition-colors hover:bg-rule hover:text-ink"
       >
         <span aria-hidden>⎯</span>
       </button>
       <button
         type="button"
-        aria-label="Maximize"
+        aria-label="Toggle maximize window"
         onMouseDown={stopMouseDown}
         onClick={onMaximize}
-        className="flex h-6 w-8 items-center justify-center text-xs text-ink-2 transition-colors hover:bg-rule hover:text-ink"
+        className="focus-ring flex h-8 w-10 pointer-coarse:h-11 pointer-coarse:w-12 items-center justify-center text-xs text-ink-2 transition-colors hover:bg-rule hover:text-ink"
       >
         <span aria-hidden>▢</span>
       </button>
       <button
         type="button"
-        aria-label="Close"
+        aria-label="Close window"
         onMouseDown={stopMouseDown}
         onClick={onClose}
-        className="flex h-6 w-8 items-center justify-center text-xs text-ink-2 transition-colors hover:bg-danger hover:text-cloud"
+        className="focus-ring flex h-8 w-10 pointer-coarse:h-11 pointer-coarse:w-12 items-center justify-center text-xs text-ink-2 transition-colors hover:bg-danger hover:text-cloud"
       >
         <span aria-hidden>✕</span>
       </button>

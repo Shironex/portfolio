@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Caveat, Fredoka, JetBrains_Mono, Nunito } from 'next/font/google'
+import { Fraunces, Geist, JetBrains_Mono } from 'next/font/google'
 import type React from 'react'
 import { Suspense } from 'react'
 
@@ -10,31 +10,35 @@ import { defaultMetadata, siteConfig } from '@/lib/metadata-config'
 import Providers from '@/context/providers'
 import '@/styles/globals.css'
 
+/*
+ * Typography:
+ *   - Display: Fraunces — variable serif with optical sizing. Used for
+ *     headlines and the brand mark. Carries more character than the
+ *     previous rounded-friendly pairing.
+ *   - Body: Geist — distinctive neutral sans from Vercel. Replaces the
+ *     generic Nunito for copy.
+ *   - Mono: JetBrains Mono — unchanged, used in terminal and kbd.
+ * Weights trimmed to what's actually rendered.
+ */
+
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800'] as const,
+  weight: ['400', '700'],
   variable: '--font-jetbrains-mono',
   display: 'swap',
 })
 
-const fredoka = Fredoka({
+const fraunces = Fraunces({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-fredoka',
+  weight: ['500', '600', '700'],
+  variable: '--font-fraunces',
   display: 'swap',
 })
 
-const nunito = Nunito({
+const geist = Geist({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-nunito',
-  display: 'swap',
-})
-
-const caveat = Caveat({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-  variable: '--font-caveat',
+  weight: ['400', '500', '600'],
+  variable: '--font-geist',
   display: 'swap',
 })
 
@@ -51,7 +55,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${fredoka.variable} ${nunito.variable} ${caveat.variable} ${jetbrainsMono.variable} font-body antialiased`}
+        className={`${fraunces.variable} ${geist.variable} ${jetbrainsMono.variable} font-body antialiased`}
         suppressHydrationWarning
       >
         <Suspense fallback={null}>
