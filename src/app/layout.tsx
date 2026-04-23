@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Fraunces, Geist, JetBrains_Mono } from 'next/font/google'
 import type React from 'react'
-import { Suspense } from 'react'
 
 import { Toaster } from '@/components/ui/sonner'
 
@@ -57,10 +56,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
         className={`${fraunces.variable} ${geist.variable} ${jetbrainsMono.variable} font-body antialiased`}
         suppressHydrationWarning
       >
-        <Suspense fallback={null}>
-          {children}
-          <Toaster />
-        </Suspense>
+        {children}
+        <Toaster />
       </body>
     </html>
   )
