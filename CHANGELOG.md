@@ -1,3 +1,10 @@
+# [2.7.0](https://github.com/Shironex/portfolio/compare/v2.6.0...v2.7.0) (2026-04-23)
+
+
+### Features
+
+* remove timeline section from about page ([f6386a0](https://github.com/Shironex/portfolio/commit/f6386a005746ca26a0bafd094b66b38b90e65aa5))
+
 # [2.6.0](https://github.com/Shironex/portfolio/compare/v2.5.0...v2.6.0) (2026-04-23)
 
 
