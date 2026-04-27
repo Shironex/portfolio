@@ -57,7 +57,7 @@
     "next": "16.2.4",
     "next-safe-action": "^8.5.2",
     "posthog-js": "^1.371.2",
-    "posthog-node": "^5.30.0",
+    "posthog-node": "^5.30.4",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "react-hook-form": "^7.73.1",
