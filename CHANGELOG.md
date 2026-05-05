@@ -1,3 +1,10 @@
+## [2.8.4](https://github.com/Shironex/portfolio/compare/v2.8.3...v2.8.4) (2026-05-05)
+
+
+### Bug Fixes
+
+* **ci:** run pnpm setup before node setup to fix pnpm not found error ([b4a6231](https://github.com/Shironex/portfolio/commit/b4a6231c9ade0e55184f9ab9ec306b3dc3134282))
+
 ## [2.8.3](https://github.com/Shironex/portfolio/compare/v2.8.2...v2.8.3) (2026-04-23)
 
 
