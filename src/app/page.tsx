@@ -31,8 +31,8 @@ function StaticHero() {
 
             <p className="font-body text-ink-2 relative mt-3 max-w-xl text-[15px] leading-relaxed">
               AutoMaker passed 3k stars with a team of four. Omniscribe runs
-              twelve parallel Claude sessions on my laptop without setting it
-              on fire. This portfolio is the third tool in that line.
+              twelve parallel Claude sessions on my laptop without setting it on
+              fire. This portfolio is the third tool in that line.
             </p>
           </div>
         </div>

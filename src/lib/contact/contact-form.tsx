@@ -3,17 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, Send } from 'lucide-react'
 import { useAction } from 'next-safe-action/hooks'
-const capturePosthogEvent = async (
-  event: string,
-  props?: Record<string, unknown>
-) => {
-  try {
-    const { default: posthog } = await import('posthog-js')
-    posthog.capture(event, props)
-  } catch {
-    // posthog capture is best-effort; never break the form flow
-  }
-}
 import { useForm } from 'react-hook-form'
 import Turnstile from 'react-turnstile'
 import { toast } from 'sonner'
@@ -34,6 +23,18 @@ import { env } from '@/env/client'
 
 import { sendEmailAction } from './action'
 import { ContactFormSchema, contactFormSchema } from './validation'
+
+const capturePosthogEvent = async (
+  event: string,
+  props?: Record<string, unknown>
+) => {
+  try {
+    const { default: posthog } = await import('posthog-js')
+    posthog.capture(event, props)
+  } catch {
+    // posthog capture is best-effort; never break the form flow
+  }
+}
 
 export interface ContactFormProps {
   theme?: 'light' | 'dark'

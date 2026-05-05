@@ -7,8 +7,9 @@
 
 'use client'
 
-import { Clock, Github, Mail, MapPin } from 'lucide-react'
 import dynamic from 'next/dynamic'
+
+import { Clock, Github, Mail, MapPin } from 'lucide-react'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
 
