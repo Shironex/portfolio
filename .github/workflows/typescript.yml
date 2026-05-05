@@ -15,10 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node.js and pnpm
         uses: ./.github/actions/setup-pnpm
 
       - name: TypeScript Check
         run: pnpm run typecheck
+        env:
+          NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN: phc_placeholder_for_ci
+          NEXT_PUBLIC_POSTHOG_HOST: https://us.i.posthog.com
