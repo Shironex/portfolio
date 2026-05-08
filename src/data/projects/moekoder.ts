@@ -5,11 +5,11 @@ export const moekoder: Project = {
   slug: 'moekoder',
   title: 'Moekoder',
   summary:
-    'Cozy desktop hardsub tool — drop in an MKV + ASS, pick NVENC/QSV/AMF or libx264, and get a playable MP4 out. v0.1 is content-complete; website lands once the domain is set up.',
+    'Cozy desktop hardsub tool for anime archivists — drop in an MKV + ASS, pick NVENC/QSV/AMF or libx264 fallback, and get a playable MP4 out. v0.3 ships a persistent batch queue with retries and total-queue disk preflight.',
   description: [
     'Moekoder is a desktop hardsub tool for anime archivists who already know what NVENC and CQ mean. It takes an MKV plus an ASS subtitle track, runs them through ffmpeg with libass for rendering, smart-passes audio streams (copy when the container allows it, AAC 192k fallback for TrueHD/DTS/FLAC/PCM), and burns out an MP4 ready to play anywhere — all wrapped in a dark-plum UI with six themes.',
     'The shell is Electron 41 with a React 18 + Vite 7 + Tailwind v4 renderer, an Astro 6 landing page, and a shared `@moekoder/shared` package for IPC channel types and theme tokens. ffmpeg is not bundled — a small installer fetches the right build for the host OS on first launch (BtbN on Windows, evermeet.cx on macOS) with SHA-256 verification, keeping the app distributable under 50 MB.',
-    'v0.1.0 is content-complete (CHANGELOG dated 2026-04-20) and waiting on the domain purchase to cut the tag, publish the GitHub release, and put the landing site live. This is the only Shiro-suite project that is pre-release in the portfolio.',
+    'Currently at v0.3.0 (Batch Queue release, 2026-05-04). The Queue tab drives a persistent pipeline at <userData>/queue.json that survives force-kill, with soft-pause, configurable retries, drag-reorder, per-item log viewers, and total-queue disk-space preflight. Public releases ship via GitHub for Windows (NSIS) and macOS (DMG).',
   ],
   image: '/projects/moekoder/thumbnail.png',
   projectType: 'desktop',
@@ -46,6 +46,8 @@ export const moekoder: Project = {
     'Live encode UI — progress ring, filmstrip preview, rolling log, fps / speed / bitrate / ETA',
     '6 themes (Plum, Midnight, Matcha, Cosmic, Void, Paper) with live switching',
     'Disk-space preflight, cancel without leaking partial files, opt-in auto-updater',
+    'Drag-and-drop auto-pairing of video + ASS by filename, with conflict resolver dropdown',
+    'Persistent batch queue (1–4 parallel) with soft-pause, exponential-backoff retries, drag-reorder, per-item log viewer, and total-queue disk preflight',
   ],
   techDetails: {
     stack: [
@@ -66,7 +68,7 @@ export const moekoder: Project = {
   },
   inProgress: true,
   duration: 'Ongoing',
-  demoUrl: '#in-development',
+  demoUrl: 'https://github.com/Shironex/moekoder/releases/latest',
   githubUrl: 'https://github.com/Shironex/moekoder',
   featured: true,
 }
