@@ -1,3 +1,10 @@
+## [2.8.5](https://github.com/Shironex/portfolio/compare/v2.8.4...v2.8.5) (2026-05-13)
+
+
+### Bug Fixes
+
+* **deps:** patch 40 audit vulns (next 16.2.6, transitive overrides) ([30a531e](https://github.com/Shironex/portfolio/commit/30a531ee6f44112e3d564a7f7ddbce56b9978372))
+
 ## [2.8.4](https://github.com/Shironex/portfolio/compare/v2.8.3...v2.8.4) (2026-05-05)
 
 
