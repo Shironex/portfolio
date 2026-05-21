@@ -1,7 +1,5 @@
 import { Metadata } from 'next'
 
-import { projectsData } from '@/data/projects-data'
-
 // Base URL for the website (used for absolute URLs in metadata)
 export const siteConfig = {
   name: "ShiroOS — Kacper's desktop",
@@ -81,78 +79,4 @@ export const defaultMetadata: Metadata = {
   //   src/app/apple-icon.png  → /apple-icon.png   (iOS touch)
   //   src/app/manifest.ts     → /manifest.webmanifest
   // Declaring them manually here would pin Apple touch to the wrong size.
-}
-
-// Type for page-specific metadata
-export interface PageMetadata extends Partial<Metadata> {
-  path?: string
-  ogImage?: string
-}
-
-// Section-specific metadata configurations
-export const sectionMetadata: Record<string, PageMetadata> = {
-  home: {
-    title: 'Home',
-    description: `Kacper's desktop-metaphor portfolio — ${projectsData.length} projects, one interface.`,
-    path: '/',
-    ogImage: '/og-image.png',
-  },
-}
-
-// Helper function to generate metadata for a specific page
-export function generateMetadata(
-  pageMetadata: PageMetadata,
-  dynamicParams?: Record<string, string>
-): Metadata {
-  const title = pageMetadata.title || defaultMetadata.title
-  const description = pageMetadata.description || defaultMetadata.description
-  const ogImage = pageMetadata.ogImage || siteConfig.ogImage
-
-  // Construct the URL with dynamic parameters if provided
-  let path = pageMetadata.path || '/'
-  if (dynamicParams) {
-    Object.entries(dynamicParams).forEach(([key, value]) => {
-      path = path.replace(`:${key}`, value)
-    })
-  }
-
-  const url = `${siteConfig.url}${path}`
-
-  return {
-    ...defaultMetadata,
-    title,
-    description,
-    openGraph: {
-      ...defaultMetadata.openGraph,
-      title:
-        typeof title === 'string'
-          ? title
-          : (title as any)?.default || siteConfig.name,
-      description: description?.toString() || defaultMetadata.description || '',
-      url,
-      images: [
-        {
-          url: `${siteConfig.url}${ogImage}`,
-          width: 1200,
-          height: 630,
-          alt:
-            typeof title === 'string'
-              ? title
-              : (title as any)?.default || siteConfig.name,
-        },
-      ],
-    },
-    twitter: {
-      ...defaultMetadata.twitter,
-      title:
-        typeof title === 'string'
-          ? title
-          : (title as any)?.default || siteConfig.name,
-      description: description?.toString() || defaultMetadata.description || '',
-      images: [`${siteConfig.url}${ogImage}`],
-    },
-    alternates: {
-      canonical: url,
-    },
-  }
 }

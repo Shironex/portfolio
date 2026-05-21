@@ -1,8 +1,3 @@
-export interface NavItem {
-  name: string
-  path: string
-}
-
 export interface GalleryItem {
   src: string
   alt: string
@@ -32,17 +27,6 @@ export interface Project {
   demoUrl: string
   githubUrl?: string
   featured: boolean
-}
-
-export interface Article {
-  slug: string
-  title: string
-  date: string
-  excerpt: string
-  tags: string[]
-  readTime: string
-  image: string
-  content: string
 }
 
 export interface FullDiscordEmbed {

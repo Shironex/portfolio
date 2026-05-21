@@ -29,5 +29,3 @@ export interface AppDescriptor {
   icon: LucideIcon
   color: string
 }
-
-export type WindowControl = 'min' | 'max' | 'close'
