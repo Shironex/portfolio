@@ -48,3 +48,6 @@ next-env.d.ts
 .omniscribe/
 .planning/
 .playwright-mcp/
+
+# kirei audit/research output (internal working notes, not tracked)
+docs/audit/
