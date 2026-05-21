@@ -2,6 +2,9 @@ import { unstable_cache } from 'next/cache'
 
 import { env } from '@/env/server'
 
+/** Revalidate window (seconds) for cached GitHub activity — 6 hours. */
+export const GITHUB_ACTIVITY_REVALIDATE_SECONDS = 21600
+
 const LEVEL_MAP = {
   NONE: 0,
   FIRST_QUARTILE: 1,
@@ -105,6 +108,6 @@ async function fetchRaw(username: string): Promise<GithubActivity> {
 }
 
 export const getGithubActivity = unstable_cache(fetchRaw, ['github-activity'], {
-  revalidate: 21600,
+  revalidate: GITHUB_ACTIVITY_REVALIDATE_SECONDS,
   tags: ['github-activity'],
 })

@@ -9,6 +9,7 @@
 import { Fragment, useMemo, useState } from 'react'
 
 import { accentFor } from '@/components/os/accent-map'
+import { ProjectAvatar } from '@/components/os/project-avatar'
 
 import { projectsData } from '@/data/projects-data'
 import type { Project } from '@/types'
@@ -162,15 +163,9 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                 className="focus-ring group border-rule-2 bg-surf-solid hover:border-miku/40 hover:shadow-elev-2 relative rounded-xl border p-4 text-left transition-all hover:-translate-y-0.5"
               >
                 <div className="flex items-start gap-3">
-                  <span
-                    className="font-display flex size-10 shrink-0 items-center justify-center rounded-lg text-lg font-bold"
-                    style={{
-                      backgroundColor: `${accent}25`,
-                      color: accent,
-                    }}
-                  >
+                  <ProjectAvatar accent={accent} className="shrink-0">
                     {p.title[0]}
-                  </span>
+                  </ProjectAvatar>
                   <div className="min-w-0 flex-1">
                     <div className="font-display text-ink flex items-center gap-1.5 text-sm">
                       <span className="truncate">{p.title}</span>

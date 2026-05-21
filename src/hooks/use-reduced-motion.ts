@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useMediaQuery } from '@/hooks/use-media-query'
 
 /**
  * React to the user's motion preference. Returns `true` when the user has
@@ -8,20 +8,5 @@ import { useEffect, useState } from 'react'
  * auto-dismiss timers accordingly.
  */
 export function useReducedMotion(): boolean {
-  const [reduced, setReduced] = useState(false)
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || !window.matchMedia) return
-    const mql = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const update = () => setReduced(mql.matches)
-    update()
-    if (mql.addEventListener) mql.addEventListener('change', update)
-    else mql.addListener(update)
-    return () => {
-      if (mql.removeEventListener) mql.removeEventListener('change', update)
-      else mql.removeListener(update)
-    }
-  }, [])
-
-  return reduced
+  return useMediaQuery('(prefers-reduced-motion: reduce)')
 }

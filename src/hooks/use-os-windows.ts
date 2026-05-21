@@ -5,30 +5,16 @@ import { useCallback, useMemo, useState } from 'react'
 import { APP_WINDOW_DEFAULTS } from '@/components/os/constants'
 import type { AppId, WindowId, WindowState } from '@/components/os/types'
 
+import {
+  cascadeOrigin,
+  clampResize,
+  clampWindowToViewport,
+  maximizeBounds,
+} from '@/lib/os/geometry'
+
 import type { Project } from '@/types'
 
 const INITIAL_Z = 100
-
-const MAXIMIZED_INSET = { top: 44, bottom: 64, side: 8 } as const
-
-function clampToViewport(x: number, y: number) {
-  if (typeof window === 'undefined') return { x, y }
-  const nx = Math.max(4, Math.min(window.innerWidth - 200, x))
-  const ny = Math.max(32, Math.min(window.innerHeight - 100, y))
-  return { x: nx, y: ny }
-}
-
-function viewportGeometry() {
-  if (typeof window === 'undefined') {
-    return { x: MAXIMIZED_INSET.side, y: MAXIMIZED_INSET.top, w: 1200, h: 600 }
-  }
-  return {
-    x: MAXIMIZED_INSET.side,
-    y: MAXIMIZED_INSET.top,
-    w: window.innerWidth - MAXIMIZED_INSET.side * 2,
-    h: window.innerHeight - MAXIMIZED_INSET.top - MAXIMIZED_INSET.bottom,
-  }
-}
 
 export function useOsWindows() {
   const [windows, setWindows] = useState<WindowState[]>([])
@@ -86,7 +72,7 @@ export function useOsWindows() {
         focus(id)
         return
       }
-      const offset = windows.length
+      const origin = cascadeOrigin(windows.length)
       const nextZ = zCounter + 1
       setZCounter(nextZ)
       setWindows((ws) => [
@@ -95,8 +81,8 @@ export function useOsWindows() {
           id,
           title: `${project.slug}.app`,
           icon: '◆',
-          x: 200 + offset * 20,
-          y: 110 + offset * 18,
+          x: origin.x,
+          y: origin.y,
           w: 820,
           h: 600,
           z: nextZ,
@@ -118,7 +104,7 @@ export function useOsWindows() {
   }, [])
 
   const move = useCallback((id: WindowId, x: number, y: number) => {
-    const clamped = clampToViewport(x, y)
+    const clamped = clampWindowToViewport(x, y)
     setWindows((ws) =>
       ws.map((w) => (w.id === id ? { ...w, x: clamped.x, y: clamped.y } : w))
     )
@@ -134,18 +120,13 @@ export function useOsWindows() {
           if (w.id !== id) return w
           const minW = w.minW ?? 320
           const minH = w.minH ?? 240
-          const nextW = Math.max(minW, patch.w ?? w.w)
-          const nextH = Math.max(minH, patch.h ?? w.h)
-          const maxWidth =
-            typeof window !== 'undefined' ? window.innerWidth - 16 : 4096
-          const maxHeight =
-            typeof window !== 'undefined' ? window.innerHeight - 80 : 4096
+          const next = clampResize(w, patch, minW, minH)
           return {
             ...w,
-            x: Math.max(0, Math.min(maxWidth - minW, patch.x ?? w.x)),
-            y: Math.max(32, Math.min(maxHeight - minH, patch.y ?? w.y)),
-            w: Math.min(maxWidth, nextW),
-            h: Math.min(maxHeight, nextH),
+            x: next.x,
+            y: next.y,
+            w: next.w,
+            h: next.h,
             // Resizing exits maximized state (matches Windows behavior)
             maximized: false,
             prevGeometry: undefined,
@@ -178,7 +159,7 @@ export function useOsWindows() {
               prevGeometry: undefined,
             }
           }
-          const max = viewportGeometry()
+          const max = maximizeBounds()
           return {
             ...w,
             maximized: true,

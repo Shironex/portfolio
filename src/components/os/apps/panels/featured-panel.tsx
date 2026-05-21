@@ -1,11 +1,9 @@
 'use client'
 
 import { accentFor } from '@/components/os/accent-map'
+import { ProjectAvatar } from '@/components/os/project-avatar'
 
-import {
-  getFeaturedProjects,
-  getInProgressProjects,
-} from '@/lib/utils/projects'
+import { getPinnedProjects } from '@/lib/utils/projects'
 
 import { projectsData } from '@/data/projects-data'
 import type { Project } from '@/types'
@@ -26,16 +24,11 @@ interface FeaturedPanelProps {
 }
 
 export function FeaturedPanel({ onOpenProject }: FeaturedPanelProps) {
-  const featured = getFeaturedProjects(projectsData)
-  const inProgress = getInProgressProjects(projectsData)
-  const seen = new Set<string>()
-  const pinned: Project[] = []
-  for (const p of [...featured, ...inProgress]) {
-    if (seen.has(p.slug)) continue
-    seen.add(p.slug)
-    pinned.push(p)
-    if (pinned.length >= MAX_PINNED) break
-  }
+  const pinned = getPinnedProjects(projectsData, {
+    cap: MAX_PINNED,
+    order: 'featured-first',
+    dedupeBy: 'slug',
+  })
 
   return (
     <div className="border-rule-2 bg-surf-solid overflow-hidden rounded-2xl border">
@@ -59,15 +52,9 @@ export function FeaturedPanel({ onOpenProject }: FeaturedPanelProps) {
               aria-label={`Open ${p.title}`}
               className="focus-ring group border-rule hover:bg-surf-0 relative flex w-full items-start gap-3 border-b px-4 py-3 text-left transition-colors last:border-b-0"
             >
-              <span
-                className="font-display flex size-10 shrink-0 items-center justify-center rounded-lg text-lg font-bold"
-                style={{
-                  backgroundColor: `${accent}25`,
-                  color: accent,
-                }}
-              >
+              <ProjectAvatar accent={accent} className="shrink-0">
                 {p.title[0]}
-              </span>
+              </ProjectAvatar>
               <div className="min-w-0 flex-1">
                 <div className="font-display text-ink flex items-center gap-1.5 text-sm">
                   {p.title}

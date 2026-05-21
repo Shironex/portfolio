@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useMediaQuery } from '@/hooks/use-media-query'
 
 const MOBILE_QUERY = '(max-width: 767px)'
 
@@ -13,16 +13,5 @@ const MOBILE_QUERY = '(max-width: 767px)'
  * paint — the boot splash overlay covers that, so it's invisible in practice.
  */
 export function useIsMobile(): boolean {
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-    const mql = window.matchMedia(MOBILE_QUERY)
-    const update = () => setIsMobile(mql.matches)
-    update()
-    mql.addEventListener('change', update)
-    return () => mql.removeEventListener('change', update)
-  }, [])
-
-  return isMobile
+  return useMediaQuery(MOBILE_QUERY)
 }

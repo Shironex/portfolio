@@ -6,17 +6,17 @@ import { useEffect, useMemo, useRef } from 'react'
 import { Search, X } from 'lucide-react'
 
 import { AUTHOR_NAME, EMAIL_CONTACT } from '@/lib/constants'
-import {
-  getFeaturedProjects,
-  getInProgressProjects,
-} from '@/lib/utils/projects'
+import { onBackdropDismiss } from '@/lib/utils'
+import { getPinnedProjects } from '@/lib/utils/projects'
 
 import { projectsData } from '@/data/projects-data'
 import { useFocusTrap } from '@/hooks/use-focus-trap'
+import { useHotkeys } from '@/hooks/use-hotkeys'
 import type { Project } from '@/types'
 
 import { accentFor } from './accent-map'
 import { APPS } from './constants'
+import { ProjectAvatar } from './project-avatar'
 import type { AppId } from './types'
 
 interface StartMenuProps {
@@ -44,41 +44,26 @@ export function StartMenu({
 
   useFocusTrap(panelRef, true)
 
-  const recentProjects = useMemo<Project[]>(() => {
-    const featured = getFeaturedProjects(projectsData)
-    const inProgress = getInProgressProjects(projectsData)
-    const merged: Project[] = []
-    const seen = new Set<string>()
-    for (const p of [...inProgress, ...featured]) {
-      if (seen.has(p.id)) continue
-      seen.add(p.id)
-      merged.push(p)
-      if (merged.length >= 6) break
-    }
-    return merged
-  }, [])
+  const recentProjects = useMemo<Project[]>(
+    () =>
+      getPinnedProjects(projectsData, {
+        cap: 6,
+        order: 'in-progress-first',
+        dedupeBy: 'id',
+      }),
+    []
+  )
 
   useEffect(() => {
     searchRef.current?.focus()
   }, [])
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault()
-        onClose()
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
+  useHotkeys(useMemo(() => ({ escape: onClose }), [onClose]))
 
   return (
     <div
       className="bg-ink/20 fixed inset-0 z-[450] backdrop-blur-sm"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) onClose()
-      }}
+      onMouseDown={onBackdropDismiss(onClose)}
     >
       <div
         ref={panelRef}
@@ -152,16 +137,9 @@ export function StartMenu({
               }}
               className="focus-ring hover:bg-surf-soft flex w-full items-center gap-3 px-5 py-2 text-left transition-colors"
             >
-              <span
-                aria-hidden
-                className="font-display flex size-8 items-center justify-center rounded-lg text-sm font-bold"
-                style={{
-                  backgroundColor: accentFor(p.slug) + '25',
-                  color: accentFor(p.slug),
-                }}
-              >
+              <ProjectAvatar accent={accentFor(p.slug)} size={8} hidden>
                 {p.title[0]}
-              </span>
+              </ProjectAvatar>
               <div className="min-w-0 flex-1">
                 <div className="font-body text-ink truncate text-sm">
                   {p.title}

@@ -2,16 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-interface Day {
-  date: string
-  count: number
-  level: 0 | 1 | 2 | 3 | 4
-}
+import type {
+  ContributionDay,
+  GithubActivity,
+} from '@/lib/github/fetch-activity'
+import { formatDate } from '@/lib/utils/format-date'
 
-interface Activity {
-  total: number
-  days: Day[]
-}
+type Day = ContributionDay
+type Activity = GithubActivity
 
 const LEVEL_BG: Record<Day['level'], string> = {
   0: 'bg-rule',
@@ -30,19 +28,15 @@ type FetchState =
   | { kind: 'unconfigured' }
   | { kind: 'error' }
 
-function formatDate(iso: string) {
-  const d = new Date(`${iso}T00:00:00`)
-  return d.toLocaleDateString(undefined, {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-  })
-}
-
 function describeDay(d: Day) {
   const count = d.count === 0 ? 'No' : d.count.toLocaleString()
   const plural = d.count === 1 ? 'contribution' : 'contributions'
-  return `${count} ${plural} on ${formatDate(d.date)}`
+  const when =
+    formatDate(d.date, {
+      anchorToMidnight: true,
+      format: { weekday: 'short', month: 'short', day: 'numeric' },
+    }) ?? d.date
+  return `${count} ${plural} on ${when}`
 }
 
 interface HoverState {

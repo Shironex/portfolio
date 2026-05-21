@@ -1,8 +1,10 @@
 'use client'
 
-import { type ReactNode, useEffect, useRef } from 'react'
+import { type ReactNode, useEffect, useMemo, useRef } from 'react'
 
 import { cn } from '@/lib/utils'
+
+import { useHotkeys } from '@/hooks/use-hotkeys'
 
 export interface MenuDropdownItem {
   label: string
@@ -40,6 +42,10 @@ export function MenuDropdown({
 }: MenuDropdownProps) {
   const rootRef = useRef<HTMLDivElement>(null)
 
+  useHotkeys(
+    useMemo(() => ({ escape: isOpen ? onClose : undefined }), [isOpen, onClose])
+  )
+
   useEffect(() => {
     if (!isOpen) return
 
@@ -51,17 +57,9 @@ export function MenuDropdown({
       }
     }
 
-    function handleKey(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
-        onClose()
-      }
-    }
-
     document.addEventListener('mousedown', handlePointer)
-    document.addEventListener('keydown', handleKey)
     return () => {
       document.removeEventListener('mousedown', handlePointer)
-      document.removeEventListener('keydown', handleKey)
     }
   }, [isOpen, onClose])
 

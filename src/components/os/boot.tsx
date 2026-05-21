@@ -1,8 +1,9 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
+import { useHotkeys } from '@/hooks/use-hotkeys'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 const STEPS = [
@@ -63,15 +64,18 @@ export function Boot() {
     return () => timers.forEach((id) => window.clearTimeout(id))
   }, [ready])
 
+  useHotkeys(
+    useMemo(
+      () => ({ escape: ready ? () => setGone(true) : undefined }),
+      [ready]
+    )
+  )
+
   useEffect(() => {
     if (!ready) return
     skipButtonRef.current?.focus()
     const onKey = (event: KeyboardEvent) => {
-      if (
-        event.key === 'Escape' ||
-        event.key === 'Enter' ||
-        event.key === ' '
-      ) {
+      if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault()
         setGone(true)
       }

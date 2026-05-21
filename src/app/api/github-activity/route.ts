@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server'
 
-import { getGithubActivity } from '@/lib/github/fetch-activity'
+import {
+  GITHUB_ACTIVITY_REVALIDATE_SECONDS,
+  getGithubActivity,
+} from '@/lib/github/fetch-activity'
 
 import { env } from '@/env/server'
 
@@ -15,7 +18,7 @@ export async function GET() {
     const data = await getGithubActivity(USERNAME)
     return NextResponse.json(data, {
       headers: {
-        'Cache-Control': 'public, s-maxage=21600, stale-while-revalidate=86400',
+        'Cache-Control': `public, s-maxage=${GITHUB_ACTIVITY_REVALIDATE_SECONDS}, stale-while-revalidate=86400`,
       },
     })
   } catch (error) {

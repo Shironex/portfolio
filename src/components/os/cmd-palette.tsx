@@ -5,8 +5,11 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react'
 
 import { Diamond, Search } from 'lucide-react'
 
+import { onBackdropDismiss } from '@/lib/utils'
+
 import { projectsData } from '@/data/projects-data'
 import { useFocusTrap } from '@/hooks/use-focus-trap'
+import { useHotkeys } from '@/hooks/use-hotkeys'
 import type { Project } from '@/types'
 
 import { APPS } from './constants'
@@ -45,6 +48,7 @@ export function CmdPalette({
   const listId = useId()
 
   useFocusTrap(panelRef, true)
+  useHotkeys(useMemo(() => ({ escape: onClose }), [onClose]))
 
   const items = useMemo<PaletteItem[]>(() => {
     const appItems: PaletteItem[] = APPS.map((app) => {
@@ -105,18 +109,13 @@ export function CmdPalette({
     } else if (e.key === 'Enter') {
       e.preventDefault()
       items[sel]?.onClick()
-    } else if (e.key === 'Escape') {
-      e.preventDefault()
-      onClose()
     }
   }
 
   return (
     <div
       className="bg-ink/30 fixed inset-0 z-[500] flex items-start justify-center pt-[12vh] backdrop-blur-sm"
-      onMouseDown={(e) => {
-        if (e.target === e.currentTarget) onClose()
-      }}
+      onMouseDown={onBackdropDismiss(onClose)}
     >
       <div
         ref={panelRef}

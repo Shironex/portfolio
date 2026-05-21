@@ -2,24 +2,17 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useMemo } from 'react'
 
 import { AlertTriangle, ArrowLeft, Home } from 'lucide-react'
+
+import { useHotkeys } from '@/hooks/use-hotkeys'
 
 export default function NotFound() {
   const router = useRouter()
   const pathname = usePathname()
 
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault()
-        router.push('/')
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [router])
+  useHotkeys(useMemo(() => ({ escape: () => router.push('/') }), [router]))
 
   return (
     <main className="from-sky-0 via-sky-1 to-sky-2 font-body relative min-h-screen overflow-hidden bg-gradient-to-br">

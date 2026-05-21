@@ -1,11 +1,11 @@
 'use client'
 
-import type { ReactNode } from 'react'
-import { useEffect, useRef } from 'react'
+import { type ReactNode, useMemo, useRef } from 'react'
 
 import { X } from 'lucide-react'
 
 import { useFocusTrap } from '@/hooks/use-focus-trap'
+import { useHotkeys } from '@/hooks/use-hotkeys'
 import { useScrollLock } from '@/hooks/use-scroll-lock'
 
 interface MobileSheetProps {
@@ -33,16 +33,7 @@ export function MobileSheet({
   useScrollLock(true)
   useFocusTrap(panelRef, true)
 
-  useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        event.preventDefault()
-        onClose()
-      }
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
+  useHotkeys(useMemo(() => ({ escape: onClose }), [onClose]))
 
   return (
     <div

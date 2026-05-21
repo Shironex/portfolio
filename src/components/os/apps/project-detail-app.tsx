@@ -11,21 +11,12 @@ import { ExternalLink, Github } from 'lucide-react'
 
 import { accentFor } from '@/components/os/accent-map'
 
+import { formatDate } from '@/lib/utils/format-date'
+
 import type { Project } from '@/types'
 
 interface ProjectDetailAppProps {
   project: Project
-}
-
-function formatDate(raw: string | undefined): string | null {
-  if (!raw) return null
-  // Try parsing ISO-like strings; fall back to the raw value (e.g. "Ongoing").
-  const parsed = new Date(raw)
-  if (Number.isNaN(parsed.getTime())) return raw
-  return parsed.toLocaleDateString('en-US', {
-    month: 'short',
-    year: 'numeric',
-  })
 }
 
 function hasUsableDemo(demoUrl: string): boolean {
@@ -38,7 +29,11 @@ function hasUsableDemo(demoUrl: string): boolean {
 
 export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
   const accent = accentFor(project.slug)
-  const completed = formatDate(project.completedDate)
+  const completed = formatDate(project.completedDate, {
+    locale: 'en-US',
+    format: { month: 'short', year: 'numeric' },
+    fallbackToRaw: true,
+  })
   const stack = Array.from(
     new Set([...project.technologies, ...project.techDetails.stack])
   )
