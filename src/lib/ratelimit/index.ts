@@ -72,5 +72,3 @@ export const rateLimitBot = async (
   await redisClient.incr(key)
   await redisClient.expire(key, duration)
 }
-
-export default rateLimiter

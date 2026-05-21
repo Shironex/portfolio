@@ -1,9 +1,8 @@
-/* eslint-disable n/no-process-env */
-
 // PostHog is deferred until the browser is idle or the user interacts with
 // the page, whichever comes first. This keeps the posthog-js bundle out of
 // the initial paint waterfall without dropping any high-intent events
 // (contact clicks, project opens, form submits all happen post-interaction).
+import { env } from '@/env/client'
 
 let booted = false
 
@@ -11,11 +10,12 @@ async function bootPosthog() {
   if (booted) return
   booted = true
   const { default: posthog } = await import('posthog-js')
-  posthog.init(process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN as string, {
-    api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+  posthog.init(env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN, {
+    api_host: env.NEXT_PUBLIC_POSTHOG_HOST,
     ui_host: 'https://us.posthog.com',
     defaults: '2026-01-30',
     capture_exceptions: true,
+    // eslint-disable-next-line n/no-process-env -- NODE_ENV check must remain raw; importing typed server env here risks breaking early boot in some Next.js instrumentation contexts
     debug: process.env.NODE_ENV === 'development',
   })
 }

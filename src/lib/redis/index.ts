@@ -1,7 +1,7 @@
-import createRedisClient from 'ioredis'
+import Redis from 'ioredis'
 
 import { env } from '@/env/server'
 
-const redisClient = new createRedisClient(env.REDIS_HOST)
+const redisClient = new Redis(env.REDIS_HOST)
 
 export default redisClient

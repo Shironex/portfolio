@@ -1,5 +1,7 @@
 import Image from 'next/image'
 
+import { GITHUB_URL } from '@/lib/constants'
+
 /**
  * readme.md window — short welcome note for ShiroOS.
  */
@@ -83,7 +85,7 @@ export default function ReadmeApp() {
       <p className="text-ink-3 mt-8 text-sm">
         Built with Next.js 16 and Tailwind v4. Source is on{' '}
         <a
-          href="https://github.com/shironex"
+          href={GITHUB_URL}
           className="focus-ring text-miku-2 rounded-sm underline underline-offset-2"
         >
           GitHub
