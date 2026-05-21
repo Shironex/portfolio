@@ -1,9 +1,11 @@
 'use client'
 
 import type { KeyboardEvent, MouseEvent, ReactNode } from 'react'
-import { useEffect, useRef } from 'react'
+import { useCallback, useRef } from 'react'
 
 import { WindowControls } from '@/components/os/window-controls'
+
+import { usePointerDrag } from '@/hooks/use-pointer-drag'
 
 import type { WindowId, WindowState } from './types'
 
@@ -47,13 +49,20 @@ export function Window({
   children,
 }: WindowProps) {
   const rootRef = useRef<HTMLDivElement | null>(null)
-  const dragRef = useRef<{ dx: number; dy: number } | null>(null)
+  // Per-gesture move handler set at mousedown; the shared pointer-drag hook
+  // dispatches every mousemove through it and clears it on mouseup.
+  const onGestureMove = useRef<((event: globalThis.MouseEvent) => void) | null>(
+    null
+  )
 
-  useEffect(() => {
-    return () => {
-      dragRef.current = null
-    }
-  }, [])
+  const startPointer = usePointerDrag({
+    onMove: useCallback((event: globalThis.MouseEvent) => {
+      onGestureMove.current?.(event)
+    }, []),
+    onEnd: useCallback(() => {
+      onGestureMove.current = null
+    }, []),
+  })
 
   if (win.minimized) return null
 
@@ -62,25 +71,13 @@ export function Window({
     const el = rootRef.current
     if (!el) return
     const rect = el.getBoundingClientRect()
-    dragRef.current = {
-      dx: e.clientX - rect.left,
-      dy: e.clientY - rect.top,
-    }
+    const dx = e.clientX - rect.left
+    const dy = e.clientY - rect.top
 
-    const handleMove = (event: globalThis.MouseEvent) => {
-      const drag = dragRef.current
-      if (!drag) return
-      onMove(win.id, event.clientX - drag.dx, event.clientY - drag.dy)
+    onGestureMove.current = (event) => {
+      onMove(win.id, event.clientX - dx, event.clientY - dy)
     }
-
-    const handleUp = () => {
-      dragRef.current = null
-      window.removeEventListener('mousemove', handleMove)
-      window.removeEventListener('mouseup', handleUp)
-    }
-
-    window.addEventListener('mousemove', handleMove)
-    window.addEventListener('mouseup', handleUp)
+    startPointer()
   }
 
   const startResize = (dir: ResizeDir) => (e: MouseEvent<HTMLDivElement>) => {
@@ -97,7 +94,7 @@ export function Window({
       mouseY: e.clientY,
     }
 
-    const handleMove = (event: globalThis.MouseEvent) => {
+    onGestureMove.current = (event) => {
       const dx = event.clientX - start.mouseX
       const dy = event.clientY - start.mouseY
       const patch: Partial<{
@@ -118,14 +115,7 @@ export function Window({
       }
       onResize(win.id, patch)
     }
-
-    const handleUp = () => {
-      window.removeEventListener('mousemove', handleMove)
-      window.removeEventListener('mouseup', handleUp)
-    }
-
-    window.addEventListener('mousemove', handleMove)
-    window.addEventListener('mouseup', handleUp)
+    startPointer()
   }
 
   const handleTitleKey = (event: KeyboardEvent<HTMLDivElement>) => {

@@ -1,218 +1,65 @@
 'use client'
 
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback } from 'react'
 
-import { APP_WINDOW_DEFAULTS } from '@/components/os/constants'
-import type { AppId, WindowId, WindowState } from '@/components/os/types'
+import type { AppId, WindowId } from '@/components/os/types'
 
-import {
-  cascadeOrigin,
-  clampResize,
-  clampWindowToViewport,
-  maximizeBounds,
-} from '@/lib/os/geometry'
+import { createAppWindow, createProjectWindow } from '@/lib/os/window-factory'
 
 import type { Project } from '@/types'
 
-/** Base z-index; the first window opened sits at {@link INITIAL_Z} + 1. */
-const INITIAL_Z = 100
+import { useWindowStack } from './use-window-stack'
 
 /**
- * Next z-index for the stack, derived from the current windows array rather
- * than a separate counter. Reading it inside the functional updater (where
- * `ws` is the freshly-committed array) fixes the old stale-counter focus/raise
- * desync.
+ * Public ShiroOS window-management API.
+ *
+ * Thin composition layer: {@link useWindowStack} owns the window-stack state
+ * machine (CRUD, z-ordering, minimize/maximize), and the window factories
+ * collapse the shared open-app / open-project construction. The returned shape
+ * is the stable contract every OS surface (os-shell, mobile-shell, taskbar,
+ * menubar, start-menu, cmd-palette) consumes.
  */
-function nextZ(ws: WindowState[]): number {
-  return Math.max(INITIAL_Z, ...ws.map((w) => w.z)) + 1
-}
-
 export function useOsWindows() {
-  const [windows, setWindows] = useState<WindowState[]>([])
-
-  const focus = useCallback((id: WindowId) => {
-    setWindows((ws) => {
-      const target = ws.find((w) => w.id === id)
-      if (!target) return ws
-      const z = nextZ(ws)
-      return ws.map((w) => (w.id === id ? { ...w, z, minimized: false } : w))
-    })
-  }, [])
+  const stack = useWindowStack()
+  const { windows, pushWindow, focus, isOpen } = stack
 
   const openApp = useCallback(
     (appId: AppId) => {
-      const existing = windows.find((w) => w.id === appId)
-      if (existing) {
+      if (isOpen(appId)) {
         focus(appId)
         return
       }
-      const cfg = APP_WINDOW_DEFAULTS[appId]
-      setWindows((ws) => [
-        ...ws,
-        {
-          id: appId,
-          title: cfg.title,
-          icon: cfg.icon,
-          x: cfg.x,
-          y: cfg.y,
-          w: cfg.w,
-          h: cfg.h,
-          z: nextZ(ws),
-          minimized: false,
-          maximized: false,
-        },
-      ])
+      pushWindow((z) => createAppWindow(appId, z))
     },
-    [windows, focus]
+    [isOpen, focus, pushWindow]
   )
 
   const openProject = useCallback(
     (project: Project) => {
       const id: WindowId = `project-${project.slug}`
-      const existing = windows.find((w) => w.id === id)
-      if (existing) {
+      if (isOpen(id)) {
         focus(id)
         return
       }
-      const origin = cascadeOrigin(windows.length)
-      setWindows((ws) => [
-        ...ws,
-        {
-          id,
-          title: `${project.slug}.app`,
-          icon: '◆',
-          x: origin.x,
-          y: origin.y,
-          w: 820,
-          h: 600,
-          z: nextZ(ws),
-          minimized: false,
-          maximized: false,
-          project,
-        },
-      ])
+      const openCount = windows.length
+      pushWindow((z) => createProjectWindow(project, z, openCount))
     },
-    [windows, focus]
-  )
-
-  const close = useCallback((id: WindowId) => {
-    setWindows((ws) => ws.filter((w) => w.id !== id))
-  }, [])
-
-  const closeAll = useCallback(() => {
-    setWindows([])
-  }, [])
-
-  const move = useCallback((id: WindowId, x: number, y: number) => {
-    const clamped = clampWindowToViewport(x, y)
-    setWindows((ws) =>
-      ws.map((w) => (w.id === id ? { ...w, x: clamped.x, y: clamped.y } : w))
-    )
-  }, [])
-
-  const resize = useCallback(
-    (
-      id: WindowId,
-      patch: Partial<{ x: number; y: number; w: number; h: number }>
-    ) => {
-      setWindows((ws) =>
-        ws.map((w) => {
-          if (w.id !== id) return w
-          const minW = w.minW ?? 320
-          const minH = w.minH ?? 240
-          const next = clampResize(w, patch, minW, minH)
-          return {
-            ...w,
-            x: next.x,
-            y: next.y,
-            w: next.w,
-            h: next.h,
-            // Resizing exits maximized state (matches Windows behavior)
-            maximized: false,
-            prevGeometry: undefined,
-          }
-        })
-      )
-    },
-    []
-  )
-
-  const minimize = useCallback((id: WindowId) => {
-    setWindows((ws) =>
-      ws.map((w) => (w.id === id ? { ...w, minimized: true } : w))
-    )
-  }, [])
-
-  const toggleMaximize = useCallback(
-    (id: WindowId) => {
-      setWindows((ws) =>
-        ws.map((w) => {
-          if (w.id !== id) return w
-          if (w.maximized && w.prevGeometry) {
-            return {
-              ...w,
-              maximized: false,
-              x: w.prevGeometry.x,
-              y: w.prevGeometry.y,
-              w: w.prevGeometry.w,
-              h: w.prevGeometry.h,
-              prevGeometry: undefined,
-            }
-          }
-          const max = maximizeBounds()
-          return {
-            ...w,
-            maximized: true,
-            prevGeometry: { x: w.x, y: w.y, w: w.w, h: w.h },
-            x: max.x,
-            y: max.y,
-            w: max.w,
-            h: max.h,
-          }
-        })
-      )
-      focus(id)
-    },
-    [focus]
-  )
-
-  const toggleMinimize = useCallback(
-    (id: WindowId) => {
-      const target = windows.find((w) => w.id === id)
-      if (!target) return
-      if (target.minimized) {
-        focus(id)
-      } else {
-        minimize(id)
-      }
-    },
-    [windows, focus, minimize]
-  )
-
-  const topmostId = useMemo(() => {
-    const visible = windows.filter((w) => !w.minimized)
-    if (visible.length === 0) return null
-    return visible.reduce((top, w) => (w.z > top.z ? w : top), visible[0]).id
-  }, [windows])
-
-  const isOpen = useCallback(
-    (id: WindowId) => windows.some((w) => w.id === id),
-    [windows]
+    [windows, isOpen, focus, pushWindow]
   )
 
   return {
     windows,
     openApp,
     openProject,
-    close,
-    closeAll,
+    close: stack.close,
+    closeAll: stack.closeAll,
     focus,
-    move,
-    resize,
-    minimize,
-    toggleMinimize,
-    toggleMaximize,
-    topmostId,
+    move: stack.move,
+    resize: stack.resize,
+    minimize: stack.minimize,
+    toggleMinimize: stack.toggleMinimize,
+    toggleMaximize: stack.toggleMaximize,
+    topmostId: stack.topmostId,
     isOpen,
   }
 }
