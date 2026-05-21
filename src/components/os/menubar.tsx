@@ -62,14 +62,16 @@ export function MenuBar({
         {
           label: 'Copy email',
           onClick: async () => {
-            await navigator.clipboard.writeText(EMAIL_CONTACT)
+            await navigator.clipboard.writeText(EMAIL_CONTACT).catch(() => null)
             toast('Email copied')
           },
         },
         {
           label: 'Copy GitHub URL',
           onClick: async () => {
-            await navigator.clipboard.writeText(GITHUB_URL)
+            await navigator.clipboard
+              .writeText(GITHUB_URL)
+              .catch(() => null)
             toast('GitHub URL copied')
           },
         },

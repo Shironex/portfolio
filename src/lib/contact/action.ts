@@ -14,6 +14,8 @@ import { env } from '@/env/server'
 
 import { contactFormSchema } from './validation'
 
+const DISCORD_PREVIEW_MAX = 200
+
 export const sendEmailAction = unauthenticatedAction
   .metadata({
     actionName: 'send Email Action',
@@ -72,8 +74,8 @@ export const sendEmailAction = unauthenticatedAction
           {
             name: 'Quick Preview',
             value:
-              parsedInput.message.substring(0, 200) +
-              (parsedInput.message.length > 200 ? '...' : ''),
+              parsedInput.message.substring(0, DISCORD_PREVIEW_MAX) +
+              (parsedInput.message.length > DISCORD_PREVIEW_MAX ? '...' : ''),
             inline: false,
           },
         ],

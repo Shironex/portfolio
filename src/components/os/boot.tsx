@@ -15,6 +15,9 @@ const STEPS = [
 
 const BOOT_STORAGE_KEY = 'shiroos:booted'
 
+// Step advancement timings in ms; final entry auto-dismisses the splash.
+const BOOT_STEP_TIMINGS_MS = [650, 1450, 2250, 3000, 3700] as const
+
 /**
  * ShiroOS boot splash. Shown only once per tab session; skippable via Esc or
  * the "skip" button. Respects `prefers-reduced-motion` by collapsing to an
@@ -55,11 +58,11 @@ export function Boot() {
   useEffect(() => {
     if (!ready) return
     const timers = [
-      window.setTimeout(() => setStep(1), 650),
-      window.setTimeout(() => setStep(2), 1450),
-      window.setTimeout(() => setStep(3), 2250),
-      window.setTimeout(() => setStep(4), 3000),
-      window.setTimeout(() => setGone(true), 3700),
+      window.setTimeout(() => setStep(1), BOOT_STEP_TIMINGS_MS[0]),
+      window.setTimeout(() => setStep(2), BOOT_STEP_TIMINGS_MS[1]),
+      window.setTimeout(() => setStep(3), BOOT_STEP_TIMINGS_MS[2]),
+      window.setTimeout(() => setStep(4), BOOT_STEP_TIMINGS_MS[3]),
+      window.setTimeout(() => setGone(true), BOOT_STEP_TIMINGS_MS[4]),
     ]
     return () => timers.forEach((id) => window.clearTimeout(id))
   }, [ready])

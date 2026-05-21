@@ -9,6 +9,8 @@ let posthogClient: PostHog | null = null
 
 export function getPostHogClient() {
   if (!posthogClient) {
+    // flushAt: 1 / flushInterval: 0 — flush immediately after each event,
+    // required in serverless environments where the process may exit at any time.
     posthogClient = new PostHog(env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN, {
       host: env.NEXT_PUBLIC_POSTHOG_HOST,
       flushAt: 1,

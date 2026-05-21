@@ -19,7 +19,13 @@ export async function verifyTurnstile(token: string): Promise<void> {
     }
   )
 
-  const turnstileData = await turnstileResponse.json()
+  const turnstileData = (await turnstileResponse.json()) as {
+    success: boolean
+    'error-codes'?: string[]
+    hostname?: string
+    action?: string
+    cdata?: string
+  }
 
   if (!turnstileData.success) {
     throw new PublicError(

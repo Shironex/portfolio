@@ -22,7 +22,7 @@ const rateLimiter = async (
 
   const key = `rate_limit:${keyword}`
   const currentCount = await client.get(key)
-  const count = parseInt(currentCount as string, 10) || 0
+  const count = parseInt(currentCount ?? '', 10) || 0
 
   if (count >= limit) {
     return { limit, remaining: limit - count, success: false }
