@@ -14,26 +14,30 @@ import {
 
 import type { Project } from '@/types'
 
+/** Base z-index; the first window opened sits at {@link INITIAL_Z} + 1. */
 const INITIAL_Z = 100
+
+/**
+ * Next z-index for the stack, derived from the current windows array rather
+ * than a separate counter. Reading it inside the functional updater (where
+ * `ws` is the freshly-committed array) fixes the old stale-counter focus/raise
+ * desync.
+ */
+function nextZ(ws: WindowState[]): number {
+  return Math.max(INITIAL_Z, ...ws.map((w) => w.z)) + 1
+}
 
 export function useOsWindows() {
   const [windows, setWindows] = useState<WindowState[]>([])
-  const [zCounter, setZCounter] = useState(INITIAL_Z)
 
-  const focus = useCallback(
-    (id: WindowId) => {
-      setWindows((ws) => {
-        const target = ws.find((w) => w.id === id)
-        if (!target) return ws
-        setZCounter((z) => z + 1)
-        const nextZ = zCounter + 1
-        return ws.map((w) =>
-          w.id === id ? { ...w, z: nextZ, minimized: false } : w
-        )
-      })
-    },
-    [zCounter]
-  )
+  const focus = useCallback((id: WindowId) => {
+    setWindows((ws) => {
+      const target = ws.find((w) => w.id === id)
+      if (!target) return ws
+      const z = nextZ(ws)
+      return ws.map((w) => (w.id === id ? { ...w, z, minimized: false } : w))
+    })
+  }, [])
 
   const openApp = useCallback(
     (appId: AppId) => {
@@ -43,8 +47,6 @@ export function useOsWindows() {
         return
       }
       const cfg = APP_WINDOW_DEFAULTS[appId]
-      const nextZ = zCounter + 1
-      setZCounter(nextZ)
       setWindows((ws) => [
         ...ws,
         {
@@ -55,13 +57,13 @@ export function useOsWindows() {
           y: cfg.y,
           w: cfg.w,
           h: cfg.h,
-          z: nextZ,
+          z: nextZ(ws),
           minimized: false,
           maximized: false,
         },
       ])
     },
-    [windows, focus, zCounter]
+    [windows, focus]
   )
 
   const openProject = useCallback(
@@ -73,8 +75,6 @@ export function useOsWindows() {
         return
       }
       const origin = cascadeOrigin(windows.length)
-      const nextZ = zCounter + 1
-      setZCounter(nextZ)
       setWindows((ws) => [
         ...ws,
         {
@@ -85,14 +85,14 @@ export function useOsWindows() {
           y: origin.y,
           w: 820,
           h: 600,
-          z: nextZ,
+          z: nextZ(ws),
           minimized: false,
           maximized: false,
           project,
         },
       ])
     },
-    [windows, focus, zCounter]
+    [windows, focus]
   )
 
   const close = useCallback((id: WindowId) => {
