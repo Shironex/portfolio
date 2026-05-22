@@ -1,3 +1,11 @@
+## [2.8.6](https://github.com/Shironex/portfolio/compare/v2.8.5...v2.8.6) (2026-05-22)
+
+
+### Bug Fixes
+
+* **os:** derive window z-index from stack, drop stale zCounter ([cec3728](https://github.com/Shironex/portfolio/commit/cec3728893d3ff00aa66203057512e0810290112))
+* type external boundaries, name magic numbers, guard clipboard (audit phase 6) ([8bff6bd](https://github.com/Shironex/portfolio/commit/8bff6bd016ff0dff3df53439e1c8257d2f476760))
+
 ## [2.8.5](https://github.com/Shironex/portfolio/compare/v2.8.4...v2.8.5) (2026-05-13)
 
 
