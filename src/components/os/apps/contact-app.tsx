@@ -9,7 +9,9 @@
 
 import dynamic from 'next/dynamic'
 
-import { Clock, Github, Mail, MapPin } from 'lucide-react'
+import { Clock, Mail, MapPin } from 'lucide-react'
+
+import { GithubIcon } from '@/components/icons/github-icon'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
 
@@ -43,7 +45,7 @@ const rows: ReachRow[] = [
     href: `mailto:${EMAIL_CONTACT}`,
   },
   {
-    icon: <Github className="h-4 w-4" />,
+    icon: <GithubIcon className="h-4 w-4" />,
     label: 'GitHub',
     value: GITHUB_URL.replace(/^https?:\/\//, ''),
     href: GITHUB_URL,

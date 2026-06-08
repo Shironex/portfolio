@@ -7,7 +7,9 @@
 
 import Image from 'next/image'
 
-import { ExternalLink, Github } from 'lucide-react'
+import { ExternalLink } from 'lucide-react'
+
+import { GithubIcon } from '@/components/icons/github-icon'
 
 import { accentFor } from '@/components/os/accent-map'
 
@@ -102,7 +104,7 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
                 rel="noreferrer"
                 className="focus-ring bg-surf-0 border-rule-2 text-ink hover:bg-surf-soft inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold transition"
               >
-                <Github className="h-4 w-4" />
+                <GithubIcon className="h-4 w-4" />
                 source ↗
               </a>
             )}
