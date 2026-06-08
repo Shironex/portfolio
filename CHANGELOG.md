@@ -1,3 +1,10 @@
+## [2.8.9](https://github.com/Shironex/portfolio/compare/v2.8.8...v2.8.9) (2026-06-08)
+
+
+### Bug Fixes
+
+* **os:** detach boot keydown listener on dismiss to unblock typing ([6412980](https://github.com/Shironex/portfolio/commit/6412980f582bfb558de554aa2337b3e6a6a41d7b))
+
 ## [2.8.8](https://github.com/Shironex/portfolio/compare/v2.8.7...v2.8.8) (2026-06-08)
 
 
