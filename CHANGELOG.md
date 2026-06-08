@@ -1,3 +1,10 @@
+## [2.8.8](https://github.com/Shironex/portfolio/compare/v2.8.7...v2.8.8) (2026-06-08)
+
+
+### Bug Fixes
+
+* **docker:** copy pnpm-workspace.yaml for pnpm build integrity ([d60a17d](https://github.com/Shironex/portfolio/commit/d60a17d602af7124f61c4910c2c93f43200edec0))
+
 ## [2.8.7](https://github.com/Shironex/portfolio/compare/v2.8.6...v2.8.7) (2026-06-08)
 
 
