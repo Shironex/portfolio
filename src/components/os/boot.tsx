@@ -75,7 +75,10 @@ export function Boot() {
   )
 
   useEffect(() => {
-    if (!ready) return
+    // Once dismissed the component renders null but stays mounted, so this
+    // listener must detach on `gone` too — otherwise it keeps swallowing every
+    // Space/Enter on the page (e.g. typing in the contact form).
+    if (!ready || gone) return
     skipButtonRef.current?.focus()
     const onKey = (event: KeyboardEvent) => {
       if (event.key === 'Enter' || event.key === ' ') {
@@ -85,7 +88,7 @@ export function Boot() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [ready])
+  }, [ready, gone])
 
   if (gone || !ready) return null
 
