@@ -1,0 +1,29 @@
+onlyBuiltDependencies:
+  - esbuild
+  - msgpackr-extract
+  - protobufjs
+  - sharp
+  - unrs-resolver
+
+overrides:
+  minimatch@9: ">=9.0.7"
+  rollup@4: ">=4.59.0"
+  serialize-javascript: ">=7.0.3"
+  handlebars: ">=4.7.9"
+  flatted: ">=3.4.2"
+  picomatch@4: ">=4.0.4"
+  micromatch>picomatch: ">=4.0.4"
+  brace-expansion@1: ">=1.1.13"
+  brace-expansion@>=5: ">=5.0.6"
+  minimatch@3>brace-expansion: ">=5.0.6"
+  protobufjs: ">=8.2.0"
+  dompurify: ">=3.4.0"
+  lodash: ">=4.18.1"
+  lodash-es: ">=4.18.1"
+  fast-uri: ">=3.1.2"
+  tmp: ">=0.2.6"
+  socket.io-parser: ">=4.2.6"
+  "@react-email/preview-server>next": "16.2.6"
+  postcss: ">=8.5.10"
+  uuid: ">=11.1.1"
+  ws: ">=8.20.1"
