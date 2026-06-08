@@ -11,7 +11,7 @@ import {
   Row,
   Section,
   Text,
-} from '@react-email/components'
+} from 'react-email'
 
 import { ContactFormSchema } from '@/lib/contact/validation'
 
