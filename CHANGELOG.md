@@ -1,3 +1,11 @@
+## [2.8.7](https://github.com/Shironex/portfolio/compare/v2.8.6...v2.8.7) (2026-06-08)
+
+
+### Bug Fixes
+
+* **lint:** lint the TS/TSX tree and drop core-rule false positives ([55f5357](https://github.com/Shironex/portfolio/commit/55f5357c02091bc8d214fcbd8a22738e28a7fa48))
+* **deps:** migrate pnpm overrides to workspace.yaml, clear 5 CVEs, bump safe deps ([5ac8768](https://github.com/Shironex/portfolio/commit/5ac8768e50a2172cf3164725ac6a3cf1004d0fed))
+
 ## [2.8.6](https://github.com/Shironex/portfolio/compare/v2.8.5...v2.8.6) (2026-05-22)
 
 
