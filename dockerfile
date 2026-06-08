@@ -14,7 +14,10 @@ RUN corepack prepare pnpm@latest --activate
 WORKDIR /app
 
 # Copy package files
-COPY ./package.json ./pnpm-lock.yaml ./
+# pnpm-workspace.yaml carries pnpm.overrides + onlyBuiltDependencies (moved out
+# of package.json for pnpm 10); without it `--frozen-lockfile` fails with
+# ERR_PNPM_LOCKFILE_CONFIG_MISMATCH because the lockfile's overrides have no source.
+COPY ./package.json ./pnpm-lock.yaml ./pnpm-workspace.yaml ./
 
 # Disable Husky
 ENV HUSKY=0
