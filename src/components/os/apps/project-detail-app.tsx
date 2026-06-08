@@ -10,7 +10,6 @@ import Image from 'next/image'
 import { ExternalLink } from 'lucide-react'
 
 import { GithubIcon } from '@/components/icons/github-icon'
-
 import { accentFor } from '@/components/os/accent-map'
 
 import { formatDate } from '@/lib/utils/format-date'

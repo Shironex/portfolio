@@ -69,9 +69,7 @@ export function MenuBar({
         {
           label: 'Copy GitHub URL',
           onClick: async () => {
-            await navigator.clipboard
-              .writeText(GITHUB_URL)
-              .catch(() => null)
+            await navigator.clipboard.writeText(GITHUB_URL).catch(() => null)
             toast('GitHub URL copied')
           },
         },
