@@ -109,7 +109,7 @@ export function StartMenu({
                   aria-hidden
                   className="flex size-11 items-center justify-center rounded-xl"
                   style={{
-                    backgroundColor: app.color + '25',
+                    backgroundColor: `${app.color}25`,
                     color: app.color,
                   }}
                 >

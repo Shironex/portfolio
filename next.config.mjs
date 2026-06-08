@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /* eslint-disable n/no-process-env */
 import bundleAnalyzer from '@next/bundle-analyzer'
 import { createJiti } from 'jiti'

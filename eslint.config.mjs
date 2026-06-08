@@ -24,6 +24,7 @@ const eslintConfig = [
   // Next.js 16 flat config (no legacy extends or compat)
   nextPlugin.configs['core-web-vitals'],
   {
+    files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
     plugins: {
       '@typescript-eslint': tseslint,
       'check-file': checkFilePlugin,
@@ -41,6 +42,13 @@ const eslintConfig = [
     rules: {
       // TypeScript rules
       'no-console': 'off',
+      // Disable core rules that TypeScript already handles better.
+      // no-undef has no type info about DOM/Node globals and only produces
+      // false positives on TS; no-unused-vars is superseded by the
+      // @typescript-eslint version below (which understands type positions
+      // and the ^_ ignore pattern).
+      'no-undef': 'off',
+      'no-unused-vars': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': [
