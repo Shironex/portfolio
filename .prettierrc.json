@@ -3,6 +3,7 @@
   "singleQuote": true,
   "tabWidth": 2,
   "trailingComma": "es5",
+  "endOfLine": "lf",
   "importOrder": [
     "^(react|next?/?([a-zA-Z/]*))$",
     "<THIRD_PARTY_MODULES>",
