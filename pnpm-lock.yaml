@@ -61,7 +61,7 @@ importers:
         version: 2.7.0
       lucide-react:
         specifier: ^1.21.0
-        version: 1.21.0(react@19.2.7)
+        version: 1.22.0(react@19.2.7)
       motion:
         specifier: ^12.42.0
         version: 12.42.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -143,7 +143,7 @@ importers:
         version: 4.3.1
       '@trivago/prettier-plugin-sort-imports':
         specifier: 6.0.2
-        version: 6.0.2(prettier@3.8.5)
+        version: 6.0.2(prettier@3.9.1)
       '@types/node':
         specifier: ^25.9.4
         version: 25.9.4
@@ -187,14 +187,14 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       postcss:
-        specifier: ^8.5.15
-        version: 8.5.15
+        specifier: '>=8.5.10'
+        version: 8.5.16
       prettier:
-        specifier: ^3.8.5
-        version: 3.8.5
+        specifier: ^3.9.1
+        version: 3.9.1
       prettier-plugin-tailwindcss:
         specifier: ^0.8.0
-        version: 0.8.0(@trivago/prettier-plugin-sort-imports@6.0.2(prettier@3.8.5))(prettier@3.8.5)
+        version: 0.8.0(@trivago/prettier-plugin-sort-imports@6.0.2(prettier@3.9.1))(prettier@3.9.1)
       react-email:
         specifier: 6.6.5
         version: 6.6.5(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -3511,8 +3511,8 @@ packages:
     resolution: {integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==}
     engines: {node: '>=10'}
 
-  lucide-react@1.21.0:
-    resolution: {integrity: sha512-reEZMXq8Qdd5jg5XYkQ5TR1fB/GiQ7ih4vcrthYDtgjSDwh0i6/YLiGjsWsIwgN49gpAnd4J2elSNzncMEEUUQ==}
+  lucide-react@1.22.0:
+    resolution: {integrity: sha512-c9o3l0PiNcgOQDW4F31BEYHudE7kgxVt3o30qMl36ZPwTxXlGB4QnLilhERvVM4uh/pl5MDyY1/gzZSYcHDtBg==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -4108,8 +4108,8 @@ packages:
   postal-mime@2.7.4:
     resolution: {integrity: sha512-0WdnFQYUrPGGTFu1uOqD2s7omwua8xaeYGdO6rb88oD5yJ/4pPHDA4sdWqfD8wQVfCny563n/HQS7zTFft+f/g==}
 
-  postcss@8.5.15:
-    resolution: {integrity: sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==}
+  postcss@8.5.16:
+    resolution: {integrity: sha512-vuwillviilfKZsg0VGj5R/YwwcHx4SLsIOI/7K6mQkWx+l5cUHTjj5g0AasTBcyXsbfTgrwsUNmVUb5xVwyPwg==}
     engines: {node: ^10 || ^12 || >=14}
 
   posthog-js@1.395.0:
@@ -4186,8 +4186,8 @@ packages:
       prettier-plugin-svelte:
         optional: true
 
-  prettier@3.8.5:
-    resolution: {integrity: sha512-zxcTTCedNGJM4R8sj/Cq/F0W/c4iE0afWBcBwMTRtw4WHYP9TWkYjdiH3npPRUYsXQCPR0hTU9yjovOu+E6EQA==}
+  prettier@3.9.1:
+    resolution: {integrity: sha512-ppiDo2CSwexck1eyZUwJHg/N3nf1+6IRCv7W/VJ5vaLnVCmB7+3CdRfMwoCHBBX6xTrREDTksZ4OZl5SSf4zXA==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -5966,7 +5966,7 @@ snapshots:
   '@react-email/render@2.0.9(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       html-to-text: 9.0.5
-      prettier: 3.8.5
+      prettier: 3.9.1
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
 
@@ -6190,10 +6190,10 @@ snapshots:
       '@alloc/quick-lru': 5.2.0
       '@tailwindcss/node': 4.3.1
       '@tailwindcss/oxide': 4.3.1
-      postcss: 8.5.15
+      postcss: 8.5.16
       tailwindcss: 4.3.1
 
-  '@trivago/prettier-plugin-sort-imports@6.0.2(prettier@3.8.5)':
+  '@trivago/prettier-plugin-sort-imports@6.0.2(prettier@3.9.1)':
     dependencies:
       '@babel/generator': 7.29.7
       '@babel/parser': 7.29.7
@@ -6203,7 +6203,7 @@ snapshots:
       lodash-es: 4.18.1
       minimatch: 10.2.5
       parse-imports-exports: 0.2.4
-      prettier: 3.8.5
+      prettier: 3.9.1
     transitivePeerDependencies:
       - supports-color
 
@@ -8482,7 +8482,7 @@ snapshots:
     dependencies:
       yallist: 4.0.0
 
-  lucide-react@1.21.0(react@19.2.7):
+  lucide-react@1.22.0(react@19.2.7):
     dependencies:
       react: 19.2.7
 
@@ -8636,7 +8636,7 @@ snapshots:
       '@swc/helpers': 0.5.15
       baseline-browser-mapping: 2.10.40
       caniuse-lite: 1.0.30001799
-      postcss: 8.5.15
+      postcss: 8.5.16
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
       styled-jsx: 5.1.6(react@19.2.7)
@@ -8661,7 +8661,7 @@ snapshots:
       '@swc/helpers': 0.5.15
       baseline-browser-mapping: 2.10.40
       caniuse-lite: 1.0.30001799
-      postcss: 8.5.15
+      postcss: 8.5.16
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
       styled-jsx: 5.1.6(react@19.2.7)
@@ -8981,7 +8981,7 @@ snapshots:
 
   postal-mime@2.7.4: {}
 
-  postcss@8.5.15:
+  postcss@8.5.16:
     dependencies:
       nanoid: 3.3.15
       picocolors: 1.1.1
@@ -9008,13 +9008,13 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier-plugin-tailwindcss@0.8.0(@trivago/prettier-plugin-sort-imports@6.0.2(prettier@3.8.5))(prettier@3.8.5):
+  prettier-plugin-tailwindcss@0.8.0(@trivago/prettier-plugin-sort-imports@6.0.2(prettier@3.9.1))(prettier@3.9.1):
     dependencies:
-      prettier: 3.8.5
+      prettier: 3.9.1
     optionalDependencies:
-      '@trivago/prettier-plugin-sort-imports': 6.0.2(prettier@3.8.5)
+      '@trivago/prettier-plugin-sort-imports': 6.0.2(prettier@3.9.1)
 
-  prettier@3.8.5: {}
+  prettier@3.9.1: {}
 
   pretty-ms@9.3.0:
     dependencies:
