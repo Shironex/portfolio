@@ -77,7 +77,7 @@
     "husky": "^9.1.7",
     "png-to-ico": "^3.0.1",
     "postcss": "^8.5.15",
-    "prettier": "^3.8.5",
+    "prettier": "^3.9.1",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "react-email": "6.6.5",
     "semantic-release": "^25.0.5",
