@@ -1,3 +1,10 @@
+## [2.8.10](https://github.com/Shironex/portfolio/compare/v2.8.9...v2.8.10) (2026-07-09)
+
+
+### Bug Fixes
+
+* **deps:** sync pnpm-lock.yaml postcss specifier with workspace override ([a3d047b](https://github.com/Shironex/portfolio/commit/a3d047b588fdb421d2437409e8919138e0c9ac9e))
+
 ## [2.8.9](https://github.com/Shironex/portfolio/compare/v2.8.8...v2.8.9) (2026-06-08)
 
 
