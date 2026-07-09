@@ -1,3 +1,10 @@
+# [2.9.0](https://github.com/Shironex/portfolio/compare/v2.8.10...v2.9.0) (2026-07-09)
+
+
+### Features
+
+* **content:** reposition copy as full-stack developer, Poland/remote ([6cc9768](https://github.com/Shironex/portfolio/commit/6cc9768c3915423d971be71ca8d73efe62f416ba))
+
 ## [2.8.10](https://github.com/Shironex/portfolio/compare/v2.8.9...v2.8.10) (2026-07-09)
 
 
