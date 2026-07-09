@@ -29,7 +29,7 @@ export function HeroPlate({ onOpenCmd, onOpenContact }: HeroPlateProps) {
       />
 
       <div className="text-ink-3 relative mb-3 font-mono text-[11px]">
-        Junior full-stack · Gdańsk, PL
+        Full-stack developer · Poland · remote
       </div>
 
       <h1 className="font-display text-ink relative text-[clamp(32px,8vw,44px)] leading-[1.05] font-bold tracking-[-0.02em] md:text-[clamp(40px,4.6vw,60px)]">

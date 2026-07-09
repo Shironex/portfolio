@@ -62,7 +62,8 @@ export function NoscriptFallback() {
             }}
           >
             <li>
-              <strong>{AUTHOR_NAME}</strong> — full-stack developer, Gdańsk, PL
+              <strong>{AUTHOR_NAME}</strong> — full-stack developer, Poland
+              (remote)
             </li>
             <li>
               Email:{' '}

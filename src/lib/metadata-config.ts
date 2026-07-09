@@ -8,7 +8,7 @@ export const siteConfig = {
   url: env.NEXT_PUBLIC_PUBLIC_URL,
   ogImage: '/og-image.png', // Default Open Graph image
   description:
-    'Desktop-metaphor portfolio of Kacper Lachowicz — junior full-stack in Gdańsk, building Electron apps and typed full-stack systems.',
+    'Desktop-metaphor portfolio of Kacper Lachowicz — full-stack developer from Poland, building Electron apps and typed full-stack systems.',
   twitter: {
     handle: '@shirone_dev',
     site: '@shirone_dev',
@@ -25,7 +25,7 @@ export const siteConfig = {
     'NestJS',
     'desktop apps',
     'full-stack developer',
-    'Gdańsk',
+    'Poland',
   ],
   author: 'Shironex',
   themeColor: '#0f7c74',

@@ -21,7 +21,7 @@ function StaticHero() {
         <div className="grid flex-1 gap-6 md:grid-cols-[minmax(0,1.3fr)_minmax(340px,1fr)]">
           <div className="border-rule-2 bg-surf-solid shadow-elev-3 relative flex h-full w-full flex-col overflow-hidden rounded-3xl border px-5 py-6 md:px-8 md:py-7">
             <div className="text-ink-3 relative mb-3 font-mono text-[11px]">
-              Junior full-stack · Gdańsk, PL
+              Full-stack developer · Poland · remote
             </div>
 
             <h1 className="font-display text-ink relative text-[clamp(32px,8vw,44px)] leading-[1.05] font-bold tracking-[-0.02em] md:text-[clamp(40px,4.6vw,60px)]">

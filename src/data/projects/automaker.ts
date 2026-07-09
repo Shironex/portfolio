@@ -5,10 +5,10 @@ export const automaker: Project = {
   slug: 'automaker',
   title: 'AutoMaker',
   summary:
-    'Autonomous AI development studio that orchestrates Claude agents to implement features on a Kanban board. My first open-source project, built with a team of 4. Over 3,000 stars in 2 months.',
+    'Autonomous AI development studio that orchestrates Claude agents to implement features on a Kanban board. My first open-source project — built for fun with a team of 4, it grew past 3,000 stars in two months. I was one of the core contributors.',
   description: [
     'AutoMaker is an autonomous AI development studio. Users describe features on a Kanban board, and when moved to "In Progress", a Claude agent automatically implements the feature in an isolated git worktree. You review the changes, approve or reject, and move on to the next one.',
-    'This was my first open-source project. A team of four of us started it for fun and it took off way faster than we expected. We hit 3,000 GitHub stars within two months. Contributing every day, pushing rapid changes, and watching the community grow was an incredible experience.',
+    'This was my first open-source project. A team of four of us started it for fun, and within a month it grew into something much bigger than we expected — 3,000 GitHub stars in two months. I was one of the core contributors, working across the agent execution pipeline, server architecture, auth, Docker/CI, and day-to-day issue triage, while everyone on the team had a hand in every layer.',
     'Building AutoMaker taught me things no tutorial ever could. How much time open-source maintenance actually takes. How hard it is to keep a codebase healthy when multiple people push changes daily. How to support cross-platform users with completely different environments. How to coordinate a team around a fast-moving project without everything falling apart.',
     'I no longer have time to contribute actively, but AutoMaker remains one of my proudest projects. Not because of the star count, but because of everything I learned building it.',
   ],

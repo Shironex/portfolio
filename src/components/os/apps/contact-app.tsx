@@ -53,7 +53,7 @@ const rows: ReachRow[] = [
   {
     icon: <MapPin className="h-4 w-4" />,
     label: 'Location',
-    value: 'Gdańsk, PL',
+    value: 'Poland · remote',
   },
   {
     icon: <Clock className="h-4 w-4" />,

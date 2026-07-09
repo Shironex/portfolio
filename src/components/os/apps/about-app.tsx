@@ -60,7 +60,7 @@ export default function AboutApp() {
         <div>
           <h2 className="font-display text-ink mb-2 text-2xl font-semibold tracking-tight">
             I&apos;m <em className="text-ink font-bold not-italic">Kacper</em> —
-            junior full-stack, Gdańsk, PL
+            full-stack developer, Poland
           </h2>
           <p className="text-ink-2 text-sm leading-relaxed">
             Four years in, mostly TypeScript, with a soft spot for Electron. I

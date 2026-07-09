@@ -35,7 +35,7 @@ export const TERMINAL_BLOCKS: Array<{ prompt: string; output: string[] }> = [
   {
     prompt: 'cat about.md',
     output: [
-      'Junior full-stack, Gdańsk, PL.',
+      'Full-stack developer, Poland. Remote-first.',
       'Four years of TypeScript, mostly Electron and Next.js.',
     ],
   },
@@ -45,6 +45,6 @@ export const TERMINAL_BLOCKS: Array<{ prompt: string; output: string[] }> = [
   },
   {
     prompt: 'cat availability.txt',
-    output: ['Open to freelance now · full-time from Q2 2026.'],
+    output: ['Open to full-time (remote) and freelance work.'],
   },
 ]
