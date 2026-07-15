@@ -96,7 +96,12 @@ export default function OsShell() {
       <NoscriptFallback />
       <Boot />
       {isMobile ? (
-        <MobileShell os={os} onOpenCmd={openCmd} />
+        <MobileShell
+          os={os}
+          onOpenCmd={openCmd}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+        />
       ) : (
         <>
           <MenuBar

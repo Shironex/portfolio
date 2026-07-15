@@ -3,9 +3,10 @@
 import Image from 'next/image'
 import { useCallback, useState } from 'react'
 
-import { Menu, Search, X } from 'lucide-react'
+import { Menu, Moon, Search, Sun, X } from 'lucide-react'
 
 import type { OsWindowsApi } from '@/hooks/use-os-windows'
+import type { Theme } from '@/hooks/use-theme'
 
 import { AppBody } from './app-registry'
 import { FeaturedPanel } from './apps/panels/featured-panel'
@@ -17,6 +18,8 @@ import type { AppId } from './types'
 interface MobileShellProps {
   os: OsWindowsApi
   onOpenCmd: () => void
+  theme: Theme
+  onToggleTheme: () => void
 }
 
 /**
@@ -31,7 +34,12 @@ interface MobileShellProps {
  * Open windows (`os.windows`) render as full-screen slide-up sheets stacked
  * by z-index — the same `useOsWindows` state drives both desktop and mobile.
  */
-export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
+export function MobileShell({
+  os,
+  onOpenCmd,
+  theme,
+  onToggleTheme,
+}: MobileShellProps) {
   const [launcherOpen, setLauncherOpen] = useState(false)
 
   const openApp = useCallback(
@@ -71,14 +79,32 @@ export function MobileShell({ os, onOpenCmd }: MobileShellProps) {
             ShiroOS
           </span>
         </div>
-        <button
-          type="button"
-          onClick={() => setLauncherOpen(true)}
-          aria-label="Open app launcher"
-          className="focus-ring text-ink-2 hover:bg-surf-0 hover:text-ink flex size-11 items-center justify-center rounded-md"
-        >
-          <Menu aria-hidden size={18} />
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={onToggleTheme}
+            aria-label={
+              theme === 'dark'
+                ? 'Switch to light theme'
+                : 'Switch to dark theme'
+            }
+            className="focus-ring text-ink-2 hover:bg-surf-0 hover:text-miku-2 flex size-11 items-center justify-center rounded-md"
+          >
+            {theme === 'dark' ? (
+              <Sun aria-hidden size={18} />
+            ) : (
+              <Moon aria-hidden size={18} />
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() => setLauncherOpen(true)}
+            aria-label="Open app launcher"
+            className="focus-ring text-ink-2 hover:bg-surf-0 hover:text-ink flex size-11 items-center justify-center rounded-md"
+          >
+            <Menu aria-hidden size={18} />
+          </button>
+        </div>
       </div>
 
       {/* Feed */}
