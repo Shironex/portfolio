@@ -5,11 +5,11 @@ export const shiranami: Project = {
   slug: 'shiranami',
   title: 'Shiranami',
   summary:
-    'Desktop music player for the library on your disk — synced lyrics, internet radio, YouTube + Spotify playlist import, crossfade, and Discord Rich Presence.',
+    'Desktop music player for the library on your disk: synced lyrics, internet radio, YouTube + Spotify playlist import, crossfade, and Discord Rich Presence.',
   description: [
-    'Shiranami is a desktop music player built around the idea that your own files are the source of truth. It scans your local library, then layers on the things streaming apps do well — synced lyrics from lrclib, an internet radio browser, a YouTube and Spotify playlist importer that downloads tracks via yt-dlp and ffmpeg that the app installs and keeps updated for you, and a dual-deck equal-power crossfade between songs.',
+    'Shiranami is a desktop music player built around the idea that your own files are the source of truth. It scans your local library, then layers on the things streaming apps do well: synced lyrics from lrclib, an internet radio browser, a YouTube and Spotify playlist importer that downloads tracks via yt-dlp and ffmpeg that the app installs and keeps updated for you, and a dual-deck equal-power crossfade between songs.',
     'The shell is Electron 41 + electron-updater with a React 18 + Vite 8 + Tailwind v4 renderer. State lives in Zustand, data layer is Drizzle ORM over better-sqlite3, and long lists are virtualized via react-window so a 10k-song library still feels responsive. Rich Presence runs through @xhayper/discord-rpc.',
-    'It ships as Windows .exe and macOS .dmg builds via GitHub Releases with an in-app auto-updater on Windows, and reaches a Polish-speaking audience through full EN/PL localization. It is the music companion in the Shiro suite — the app ShiroOS nods to whenever something on the desktop is playing.',
+    'It ships as Windows .exe and macOS .dmg builds via GitHub Releases with an in-app auto-updater on Windows, and reaches a Polish-speaking audience through full EN/PL localization. It is the music companion in the Shiro suite, the app ShiroOS nods to whenever something on the desktop is playing.',
   ],
   image: '/projects/shiranami/thumbnail.png',
   projectType: 'desktop',
@@ -34,11 +34,11 @@ export const shiranami: Project = {
   ],
   features: [
     'Local music library scanner with playlists, favorites, and virtualized lists (handles 10k+ tracks smoothly)',
-    'Synced lyrics via lrclib with configurable size and opacity — click any line to seek',
+    'Synced lyrics via lrclib with configurable size and opacity: click any line to seek',
     'Internet radio browser backed by the Radio Browser API',
     'Full-playlist import from YouTube and Spotify, downloaded via yt-dlp + ffmpeg the app installs for you',
     'Auto-fill missing tags and cover art from online sources',
-    '10-band equalizer with preamp and 13 genre presets, plus dual-deck equal-power crossfade (1–12s)',
+    '10-band equalizer with preamp and 13 genre presets, plus dual-deck equal-power crossfade (1-12s)',
     'Auto-generated Mixes and a listening history dashboard with play counts, top tracks/artists, and a daily activity graph',
     'Configurable compact mini-player with size presets and always-on-top, sleep timer, audio visualizer, command palette (Ctrl+K)',
     'Album-art-driven ambient UI, EN + PL runtime localization, sharable deep-links per track',

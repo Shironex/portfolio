@@ -7,7 +7,7 @@ export const shiroani: Project = {
   summary:
     'Desktop anime browser, tracker, and mascot in one Electron shell. Ad-free webview, AniList-backed schedule, personal library, and a chibi that sits on your desktop.',
   description: [
-    'ShiroAni is a desktop app that folds three tools most anime fans keep separate — a streaming browser, a tracker, and a schedule — into one shell. The browser ships with Ghostery/uBO filter lists refreshed every two hours, so ad-heavy sites load without the usual pop-ups. The library tracks watching, completed, plan, hold and dropped, with 17 built-in themes (15 dark + 2 light) and a Polish UI out of the box.',
+    'ShiroAni is a desktop app that folds three tools most anime fans keep separate - a streaming browser, a tracker, and a schedule - into one shell. The browser ships with Ghostery/uBO filter lists refreshed every two hours, so ad-heavy sites load without the usual pop-ups. The library tracks watching, completed, plan, hold and dropped, with 17 built-in themes (15 dark + 2 light) and a Polish UI out of the box.',
     'Under the hood it is a pnpm monorepo with an Electron 41 shell, a NestJS 11 backend running in the main process against better-sqlite3, and a React 18 + Vite 7 + Tailwind v4 renderer. A native C++ module via node-addon-api handles the chibi mascot that sits on top of the Windows desktop. A small Discord bot lives in the same repo and mirrors library activity.',
     'Current version is 0.6.2, published to GitHub Releases with auto-update on Windows. It is the most production-grade app in the Shiro suite and the one I use daily.',
   ],
@@ -57,7 +57,7 @@ export const shiroani: Project = {
   features: [
     'Ad-free built-in browser with Ghostery/uBO filter lists refreshed every 2h',
     'AniList-backed weekly airing schedule with episode notifications',
-    'Personal library tracker — watching, completed, plan, hold, dropped',
+    'Personal library tracker: watching, completed, plan, hold, dropped',
     'Rich-text anime diary (TipTap)',
     'Desktop chibi mascot via native C++ overlay (Windows)',
     '17 built-in themes (15 dark + 2 light) with custom wallpapers and a floating dock',

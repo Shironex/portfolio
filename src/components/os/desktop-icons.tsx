@@ -34,7 +34,7 @@ export function DesktopIcons({ onLaunch }: DesktopIconsProps) {
           <button
             key={app.id}
             type="button"
-            aria-label={`${app.name} — press Enter to open`}
+            aria-label={`${app.name} - press Enter to open`}
             onClick={() => setSelectedId(app.id)}
             onDoubleClick={() => onLaunch(app.id)}
             onKeyDown={handleKey(app.id)}

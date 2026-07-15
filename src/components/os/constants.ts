@@ -41,7 +41,7 @@ export const TERMINAL_BLOCKS: Array<{ prompt: string; output: string[] }> = [
   },
   {
     prompt: 'ls projects/ | wc -l',
-    output: ['16 — two featured, five in-progress, eight shipped.'],
+    output: ['16: two featured, five in-progress, eight shipped.'],
   },
   {
     prompt: 'cat availability.txt',

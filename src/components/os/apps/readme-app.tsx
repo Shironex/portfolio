@@ -40,19 +40,19 @@ export default function ReadmeApp() {
       </h3>
       <ul className="list-disc space-y-1 pl-5">
         <li>
-          <span className="text-ink font-semibold">Projects</span> — 16 things I
+          <span className="text-ink font-semibold">Projects</span>: 16 things I
           made, filterable by status.
         </li>
         <li>
-          <span className="text-ink font-semibold">About</span> — bio, things I
+          <span className="text-ink font-semibold">About</span>: bio, things I
           do outside the editor, a rough timeline.
         </li>
         <li>
-          <span className="text-ink font-semibold">Monitor</span> — skills and
+          <span className="text-ink font-semibold">Monitor</span>: skills and
           tools I use daily.
         </li>
         <li>
-          <span className="text-ink font-semibold">Contact</span> — form + my
+          <span className="text-ink font-semibold">Contact</span>: form + my
           email and GitHub.
         </li>
       </ul>
@@ -65,16 +65,16 @@ export default function ReadmeApp() {
           <kbd className="bg-surf-soft border-rule text-ink-2 rounded border px-1.5 py-0.5 font-mono text-xs font-bold">
             ⌘K
           </kbd>{' '}
-          — command palette
+          - command palette
         </li>
         <li>
           <kbd className="bg-surf-soft border-rule text-ink-2 rounded border px-1.5 py-0.5 font-mono text-xs font-bold">
             Esc
           </kbd>{' '}
-          — close the focused window
+          - close the focused window
         </li>
         <li>
-          Arrow keys on a focused title bar — move the window;{' '}
+          Arrow keys on a focused title bar - move the window;{' '}
           <kbd className="bg-surf-soft border-rule text-ink-2 rounded border px-1.5 py-0.5 font-mono text-xs font-bold">
             Shift
           </kbd>{' '}

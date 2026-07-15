@@ -49,7 +49,7 @@ export function NoscriptFallback() {
               lineHeight: 1.6,
             }}
           >
-            This portfolio is a tiny desktop — boot splash, draggable windows,
+            This portfolio is a tiny desktop: boot splash, draggable windows,
             command palette. Enable JS to explore. In the meantime:
           </p>
           <ul
@@ -62,7 +62,7 @@ export function NoscriptFallback() {
             }}
           >
             <li>
-              <strong>{AUTHOR_NAME}</strong> — full-stack developer, Poland
+              <strong>{AUTHOR_NAME}</strong>, full-stack developer, Poland
               (remote)
             </li>
             <li>

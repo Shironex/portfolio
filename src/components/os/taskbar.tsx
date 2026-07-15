@@ -64,8 +64,8 @@ export function Taskbar({
           const Icon = app.icon
           const label = isOpen
             ? isMinimized
-              ? `${app.name} (minimized) — restore`
-              : `${app.name} — bring to front`
+              ? `${app.name} (minimized) - restore`
+              : `${app.name} - bring to front`
             : `Open ${app.name}`
           return (
             <div key={app.id} className="group relative">

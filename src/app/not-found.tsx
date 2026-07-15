@@ -42,7 +42,7 @@ export default function NotFound() {
                 strokeWidth={2}
               />
               <span className="text-ink font-mono text-xs font-bold">
-                error.sys — 404
+                error.sys - 404
               </span>
             </div>
             <Link

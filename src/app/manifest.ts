@@ -4,7 +4,7 @@ import { siteConfig } from '@/lib/metadata-config'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "ShiroOS — Kacper's desktop",
+    name: "ShiroOS: Kacper's desktop",
     short_name: 'ShiroOS',
     description: siteConfig.description,
     start_url: '/',

@@ -4,11 +4,11 @@ import { env } from '@/env/client'
 
 // Base URL for the website (used for absolute URLs in metadata)
 export const siteConfig = {
-  name: "ShiroOS — Kacper's desktop",
+  name: "ShiroOS: Kacper's desktop",
   url: env.NEXT_PUBLIC_PUBLIC_URL,
   ogImage: '/og-image.png', // Default Open Graph image
   description:
-    'Desktop-metaphor portfolio of Kacper Lachowicz — full-stack developer from Poland, building Electron apps and typed full-stack systems.',
+    'Desktop-metaphor portfolio of Kacper Lachowicz, full-stack developer from Poland, building Electron apps and typed full-stack systems.',
   twitter: {
     handle: '@shirone_dev',
     site: '@shirone_dev',

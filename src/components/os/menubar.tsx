@@ -103,7 +103,7 @@ export function MenuBar({
         { label: 'About ShiroOS', onClick: () => onLaunchApp('readme') },
         {
           label: 'Keyboard shortcuts',
-          onClick: () => toast('⌘K — command palette · Esc — close window'),
+          onClick: () => toast('⌘K - command palette · Esc - close window'),
         },
       ],
     },

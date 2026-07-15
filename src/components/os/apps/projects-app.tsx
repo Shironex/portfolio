@@ -85,7 +85,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
           {projectsData.length} projects
         </h2>
         <p className="text-ink-3 text-sm">
-          Pick one — each opens in its own window.
+          Pick one - each opens in its own window.
         </p>
       </div>
 

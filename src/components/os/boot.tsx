@@ -191,7 +191,7 @@ export function Boot() {
                 </span>
                 <span>{s.label}</span>
                 <span className="text-ink-4 font-mono text-[9px] tracking-[0.1em]">
-                  {state === 'wait' ? '—' : s.detail}
+                  {state === 'wait' ? '-' : s.detail}
                 </span>
               </div>
             )

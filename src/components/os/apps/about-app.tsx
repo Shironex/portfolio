@@ -59,7 +59,7 @@ export default function AboutApp() {
         </div>
         <div>
           <h2 className="font-display text-ink mb-2 text-2xl font-semibold tracking-tight">
-            I&apos;m <em className="text-ink font-bold not-italic">Kacper</em> —
+            I&apos;m <em className="text-ink font-bold not-italic">Kacper</em>,
             full-stack developer, Poland
           </h2>
           <p className="text-ink-2 text-sm leading-relaxed">
@@ -77,7 +77,7 @@ export default function AboutApp() {
         <p className="text-ink-2 text-sm leading-relaxed">
           Desktop apps with Electron, typed backends on Node and NestJS, Next.js
           App Router for the web. I spend more than the usual amount of time on
-          the parts most people skip —{' '}
+          the parts most people skip:{' '}
           <em className="text-ink font-semibold not-italic">
             empty states, 404s, focus rings
           </em>
