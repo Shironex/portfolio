@@ -1,3 +1,10 @@
+## [2.9.1](https://github.com/Shironex/portfolio/compare/v2.9.0...v2.9.1) (2026-07-15)
+
+
+### Bug Fixes
+
+* **os:** stop black background bleed-through on mobile shell ([dd14237](https://github.com/Shironex/portfolio/commit/dd14237efdab4aabc80d5630de2a55ed1880eae8))
+
 # [2.9.0](https://github.com/Shironex/portfolio/compare/v2.8.10...v2.9.0) (2026-07-09)
 
 
