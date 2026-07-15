@@ -502,7 +502,15 @@
   }
 
   body {
-    @apply bg-background text-foreground font-mono antialiased;
+    @apply font-mono antialiased;
+    /*
+     * Ground is the washi-cream sky palette (deep-teal in dark mode), not the
+     * legacy near-black shadcn `--background` token. The OS shell overlays this
+     * with its own wallpaper, but the body still shows pre-hydration and in any
+     * uncovered area (notably the mobile feed), so it must never flash black.
+     */
+    background-color: var(--color-sky-1);
+    color: var(--color-ink);
   }
 
   /*

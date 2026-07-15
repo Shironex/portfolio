@@ -87,7 +87,12 @@ export default function OsShell() {
   )
 
   return (
-    <div className="text-ink fixed inset-0 overflow-hidden">
+    // Opaque cream ground for the whole shell. On desktop `DesktopCanvas`
+    // paints its richer wallpaper over this, so it's invisible there; on
+    // mobile `MobileShell` renders a transparent feed, so this layer is what
+    // the user actually sees behind the cards — without it the near-black
+    // `body` background and the SSR `StaticHero` bleed through the gaps.
+    <div className="text-ink from-sky-0 via-sky-1 to-sky-2 fixed inset-0 overflow-hidden bg-gradient-to-br">
       <NoscriptFallback />
       <Boot />
       {isMobile ? (
