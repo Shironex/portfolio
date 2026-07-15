@@ -121,6 +121,15 @@ const eslintConfig = [
       },
     },
   },
+  // Playwright config + e2e specs run in Node, where reading process.env for
+  // ports/base URLs/output dirs is the standard pattern (app code still uses
+  // the typed env imports and stays under n/no-process-env).
+  {
+    files: ['playwright.config.ts', 'e2e/**/*.{ts,tsx}'],
+    rules: {
+      'n/no-process-env': 'off',
+    },
+  },
   // Keep Prettier last to disable formatting-related ESLint rules
   eslintConfigPrettier,
 ]
