@@ -4,6 +4,7 @@ import { Search } from 'lucide-react'
 
 import { Clock } from './clock'
 import { APPS } from './constants'
+import { Kbd } from './kbd'
 import type { AppId, WindowId } from './types'
 
 interface TaskbarProps {
@@ -46,13 +47,11 @@ export function Taskbar({
       <button
         type="button"
         onClick={onOpenCmd}
-        className="focus-ring bg-surf-0 text-ink-3 hover:bg-surf-1 flex min-w-[220px] items-center gap-2 rounded-lg px-3 py-1.5 text-xs"
+        className="focus-ring bg-surf-0 text-ink-3 hover:bg-surf-1 flex min-w-[160px] items-center gap-2 rounded-lg px-3 py-1.5 text-xs lg:min-w-[220px]"
       >
         <Search aria-hidden size={14} />
         <span>search apps &amp; projects…</span>
-        <kbd className="border-rule bg-surf-solid/60 ml-auto rounded border px-1.5 py-0.5 font-mono text-[11px]">
-          ⌘K
-        </kbd>
+        <Kbd className="ml-auto">⌘K</Kbd>
       </button>
 
       <span aria-hidden className="bg-rule-2 h-6 w-px" />
@@ -81,15 +80,15 @@ export function Taskbar({
                 {isOpen && (
                   <span
                     aria-hidden
-                    className={`absolute -bottom-0.5 left-1/2 size-1 -translate-x-1/2 rounded-full ${
-                      isMinimized ? 'bg-miku/40' : 'bg-miku'
+                    className={`absolute -bottom-0.5 left-1/2 h-1 -translate-x-1/2 rounded-full transition-all ${
+                      isMinimized ? 'bg-miku/40 w-1' : 'bg-miku w-2.5'
                     }`}
                   />
                 )}
               </button>
               <span
                 aria-hidden
-                className="border-rule-2 bg-surf-solid text-ink pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded-md border px-2 py-1 font-mono text-[10px] whitespace-nowrap opacity-0 shadow-sm transition-opacity group-focus-within:opacity-100 group-hover:opacity-100"
+                className="border-rule-2 bg-surf-solid text-ink pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 translate-y-1 rounded-md border px-2 py-1 font-mono text-[10px] whitespace-nowrap opacity-0 shadow-sm transition-all duration-150 group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100"
               >
                 {app.name}
               </span>
@@ -100,8 +99,9 @@ export function Taskbar({
 
       <span aria-hidden className="bg-rule-2 h-6 w-px" />
 
+      {/* Time only — the menubar already shows the full date. */}
       <div className="text-ink-3 flex items-center gap-2 px-1 font-mono text-[11px]">
-        <Clock />
+        <Clock showDate={false} />
       </div>
     </div>
   )

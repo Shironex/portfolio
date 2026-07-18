@@ -3,22 +3,31 @@
 import type { ReactNode } from 'react'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 
-import { Diamond, Search } from 'lucide-react'
+import { Copy, Diamond, Moon, Search, SquareX, Sun } from 'lucide-react'
+import { toast } from 'sonner'
 
+import { GithubIcon } from '@/components/icons/github-icon'
+
+import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
 import { onBackdropDismiss } from '@/lib/utils'
 
 import { projectsData } from '@/data/projects-data'
 import { useFocusTrap } from '@/hooks/use-focus-trap'
 import { useHotkeys } from '@/hooks/use-hotkeys'
+import type { Theme } from '@/hooks/use-theme'
 import type { Project } from '@/types'
 
 import { APPS } from './constants'
+import { Kbd } from './kbd'
 import type { AppId } from './types'
 
 interface CmdPaletteProps {
   onClose: () => void
   onLaunch: (appId: AppId) => void
   onOpenProject: (project: Project) => void
+  theme: Theme
+  onToggleTheme: () => void
+  onCloseAll: () => void
 }
 
 interface PaletteItem {
@@ -31,15 +40,18 @@ interface PaletteItem {
 }
 
 /**
- * ⌘K command palette overlay. Merges APPS + projects into a filterable list.
- * Implements the combobox/listbox pattern for arrow-key navigation, traps
- * focus while open, and returns focus to the previously focused element on
- * close.
+ * ⌘K command palette overlay. Merges APPS + system actions + projects into a
+ * filterable list. Implements the combobox/listbox pattern for arrow-key
+ * navigation, traps focus while open, and returns focus to the previously
+ * focused element on close.
  */
 export function CmdPalette({
   onClose,
   onLaunch,
   onOpenProject,
+  theme,
+  onToggleTheme,
+  onCloseAll,
 }: CmdPaletteProps) {
   const [q, setQ] = useState('')
   const [sel, setSel] = useState(0)
@@ -66,6 +78,60 @@ export function CmdPalette({
       }
     })
 
+    const actionItems: PaletteItem[] = [
+      {
+        ic:
+          theme === 'dark' ? (
+            <Sun size={14} strokeWidth={1.75} />
+          ) : (
+            <Moon size={14} strokeWidth={1.75} />
+          ),
+        color: '#b87a1e',
+        label:
+          theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme',
+        hint: 'action',
+        onClick: () => {
+          onToggleTheme()
+          onClose()
+        },
+        search: 'theme dark light mode toggle switch',
+      },
+      {
+        ic: <Copy size={14} strokeWidth={1.75} />,
+        color: '#0f7c74',
+        label: 'Copy email address',
+        hint: 'action',
+        onClick: async () => {
+          await navigator.clipboard.writeText(EMAIL_CONTACT).catch(() => null)
+          toast.success('Email copied')
+          onClose()
+        },
+        search: 'copy email address contact mail',
+      },
+      {
+        ic: <GithubIcon className="size-3.5" />,
+        color: '#0a5954',
+        label: 'Open GitHub profile',
+        hint: 'action',
+        onClick: () => {
+          window.open(GITHUB_URL, '_blank', 'noopener')
+          onClose()
+        },
+        search: 'github profile source code repositories',
+      },
+      {
+        ic: <SquareX size={14} strokeWidth={1.75} />,
+        color: '#6b645a',
+        label: 'Close all windows',
+        hint: 'action',
+        onClick: () => {
+          onCloseAll()
+          onClose()
+        },
+        search: 'close all windows clear desktop',
+      },
+    ]
+
     const projectItems: PaletteItem[] = projectsData.map((project) => ({
       ic: <Diamond size={14} strokeWidth={1.75} />,
       color: '#0f7c74',
@@ -85,11 +151,11 @@ export function CmdPalette({
         .toLowerCase(),
     }))
 
-    const all = [...appItems, ...projectItems]
+    const all = [...appItems, ...actionItems, ...projectItems]
     if (!q) return all
     const needle = q.toLowerCase()
     return all.filter((item) => item.search.includes(needle))
-  }, [q, onLaunch, onOpenProject, onClose])
+  }, [q, onLaunch, onOpenProject, onClose, theme, onToggleTheme, onCloseAll])
 
   useEffect(() => {
     inputRef.current?.focus()
@@ -98,6 +164,14 @@ export function CmdPalette({
   useEffect(() => {
     setSel(0)
   }, [q])
+
+  // Keep the keyboard selection visible — without this, arrowing past the
+  // fold moves the active item out of the scrolled listbox.
+  useEffect(() => {
+    document
+      .getElementById(`${listId}-item-${sel}`)
+      ?.scrollIntoView({ block: 'nearest' })
+  }, [sel, listId])
 
   const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown') {
@@ -142,9 +216,7 @@ export function CmdPalette({
             aria-expanded="true"
             className="focus-ring text-ink placeholder:text-ink-4 flex-1 rounded bg-transparent text-sm outline-none"
           />
-          <kbd className="border-rule bg-surf-soft text-ink-3 rounded border px-1.5 py-0.5 font-mono text-[11px]">
-            esc
-          </kbd>
+          <Kbd className="pointer-coarse:hidden">esc</Kbd>
         </div>
 
         <div
@@ -198,24 +270,15 @@ export function CmdPalette({
           )}
         </div>
 
-        <div className="border-rule bg-surf-soft text-ink-4 flex items-center gap-4 border-t px-4 py-2 font-mono text-[10px]">
+        <div className="border-rule bg-surf-soft text-ink-4 flex items-center gap-4 border-t px-4 py-2 font-mono text-[10px] pointer-coarse:hidden">
           <span>
-            <kbd className="border-rule bg-surf-solid/80 rounded border px-1">
-              ↑↓
-            </kbd>{' '}
-            navigate
+            <Kbd>↑↓</Kbd> navigate
           </span>
           <span>
-            <kbd className="border-rule bg-surf-solid/80 rounded border px-1">
-              ⏎
-            </kbd>{' '}
-            select
+            <Kbd>⏎</Kbd> select
           </span>
           <span>
-            <kbd className="border-rule bg-surf-solid/80 rounded border px-1">
-              esc
-            </kbd>{' '}
-            close
+            <Kbd>esc</Kbd> close
           </span>
         </div>
       </div>

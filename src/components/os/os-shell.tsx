@@ -167,6 +167,9 @@ export default function OsShell() {
           onClose={closeCmd}
           onLaunch={os.openApp}
           onOpenProject={os.openProject}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+          onCloseAll={os.closeAll}
         />
       )}
     </div>

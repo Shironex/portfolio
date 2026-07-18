@@ -14,7 +14,7 @@ import { Clock } from './clock'
 import { MenuDropdown, type MenuDropdownSection } from './menu-dropdown'
 import type { AppId } from './types'
 
-type DropdownId = 'file' | 'edit' | 'view' | 'help'
+type DropdownId = 'file' | 'edit' | 'view' | 'go' | 'help'
 
 interface MenuBarProps {
   onOpenCmd: () => void
@@ -26,9 +26,8 @@ interface MenuBarProps {
 
 /**
  * Fixed top menu bar. Three sections: logo (left), menu items (center),
- * status chips + date + time (right). File/Edit/View/Help expand into
- * dropdowns; Go opens the command palette. Right-side tray hosts a theme
- * toggle before the online chip.
+ * theme toggle + clock (right). File/Edit/View/Go/Help all expand into
+ * dropdowns.
  */
 export function MenuBar({
   onOpenCmd,
@@ -63,14 +62,35 @@ export function MenuBar({
           label: 'Copy email',
           onClick: async () => {
             await navigator.clipboard.writeText(EMAIL_CONTACT).catch(() => null)
-            toast('Email copied')
+            toast.success('Email copied')
           },
         },
         {
           label: 'Copy GitHub URL',
           onClick: async () => {
             await navigator.clipboard.writeText(GITHUB_URL).catch(() => null)
-            toast('GitHub URL copied')
+            toast.success('GitHub URL copied')
+          },
+        },
+      ],
+    },
+  ]
+
+  const goSections: MenuDropdownSection[] = [
+    {
+      items: [{ label: 'Command palette', kbd: '⌘K', onClick: onOpenCmd }],
+    },
+    {
+      divider: true,
+      items: [
+        {
+          label: 'GitHub profile',
+          onClick: () => window.open(GITHUB_URL, '_blank', 'noopener'),
+        },
+        {
+          label: 'Email me',
+          onClick: () => {
+            window.location.href = `mailto:${EMAIL_CONTACT}`
           },
         },
       ],
@@ -102,8 +122,10 @@ export function MenuBar({
       items: [
         { label: 'About ShiroOS', onClick: () => onLaunchApp('readme') },
         {
+          // The readme documents the full shortcut set — richer than the old
+          // two-item toast.
           label: 'Keyboard shortcuts',
-          onClick: () => toast('⌘K - command palette · Esc - close window'),
+          onClick: () => onLaunchApp('readme'),
         },
       ],
     },
@@ -150,14 +172,13 @@ export function MenuBar({
           onToggle={toggle('view')}
           onClose={close}
         />
-        <button
-          type="button"
-          onClick={onOpenCmd}
-          aria-label="Go to command palette"
-          className="focus-ring font-body text-ink-2 hover:bg-surf-0 hover:text-ink rounded-md px-2 py-1 text-sm transition-colors"
-        >
-          Go
-        </button>
+        <MenuDropdown
+          label="Go"
+          sections={goSections}
+          isOpen={openId === 'go'}
+          onToggle={toggle('go')}
+          onClose={close}
+        />
         <MenuDropdown
           label="Help"
           sections={helpSections}

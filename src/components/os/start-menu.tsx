@@ -5,7 +5,9 @@ import { useEffect, useMemo, useRef } from 'react'
 
 import { Search, X } from 'lucide-react'
 
-import { AUTHOR_NAME, EMAIL_CONTACT } from '@/lib/constants'
+import { GithubIcon } from '@/components/icons/github-icon'
+
+import { AUTHOR_NAME, EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
 import { onBackdropDismiss } from '@/lib/utils'
 import { getPinnedProjects } from '@/lib/utils/projects'
 
@@ -16,6 +18,7 @@ import type { Project } from '@/types'
 
 import { accentFor } from './accent-map'
 import { APPS } from './constants'
+import { Kbd } from './kbd'
 import { ProjectAvatar } from './project-avatar'
 import type { AppId } from './types'
 
@@ -83,9 +86,7 @@ export function StartMenu({
         >
           <Search aria-hidden size={16} />
           <span className="flex-1">Type to search apps &amp; projects…</span>
-          <kbd className="border-rule bg-surf-solid rounded border px-1.5 py-0.5 font-mono text-[11px]">
-            ⌘K
-          </kbd>
+          <Kbd>⌘K</Kbd>
         </button>
 
         <div className="text-ink-4 px-5 pt-4 pb-1 font-mono text-[10px] tracking-widest uppercase">
@@ -121,6 +122,26 @@ export function StartMenu({
               </button>
             )
           })}
+          {/* Sixth tile fills the 3x2 grid — no dead cell — and gives the
+              GitHub profile a first-class launch surface. */}
+          <a
+            href={GITHUB_URL}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Open GitHub profile (opens in new tab)"
+            onClick={onClose}
+            className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 hover:border-miku/40 flex flex-col items-center justify-center gap-2 rounded-xl border px-3 py-4 text-center transition-colors"
+          >
+            <span
+              aria-hidden
+              className="bg-miku/15 text-miku flex size-11 items-center justify-center rounded-xl"
+            >
+              <GithubIcon className="size-5" />
+            </span>
+            <span className="font-body text-ink text-sm font-medium">
+              GitHub
+            </span>
+          </a>
         </div>
 
         <div className="text-ink-4 px-5 pt-2 pb-1 font-mono text-[10px] tracking-widest uppercase">

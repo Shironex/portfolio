@@ -5,13 +5,17 @@ import { useCallback, useState } from 'react'
 
 import { Menu, Moon, Search, Sun, X } from 'lucide-react'
 
+import { GithubIcon } from '@/components/icons/github-icon'
+
+import { GITHUB_URL } from '@/lib/constants'
+
 import type { OsWindowsApi } from '@/hooks/use-os-windows'
 import type { Theme } from '@/hooks/use-theme'
 
 import { AppBody } from './app-registry'
 import { FeaturedPanel } from './apps/panels/featured-panel'
 import { HeroPlate } from './apps/panels/hero-plate'
-import { APPS } from './constants'
+import { APPS, windowIconFor } from './constants'
 import { MobileSheet } from './mobile-sheet'
 import type { AppId } from './types'
 
@@ -159,9 +163,6 @@ export function MobileShell({
           >
             <Search aria-hidden size={14} />
             <span className="truncate">search apps &amp; projects…</span>
-            <kbd className="border-rule bg-surf-solid/60 ml-auto rounded border px-1.5 py-0.5 font-mono text-[11px]">
-              ⌘K
-            </kbd>
           </button>
           <div className="flex items-center gap-1">
             {APPS.map((app) => {
@@ -238,23 +239,44 @@ export function MobileShell({
                   </button>
                 )
               })}
+              {/* Sixth tile completes the 3x2 grid — no dead cell. */}
+              <a
+                href={GITHUB_URL}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Open GitHub profile (opens in new tab)"
+                onClick={() => setLauncherOpen(false)}
+                className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 flex flex-col items-center gap-2 rounded-xl border px-2 py-4 transition-colors"
+              >
+                <span
+                  aria-hidden
+                  className="bg-miku/15 text-miku flex size-12 items-center justify-center rounded-xl"
+                >
+                  <GithubIcon className="size-[22px]" />
+                </span>
+                <span className="font-display text-ink text-sm">GitHub</span>
+              </a>
             </div>
           </div>
         </div>
       )}
 
       {/* Top mobile sheet only — the rest of the window stack waits behind it. */}
-      {topSheet && (
-        <MobileSheet
-          key={topSheet.id}
-          title={topSheet.title}
-          icon={topSheet.icon}
-          zIndex={400 + topSheet.z}
-          onClose={() => os.close(topSheet.id)}
-        >
-          <AppBody window={topSheet} onOpenProject={os.openProject} />
-        </MobileSheet>
-      )}
+      {topSheet &&
+        (() => {
+          const SheetIcon = windowIconFor(topSheet.id)
+          return (
+            <MobileSheet
+              key={topSheet.id}
+              title={topSheet.title}
+              icon={<SheetIcon size={16} strokeWidth={1.75} />}
+              zIndex={400 + topSheet.z}
+              onClose={() => os.close(topSheet.id)}
+            >
+              <AppBody window={topSheet} onOpenProject={os.openProject} />
+            </MobileSheet>
+          )
+        })()}
     </>
   )
 }
