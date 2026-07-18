@@ -1,3 +1,14 @@
+# [2.11.0](https://github.com/Shironex/portfolio/compare/v2.10.0...v2.11.0) (2026-07-18)
+
+
+### Features
+
+* **os:** add gallery lightbox with readable captions ([ce194f3](https://github.com/Shironex/portfolio/commit/ce194f315d4c3ba23ace6b78369d76acdabddc10))
+* **os:** distinct window focus states with exit animations ([4a59920](https://github.com/Shironex/portfolio/commit/4a59920ce075fb7cb7fa8121360c87b545150428))
+* **os:** expand chrome, start menu, and command palette ([f3ba67e](https://github.com/Shironex/portfolio/commit/f3ba67e5032b9b46927ff49017880cb2c144b6c8))
+* **os:** polish app surfaces and desktop panels ([3be7969](https://github.com/Shironex/portfolio/commit/3be79691b8240f0d8cf953d2e95fbc1742a5d537))
+* **os:** unify design primitives and motion tokens ([7ecdd2e](https://github.com/Shironex/portfolio/commit/7ecdd2efbdb111814b8f73ca2e0e3b9229124ee1))
+
 # [2.10.0](https://github.com/Shironex/portfolio/compare/v2.9.1...v2.10.0) (2026-07-15)
 
 
