@@ -13,6 +13,10 @@ const Toaster = ({ ...props }: ToasterProps) => {
     <Sonner
       theme={theme}
       className="toaster group"
+      // Clear the floating taskbar (desktop) and bottom dock (mobile) so
+      // toasts never overlap the OS chrome.
+      offset={{ bottom: 72 }}
+      mobileOffset={{ bottom: 88 }}
       style={
         {
           '--normal-bg': 'var(--color-surf-solid)',

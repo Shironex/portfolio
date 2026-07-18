@@ -16,12 +16,15 @@ const STEPS = [
 const BOOT_STORAGE_KEY = 'shiroos:booted'
 
 // Step advancement timings in ms; final entry auto-dismisses the splash.
-const BOOT_STEP_TIMINGS_MS = [650, 1450, 2250, 3000, 3700] as const
+// Kept tight (~2.4s total) — the splash is a greeting, not a loading screen,
+// and first-time visitors shouldn't wait on it. The CSS fade
+// (--animate-boot-out) starts at total minus its 0.5s duration.
+const BOOT_STEP_TIMINGS_MS = [420, 950, 1500, 1950, 2400] as const
 
 /**
  * ShiroOS boot splash. Shown only once per tab session; skippable via Esc or
  * the "skip" button. Respects `prefers-reduced-motion` by collapsing to an
- * instant dismiss. Auto-dismisses at ~3.7s for first-time visitors.
+ * instant dismiss. Auto-dismisses at ~2.4s for first-time visitors.
  */
 export function Boot() {
   const reducedMotion = useReducedMotion()

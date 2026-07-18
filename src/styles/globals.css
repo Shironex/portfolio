@@ -187,12 +187,13 @@
    * Intentionally not using bounce/overshoot curves — they read as dated.
    */
   --animate-win-open: winOpen 0.28s cubic-bezier(0.25, 1, 0.5, 1);
+  --animate-win-close: winClose 0.14s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   --animate-sheet-up: sheetUp 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
   --animate-cp-in: cpIn 0.22s cubic-bezier(0.25, 1, 0.5, 1);
   --animate-pulse-slow: pulse 1.8s ease-in-out infinite;
   --animate-bob-note: bobNote 1.4s ease-in-out infinite;
   --animate-logo-pop: logoPop 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-  --animate-boot-out: bootOut 0.5s ease 3.2s forwards;
+  --animate-boot-out: bootOut 0.5s ease 1.9s forwards;
   --animate-boot-fill: bootFill 3s ease-out forwards;
   --animate-term-in: termIn 0.3s ease forwards;
   --animate-fade-in: fadeIn 0.3s ease;
@@ -301,6 +302,13 @@
     }
   }
 
+  @keyframes winClose {
+    to {
+      opacity: 0;
+      transform: scale(0.96) translateY(6px);
+    }
+  }
+
   @keyframes sheetUp {
     from {
       opacity: 0;
@@ -365,8 +373,11 @@
     --popover: 240 5% 6%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 265 89% 66%;
-    --primary-foreground: 0 0% 98%;
+    /* Primary/ring track the teal accent (miku) so shadcn components — and
+       their focus rings — match the ShiroOS chrome instead of the retired
+       purple theme. */
+    --primary: 176 78% 27%;
+    --primary-foreground: 43 63% 96%;
 
     --secondary: 240 5% 15%;
     --secondary-foreground: 0 0% 98%;
@@ -382,7 +393,7 @@
 
     --border: 240 5% 15%;
     --input: 240 5% 15%;
-    --ring: 265 89% 66%;
+    --ring: 176 78% 27%;
 
     --radius: 0.5rem;
 
@@ -425,6 +436,8 @@
      * navy or dark-gray-with-neon. Everything sits on a darker version of
      * the accent itself; the accent brightens so it still pops.
      */
+    --primary: 176 57% 53%;
+    --ring: 176 57% 53%;
     --color-miku: #42ccc2;
     --color-miku-2: #22a097;
     --color-miku-3: #6fdfd6;
@@ -542,17 +555,23 @@
     border-radius: inherit;
   }
 
+  /* Text selection matches the teal accent instead of the browser default. */
+  ::selection {
+    background: color-mix(in oklab, var(--color-miku) 25%, transparent);
+    color: var(--color-ink);
+  }
+
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    @apply font-bold tracking-tight;
+    @apply font-bold tracking-tight text-balance;
   }
 
   p {
-    @apply leading-relaxed;
+    @apply leading-relaxed text-pretty;
   }
 
   /* Inline code styling - only apply to code not inside pre blocks */
