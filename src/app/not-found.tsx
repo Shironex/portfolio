@@ -6,6 +6,8 @@ import { useMemo } from 'react'
 
 import { AlertTriangle, ArrowLeft, Home } from 'lucide-react'
 
+import { Kbd } from '@/components/os/kbd'
+
 import { useHotkeys } from '@/hooks/use-hotkeys'
 
 export default function NotFound() {
@@ -102,10 +104,8 @@ export default function NotFound() {
                 <ArrowLeft aria-hidden className="size-4" />
                 Go back
               </button>
-              <span className="text-ink-4 ml-auto flex items-center gap-1.5 font-mono text-[11px]">
-                <kbd className="border-rule bg-surf-solid/60 rounded border px-1.5 py-0.5 font-mono text-[11px]">
-                  Esc
-                </kbd>
+              <span className="text-ink-4 ml-auto flex items-center gap-1.5 font-mono text-[11px] pointer-coarse:hidden">
+                <Kbd>Esc</Kbd>
                 <span>to return home</span>
               </span>
             </div>

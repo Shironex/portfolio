@@ -24,10 +24,16 @@ export default function SkillsApp() {
               {col.group}
             </h3>
             <div className="flex flex-wrap gap-1.5">
-              {col.items.map((item) => (
+              {/* First chip is the daily driver — the intro copy promises
+                  this hierarchy, so the visuals have to deliver it. */}
+              {col.items.map((item, i) => (
                 <span
                   key={item.n}
-                  className="border-rule-2 bg-surf-0 text-ink-2 rounded-full border px-2.5 py-1 font-mono text-xs"
+                  className={`rounded-full border px-2.5 py-1 font-mono text-xs ${
+                    i === 0
+                      ? 'border-miku/40 bg-miku/10 text-miku-2 font-semibold'
+                      : 'border-rule-2 bg-surf-0 text-ink-2'
+                  }`}
                 >
                   {item.n}
                 </span>

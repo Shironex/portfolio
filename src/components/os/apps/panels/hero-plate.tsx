@@ -2,6 +2,8 @@
 
 import Image from 'next/image'
 
+import { Kbd } from '@/components/os/kbd'
+
 import { GithubActivityStrip } from './github-activity-strip'
 
 interface HeroPlateProps {
@@ -50,19 +52,19 @@ export function HeroPlate({ onOpenCmd, onOpenContact }: HeroPlateProps) {
           className="focus-ring bg-miku text-cloud hover:bg-miku-2 flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
         >
           Say hi
-          <kbd className="bg-cloud/20 rounded px-1 font-mono text-[11px]">
+          <Kbd tone="accent" className="pointer-coarse:hidden">
             ⏎
-          </kbd>
+          </Kbd>
         </button>
         <button
           type="button"
           onClick={onOpenCmd}
           className="focus-ring bg-surf-0 border-rule-2 text-ink hover:bg-surf-soft flex items-center gap-2 rounded-lg border px-4 py-2 text-sm transition-colors"
         >
-          Command palette
-          <kbd className="bg-surf-solid/80 rounded px-1 font-mono text-[11px]">
-            ⌘K
-          </kbd>
+          {/* Keyboard hints are noise on touch — relabel to what it does there. */}
+          <span className="pointer-coarse:hidden">Command palette</span>
+          <span className="hidden pointer-coarse:inline">Search</span>
+          <Kbd className="pointer-coarse:hidden">⌘K</Kbd>
         </button>
       </div>
 

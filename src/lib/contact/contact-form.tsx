@@ -57,11 +57,11 @@ export function ContactForm({
   const { executeAsync, isPending } = useAction(sendEmailAction, {
     onSuccess: () => {
       form.reset()
-      toast('Email sent successfully')
+      toast.success('Email sent successfully')
       void capturePosthogEvent('contact_form_submitted')
     },
     onError: ({ error }) => {
-      toast(error.serverError)
+      toast.error(error.serverError ?? 'Something went wrong')
       void capturePosthogEvent('contact_form_error', {
         error_message: error.serverError,
       })
@@ -70,7 +70,7 @@ export function ContactForm({
 
   const handleSubmit = form.handleSubmit(async (data: ContactFormSchema) => {
     if (!data.turnstileToken) {
-      toast('Please complete the captcha')
+      toast.error('Please complete the captcha')
       return
     }
     await executeAsync(data)

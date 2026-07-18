@@ -66,7 +66,7 @@ export function FeaturedPanel({ onOpenProject }: FeaturedPanelProps) {
                   {p.summary}
                 </div>
               </div>
-              <span className="text-ink-4 group-hover:text-miku transition-colors">
+              <span className="text-ink-4 group-hover:text-miku transition-all group-hover:translate-x-0.5">
                 →
               </span>
             </button>

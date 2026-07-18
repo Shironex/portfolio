@@ -27,6 +27,11 @@ export function TerminalPanel() {
   return (
     <div className="border-rule-2 bg-surf-solid overflow-hidden rounded-2xl border">
       <div className="border-rule bg-surf-soft flex items-center gap-3 border-b px-3 py-2">
+        <span aria-hidden className="flex items-center gap-1.5">
+          <span className="bg-danger/50 size-2 rounded-full" />
+          <span className="bg-peach/50 size-2 rounded-full" />
+          <span className="bg-mint/60 size-2 rounded-full" />
+        </span>
         <span className="text-ink flex-1 font-mono text-xs font-bold">
           ~/kacper - zsh
         </span>

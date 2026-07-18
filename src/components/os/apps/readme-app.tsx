@@ -1,5 +1,7 @@
 import Image from 'next/image'
 
+import { Kbd } from '@/components/os/kbd'
+
 import { GITHUB_URL } from '@/lib/constants'
 
 /**
@@ -28,11 +30,7 @@ export default function ReadmeApp() {
 
       <p>
         This is my portfolio, reimagined as a small desktop. Click the icons on
-        the side to open apps, or press{' '}
-        <kbd className="bg-miku/15 border-rule text-miku-2 rounded border px-1.5 py-0.5 font-mono text-xs font-bold">
-          ⌘K
-        </kbd>{' '}
-        for the command palette.
+        the side to open apps, or press <Kbd>⌘K</Kbd> for the command palette.
       </p>
 
       <h3 className="font-display text-ink mt-7 mb-2 text-lg font-semibold">
@@ -62,22 +60,13 @@ export default function ReadmeApp() {
       </h3>
       <ul className="list-disc space-y-1 pl-5">
         <li>
-          <kbd className="bg-surf-soft border-rule text-ink-2 rounded border px-1.5 py-0.5 font-mono text-xs font-bold">
-            ⌘K
-          </kbd>{' '}
-          - command palette
+          <Kbd>⌘K</Kbd> - command palette
         </li>
         <li>
-          <kbd className="bg-surf-soft border-rule text-ink-2 rounded border px-1.5 py-0.5 font-mono text-xs font-bold">
-            Esc
-          </kbd>{' '}
-          - close the focused window
+          <Kbd>Esc</Kbd> - close the focused window
         </li>
         <li>
-          Arrow keys on a focused title bar - move the window;{' '}
-          <kbd className="bg-surf-soft border-rule text-ink-2 rounded border px-1.5 py-0.5 font-mono text-xs font-bold">
-            Shift
-          </kbd>{' '}
+          Arrow keys on a focused title bar - move the window; <Kbd>Shift</Kbd>{' '}
           + arrows to resize.
         </li>
       </ul>
@@ -86,6 +75,8 @@ export default function ReadmeApp() {
         Built with Next.js 16 and Tailwind v4. Source is on{' '}
         <a
           href={GITHUB_URL}
+          target="_blank"
+          rel="noreferrer"
           className="focus-ring text-miku-2 rounded-sm underline underline-offset-2"
         >
           GitHub

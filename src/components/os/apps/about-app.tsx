@@ -58,7 +58,7 @@ export default function AboutApp() {
           />
         </div>
         <div>
-          <h2 className="font-display text-ink mb-2 text-2xl font-semibold tracking-tight">
+          <h2 className="font-display text-ink mb-2 text-3xl font-semibold tracking-tight">
             I&apos;m <em className="text-ink font-bold not-italic">Kacper</em>,
             full-stack developer, Poland
           </h2>
@@ -89,7 +89,7 @@ export default function AboutApp() {
         <h3 className="font-display text-ink mb-3 text-lg font-semibold">
           Outside the editor
         </h3>
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-1 gap-2.5 min-[420px]:grid-cols-2">
           {hobbies.map((h) => {
             const Icon = h.icon
             return (

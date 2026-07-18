@@ -185,7 +185,7 @@ export function GithubActivityStrip() {
       {hover && (
         <div
           aria-hidden
-          className="border-rule-2 bg-surf-solid text-ink shadow-elev-2 pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full rounded-md border px-2 py-1 font-mono text-[10px]"
+          className="border-rule-2 bg-surf-solid text-ink shadow-elev-2 animate-fade-in pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full rounded-md border px-2 py-1 font-mono text-[10px] motion-reduce:animate-none"
           style={{ left: hover.x, top: hover.y - 6 }}
         >
           {describeDay(hover.day)}

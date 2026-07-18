@@ -194,7 +194,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                       ))}
                     </div>
                   </div>
-                  <span className="text-ink-4 group-hover:text-miku transition-colors">
+                  <span className="text-ink-4 group-hover:text-miku transition-all group-hover:translate-x-0.5">
                     →
                   </span>
                 </div>

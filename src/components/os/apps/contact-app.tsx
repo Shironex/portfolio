@@ -9,7 +9,8 @@
 
 import dynamic from 'next/dynamic'
 
-import { Clock, Mail, MapPin } from 'lucide-react'
+import { Clock, Copy, Mail, MapPin } from 'lucide-react'
+import { toast } from 'sonner'
 
 import { GithubIcon } from '@/components/icons/github-icon'
 
@@ -35,6 +36,8 @@ type ReachRow = {
   label: string
   value: string
   href?: string
+  /** When set, the row grows a copy-to-clipboard button for this value. */
+  copyValue?: string
 }
 
 const rows: ReachRow[] = [
@@ -43,6 +46,7 @@ const rows: ReachRow[] = [
     label: 'Email',
     value: EMAIL_CONTACT,
     href: `mailto:${EMAIL_CONTACT}`,
+    copyValue: EMAIL_CONTACT,
   },
   {
     icon: <GithubIcon className="h-4 w-4" />,
@@ -100,16 +104,34 @@ export default function ContactApp() {
 
             if (row.href) {
               return (
-                <a
-                  key={row.label}
-                  href={row.href}
-                  target={row.href.startsWith('http') ? '_blank' : undefined}
-                  rel={row.href.startsWith('http') ? 'noreferrer' : undefined}
-                  aria-label={`${row.label}: ${row.value}`}
-                  className="focus-ring border-rule bg-surf-0 hover:border-miku/40 hover:bg-surf-soft flex items-center gap-3 rounded-xl border p-3 transition-colors"
-                >
-                  {inner}
-                </a>
+                <div key={row.label} className="relative">
+                  <a
+                    href={row.href}
+                    target={row.href.startsWith('http') ? '_blank' : undefined}
+                    rel={row.href.startsWith('http') ? 'noreferrer' : undefined}
+                    aria-label={`${row.label}: ${row.value}`}
+                    className={`focus-ring border-rule bg-surf-0 hover:border-miku/40 hover:bg-surf-soft flex items-center gap-3 rounded-xl border p-3 transition-colors ${
+                      row.copyValue ? 'pr-11' : ''
+                    }`}
+                  >
+                    {inner}
+                  </a>
+                  {row.copyValue && (
+                    <button
+                      type="button"
+                      aria-label={`Copy ${row.label.toLowerCase()}`}
+                      onClick={async () => {
+                        await navigator.clipboard
+                          .writeText(row.copyValue ?? '')
+                          .catch(() => null)
+                        toast.success(`${row.label} copied`)
+                      }}
+                      className="focus-ring text-ink-4 hover:bg-surf-soft hover:text-miku-2 absolute top-1/2 right-2 -translate-y-1/2 rounded-md p-2 transition-colors"
+                    >
+                      <Copy aria-hidden className="size-3.5" />
+                    </button>
+                  )}
+                </div>
               )
             }
 
