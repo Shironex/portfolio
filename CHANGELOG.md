@@ -1,3 +1,10 @@
+# [2.10.0](https://github.com/Shironex/portfolio/compare/v2.9.1...v2.10.0) (2026-07-15)
+
+
+### Features
+
+* **os:** add theme toggle to mobile shell ([669065e](https://github.com/Shironex/portfolio/commit/669065e5fe52ddbfec8c0810ca667db461ccdc27))
+
 ## [2.9.1](https://github.com/Shironex/portfolio/compare/v2.9.0...v2.9.1) (2026-07-15)
 
 
