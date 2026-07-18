@@ -10,7 +10,8 @@ import { useScrollLock } from '@/hooks/use-scroll-lock'
 
 interface MobileSheetProps {
   title: string
-  icon?: string
+  /** Rendered in the header — typically a lucide icon element. */
+  icon?: ReactNode
   onClose: () => void
   zIndex?: number
   children: ReactNode
@@ -47,7 +48,7 @@ export function MobileSheet({
       <div className="border-rule bg-surf-1 flex h-12 shrink-0 items-center justify-between gap-3 border-b px-4">
         <div className="flex items-center gap-2">
           {icon && (
-            <span aria-hidden className="text-miku-2 text-sm">
+            <span aria-hidden className="text-miku-2">
               {icon}
             </span>
           )}

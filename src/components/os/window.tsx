@@ -1,12 +1,14 @@
 'use client'
 
 import type { KeyboardEvent, MouseEvent, ReactNode } from 'react'
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { WindowControls } from '@/components/os/window-controls'
 
 import { usePointerDrag } from '@/hooks/use-pointer-drag'
+import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
+import { windowIconFor } from './constants'
 import type { WindowId, WindowState } from './types'
 
 interface WindowProps {
@@ -28,6 +30,8 @@ type ResizeDir = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw'
 
 const KEYBOARD_MOVE_STEP = 20
 const KEYBOARD_RESIZE_STEP = 24
+/** Duration of the close/minimize exit animation (matches animate-win-close). */
+const EXIT_ANIMATION_MS = 140
 
 /**
  * Draggable OS window with keyboard parity.
@@ -54,6 +58,9 @@ export function Window({
   const onGestureMove = useRef<((event: globalThis.MouseEvent) => void) | null>(
     null
   )
+  const reducedMotion = useReducedMotion()
+  // Close/minimize play a short exit animation before the state change lands.
+  const [leaving, setLeaving] = useState(false)
 
   const startPointer = usePointerDrag({
     onMove: useCallback((event: globalThis.MouseEvent) => {
@@ -64,7 +71,24 @@ export function Window({
     }, []),
   })
 
+  // The component stays mounted while minimized (it renders null), so the
+  // leaving flag must clear on restore or the exit animation would replay.
+  useEffect(() => {
+    if (!win.minimized) setLeaving(false)
+  }, [win.minimized])
+
   if (win.minimized) return null
+
+  const exitThen = (commit: () => void) => {
+    if (reducedMotion || leaving) {
+      commit()
+      return
+    }
+    setLeaving(true)
+    globalThis.setTimeout(commit, EXIT_ANIMATION_MS)
+  }
+  const requestClose = () => exitThen(() => onClose(win.id))
+  const requestMinimize = () => exitThen(() => onMinimize(win.id))
 
   const startDrag = (e: MouseEvent<HTMLDivElement>) => {
     onFocus(win.id)
@@ -122,13 +146,13 @@ export function Window({
     const ctrlish = event.ctrlKey || event.metaKey
     if (ctrlish && event.key.toLowerCase() === 'w') {
       event.preventDefault()
-      onClose(win.id)
+      requestClose()
       return
     }
     if (ctrlish && event.key.toLowerCase() === 'm') {
       event.preventDefault()
       if (event.shiftKey) onMaximize(win.id)
-      else onMinimize(win.id)
+      else requestMinimize()
       return
     }
     if (
@@ -160,6 +184,7 @@ export function Window({
   }
 
   const showHandles = !win.maximized
+  const TitleIcon = windowIconFor(win.id)
 
   return (
     <div
@@ -177,8 +202,11 @@ export function Window({
       }}
       className={[
         'border-rule-2 bg-surf-2 absolute flex flex-col overflow-hidden rounded-xl border backdrop-blur-xl',
-        'shadow-elev-3 animate-win-open motion-reduce:animate-none',
-        isFocused ? 'ring-miku/30 ring-1' : '',
+        'transition-shadow duration-200 motion-reduce:animate-none',
+        leaving ? 'animate-win-close' : 'animate-win-open',
+        // Focused window carries the deeper shadow + accent ring; unfocused
+        // windows recede so the stack reads at a glance.
+        isFocused ? 'shadow-elev-3 ring-miku/30 ring-1' : 'shadow-elev-2',
       ]
         .filter(Boolean)
         .join(' ')}
@@ -192,15 +220,22 @@ export function Window({
         className="focus-ring border-rule bg-surf-1 flex h-9 cursor-grab items-center justify-between gap-3 border-b px-3 select-none active:cursor-grabbing pointer-coarse:h-11"
       >
         <div className="flex items-center gap-2">
-          <span aria-hidden className="text-miku-2 text-sm">
-            {win.icon}
+          <span
+            aria-hidden
+            className={isFocused ? 'text-miku-2' : 'text-ink-4'}
+          >
+            <TitleIcon size={14} strokeWidth={1.75} />
           </span>
-          <span className="text-ink-2 font-mono text-xs">{win.title}</span>
+          <span
+            className={`font-mono text-xs ${isFocused ? 'text-ink-2' : 'text-ink-4'}`}
+          >
+            {win.title}
+          </span>
         </div>
         <WindowControls
-          onMinimize={() => onMinimize(win.id)}
+          onMinimize={requestMinimize}
           onMaximize={() => onMaximize(win.id)}
-          onClose={() => onClose(win.id)}
+          onClose={requestClose}
         />
       </div>
       <div className="font-body text-ink flex-1 overflow-auto p-6">

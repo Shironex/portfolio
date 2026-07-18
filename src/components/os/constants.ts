@@ -1,6 +1,14 @@
-import { Activity, BookOpen, FolderKanban, Mail, UserRound } from 'lucide-react'
+import {
+  Activity,
+  BookOpen,
+  Diamond,
+  FolderKanban,
+  Mail,
+  UserRound,
+} from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
-import type { AppDescriptor, AppId } from './types'
+import type { AppDescriptor, AppId, WindowId } from './types'
 
 /*
  * App accents collapse to a two-tone teal + ochre system. Icons are from
@@ -14,6 +22,15 @@ export const APPS: AppDescriptor[] = [
   { id: 'contact', name: 'Contact', icon: Mail, color: '#b87a1e' },
   { id: 'readme', name: 'Readme', icon: BookOpen, color: '#1ca59b' },
 ]
+
+/**
+ * Lucide icon for a window's title bar — the app's own icon, or Diamond for
+ * project windows. Keeps title bars in the same icon system as the taskbar,
+ * start menu, and desktop instead of the old Unicode glyphs.
+ */
+export function windowIconFor(id: WindowId): LucideIcon {
+  return APPS.find((app) => app.id === id)?.icon ?? Diamond
+}
 
 export const APP_WINDOW_DEFAULTS: Record<
   AppId,
