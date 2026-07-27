@@ -17,6 +17,18 @@ interface ClockProps {
  */
 function ClockImpl({ className, showDate = true }: ClockProps) {
   const now = useClock()
+
+  // Pre-hydration there is no trustworthy clock — hold the space instead so the
+  // chrome doesn't jump when the real time lands a frame later.
+  if (!now) {
+    return (
+      <time className={className}>
+        <span className="invisible">00:00</span>
+        {showDate && <span className="invisible ml-2">Mon, Jan 00</span>}
+      </time>
+    )
+  }
+
   const time = now.toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit',
