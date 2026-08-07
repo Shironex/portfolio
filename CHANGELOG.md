@@ -1,3 +1,10 @@
+## [2.11.1](https://github.com/Shironex/portfolio/compare/v2.11.0...v2.11.1) (2026-08-07)
+
+
+### Bug Fixes
+
+* **deps:** apply Phase 1 safe dependency bumps to clear CVEs ([bc289d7](https://github.com/Shironex/portfolio/commit/bc289d74927df0496a84d7825410fd76570e08b6))
+
 # [2.11.0](https://github.com/Shironex/portfolio/compare/v2.10.0...v2.11.0) (2026-07-18)
 
 
