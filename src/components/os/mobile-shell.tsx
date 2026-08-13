@@ -61,9 +61,10 @@ export function MobileShell({
   // topmost non-minimized window by z-order and render just that.
   const topSheet = os.windows
     .filter((w) => !w.minimized)
-    .reduce<
-      (typeof os.windows)[number] | null
-    >((top, w) => (top === null || w.z > top.z ? w : top), null)
+    .reduce<(typeof os.windows)[number] | null>(
+      (top, w) => (top === null || w.z > top.z ? w : top),
+      null
+    )
 
   return (
     <>
