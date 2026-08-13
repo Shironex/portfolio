@@ -190,7 +190,7 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2
       postcss:
-        specifier: ^8.5.26
+        specifier: '>=8.5.10'
         version: 8.5.26
       prettier:
         specifier: ^3.9.6
