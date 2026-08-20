@@ -1,3 +1,16 @@
+# [2.12.0](https://github.com/Shironex/portfolio/compare/v2.11.1...v2.12.0) (2026-08-20)
+
+
+### Bug Fixes
+
+* **ci:** broken pnpm lock file ([4e7e663](https://github.com/Shironex/portfolio/commit/4e7e663a5bf1182714ccf469a6c520038b86f002))
+
+
+### Features
+
+* **theme:** add the palette picker and move accents onto roles ([776d0c9](https://github.com/Shironex/portfolio/commit/776d0c9c6dee876aae11a3034c4e0875b6fd675e))
+* **theme:** move palette tokens into a generated stylesheet ([0c627e7](https://github.com/Shironex/portfolio/commit/0c627e7edad699536fd65428cfefe5c565414bbe))
+
 ## [2.11.1](https://github.com/Shironex/portfolio/compare/v2.11.0...v2.11.1) (2026-08-07)
 
 
