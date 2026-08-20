@@ -15,7 +15,7 @@ export function NoscriptFallback() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: '#f5efe0',
+          background: 'var(--color-sky-1)',
           padding: '2rem',
           zIndex: 10_000,
           fontFamily: 'system-ui, -apple-system, "Segoe UI", Geist, sans-serif',
@@ -26,7 +26,7 @@ export function NoscriptFallback() {
             maxWidth: 520,
             padding: '2rem',
             borderRadius: 16,
-            background: '#ffffff',
+            background: 'var(--color-surf-solid)',
             border: '1px solid rgba(26, 23, 20, 0.16)',
             boxShadow: '0 10px 40px -5px rgba(26, 23, 20, 0.2)',
           }}
@@ -35,7 +35,7 @@ export function NoscriptFallback() {
             style={{
               margin: 0,
               fontSize: 24,
-              color: '#1a1714',
+              color: 'var(--color-ink)',
               fontWeight: 700,
             }}
           >
@@ -44,7 +44,7 @@ export function NoscriptFallback() {
           <p
             style={{
               marginTop: 12,
-              color: '#3a3530',
+              color: 'var(--color-ink-2)',
               fontSize: 14,
               lineHeight: 1.6,
             }}
@@ -56,7 +56,7 @@ export function NoscriptFallback() {
             style={{
               marginTop: 16,
               paddingLeft: 20,
-              color: '#3a3530',
+              color: 'var(--color-ink-2)',
               fontSize: 14,
               lineHeight: 1.8,
             }}
@@ -67,13 +67,16 @@ export function NoscriptFallback() {
             </li>
             <li>
               Email:{' '}
-              <a href={`mailto:${EMAIL_CONTACT}`} style={{ color: '#0f7c74' }}>
+              <a
+                href={`mailto:${EMAIL_CONTACT}`}
+                style={{ color: 'var(--color-miku)' }}
+              >
                 {EMAIL_CONTACT}
               </a>
             </li>
             <li>
               GitHub:{' '}
-              <a href={GITHUB_URL} style={{ color: '#00b8d4' }}>
+              <a href={GITHUB_URL} style={{ color: 'var(--color-miku)' }}>
                 {GITHUB_URL}
               </a>
             </li>

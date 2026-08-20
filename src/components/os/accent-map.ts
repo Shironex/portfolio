@@ -1,39 +1,78 @@
 /**
- * Per-project accent colors. Collapsed to a teal-weighted palette with an
- * ochre for warm outliers — so project cards still read as distinct without
- * returning to the old pastel rainbow.
+ * Accent roles, not colours.
  *
- * Keys map to the `slug` field on each {@link Project} entry in
- * `@/data/projects-data`.
+ * A ShiroOS surface names the role it means and the active palette decides the
+ * hex, so switching palettes reaches app icons, project tiles and the command
+ * palette without any of them knowing a colour exists. The six roles are
+ * exactly what the palette table in `scripts/gen-palettes.mjs` defines; there
+ * is deliberately no escape hatch for an arbitrary colour, because one would
+ * be the colour that stops changing when the palette does.
  */
-export const projectAccent: Record<string, string> = {
-  automaker: '#b87a1e',
-  omniscribe: '#0f7c74',
-  shiroani: '#1ca59b',
-  shiranami: '#0a5954',
-  kodama: '#1ca59b',
-  shiroku: '#b87a1e',
-  toriime: '#cf8a33',
-  gitchorus: '#b87a1e',
-  sudeko: '#0a5954',
-  matmajka: '#1ca59b',
-  'kirei-manga': '#cf8a33',
-  moekoder: '#0a5954',
-  'write-wiz': '#0f7c74',
-  'claude-code-discord-bot': '#0a5954',
-  'cli-template': '#0f7c74',
-  'gh-labels-cli': '#1ca59b',
-  'shinijs-logger': '#0f7c74',
-  'shinijs-rate-limit': '#b87a1e',
+export const ACCENT_ROLES = [
+  'primary',
+  'deep',
+  'bright',
+  'warm',
+  'warm-2',
+  'neutral',
+] as const
+
+export type AccentRole = (typeof ACCENT_ROLES)[number]
+
+const ROLE_VAR: Record<AccentRole, string> = {
+  primary: '--color-miku',
+  deep: '--color-miku-2',
+  bright: '--color-miku-3',
+  warm: '--color-peach',
+  'warm-2': '--color-peach-2',
+  neutral: '--color-lav',
 }
 
-export const DEFAULT_ACCENT = '#0f7c74'
+/** Resolved colour for a role, for use in an inline `style`. */
+export function accentColor(role: AccentRole): string {
+  return `var(${ROLE_VAR[role]})`
+}
 
 /**
- * Resolve the accent color for a given project slug (or id — they match
- * across the current dataset). Falls back to {@link DEFAULT_ACCENT} when
- * no mapping exists.
+ * Translucent fill of an accent. Replaces the `${hex}25` suffix trick, which
+ * only worked while accents were literal hex strings.
  */
-export function accentFor(idOrSlug: string): string {
+export function accentTint(role: AccentRole, percent: number): string {
+  return `color-mix(in oklab, var(${ROLE_VAR[role]}) ${percent}%, transparent)`
+}
+
+/**
+ * Per-project accent role. Keys map to the `slug` field on each `Project`
+ * entry in `@/data/projects-data`.
+ */
+export const projectAccent: Record<string, AccentRole> = {
+  automaker: 'warm',
+  omniscribe: 'primary',
+  shiroani: 'bright',
+  shiranami: 'deep',
+  kodama: 'bright',
+  shiroku: 'warm',
+  toriime: 'warm-2',
+  gitchorus: 'warm',
+  sudeko: 'deep',
+  matmajka: 'bright',
+  'kirei-manga': 'warm-2',
+  moekoder: 'deep',
+  'write-wiz': 'primary',
+  'claude-code-discord-bot': 'deep',
+  'cli-template': 'primary',
+  'gh-labels-cli': 'bright',
+  'shinijs-logger': 'primary',
+  'shinijs-rate-limit': 'warm',
+}
+
+export const DEFAULT_ACCENT: AccentRole = 'primary'
+
+/**
+ * Resolve the accent role for a given project slug (or id — they match across
+ * the current dataset). Falls back to {@link DEFAULT_ACCENT} when no mapping
+ * exists.
+ */
+export function accentFor(idOrSlug: string): AccentRole {
   return projectAccent[idOrSlug] ?? DEFAULT_ACCENT
 }

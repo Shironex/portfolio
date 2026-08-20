@@ -50,7 +50,7 @@ export default function OsShell() {
   const [cmdOpen, setCmdOpen] = useState(false)
   const [startOpen, setStartOpen] = useState(false)
   const os = useOsWindows()
-  const { theme, toggleTheme } = useTheme()
+  const { theme, palette, toggleTheme, setPalette } = useTheme()
   const isMobile = useIsMobile()
 
   const toggleCmd = useCallback(() => {
@@ -101,6 +101,8 @@ export default function OsShell() {
           onOpenCmd={openCmd}
           theme={theme}
           onToggleTheme={toggleTheme}
+          palette={palette}
+          onSelectPalette={setPalette}
         />
       ) : (
         <>
@@ -110,6 +112,8 @@ export default function OsShell() {
             onCloseAll={os.closeAll}
             theme={theme}
             onToggleTheme={toggleTheme}
+            palette={palette}
+            onSelectPalette={setPalette}
           />
 
           <DesktopCanvas>
@@ -170,6 +174,8 @@ export default function OsShell() {
           theme={theme}
           onToggleTheme={toggleTheme}
           onCloseAll={os.closeAll}
+          palette={palette}
+          onSelectPalette={setPalette}
         />
       )}
     </div>

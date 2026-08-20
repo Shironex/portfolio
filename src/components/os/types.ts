@@ -2,6 +2,8 @@ import type { LucideIcon } from 'lucide-react'
 
 import type { Project } from '@/types'
 
+import type { AccentRole } from './accent-map'
+
 export type AppId = 'projects' | 'about' | 'skills' | 'contact' | 'readme'
 
 export type WindowId = AppId | `project-${string}`
@@ -27,5 +29,5 @@ export interface AppDescriptor {
   id: AppId
   name: string
   icon: LucideIcon
-  color: string
+  accent: AccentRole
 }

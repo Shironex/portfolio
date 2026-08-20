@@ -5,6 +5,7 @@ import type React from 'react'
 import { Toaster } from '@/components/ui/sonner'
 
 import { defaultMetadata, siteConfig } from '@/lib/metadata-config'
+import { APPEARANCE_BOOT_SCRIPT, DEFAULT_PALETTE } from '@/lib/os/appearance'
 
 import '@/styles/globals.css'
 
@@ -51,7 +52,14 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-palette={DEFAULT_PALETTE} suppressHydrationWarning>
+      <head>
+        <script
+          // Applies the stored mode and palette before first paint. Inline and
+          // blocking on purpose; a deferred script paints the default first.
+          dangerouslySetInnerHTML={{ __html: APPEARANCE_BOOT_SCRIPT }}
+        />
+      </head>
       <body
         className={`${fraunces.variable} ${geist.variable} ${jetbrainsMono.variable} font-body antialiased`}
         suppressHydrationWarning

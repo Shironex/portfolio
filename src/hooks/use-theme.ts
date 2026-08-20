@@ -2,30 +2,27 @@
 
 import { useCallback, useEffect, useState } from 'react'
 
-export type Theme = 'light' | 'dark'
+import {
+  type Appearance,
+  DEFAULT_APPEARANCE,
+  type Mode,
+  type PaletteId,
+  applyAppearance,
+  readStoredAppearance,
+  writeStoredAppearance,
+} from '@/lib/os/appearance'
 
-const STORAGE_KEY = 'shiroos:theme'
-
-function readStoredTheme(): Theme | null {
-  if (typeof window === 'undefined') return null
-  const v = window.localStorage.getItem(STORAGE_KEY)
-  return v === 'light' || v === 'dark' ? v : null
-}
-
-function applyTheme(theme: Theme) {
-  if (typeof document === 'undefined') return
-  const root = document.documentElement
-  if (theme === 'dark') root.classList.add('dark')
-  else root.classList.remove('dark')
-}
+export type Theme = Mode
+export type { PaletteId }
 
 /**
- * Flip the theme inside a View Transition so the palette cross-fades instead
- * of hard-swapping. Falls back to an instant swap when the API is missing or
- * the user prefers reduced motion. Only used for user-initiated toggles — the
- * initial mount applies the stored theme directly, without an animation.
+ * Flip the appearance inside a View Transition so the palette cross-fades
+ * instead of hard-swapping. Falls back to an instant swap when the API is
+ * missing or the user prefers reduced motion. Only used for user-initiated
+ * changes — the boot script has already applied the stored appearance before
+ * first paint, so mount never animates.
  */
-function applyThemeAnimated(theme: Theme) {
+function applyAnimated(next: Appearance) {
   if (typeof document === 'undefined') return
   const doc = document as Document & {
     startViewTransition?: (callback: () => void) => unknown
@@ -34,45 +31,64 @@ function applyThemeAnimated(theme: Theme) {
     '(prefers-reduced-motion: reduce)'
   ).matches
   if (doc.startViewTransition && !reducedMotion) {
-    doc.startViewTransition(() => applyTheme(theme))
+    doc.startViewTransition(() => applyAppearance(next))
   } else {
-    applyTheme(theme)
+    applyAppearance(next)
   }
 }
 
 /**
- * Simple theme hook — reads from localStorage on mount, applies `.dark` class
- * to <html>, persists on every change. Default is light.
+ * Owns both appearance axes: light/dark mode and the colour palette.
+ *
+ * The boot script has normally applied the stored appearance before paint, so
+ * mount is just a sync. It re-applies anyway rather than trusting that: the
+ * apply is idempotent, and it is the difference between a dropped boot script
+ * degrading into a stale-looking page and it converging on the next tick.
  */
 export function useTheme() {
-  const [theme, setThemeState] = useState<Theme>('light')
+  const [appearance, setAppearance] = useState<Appearance>(DEFAULT_APPEARANCE)
 
   useEffect(() => {
-    const stored = readStoredTheme()
-    if (stored) {
-      setThemeState(stored)
-      applyTheme(stored)
-    }
+    const stored = readStoredAppearance()
+    setAppearance(stored)
+    applyAppearance(stored)
   }, [])
 
-  const setTheme = useCallback((next: Theme) => {
-    setThemeState(next)
-    applyThemeAnimated(next)
-    if (typeof window !== 'undefined') {
-      window.localStorage.setItem(STORAGE_KEY, next)
-    }
+  const commit = useCallback((next: Appearance) => {
+    setAppearance(next)
+    applyAnimated(next)
+    writeStoredAppearance(next)
   }, [])
 
-  const toggleTheme = useCallback(() => {
-    setThemeState((prev) => {
-      const next: Theme = prev === 'dark' ? 'light' : 'dark'
-      applyThemeAnimated(next)
-      if (typeof window !== 'undefined') {
-        window.localStorage.setItem(STORAGE_KEY, next)
-      }
-      return next
-    })
-  }, [])
+  /*
+   * The next value comes from React state, not from storage. Reading storage
+   * back means a browser where setItem throws (private mode, blocked cookies)
+   * sees the same value forever, so the toggle only ever moves one way.
+   */
+  const setTheme = useCallback(
+    (mode: Mode) => commit({ ...appearance, mode }),
+    [appearance, commit]
+  )
 
-  return { theme, setTheme, toggleTheme }
+  const toggleTheme = useCallback(
+    () =>
+      commit({
+        ...appearance,
+        mode: appearance.mode === 'dark' ? 'light' : 'dark',
+      }),
+    [appearance, commit]
+  )
+
+  const setPalette = useCallback(
+    (palette: PaletteId) => commit({ ...appearance, palette }),
+    [appearance, commit]
+  )
+
+  return {
+    theme: appearance.mode,
+    palette: appearance.palette,
+    setTheme,
+    toggleTheme,
+    setPalette,
+  }
 }

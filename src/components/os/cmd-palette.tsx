@@ -3,12 +3,21 @@
 import type { ReactNode } from 'react'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 
-import { Copy, Diamond, Moon, Search, SquareX, Sun } from 'lucide-react'
+import {
+  Copy,
+  Diamond,
+  Moon,
+  Palette,
+  Search,
+  SquareX,
+  Sun,
+} from 'lucide-react'
 import { toast } from 'sonner'
 
 import { GithubIcon } from '@/components/icons/github-icon'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
+import { PALETTES, type PaletteId } from '@/lib/os/appearance'
 import { onBackdropDismiss } from '@/lib/utils'
 
 import { projectsData } from '@/data/projects-data'
@@ -17,6 +26,12 @@ import { useHotkeys } from '@/hooks/use-hotkeys'
 import type { Theme } from '@/hooks/use-theme'
 import type { Project } from '@/types'
 
+import {
+  type AccentRole,
+  accentColor,
+  accentFor,
+  accentTint,
+} from './accent-map'
 import { APPS } from './constants'
 import { Kbd } from './kbd'
 import type { AppId } from './types'
@@ -28,15 +43,22 @@ interface CmdPaletteProps {
   theme: Theme
   onToggleTheme: () => void
   onCloseAll: () => void
+  palette: PaletteId
+  onSelectPalette: (id: PaletteId) => void
 }
 
 interface PaletteItem {
   ic: ReactNode
-  color: string
+  accent: AccentRole
   label: string
   hint: string
   onClick: () => void
   search: string
+  /**
+   * Renders this row's swatch in the named palette instead of the active one.
+   * Only the palette rows set it, so ⌘K previews all six colours at once.
+   */
+  swatchPalette?: PaletteId
 }
 
 /**
@@ -52,6 +74,8 @@ export function CmdPalette({
   theme,
   onToggleTheme,
   onCloseAll,
+  palette,
+  onSelectPalette,
 }: CmdPaletteProps) {
   const [q, setQ] = useState('')
   const [sel, setSel] = useState(0)
@@ -67,7 +91,7 @@ export function CmdPalette({
       const Icon = app.icon
       return {
         ic: <Icon size={14} strokeWidth={1.75} />,
-        color: app.color,
+        accent: app.accent,
         label: `Open ${app.name}`,
         hint: 'app',
         onClick: () => {
@@ -86,7 +110,7 @@ export function CmdPalette({
           ) : (
             <Moon size={14} strokeWidth={1.75} />
           ),
-        color: '#b87a1e',
+        accent: 'warm',
         label:
           theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme',
         hint: 'action',
@@ -98,7 +122,7 @@ export function CmdPalette({
       },
       {
         ic: <Copy size={14} strokeWidth={1.75} />,
-        color: '#0f7c74',
+        accent: 'primary',
         label: 'Copy email address',
         hint: 'action',
         onClick: async () => {
@@ -110,7 +134,7 @@ export function CmdPalette({
       },
       {
         ic: <GithubIcon className="size-3.5" />,
-        color: '#0a5954',
+        accent: 'deep',
         label: 'Open GitHub profile',
         hint: 'action',
         onClick: () => {
@@ -121,7 +145,7 @@ export function CmdPalette({
       },
       {
         ic: <SquareX size={14} strokeWidth={1.75} />,
-        color: '#6b645a',
+        accent: 'neutral',
         label: 'Close all windows',
         hint: 'action',
         onClick: () => {
@@ -132,9 +156,22 @@ export function CmdPalette({
       },
     ]
 
+    const paletteItems: PaletteItem[] = PALETTES.map((p) => ({
+      ic: <Palette size={14} strokeWidth={1.75} />,
+      accent: 'primary',
+      swatchPalette: p.id,
+      label: `Palette: ${p.name}`,
+      hint: p.id === palette ? 'active' : 'theme',
+      onClick: () => {
+        onSelectPalette(p.id)
+        onClose()
+      },
+      search: `${p.name} palette theme colour color`.toLowerCase(),
+    }))
+
     const projectItems: PaletteItem[] = projectsData.map((project) => ({
       ic: <Diamond size={14} strokeWidth={1.75} />,
-      color: '#0f7c74',
+      accent: accentFor(project.slug),
       label: project.title,
       hint: project.projectType ?? 'project',
       onClick: () => {
@@ -151,11 +188,21 @@ export function CmdPalette({
         .toLowerCase(),
     }))
 
-    const all = [...appItems, ...actionItems, ...projectItems]
+    const all = [...appItems, ...actionItems, ...paletteItems, ...projectItems]
     if (!q) return all
     const needle = q.toLowerCase()
     return all.filter((item) => item.search.includes(needle))
-  }, [q, onLaunch, onOpenProject, onClose, theme, onToggleTheme, onCloseAll])
+  }, [
+    q,
+    onLaunch,
+    onOpenProject,
+    onClose,
+    theme,
+    onToggleTheme,
+    onCloseAll,
+    palette,
+    onSelectPalette,
+  ])
 
   useEffect(() => {
     inputRef.current?.focus()
@@ -248,10 +295,11 @@ export function CmdPalette({
             >
               <span
                 aria-hidden
+                data-palette={item.swatchPalette}
                 className="flex size-6 items-center justify-center rounded"
                 style={{
-                  backgroundColor: `${item.color}20`,
-                  color: item.color,
+                  backgroundColor: accentTint(item.accent, 12),
+                  color: accentColor(item.accent),
                 }}
               >
                 {item.ic}

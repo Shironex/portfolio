@@ -16,7 +16,7 @@ import { useFocusTrap } from '@/hooks/use-focus-trap'
 import { useHotkeys } from '@/hooks/use-hotkeys'
 import type { Project } from '@/types'
 
-import { accentFor } from './accent-map'
+import { accentColor, accentFor, accentTint } from './accent-map'
 import { APPS } from './constants'
 import { Kbd } from './kbd'
 import { ProjectAvatar } from './project-avatar'
@@ -110,8 +110,8 @@ export function StartMenu({
                   aria-hidden
                   className="flex size-11 items-center justify-center rounded-xl"
                   style={{
-                    backgroundColor: `${app.color}25`,
-                    color: app.color,
+                    backgroundColor: accentTint(app.accent, 15),
+                    color: accentColor(app.accent),
                   }}
                 >
                   <Icon size={20} strokeWidth={1.75} />

@@ -58,3 +58,4 @@ next-env.d.ts
 # kirei audit/research output (internal working notes, not tracked)
 docs/audit/
 docs/deps/
+.palette-shots/

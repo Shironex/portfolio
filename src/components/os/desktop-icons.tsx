@@ -1,5 +1,6 @@
 'use client'
 
+import { accentColor, accentTint } from './accent-map'
 import { APPS } from './constants'
 import type { AppId } from './types'
 
@@ -29,8 +30,8 @@ export function DesktopIcons({ onLaunch }: DesktopIconsProps) {
               aria-hidden
               className="shadow-elev-1 flex size-12 items-center justify-center rounded-xl"
               style={{
-                backgroundColor: `${app.color}25`,
-                color: app.color,
+                backgroundColor: accentTint(app.accent, 15),
+                color: accentColor(app.accent),
               }}
             >
               <Icon size={22} strokeWidth={1.75} />

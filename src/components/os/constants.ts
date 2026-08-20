@@ -11,16 +11,16 @@ import type { LucideIcon } from 'lucide-react'
 import type { AppDescriptor, AppId, WindowId } from './types'
 
 /*
- * App accents collapse to a two-tone teal + ochre system. Icons are from
- * lucide-react (instead of single Unicode glyphs) so they read as
- * intentional instead of placeholder-y.
+ * Each app names an accent role rather than a colour, so the active palette
+ * decides what it paints. Icons are from lucide-react (instead of single
+ * Unicode glyphs) so they read as intentional instead of placeholder-y.
  */
 export const APPS: AppDescriptor[] = [
-  { id: 'projects', name: 'Projects', icon: FolderKanban, color: '#0f7c74' },
-  { id: 'about', name: 'About', icon: UserRound, color: '#1ca59b' },
-  { id: 'skills', name: 'Monitor', icon: Activity, color: '#0a5954' },
-  { id: 'contact', name: 'Contact', icon: Mail, color: '#b87a1e' },
-  { id: 'readme', name: 'Readme', icon: BookOpen, color: '#1ca59b' },
+  { id: 'projects', name: 'Projects', icon: FolderKanban, accent: 'primary' },
+  { id: 'about', name: 'About', icon: UserRound, accent: 'bright' },
+  { id: 'skills', name: 'Monitor', icon: Activity, accent: 'deep' },
+  { id: 'contact', name: 'Contact', icon: Mail, accent: 'warm' },
+  { id: 'readme', name: 'Readme', icon: BookOpen, accent: 'bright' },
 ]
 
 /**
