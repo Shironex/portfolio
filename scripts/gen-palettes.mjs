@@ -14,7 +14,7 @@
  * "cream". In light mode that is the paper colour; in dark mode it is the deep
  * ground, because cream on a bright accent lands near 1.5:1.
  */
-import { readFileSync, writeFileSync } from 'node:fs'
+import { readFileSync, realpathSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 
@@ -322,6 +322,13 @@ export const DEFAULT_PALETTE: PaletteId = '${DEFAULT_PALETTE_ID}'
 `
 }
 
+/* Importable: only writes when run directly, so other scripts can pull in
+   PALETTES without triggering the emit. */
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
+  main()
+}
+
+function main() {
 const css = build()
 const ts = buildTs()
 
@@ -350,4 +357,5 @@ if (process.argv.includes('--check')) {
     `wrote ${outputs.length} files — ${PALETTES.length} palettes x 2 modes, ` +
       `${tokens(PALETTES[0].light, 'light').length} tokens each, gates pass`
   )
+}
 }

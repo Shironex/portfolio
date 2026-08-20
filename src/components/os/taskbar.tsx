@@ -2,6 +2,7 @@
 
 import { Search } from 'lucide-react'
 
+import { accentColor } from './accent-map'
 import { Clock } from './clock'
 import { APPS } from './constants'
 import { Kbd } from './kbd'
@@ -74,7 +75,7 @@ export function Taskbar({
                 onClick={() => (isOpen ? onRestore(app.id) : onLaunch(app.id))}
                 className="focus-ring hover:bg-surf-0 relative flex size-9 items-center justify-center rounded-lg transition-colors pointer-coarse:size-11"
               >
-                <span aria-hidden style={{ color: app.color }}>
+                <span aria-hidden style={{ color: accentColor(app.accent) }}>
                   <Icon size={18} strokeWidth={1.75} />
                 </span>
                 {isOpen && (

@@ -2,16 +2,17 @@ import type { ReactNode } from 'react'
 
 import { cn } from '@/lib/utils'
 
+import { type AccentRole, accentColor, accentTint } from './accent-map'
+
 type AvatarSize = 10 | 8
-type AccentAlpha = '25' | '22'
 
 interface ProjectAvatarProps {
-  /** Hex accent color (e.g. from `accentFor(slug)`). */
-  accent: string
+  /** Accent role (e.g. from `accentFor(slug)`). */
+  accent: AccentRole
   /** Tile dimension — maps to Tailwind `size-10` / `size-8`. */
   size?: AvatarSize
-  /** Two-hex-digit alpha appended to `accent` for the background tint. */
-  alpha?: AccentAlpha
+  /** Opacity of the accent behind the glyph, as a percentage. */
+  tint?: number
   /** Tile contents — typically the project's first letter. */
   children: ReactNode
   /** Hide from the accessibility tree (the parent button labels itself). */
@@ -28,12 +29,12 @@ const SIZE_CLASS: Record<AvatarSize, string> = {
 /**
  * Accent-tinted square tile used across the OS surfaces to represent a
  * project (projects grid, featured panel, start-menu recents). Size and
- * accent-alpha are variant props so each call site keeps its exact pixels.
+ * tint are variant props so each call site keeps its exact pixels.
  */
 export function ProjectAvatar({
   accent,
   size = 10,
-  alpha = '25',
+  tint = 15,
   children,
   hidden,
   className,
@@ -47,8 +48,8 @@ export function ProjectAvatar({
         className
       )}
       style={{
-        backgroundColor: `${accent}${alpha}`,
-        color: accent,
+        backgroundColor: accentTint(accent, tint),
+        color: accentColor(accent),
       }}
     >
       {children}

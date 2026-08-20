@@ -12,7 +12,7 @@ import { Calendar, Clock, ExternalLink, Maximize2, X } from 'lucide-react'
 import { createPortal } from 'react-dom'
 
 import { GithubIcon } from '@/components/icons/github-icon'
-import { accentFor } from '@/components/os/accent-map'
+import { accentColor, accentFor, accentTint } from '@/components/os/accent-map'
 
 import { onBackdropDismiss } from '@/lib/utils'
 import { formatDate } from '@/lib/utils/format-date'
@@ -121,14 +121,17 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
         <div
           aria-hidden
           className="pointer-events-none absolute -top-16 -right-16 h-48 w-48 rounded-full opacity-60 blur-3xl"
-          style={{ backgroundColor: accent }}
+          style={{ backgroundColor: accentColor(accent) }}
         />
         <div className="relative">
           <div className="mb-3 flex items-center gap-2">
             {project.projectType && (
               <span
                 className="rounded-full px-2 py-0.5 font-mono text-[10px] tracking-widest uppercase"
-                style={{ backgroundColor: `${accent}22`, color: accent }}
+                style={{
+                  backgroundColor: accentTint(accent, 13),
+                  color: accentColor(accent),
+                }}
               >
                 {project.projectType}
               </span>
@@ -241,9 +244,9 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
                 key={tech}
                 className="rounded-full border px-2.5 py-1 font-mono text-xs"
                 style={{
-                  borderColor: `${accent}40`,
-                  color: accent,
-                  backgroundColor: `${accent}10`,
+                  borderColor: accentTint(accent, 25),
+                  color: accentColor(accent),
+                  backgroundColor: accentTint(accent, 6),
                 }}
               >
                 {tech}

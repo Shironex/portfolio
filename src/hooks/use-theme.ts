@@ -38,15 +38,20 @@ function applyAnimated(next: Appearance) {
 }
 
 /**
- * Owns both appearance axes: light/dark mode and the colour palette. The
- * document is already correct on arrival — the boot script in the document
- * head runs before paint, so mount only syncs React state to what is on <html>.
+ * Owns both appearance axes: light/dark mode and the colour palette.
+ *
+ * The boot script has normally applied the stored appearance before paint, so
+ * mount is just a sync. It re-applies anyway rather than trusting that: the
+ * apply is idempotent, and it is the difference between a dropped boot script
+ * degrading into a stale-looking page and it converging on the next tick.
  */
 export function useTheme() {
   const [appearance, setAppearance] = useState<Appearance>(DEFAULT_APPEARANCE)
 
   useEffect(() => {
-    setAppearance(readStoredAppearance())
+    const stored = readStoredAppearance()
+    setAppearance(stored)
+    applyAppearance(stored)
   }, [])
 
   const commit = useCallback((next: Appearance) => {
@@ -55,19 +60,28 @@ export function useTheme() {
     writeStoredAppearance(next)
   }, [])
 
+  /*
+   * The next value comes from React state, not from storage. Reading storage
+   * back means a browser where setItem throws (private mode, blocked cookies)
+   * sees the same value forever, so the toggle only ever moves one way.
+   */
   const setTheme = useCallback(
-    (mode: Mode) => commit({ ...readStoredAppearance(), mode }),
-    [commit]
+    (mode: Mode) => commit({ ...appearance, mode }),
+    [appearance, commit]
   )
 
-  const toggleTheme = useCallback(() => {
-    const current = readStoredAppearance()
-    commit({ ...current, mode: current.mode === 'dark' ? 'light' : 'dark' })
-  }, [commit])
+  const toggleTheme = useCallback(
+    () =>
+      commit({
+        ...appearance,
+        mode: appearance.mode === 'dark' ? 'light' : 'dark',
+      }),
+    [appearance, commit]
+  )
 
   const setPalette = useCallback(
-    (palette: PaletteId) => commit({ ...readStoredAppearance(), palette }),
-    [commit]
+    (palette: PaletteId) => commit({ ...appearance, palette }),
+    [appearance, commit]
   )
 
   return {

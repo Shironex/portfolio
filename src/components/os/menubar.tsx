@@ -7,11 +7,13 @@ import { Moon, Sun } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
+import type { PaletteId } from '@/lib/os/appearance'
 
 import type { Theme } from '@/hooks/use-theme'
 
 import { Clock } from './clock'
 import { MenuDropdown, type MenuDropdownSection } from './menu-dropdown'
+import { PalettePicker } from './palette-picker'
 import type { AppId } from './types'
 
 type DropdownId = 'file' | 'edit' | 'view' | 'go' | 'help'
@@ -22,6 +24,8 @@ interface MenuBarProps {
   onCloseAll: () => void
   theme: Theme
   onToggleTheme: () => void
+  palette: PaletteId
+  onSelectPalette: (id: PaletteId) => void
 }
 
 /**
@@ -35,6 +39,8 @@ export function MenuBar({
   onCloseAll,
   theme,
   onToggleTheme,
+  palette,
+  onSelectPalette,
 }: MenuBarProps) {
   const [openId, setOpenId] = useState<DropdownId | null>(null)
 
@@ -107,6 +113,10 @@ export function MenuBar({
           onClick: onToggleTheme,
         },
       ],
+    },
+    {
+      divider: true,
+      node: <PalettePicker value={palette} onSelect={onSelectPalette} />,
     },
     {
       divider: true,

@@ -15,9 +15,11 @@ export interface MenuDropdownItem {
 }
 
 export interface MenuDropdownSection {
-  items: MenuDropdownItem[]
+  items?: MenuDropdownItem[]
   /** Render a divider BEFORE this section's items */
   divider?: boolean
+  /** Arbitrary content rendered instead of `items` */
+  node?: ReactNode
 }
 
 interface MenuDropdownProps {
@@ -89,31 +91,35 @@ export function MenuDropdown({
               {section.divider && (
                 <div role="separator" className="bg-rule my-1 h-px" />
               )}
-              {section.items.map((item, itemIndex) => (
-                <button
-                  key={`${sectionIndex}-${itemIndex}-${item.label}`}
-                  type="button"
-                  role="menuitem"
-                  disabled={item.disabled}
-                  onClick={() => {
-                    item.onClick()
-                    onClose()
-                  }}
-                  className="focus-ring text-ink hover:bg-surf-soft flex w-full items-center gap-3 px-3 py-1.5 text-sm disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  {item.icon && (
-                    <span aria-hidden className="text-ink-3 size-4">
-                      {item.icon}
-                    </span>
-                  )}
-                  <span className="flex-1 text-left">{item.label}</span>
-                  {item.kbd && (
-                    <kbd className="text-ink-3 font-mono text-[11px]">
-                      {item.kbd}
-                    </kbd>
-                  )}
-                </button>
-              ))}
+              {section.node && (
+                <div className="px-3 py-1.5">{section.node}</div>
+              )}
+              {!section.node &&
+                section.items?.map((item, itemIndex) => (
+                  <button
+                    key={`${sectionIndex}-${itemIndex}-${item.label}`}
+                    type="button"
+                    role="menuitem"
+                    disabled={item.disabled}
+                    onClick={() => {
+                      item.onClick()
+                      onClose()
+                    }}
+                    className="focus-ring text-ink hover:bg-surf-soft flex w-full items-center gap-3 px-3 py-1.5 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {item.icon && (
+                      <span aria-hidden className="text-ink-3 size-4">
+                        {item.icon}
+                      </span>
+                    )}
+                    <span className="flex-1 text-left">{item.label}</span>
+                    {item.kbd && (
+                      <kbd className="text-ink-3 font-mono text-[11px]">
+                        {item.kbd}
+                      </kbd>
+                    )}
+                  </button>
+                ))}
             </div>
           ))}
         </div>

@@ -8,15 +8,18 @@ import { Menu, Moon, Search, Sun, X } from 'lucide-react'
 import { GithubIcon } from '@/components/icons/github-icon'
 
 import { GITHUB_URL } from '@/lib/constants'
+import type { PaletteId } from '@/lib/os/appearance'
 
 import type { OsWindowsApi } from '@/hooks/use-os-windows'
 import type { Theme } from '@/hooks/use-theme'
 
+import { accentColor, accentTint } from './accent-map'
 import { AppBody } from './app-registry'
 import { FeaturedPanel } from './apps/panels/featured-panel'
 import { HeroPlate } from './apps/panels/hero-plate'
 import { APPS, windowIconFor } from './constants'
 import { MobileSheet } from './mobile-sheet'
+import { PalettePicker } from './palette-picker'
 import type { AppId } from './types'
 
 interface MobileShellProps {
@@ -24,6 +27,8 @@ interface MobileShellProps {
   onOpenCmd: () => void
   theme: Theme
   onToggleTheme: () => void
+  palette: PaletteId
+  onSelectPalette: (id: PaletteId) => void
 }
 
 /**
@@ -43,6 +48,8 @@ export function MobileShell({
   onOpenCmd,
   theme,
   onToggleTheme,
+  palette,
+  onSelectPalette,
 }: MobileShellProps) {
   const [launcherOpen, setLauncherOpen] = useState(false)
 
@@ -177,7 +184,7 @@ export function MobileShell({
                   aria-label={`Open ${app.name}`}
                   className="focus-ring hover:bg-surf-0 relative flex size-11 items-center justify-center rounded-lg transition-colors"
                 >
-                  <span aria-hidden style={{ color: app.color }}>
+                  <span aria-hidden style={{ color: accentColor(app.accent) }}>
                     <Icon size={18} strokeWidth={1.75} />
                   </span>
                   {isOpen && (
@@ -228,8 +235,8 @@ export function MobileShell({
                       aria-hidden
                       className="flex size-12 items-center justify-center rounded-xl"
                       style={{
-                        backgroundColor: `${app.color}25`,
-                        color: app.color,
+                        backgroundColor: accentTint(app.accent, 15),
+                        color: accentColor(app.accent),
                       }}
                     >
                       <Icon size={22} strokeWidth={1.75} />
@@ -257,6 +264,13 @@ export function MobileShell({
                 </span>
                 <span className="font-display text-ink text-sm">GitHub</span>
               </a>
+            </div>
+
+            <div className="border-rule mt-6 border-t pt-5">
+              <div className="text-ink-4 mb-3 font-mono text-[10px] tracking-[0.22em] uppercase">
+                Palette
+              </div>
+              <PalettePicker value={palette} onSelect={onSelectPalette} />
             </div>
           </div>
         </div>
