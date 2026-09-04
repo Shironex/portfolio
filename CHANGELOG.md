@@ -1,3 +1,10 @@
+## [2.12.1](https://github.com/Shironex/portfolio/compare/v2.12.0...v2.12.1) (2026-09-04)
+
+
+### Bug Fixes
+
+* **os:** stop clock hydration mismatch on server-rendered time ([ce02abc](https://github.com/Shironex/portfolio/commit/ce02abcc131149777812b90c1a7fd25dc307d258))
+
 # [2.12.0](https://github.com/Shironex/portfolio/compare/v2.11.1...v2.12.0) (2026-08-20)
 
 
