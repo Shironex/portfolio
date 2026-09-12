@@ -21,5 +21,13 @@ jobs:
 
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@61680d0e9b02ff86f5648ade99e01be17f0260a4 # v4
+        with:
+          # The action bundles its own copies of the semantic-release plugins and
+          # never runs `pnpm install`, so the versions in package.json are not the
+          # ones that execute here. Pinning them explicitly keeps CI in step with
+          # the manifest.
+          extra_plugins: |
+            @semantic-release/changelog@^7.0.0
+            @semantic-release/git@^11.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
