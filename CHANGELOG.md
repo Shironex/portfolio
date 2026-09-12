@@ -1,3 +1,15 @@
+# [2.13.0](https://github.com/Shironex/portfolio/compare/v2.12.1...v2.13.0) (2026-09-12)
+
+
+### Bug Fixes
+
+* **deps:** clear critical next RCEs and high-severity sharp/fast-uri CVEs ([30e27fd](https://github.com/Shironex/portfolio/commit/30e27fd44c692dae4feb59381af491d455debaf4))
+
+
+### Features
+
+* **redis:** upgrade ioredis to 6.0.0 and keep the v5 retry backoff ([4b083a7](https://github.com/Shironex/portfolio/commit/4b083a7e20375a17cce5413643864ac5fc799373))
+
 ## [2.12.1](https://github.com/Shironex/portfolio/compare/v2.12.0...v2.12.1) (2026-09-04)
 
 
