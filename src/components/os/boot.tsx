@@ -22,6 +22,32 @@ const BOOT_STORAGE_KEY = 'shiroos:booted'
 const BOOT_STEP_TIMINGS_MS = [420, 950, 1500, 1950, 2400] as const
 
 /**
+ * Reading the flag fails toward SHOWING the splash.
+ *
+ * A `typeof window` check guards SSR, not the access: `sessionStorage` throws
+ * outright in a browser set to block site data, inside a sandboxed iframe, and
+ * under a partitioned store. An unreadable flag is treated as an unset one, so
+ * a tab that cannot remember replays the greeting. That is the harmless
+ * direction for something skippable that lasts 2.4 seconds.
+ */
+function readBootFlag(): string | null {
+  try {
+    return window.sessionStorage.getItem(BOOT_STORAGE_KEY)
+  } catch {
+    return null
+  }
+}
+
+/** Writing fails silently: an unrecordable boot is a replay, not a crash. */
+function writeBootFlag(): void {
+  try {
+    window.sessionStorage.setItem(BOOT_STORAGE_KEY, '1')
+  } catch {
+    /* Blocked storage or an exhausted quota. The splash shows again next time. */
+  }
+}
+
+/**
  * ShiroOS boot splash. Shown only once per tab session; skippable via Esc or
  * the "skip" button. Respects `prefers-reduced-motion` by collapsing to an
  * instant dismiss. Auto-dismisses at ~2.4s for first-time visitors.
@@ -41,7 +67,7 @@ export function Boot() {
       setGone(true)
       return
     }
-    const alreadyBooted = window.sessionStorage.getItem(BOOT_STORAGE_KEY)
+    const alreadyBooted = readBootFlag()
     if (alreadyBooted || reducedMotion) {
       setGone(true)
       return
@@ -54,7 +80,7 @@ export function Boot() {
   useEffect(() => {
     if (typeof window === 'undefined') return
     if (ready || gone) {
-      window.sessionStorage.setItem(BOOT_STORAGE_KEY, '1')
+      writeBootFlag()
     }
   }, [ready, gone])
 
