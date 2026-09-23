@@ -99,7 +99,8 @@ export const sendEmailAction = unauthenticatedAction
       console.error(error)
 
       throw new PublicError(
-        'There was an error when sending email. Please try again later.'
+        'There was an error when sending email. Please try again later.',
+        { cause: error }
       )
     }
   })
