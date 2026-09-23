@@ -120,6 +120,21 @@ importers:
       '@next/eslint-plugin-next':
         specifier: ^16.3.5
         version: 16.3.5(eslint@10.10.0(jiti@2.7.0))
+      '@noctcore/eslint-plugin-async-safety':
+        specifier: ^0.3.2
+        version: 0.3.2(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
+      '@noctcore/eslint-plugin-code-quality':
+        specifier: ^0.2.2
+        version: 0.2.2(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
+      '@noctcore/eslint-plugin-contracts':
+        specifier: ^0.6.1
+        version: 0.6.1(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
+      '@noctcore/eslint-plugin-react':
+        specifier: ^0.4.0
+        version: 0.4.0(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
+      '@noctcore/eslint-plugin-security':
+        specifier: ^0.3.0
+        version: 0.3.0(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
       '@playwright/test':
         specifier: ^1.63.0
         version: 1.63.0
@@ -1061,6 +1076,42 @@ packages:
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
+
+  '@noctcore/eslint-plugin-async-safety@0.3.2':
+    resolution: {integrity: sha512-WDvIjBPyVpawu4TZLWxEzct/5e8hoYaUoGBIY84o7/pt/IHYX0Dg8YPadzlz9klrYh/CDn9wzP/DM4PMqHp/oQ==}
+    peerDependencies:
+      eslint: '>=9.0.0'
+      typescript: '>=5.0.0'
+
+  '@noctcore/eslint-plugin-code-quality@0.2.2':
+    resolution: {integrity: sha512-FHG33Li71gHpU7kegbpKZwfySFcwzg+kxfjEwCybT69xFtwT/rGVB38Akumkdphu0gexniP1YuXcSrd7bEWjWg==}
+    peerDependencies:
+      eslint: '>=9.0.0'
+      typescript: '>=5.0.0'
+
+  '@noctcore/eslint-plugin-contracts@0.6.1':
+    resolution: {integrity: sha512-91cnwX7eFAycjuM1tU/e9Sid28B8J8v8LmZWX+qHFcu1JVDcOlXQPpcFswAGRnSS7cL06kmoM84BppgAZwDDAQ==}
+    peerDependencies:
+      eslint: '>=9.0.0'
+      typescript: '>=5.0.0'
+
+  '@noctcore/eslint-plugin-react@0.4.0':
+    resolution: {integrity: sha512-J/i9hHlimS2rdL9M9slMSOgNDUyTN4E+o/dlygAuR1/rImQYBZVN8b8yKIVQzRUp+wPAygmEuqEm+8Ii6zrysg==}
+    peerDependencies:
+      eslint: '>=9.0.0'
+      typescript: '>=5.0.0'
+
+  '@noctcore/eslint-plugin-security@0.3.0':
+    resolution: {integrity: sha512-9sgZWHv4MaDIExUzehi9Jn3aY2jiHlcIJYm6Si06DMiP+FAcyywYFITP9X6JfCHkT2tQ4UXyfIuVsEwArjSvDA==}
+    peerDependencies:
+      eslint: '>=9.0.0'
+      typescript: '>=5.0.0'
+
+  '@noctcore/eslint-utils@0.1.1':
+    resolution: {integrity: sha512-s46OLf4Gw/XmjiIV2HkzhuTXmNDLFrSnS+uoLMrk0PjkJO1Jfkv4BZ75gJEKHoBQDjHrky7/xhT22aH7+g9hOQ==}
+    peerDependencies:
+      eslint: '>=9.0.0'
+      typescript: '>=5.0.0'
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -5821,6 +5872,59 @@ snapshots:
 
   '@next/swc-win32-x64-msvc@16.3.5':
     optional: true
+
+  '@noctcore/eslint-plugin-async-safety@0.3.2(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)':
+    dependencies:
+      '@noctcore/eslint-utils': 0.1.1(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.70.0(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
+      eslint: 10.10.0(jiti@2.7.0)
+      typescript: 6.0.3
+    transitivePeerDependencies:
+      - supports-color
+
+  '@noctcore/eslint-plugin-code-quality@0.2.2(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)':
+    dependencies:
+      '@noctcore/eslint-utils': 0.1.1(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.70.0(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
+      eslint: 10.10.0(jiti@2.7.0)
+      typescript: 6.0.3
+    transitivePeerDependencies:
+      - supports-color
+
+  '@noctcore/eslint-plugin-contracts@0.6.1(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)':
+    dependencies:
+      '@noctcore/eslint-utils': 0.1.1(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.70.0(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
+      eslint: 10.10.0(jiti@2.7.0)
+      typescript: 6.0.3
+    transitivePeerDependencies:
+      - supports-color
+
+  '@noctcore/eslint-plugin-react@0.4.0(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)':
+    dependencies:
+      '@noctcore/eslint-utils': 0.1.1(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.70.0(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
+      eslint: 10.10.0(jiti@2.7.0)
+      typescript: 6.0.3
+    transitivePeerDependencies:
+      - supports-color
+
+  '@noctcore/eslint-plugin-security@0.3.0(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)':
+    dependencies:
+      '@noctcore/eslint-utils': 0.1.1(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
+      '@typescript-eslint/utils': 8.70.0(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
+      eslint: 10.10.0(jiti@2.7.0)
+      typescript: 6.0.3
+    transitivePeerDependencies:
+      - supports-color
+
+  '@noctcore/eslint-utils@0.1.1(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)':
+    dependencies:
+      '@typescript-eslint/utils': 8.70.0(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
+      eslint: 10.10.0(jiti@2.7.0)
+      typescript: 6.0.3
+    transitivePeerDependencies:
+      - supports-color
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
