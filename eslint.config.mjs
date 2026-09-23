@@ -1,5 +1,10 @@
 import js from '@eslint/js'
 import nextPlugin from '@next/eslint-plugin-next'
+import noctcoreAsyncSafety from '@noctcore/eslint-plugin-async-safety'
+import noctcoreCodeQuality from '@noctcore/eslint-plugin-code-quality'
+import noctcoreContracts from '@noctcore/eslint-plugin-contracts'
+import noctcoreReact from '@noctcore/eslint-plugin-react'
+import noctcoreSecurity from '@noctcore/eslint-plugin-security'
 import tseslint from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
 import eslintConfigPrettier from 'eslint-config-prettier'
@@ -93,6 +98,50 @@ const eslintConfig = [
       'next/no-title-in-document-head': 'error',
       'next/no-typos': 'error',
       'next/no-unwanted-polyfillio': 'error',
+    },
+  },
+  // noctcore presets: architecture/correctness rules generic linters miss
+  noctcoreCodeQuality.configs.recommended,
+  noctcoreAsyncSafety.configs.recommended,
+  noctcoreContracts.configs.recommended,
+  noctcoreReact.configs.recommended,
+  noctcoreSecurity.configs.recommended,
+  {
+    files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
+    rules: {
+      // Wall-clock reads (sitemap lastmod, the desktop clock, email
+      // timestamps) are the point here; there is no mockable clock util.
+      'noctcore-code-quality/no-bare-date-now': 'off',
+
+      // `n/no-process-env` already covers this, and `src/env/*` is the one
+      // place that must read process.env.
+      'noctcore-contracts/no-direct-process-env': 'off',
+      'noctcore-contracts/restrict-throw-to-taxonomy': [
+        'error',
+        { allow: ['Error', 'PublicError'] },
+      ],
+      'noctcore-contracts/require-schema-parse-at-boundary': 'error',
+
+      // These assume a colocated `<Name>.hooks.ts` per component and
+      // PascalCase component folders; this repo keeps hooks inline and uses
+      // flat kebab-case files.
+      'noctcore-react/no-state-in-component-body': 'off',
+      'noctcore-react/no-jsx-computation': 'off',
+      'noctcore-react/max-hooks-per-file': 'off',
+      // `memo(ClockImpl)` wrappers keep the public `<Name>Props` name.
+      'noctcore-react/component-props-naming': 'off',
+
+      'noctcore-security/server-action-through-client': [
+        'error',
+        { actionClients: ['unauthenticatedAction'] },
+      ],
+    },
+  },
+  // Tooling scripts run in Node or a Playwright page, not the app runtime.
+  {
+    files: ['scripts/**/*.{js,mjs}'],
+    rules: {
+      'noctcore-react/no-unguarded-web-storage': 'off',
     },
   },
   // Node/CommonJS globals for JS tooling scripts

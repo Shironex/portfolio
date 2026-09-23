@@ -110,10 +110,9 @@ export function Boot() {
     if (!ready || gone) return
     skipButtonRef.current?.focus()
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault()
-        setGone(true)
-      }
+      if (event.key !== 'Enter' && event.key !== ' ') return
+      event.preventDefault()
+      setGone(true)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)

@@ -1,6 +1,12 @@
 import { unstable_cache } from 'next/cache'
 
+import { z } from 'zod'
+
 import { env } from '@/env/server'
+
+import type { ContributionDay, GithubActivity } from './activity-schema'
+
+export type { ContributionDay, GithubActivity } from './activity-schema'
 
 /** Revalidate window (seconds) for cached GitHub activity — 6 hours. */
 export const GITHUB_ACTIVITY_REVALIDATE_SECONDS = 21600
@@ -13,38 +19,43 @@ const LEVEL_MAP = {
   FOURTH_QUARTILE: 4,
 } as const
 
-type ContribLevel = keyof typeof LEVEL_MAP
+const GITHUB_TIMEOUT_MS = 10_000
 
-export interface ContributionDay {
-  date: string
-  count: number
-  level: 0 | 1 | 2 | 3 | 4
-}
+const ContribLevelSchema = z.enum([
+  'NONE',
+  'FIRST_QUARTILE',
+  'SECOND_QUARTILE',
+  'THIRD_QUARTILE',
+  'FOURTH_QUARTILE',
+])
 
-export interface GithubActivity {
-  total: number
-  days: ContributionDay[]
-}
-
-interface GraphQLResponse {
-  data?: {
-    user?: {
-      contributionsCollection: {
-        contributionCalendar: {
-          totalContributions: number
-          weeks: Array<{
-            contributionDays: Array<{
-              contributionCount: number
-              contributionLevel: ContribLevel
-              date: string
-            }>
-          }>
-        }
-      }
-    }
-  }
-  errors?: Array<{ message: string }>
-}
+const GraphQLResponseSchema = z.object({
+  data: z
+    .object({
+      user: z
+        .object({
+          contributionsCollection: z.object({
+            contributionCalendar: z.object({
+              totalContributions: z.number(),
+              weeks: z.array(
+                z.object({
+                  contributionDays: z.array(
+                    z.object({
+                      contributionCount: z.number(),
+                      contributionLevel: ContribLevelSchema,
+                      date: z.string(),
+                    })
+                  ),
+                })
+              ),
+            }),
+          }),
+        })
+        .nullish(),
+    })
+    .nullish(),
+  errors: z.array(z.object({ message: z.string() })).optional(),
+})
 
 const QUERY = `
   query($username: String!) {
@@ -78,13 +89,14 @@ async function fetchRaw(username: string): Promise<GithubActivity> {
       'User-Agent': 'shironex-portfolio',
     },
     body: JSON.stringify({ query: QUERY, variables: { username } }),
+    signal: AbortSignal.timeout(GITHUB_TIMEOUT_MS),
   })
 
   if (!res.ok) {
     throw new Error(`GitHub GraphQL returned ${res.status}`)
   }
 
-  const json = (await res.json()) as GraphQLResponse
+  const json = GraphQLResponseSchema.parse(await res.json())
   if (json.errors?.length) {
     throw new Error(json.errors[0].message)
   }

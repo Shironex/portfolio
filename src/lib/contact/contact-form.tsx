@@ -22,7 +22,10 @@ import { Textarea } from '@/components/ui/textarea'
 import { env } from '@/env/client'
 
 import { sendEmailAction } from './action'
-import { ContactFormSchema, contactFormSchema } from './validation'
+import {
+  ContactFormSchema,
+  type ContactForm as ContactFormValues,
+} from './validation'
 
 const capturePosthogEvent = async (
   event: string,
@@ -45,8 +48,8 @@ export function ContactForm({
   theme = 'light',
   surface = 'plain',
 }: ContactFormProps = {}) {
-  const form = useForm<ContactFormSchema>({
-    resolver: zodResolver(contactFormSchema),
+  const form = useForm<ContactFormValues>({
+    resolver: zodResolver(ContactFormSchema),
     defaultValues: {
       name: '',
       email: '',
@@ -68,7 +71,7 @@ export function ContactForm({
     },
   })
 
-  const handleSubmit = form.handleSubmit(async (data: ContactFormSchema) => {
+  const handleSubmit = form.handleSubmit(async (data: ContactFormValues) => {
     if (!data.turnstileToken) {
       toast.error('Please complete the captcha')
       return
