@@ -156,31 +156,32 @@ export function Window({
       return
     }
     if (
-      event.key === 'ArrowUp' ||
-      event.key === 'ArrowDown' ||
-      event.key === 'ArrowLeft' ||
-      event.key === 'ArrowRight'
+      event.key !== 'ArrowUp' &&
+      event.key !== 'ArrowDown' &&
+      event.key !== 'ArrowLeft' &&
+      event.key !== 'ArrowRight'
     ) {
-      event.preventDefault()
-      onFocus(win.id)
-      const step = event.shiftKey ? KEYBOARD_RESIZE_STEP : KEYBOARD_MOVE_STEP
-      if (event.shiftKey) {
-        const patch: Partial<{ w: number; h: number }> = {}
-        if (event.key === 'ArrowRight') patch.w = win.w + step
-        if (event.key === 'ArrowLeft') patch.w = Math.max(1, win.w - step)
-        if (event.key === 'ArrowDown') patch.h = win.h + step
-        if (event.key === 'ArrowUp') patch.h = Math.max(1, win.h - step)
-        onResize(win.id, patch)
-      } else {
-        let nx = win.x
-        let ny = win.y
-        if (event.key === 'ArrowRight') nx += step
-        if (event.key === 'ArrowLeft') nx -= step
-        if (event.key === 'ArrowDown') ny += step
-        if (event.key === 'ArrowUp') ny -= step
-        onMove(win.id, nx, ny)
-      }
+      return
     }
+    event.preventDefault()
+    onFocus(win.id)
+    const step = event.shiftKey ? KEYBOARD_RESIZE_STEP : KEYBOARD_MOVE_STEP
+    if (event.shiftKey) {
+      const patch: Partial<{ w: number; h: number }> = {}
+      if (event.key === 'ArrowRight') patch.w = win.w + step
+      if (event.key === 'ArrowLeft') patch.w = Math.max(1, win.w - step)
+      if (event.key === 'ArrowDown') patch.h = win.h + step
+      if (event.key === 'ArrowUp') patch.h = Math.max(1, win.h - step)
+      onResize(win.id, patch)
+      return
+    }
+    let nx = win.x
+    let ny = win.y
+    if (event.key === 'ArrowRight') nx += step
+    if (event.key === 'ArrowLeft') nx -= step
+    if (event.key === 'ArrowDown') ny += step
+    if (event.key === 'ArrowUp') ny -= step
+    onMove(win.id, nx, ny)
   }
 
   const showHandles = !win.maximized

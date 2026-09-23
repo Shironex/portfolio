@@ -22,10 +22,9 @@ export function useScrollLock(active = true) {
 
     return () => {
       lockCount = Math.max(0, lockCount - 1)
-      if (lockCount === 0) {
-        document.body.style.overflow = previousOverflow ?? ''
-        previousOverflow = null
-      }
+      if (lockCount !== 0) return
+      document.body.style.overflow = previousOverflow ?? ''
+      previousOverflow = null
     }
   }, [active])
 }

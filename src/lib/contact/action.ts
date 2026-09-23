@@ -12,7 +12,7 @@ import { verifyTurnstile } from '@/lib/utils/cloudflare'
 
 import { env } from '@/env/server'
 
-import { contactFormSchema } from './validation'
+import { ContactFormSchema } from './validation'
 
 const DISCORD_PREVIEW_MAX = 200
 
@@ -20,7 +20,7 @@ export const sendEmailAction = unauthenticatedAction
   .metadata({
     actionName: 'send Email Action',
   })
-  .inputSchema(contactFormSchema)
+  .inputSchema(ContactFormSchema)
   .action(async ({ parsedInput }) => {
     //? 5 requests per 1 hour
     const result = await rateLimitByKey(
