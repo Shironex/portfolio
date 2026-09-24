@@ -59,3 +59,8 @@ next-env.d.ts
 docs/audit/
 docs/deps/
 .palette-shots/
+
+# showcase-kit raw captures and framed intermediates
+/showcase-out/
+# the kit also writes a gallery JSON; galleries live in src/data/projects
+public/projects/*/showcase.gallery.json

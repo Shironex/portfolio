@@ -18,7 +18,9 @@
     "debug-release": "node scripts/debug-release.js",
     "generate:icons": "node scripts/generate-icons.mjs",
     "prepare": "husky",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "showcase:blog": "showcase all -c showcase/shirone-blog.config.mjs",
+    "showcase:eslint": "showcase all -c showcase/eslint-plugins.config.mjs"
   },
   "engines": {
     "node": ">=22.13.0",
@@ -61,6 +63,7 @@
     "@noctcore/eslint-plugin-contracts": "^0.6.1",
     "@noctcore/eslint-plugin-react": "^0.4.0",
     "@noctcore/eslint-plugin-security": "^0.3.0",
+    "@noctcore/showcase-kit": "0.1.1",
     "@playwright/test": "^1.63.0",
     "@react-email/ui": "6.9.5",
     "@semantic-release/changelog": "^7.0.0",
@@ -81,6 +84,7 @@
     "eslint-plugin-check-file": "3.3.2",
     "eslint-plugin-n": "^18.3.0",
     "husky": "^9.1.7",
+    "playwright": "1.63.0",
     "png-to-ico": "^3.0.2",
     "postcss": "^8.5.28",
     "prettier": "^3.9.6",

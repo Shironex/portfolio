@@ -11,8 +11,27 @@ export const eslintPlugins: Project = {
     'The repository publishes 13 packages: eleven ESLint plugins (code quality, async safety, contracts, security, observability, React, React Server Components, LLM output handling, Prisma, architecture and monorepo boundaries), a shared utility package the rules are built on, and a set of whole-repo meta rules. Together they ship more than 110 rules.',
     'Each plugin is flat-config only, has a zero-config recommended preset, and is versioned and installed on its own. Every rule has documentation with options, examples and a note on when the plugin is a bad fit.',
   ],
+  image: '/projects/eslint-plugins/thumbnail.webp',
   projectType: 'library',
-  gallery: [],
+  gallery: [
+    {
+      src: '/projects/eslint-plugins/home.webp',
+      alt: 'noctcore ESLint plugins: Docs home',
+      caption: 'Docs home: what the plugins catch and who they are for.',
+    },
+    {
+      src: '/projects/eslint-plugins/plugin.webp',
+      alt: 'noctcore ESLint plugins: async-safety plugin',
+      caption:
+        'A plugin overview: what async-safety solves, what it reports and how to install it.',
+    },
+    {
+      src: '/projects/eslint-plugins/rule.webp',
+      alt: 'noctcore ESLint plugins: require-fetch-timeout rule',
+      caption:
+        'A rule page: why the rule exists, with incorrect and correct examples.',
+    },
+  ],
   technologies: ['TypeScript', 'ESLint', 'typescript-eslint', 'Vitest'],
   features: [
     '11 ESLint plugins plus shared utilities and whole-repo meta rules',

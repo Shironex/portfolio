@@ -5,10 +5,11 @@ export const shiniJsRateLimit: Project = {
   slug: 'shinijs-rate-limit',
   title: '@shinijs/rate-limit',
   summary:
-    'Rate limiting for NestJS with a Redis backend for multi-instance apps and an in-memory fallback when Redis is unavailable.',
+    'Rate limiting for NestJS with a Redis backend for multi-instance apps and an in-memory fallback when Redis is unavailable. Archived.',
   description: [
     '@shinijs/rate-limit adds rate limiting to NestJS apps. Redis stores the counters so limits hold across several app instances, and the library falls back to in-memory storage when Redis is unreachable, which also keeps local development simple.',
     'It offers three ways in: a decorator with a guard for route-level limits, an interceptor that adds rate limit headers to responses, or the service directly for custom logic. Time windows accept seconds, minutes, hours or days, a health check reports Redis connectivity, and the test suite has more than 30 tests. It pairs with @shinijs/logger.',
+    'I stopped maintaining it in September 2026 and deprecated the package on npm.',
   ],
   projectType: 'library',
   gallery: [],
@@ -51,7 +52,7 @@ export const shiniJsRateLimit: Project = {
     ],
   },
   completedDate: 'November 2025',
-  status: 'shipped',
+  status: 'archived',
   duration: '1 day',
   demoUrl: 'https://shinijs.github.io/rate-limit/',
   githubUrl: 'https://github.com/shinijs/rate-limit',
