@@ -13,7 +13,8 @@ export default function SkillsApp() {
         <p className="font-body text-ink-3 mt-1 max-w-prose text-sm">
           What I reach for daily, grouped by layer of the stack. The first item
           in each group is what I live in; the rest are tools I&apos;m
-          comfortable with.
+          comfortable with. Dashed chips are tools I used before but don&apos;t
+          reach for today.
         </p>
       </header>
 
@@ -24,7 +25,7 @@ export default function SkillsApp() {
               {col.group}
             </h3>
             <div className="flex flex-wrap gap-1.5">
-              {/* First chip is the daily driver — the intro copy promises
+              {/* First chip is the daily driver: the intro copy promises
                   this hierarchy, so the visuals have to deliver it. */}
               {col.items.map((item, i) => (
                 <span
@@ -32,10 +33,15 @@ export default function SkillsApp() {
                   className={`rounded-full border px-2.5 py-1 font-mono text-xs ${
                     i === 0
                       ? 'border-miku/40 bg-miku/10 text-miku-2 font-semibold'
-                      : 'border-rule-2 bg-surf-0 text-ink-2'
+                      : item.previously
+                        ? 'border-rule-2 text-ink-3 border-dashed'
+                        : 'border-rule-2 bg-surf-0 text-ink-2'
                   }`}
                 >
                   {item.n}
+                  {item.previously && (
+                    <span className="text-ink-4"> · previously</span>
+                  )}
                 </span>
               ))}
             </div>
