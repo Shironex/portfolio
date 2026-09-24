@@ -136,11 +136,11 @@ export function MobileShell({
             />
             <div className="relative">
               <div className="font-display text-ink text-lg font-bold">
-                Hiring, freelance, or a bug I can help with
+                Hiring, a contract, or an MVP to build
               </div>
               <p className="font-body text-ink-2 mt-2 text-sm">
-                Open to full-time roles from Q2 2026 and freelance work before
-                then. I reply within 24 hours.
+                Open to full-time remote roles and to contracts or MVPs. Remote,
+                CET (UTC+1). I reply within 24 hours.
               </p>
               <button
                 type="button"
