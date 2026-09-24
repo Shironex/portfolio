@@ -18,7 +18,9 @@
     "debug-release": "node scripts/debug-release.js",
     "generate:icons": "node scripts/generate-icons.mjs",
     "prepare": "husky",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "showcase:blog": "showcase all -c showcase/shirone-blog.config.mjs",
+    "showcase:eslint": "showcase all -c showcase/eslint-plugins.config.mjs"
   },
   "engines": {
     "node": ">=22.13.0",
