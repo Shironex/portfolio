@@ -12,13 +12,53 @@ export const shiranami: Project = {
     'The numbers I measured: the Windows installer went from 110 MB to 12.5 MB, the macOS download from 134 MB to 17 MB, idle memory from roughly 688 MB to roughly 291 MB, and a cold boot takes about 189 ms. The Rust side has more than 1,500 tests. Existing 1.x libraries, playlists, history and settings are copied over on first launch, never moved, so nobody lost data in the upgrade.',
     'I wrote up the whole migration, including what went wrong, on my blog: shirone.blog/blog/shiranami-v2-rust-rewrite.',
   ],
-  image: '/projects/shiranami/thumbnail.png',
+  image: '/projects/shiranami/thumbnail.webp',
   projectType: 'desktop',
   gallery: [
     {
-      src: '/projects/shiranami/library.png',
-      alt: 'Shiranami library and now-playing view',
-      caption: 'Local library with queue, now-playing and synced lyrics',
+      src: '/projects/shiranami/overview.webp',
+      alt: 'Shiranami: Overview',
+      caption:
+        'Overview: your evening at a glance, with the weekly recap and a year-ago memory.',
+    },
+    {
+      src: '/projects/shiranami/library.webp',
+      alt: 'Shiranami: Library',
+      caption: 'Library: browse and play straight from your own folders.',
+    },
+    {
+      src: '/projects/shiranami/playlists.webp',
+      alt: 'Shiranami: Playlists',
+      caption: 'Playlists: custom covers and quick access from the sidebar.',
+    },
+    {
+      src: '/projects/shiranami/history.webp',
+      alt: 'Shiranami: History',
+      caption: 'History: play counts, listening time and daily activity.',
+    },
+    {
+      src: '/projects/shiranami/mixes.webp',
+      alt: 'Shiranami: Mixes',
+      caption:
+        'Mixes: smart collections built from your listening and the time of day.',
+    },
+    {
+      src: '/projects/shiranami/import-playlist.webp',
+      alt: 'Shiranami: Import Playlist',
+      caption:
+        'Import: bring a whole YouTube or Spotify playlist in, with match confidence.',
+    },
+    {
+      src: '/projects/shiranami/radio.webp',
+      alt: 'Shiranami: Radio',
+      caption:
+        'Radio: browse and stream internet stations from around the world.',
+    },
+    {
+      src: '/projects/shiranami/settings.webp',
+      alt: 'Shiranami: Settings',
+      caption:
+        'Settings: themes, accent colors, audio, integrations and language.',
     },
   ],
   technologies: ['Rust', 'Tauri', 'SQLite', 'React', 'TypeScript', 'Symphonia'],
