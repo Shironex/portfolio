@@ -17,8 +17,6 @@ export const siteConfig = {
   description:
     'Full-stack developer working in TypeScript and Rust: desktop apps with Tauri and Electron, typed Node backends, self-hosted infrastructure. Remote (CET), open to full-time roles and contracts.',
   twitter: {
-    handle: '@shirone_dev',
-    site: '@shirone_dev',
     cardType: 'summary_large_image',
   },
   keywords: [
@@ -63,8 +61,6 @@ export const defaultMetadata: Metadata = {
     card: siteConfig.twitter.cardType as 'summary_large_image',
     title: siteConfig.title,
     description: siteConfig.description,
-    site: siteConfig.twitter.site,
-    creator: siteConfig.twitter.handle,
     // Image comes from src/app/twitter-image.tsx (file-based metadata).
   },
   robots: {
