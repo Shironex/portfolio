@@ -1,7 +1,6 @@
 const HERO_COPY = {
   eyebrow: 'Full-stack developer · TypeScript + Rust · remote, CET',
   greeting: "hi, I'm Kacper.",
-  headline: 'I build typed full-stack systems and desktop apps.',
   availability:
     'Open to full-time remote roles and to contracts or MVPs. Based in Poland, working on CET (UTC+1).',
   proof: [
@@ -23,10 +22,13 @@ export function HeroText() {
         {HERO_COPY.eyebrow}
       </div>
 
-      <h1 className="font-display text-ink relative text-[clamp(32px,8vw,44px)] leading-[1.05] font-bold tracking-[-0.02em] md:text-[clamp(36px,4vw,54px)]">
+      {/* On desktop the size also tracks viewport height, so short laptop
+          screens keep the headline to three lines. */}
+      <h1 className="font-display text-ink relative text-[clamp(32px,8vw,44px)] leading-[1.05] font-bold tracking-[-0.02em] md:text-[clamp(34px,min(3.2vw,5.6vh),54px)]">
         {HERO_COPY.greeting}
-        <br />
-        {HERO_COPY.headline}
+        <br />I build typed{' '}
+        <span className="whitespace-nowrap">full-stack</span> systems and
+        desktop apps.
       </h1>
 
       <p className="font-body text-ink-2 relative mt-3 max-w-xl text-[15px] leading-relaxed">

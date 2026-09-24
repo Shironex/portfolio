@@ -17,7 +17,7 @@ interface HeroPlateProps {
  * windows. Carries the role, availability and proof points, the primary
  * CTAs, and the GitHub contribution strip underneath. Vertical density is
  * tight on purpose: the activity strip needs to stay above the fold on
- * 1080p at 100% zoom.
+ * 1080p and 1440x900 at 100% zoom; below 840px of height it is hidden.
  */
 export function HeroPlate({ onOpenCmd, onOpenContact }: HeroPlateProps) {
   return (
@@ -76,7 +76,9 @@ export function HeroPlate({ onOpenCmd, onOpenContact }: HeroPlateProps) {
         </div>
       </div>
 
-      <div className="relative">
+      {/* Short desktop viewports (1366x768 and similar) drop the heatmap so
+          the proof points and CTAs stay clear of the dock. */}
+      <div className="relative md:[@media(max-height:839px)]:hidden">
         <GithubActivityStrip />
       </div>
     </div>
