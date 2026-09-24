@@ -6,7 +6,6 @@ import { env } from '@/env/client'
 export const siteConfig = {
   name: "ShiroOS: Kacper's desktop",
   url: env.NEXT_PUBLIC_PUBLIC_URL,
-  ogImage: '/og-image.png', // Default Open Graph image
   description:
     'Desktop-metaphor portfolio of Kacper Lachowicz, full-stack developer from Poland, building Electron apps and typed full-stack systems.',
   twitter: {
@@ -48,14 +47,7 @@ export const defaultMetadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     siteName: siteConfig.name,
-    images: [
-      {
-        url: `${siteConfig.url}${siteConfig.ogImage}`,
-        width: 1200,
-        height: 630,
-        alt: siteConfig.name,
-      },
-    ],
+    // Image comes from src/app/opengraph-image.tsx (file-based metadata).
   },
   twitter: {
     card: siteConfig.twitter.cardType as 'summary_large_image',
@@ -63,7 +55,7 @@ export const defaultMetadata: Metadata = {
     description: siteConfig.description,
     site: siteConfig.twitter.site,
     creator: siteConfig.twitter.handle,
-    images: [`${siteConfig.url}${siteConfig.ogImage}`],
+    // Image comes from src/app/twitter-image.tsx (file-based metadata).
   },
   robots: {
     index: true,
