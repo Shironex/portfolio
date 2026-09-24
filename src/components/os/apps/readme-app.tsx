@@ -3,6 +3,11 @@ import Image from 'next/image'
 import { Kbd } from '@/components/os/kbd'
 
 import { GITHUB_URL } from '@/lib/constants'
+import { countProjects } from '@/lib/utils/projects'
+
+import { projectsData } from '@/data/projects-data'
+
+const projectCount = countProjects(projectsData).total
 
 /**
  * readme.md window — short welcome note for ShiroOS.
@@ -38,8 +43,8 @@ export default function ReadmeApp() {
       </h3>
       <ul className="list-disc space-y-1 pl-5">
         <li>
-          <span className="text-ink font-semibold">Projects</span>: 16 things I
-          made, filterable by status.
+          <span className="text-ink font-semibold">Projects</span>:{' '}
+          {projectCount} things I made, filterable by status.
         </li>
         <li>
           <span className="text-ink font-semibold">About</span>: bio, things I

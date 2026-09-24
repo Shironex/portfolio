@@ -1,5 +1,5 @@
 /**
- * projects.app window — filterable + searchable grid of all 16 projects.
+ * projects.app window: filterable, searchable grid of every project.
  * Each card opens the project in its own ShiroOS window via `onOpenProject`,
  * which the app registry wires up on the parent side.
  */
@@ -10,6 +10,8 @@ import { Fragment, useMemo, useState } from 'react'
 
 import { accentFor } from '@/components/os/accent-map'
 import { ProjectAvatar } from '@/components/os/project-avatar'
+
+import { countProjects } from '@/lib/utils/projects'
 
 import { projectsData } from '@/data/projects-data'
 import type { Project } from '@/types'
@@ -54,19 +56,9 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
   const [filter, setFilter] = useState<Filter>('all')
   const [q, setQ] = useState('')
 
-  const counts = useMemo(() => {
-    const acc: Record<Filter, number> = {
-      all: projectsData.length,
-      featured: 0,
-      'in-progress': 0,
-      shipped: 0,
-      archived: 0,
-    }
-    for (const p of projectsData) {
-      acc[p.status]++
-      if (p.featured) acc.featured++
-    }
-    return acc
+  const counts = useMemo<Record<Filter, number>>(() => {
+    const { total, ...rest } = countProjects(projectsData)
+    return { all: total, ...rest }
   }, [])
 
   const shown = useMemo(
@@ -84,7 +76,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
           {projectsData.length} projects
         </h2>
         <p className="text-ink-3 text-sm">
-          Pick one - each opens in its own window.
+          Pick one and it opens in its own window.
         </p>
       </div>
 

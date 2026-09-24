@@ -8,6 +8,10 @@ import {
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
+import { countProjects } from '@/lib/utils/projects'
+
+import { projectsData } from '@/data/projects-data'
+
 import type { AppDescriptor, AppId, WindowId } from './types'
 
 /*
@@ -48,6 +52,8 @@ export const APP_WINDOW_DEFAULTS: Record<
  * sequence — just a real-enough shell transcript that surfaces concrete
  * claims about the work, location, and availability.
  */
+const counts = countProjects(projectsData)
+
 export const TERMINAL_BLOCKS: Array<{ prompt: string; output: string[] }> = [
   {
     prompt: 'cat about.md',
@@ -58,7 +64,9 @@ export const TERMINAL_BLOCKS: Array<{ prompt: string; output: string[] }> = [
   },
   {
     prompt: 'ls projects/ | wc -l',
-    output: ['16: two featured, five in-progress, eight shipped.'],
+    output: [
+      `${counts.total}: ${counts.shipped} shipped, ${counts['in-progress']} in progress, ${counts.archived} archived.`,
+    ],
   },
   {
     prompt: 'cat availability.txt',
