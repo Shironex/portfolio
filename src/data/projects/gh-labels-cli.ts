@@ -64,6 +64,7 @@ export const ghLabelsCli: Project = {
     ],
   },
   completedDate: 'May 2025',
+  status: 'shipped',
   duration: '2 months',
   demoUrl: 'https://shironex.github.io/gh-labels-cli/',
   githubUrl: 'https://github.com/Shironex/gh-labels-cli',

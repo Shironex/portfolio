@@ -61,7 +61,7 @@ export const claudeCodeDiscordBot: Project = {
       'Prettier',
     ],
   },
-  inProgress: false,
+  status: 'shipped',
   duration: 'Few days (core)',
   demoUrl: '',
   githubUrl: 'https://github.com/Shironex/claude-code-discord-bot',

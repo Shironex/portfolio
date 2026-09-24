@@ -54,6 +54,7 @@ export const matmajka: Project = {
     stack: ['Next.js', 'Tailwind CSS', 'Docker', 'Resend', 'Framer Motion'],
   },
   completedDate: 'November 2024',
+  status: 'shipped',
   duration: '1 month',
   demoUrl: 'https://matmajka.com',
   featured: false,

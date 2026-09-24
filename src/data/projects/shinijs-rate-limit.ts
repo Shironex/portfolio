@@ -52,6 +52,7 @@ export const shiniJsRateLimit: Project = {
     ],
   },
   completedDate: 'November 2025',
+  status: 'shipped',
   duration: '1 day',
   demoUrl: 'https://shinijs.github.io/rate-limit/',
   githubUrl: 'https://github.com/shinijs/rate-limit',

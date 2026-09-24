@@ -8,6 +8,12 @@ export interface TechDetails {
   stack: string[]
 }
 
+/**
+ * Lifecycle of a project. `archived` covers work that is finished and no
+ * longer maintained (discontinued, superseded, or kept for reference).
+ */
+export type ProjectStatus = 'in-progress' | 'shipped' | 'archived'
+
 export interface Project {
   id: string
   slug: string
@@ -22,7 +28,7 @@ export interface Project {
   techDetails: TechDetails
   completedDate?: string
   startDate?: string
-  inProgress?: boolean
+  status: ProjectStatus
   duration: string
   demoUrl: string
   githubUrl?: string

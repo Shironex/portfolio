@@ -49,6 +49,7 @@ export const omniscribe: Project = {
       'Terminal PTY',
     ],
   },
+  status: 'shipped',
   duration: 'Ongoing',
   demoUrl: '#desktop-app',
   githubUrl: 'https://github.com/Shironex/omniscribe',

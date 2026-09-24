@@ -29,16 +29,14 @@ const FILTERS: FilterDef[] = [
   { id: 'archived', label: 'archived' },
 ]
 
-function bucketOf(p: Project): Filter {
-  if (p.inProgress) return 'in-progress'
-  if (p.featured) return 'featured'
-  if (p.completedDate) return 'shipped'
-  return 'archived'
-}
-
+/**
+ * Featured is a flag that overlaps the lifecycle buckets, so a featured
+ * project also counts towards its status (in-progress, shipped, archived).
+ */
 function matchesFilter(p: Project, filter: Filter): boolean {
   if (filter === 'all') return true
-  return bucketOf(p) === filter
+  if (filter === 'featured') return p.featured
+  return p.status === filter
 }
 
 function matchesQuery(p: Project, q: string): boolean {
@@ -65,7 +63,8 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
       archived: 0,
     }
     for (const p of projectsData) {
-      acc[bucketOf(p)]++
+      acc[p.status]++
+      if (p.featured) acc.featured++
     }
     return acc
   }, [])
@@ -174,9 +173,14 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                           FEATURED
                         </span>
                       )}
-                      {p.inProgress && (
+                      {p.status === 'in-progress' && (
                         <span className="bg-peach/20 text-peach shrink-0 rounded px-1.5 py-0.5 font-mono text-[10px]">
                           WIP
+                        </span>
+                      )}
+                      {p.status === 'archived' && (
+                        <span className="bg-surf-0 text-ink-3 shrink-0 rounded px-1.5 py-0.5 font-mono text-[10px]">
+                          ARCHIVED
                         </span>
                       )}
                     </div>

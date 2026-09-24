@@ -66,7 +66,7 @@ export const moekoder: Project = {
       'FFmpeg + libass',
     ],
   },
-  inProgress: true,
+  status: 'in-progress',
   duration: 'Ongoing',
   demoUrl: 'https://github.com/Shironex/moekoder/releases/latest',
   githubUrl: 'https://github.com/Shironex/moekoder',

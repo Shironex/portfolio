@@ -88,6 +88,7 @@ export const sudeko: Project = {
     ],
   },
   completedDate: 'September 2025',
+  status: 'shipped',
   duration: '3 days',
   demoUrl: 'https://sudekospzoo.pl/',
   featured: false,

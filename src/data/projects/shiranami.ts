@@ -64,7 +64,7 @@ export const shiranami: Project = {
       '@xhayper/discord-rpc',
     ],
   },
-  inProgress: true,
+  status: 'in-progress',
   duration: 'Ongoing',
   demoUrl: 'https://shiranami.app',
   githubUrl: 'https://github.com/Shironex/shiranami',

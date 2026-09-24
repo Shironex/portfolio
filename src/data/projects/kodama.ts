@@ -22,7 +22,7 @@ export const kodama: Project = {
   techDetails: {
     stack: ['TypeScript', 'Electron', '2D Game Engine'],
   },
-  inProgress: true,
+  status: 'in-progress',
   duration: 'Ongoing',
   demoUrl: '#in-development',
   featured: false,

@@ -51,6 +51,7 @@ export const shiniJsLogger: Project = {
     ],
   },
   completedDate: 'November 2025',
+  status: 'shipped',
   duration: '1 day',
   demoUrl: 'https://shinijs.github.io/logger/',
   githubUrl: 'https://github.com/shinijs/logger',

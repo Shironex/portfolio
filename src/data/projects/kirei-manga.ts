@@ -78,7 +78,7 @@ export const kireiManga: Project = {
       'electron-builder',
     ],
   },
-  inProgress: true,
+  status: 'in-progress',
   duration: 'Ongoing',
   demoUrl: 'https://kireimanga.app',
   githubUrl: 'https://github.com/Shironex/kirei-manga',

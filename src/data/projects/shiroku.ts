@@ -32,7 +32,7 @@ export const shiroku: Project = {
   techDetails: {
     stack: ['TypeScript', 'React', 'Electron', 'SQLite', 'Tailwind CSS'],
   },
-  inProgress: true,
+  status: 'in-progress',
   duration: 'Ongoing',
   demoUrl: '#in-development',
   featured: false,

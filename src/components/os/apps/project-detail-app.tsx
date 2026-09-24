@@ -161,9 +161,14 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
                 {completed}
               </span>
             )}
-            {project.inProgress && (
+            {project.status === 'in-progress' && (
               <span className="bg-peach/20 text-peach rounded px-2 py-0.5 tracking-widest uppercase">
                 in progress
+              </span>
+            )}
+            {project.status === 'archived' && (
+              <span className="bg-surf-0 text-ink-3 rounded px-2 py-0.5 tracking-widest uppercase">
+                archived
               </span>
             )}
           </div>

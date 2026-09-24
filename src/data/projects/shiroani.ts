@@ -82,7 +82,7 @@ export const shiroani: Project = {
       'GitHub Actions',
     ],
   },
-  inProgress: true,
+  status: 'in-progress',
   duration: 'Ongoing',
   demoUrl: 'https://shiroani.app',
   githubUrl: 'https://github.com/Shironex/shiroani',

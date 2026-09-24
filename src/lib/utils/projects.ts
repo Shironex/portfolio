@@ -6,7 +6,7 @@ import type { Project } from '@/types'
  * @returns Array of projects that are in progress
  */
 export function getInProgressProjects(projects: Project[]): Project[] {
-  return projects.filter((project) => project.inProgress)
+  return projects.filter((project) => project.status === 'in-progress')
 }
 
 /**
@@ -20,7 +20,7 @@ export function getFeaturedProjects(
   limit?: number
 ): Project[] {
   const featured = projects.filter(
-    (project) => project.featured && !project.inProgress
+    (project) => project.featured && project.status !== 'in-progress'
   )
   return limit ? featured.slice(0, limit) : featured
 }

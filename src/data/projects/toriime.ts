@@ -84,7 +84,7 @@ export const toriime: Project = {
       'BullMQ',
     ],
   },
-  inProgress: true,
+  status: 'in-progress',
   duration: '2 years',
   demoUrl: 'https://toriime.pl',
   featured: false,

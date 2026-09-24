@@ -57,6 +57,7 @@ export const cliTemplate: Project = {
     ],
   },
   completedDate: 'April 2025',
+  status: 'shipped',
   duration: '1 month',
   demoUrl: 'https://shironex.github.io/cli-template/',
   githubUrl: 'https://github.com/Shironex/cli-template',

@@ -65,6 +65,7 @@ export const automaker: Project = {
       'Vitest',
     ],
   },
+  status: 'shipped',
   duration: 'Ongoing',
   demoUrl: '',
   githubUrl: 'https://github.com/AutoMaker-Org/automaker',
