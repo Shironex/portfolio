@@ -10,8 +10,26 @@ export const shironeBlog: Project = {
     'shirone.blog is where I write up what I learn while building things: Electron packaging traps, environment variables leaking into builds, terminal performance with many sessions, moving an app to a plugin architecture, and the full story of rewriting Shiranami in Rust.',
     'It is a static Astro site with MDX posts, React islands where a post needs interactivity, Tailwind CSS with the typography plugin and Shiki for code highlighting. It has an RSS feed and a sitemap, and runs as a small Docker container on my own server through Coolify.',
   ],
+  image: '/projects/shirone-blog/thumbnail.webp',
   projectType: 'web',
-  gallery: [],
+  gallery: [
+    {
+      src: '/projects/shirone-blog/home.webp',
+      alt: 'shirone.blog: Home',
+      caption: 'Home: a short intro and the latest post.',
+    },
+    {
+      src: '/projects/shirone-blog/post.webp',
+      alt: 'shirone.blog: Shiranami 2 post',
+      caption:
+        'A post: how I rewrote Shiranami in Rust, with reading time, tags and a table of contents.',
+    },
+    {
+      src: '/projects/shirone-blog/archive.webp',
+      alt: 'shirone.blog: Archive',
+      caption: 'The archive: every post with its date, reading time and tags.',
+    },
+  ],
   technologies: ['Astro', 'MDX', 'React', 'Tailwind CSS', 'Docker'],
   features: [
     'Static site with MDX posts and React islands',
