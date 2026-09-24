@@ -5,7 +5,7 @@ const HERO_COPY = {
     'Open to full-time remote roles and to contracts or MVPs. Based in Poland, working on CET (UTC+1).',
   proof: [
     'Shiranami 2.0: moved my music player from Electron to Rust + Tauri, installer from 110 MB to 12.5 MB.',
-    'AutoMaker: #1 contributor to an open-source AI dev studio with 3k+ stars.',
+    'AutoMaker: I was the #1 contributor to an open-source AI dev studio (3k+ stars).',
     '@noctcore/eslint-plugins: 13 packages, 110+ rules for bugs code review kept catching.',
   ],
 } as const
