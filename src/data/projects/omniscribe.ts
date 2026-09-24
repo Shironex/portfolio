@@ -5,11 +5,11 @@ export const omniscribe: Project = {
   slug: 'omniscribe',
   title: 'Omniscribe',
   summary:
-    'Desktop app for running and managing up to 12 AI coding assistant sessions in parallel, with per-session terminals, git worktrees, and MCP configs.',
+    'Desktop app for running up to 12 AI coding sessions (Claude Code or Codex CLI) in parallel, each with its own terminal, optional git worktree and MCP config.',
   description: [
-    'Omniscribe is a desktop application built for developers who use AI coding assistants as a core part of their workflow. It allows running up to 12 concurrent AI sessions, each in its own isolated terminal with dedicated git worktrees and MCP (Model Context Protocol) configurations.',
-    'The app solves the friction of juggling multiple Claude Code sessions across different terminal windows. Each session gets its own workspace with full terminal integration, task tracking, and status reporting. Everything is visible from a single unified interface.',
-    'Built as a daily driver tool that I use every day for my own development work. Omniscribe demonstrates deep integration between Electron, terminal emulation, git worktree management, and AI assistant orchestration.',
+    'Omniscribe is a desktop app for developers who use AI coding assistants every day. It runs up to 12 sessions side by side, each in its own GPU-accelerated terminal, with optional git worktree isolation and a per-session MCP server configuration. Claude Code and OpenAI Codex CLI are supported through a plugin system.',
+    'It came out of juggling several Claude Code sessions across terminal windows. Omniscribe shows every session in one grid with live status (idle, working, needs input, finished), keeps a searchable session history you can resume or fork from, and adds quick actions for common git work.',
+    'It is an Electron app with a NestJS backend in the main process and a React renderer. It ships for Windows and macOS with stable and opt-in beta update channels, and I use it for my own work every day.',
   ],
   projectType: 'desktop',
   gallery: [],
@@ -26,14 +26,14 @@ export const omniscribe: Project = {
     'Tailwind CSS',
   ],
   features: [
-    'Run up to 12 AI coding sessions simultaneously',
+    'Run up to 12 AI coding sessions at once, Claude Code or Codex CLI',
     'Per-session terminal emulation with full shell access',
     'Git worktree isolation for each session',
     'MCP configuration management per session',
-    'Real-time task and status tracking across sessions',
+    'Live session status: idle, working, planning, needs input, finished',
     'Unified interface for managing all active sessions',
-    'Session-specific context and history',
-    'Cross-platform support (macOS, Windows, Linux)',
+    'Session history with search, branch filters, resume and fork',
+    'Windows and macOS builds with stable and beta update channels',
   ],
   techDetails: {
     stack: [
@@ -50,8 +50,8 @@ export const omniscribe: Project = {
     ],
   },
   status: 'shipped',
-  duration: 'Ongoing',
-  demoUrl: '#desktop-app',
+  duration: 'Ongoing (maintained)',
+  demoUrl: 'https://github.com/Shironex/omniscribe/releases/latest',
   githubUrl: 'https://github.com/Shironex/omniscribe',
   featured: true,
 }
