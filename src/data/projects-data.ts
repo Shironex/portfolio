@@ -16,20 +16,25 @@ import { shiroani } from './projects/shiroani'
 import { sudeko } from './projects/sudeko'
 import { writeWiz } from './projects/write-wiz'
 
+/**
+ * Display order. Featured and active work first, then shipped client sites
+ * and libraries, then the archive (finished, no longer maintained).
+ */
 export const projectsData: Project[] = [
+  shiranami,
   automaker,
   omniscribe,
   shiroani,
-  shiranami,
-  kireiManga,
   moekoder,
-  gitchorus,
   sudeko,
   matmajka,
+  shiniJsLogger,
+  shiniJsRateLimit,
+  // Archive
+  kireiManga,
+  gitchorus,
   writeWiz,
   claudeCodeDiscordBot,
   cliTemplate,
   ghLabelsCli,
-  shiniJsLogger,
-  shiniJsRateLimit,
 ] as const
