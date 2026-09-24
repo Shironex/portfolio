@@ -1,4 +1,29 @@
-import type { Project } from '@/types'
+import type { Project, ProjectStatus } from '@/types'
+
+export type ProjectCounts = Record<ProjectStatus, number> & {
+  total: number
+  featured: number
+}
+
+/**
+ * Count projects per status, plus the total and the featured flag (which
+ * overlaps the statuses). Copy that mentions how many projects there are
+ * reads from this so it can't drift from the data.
+ */
+export function countProjects(projects: readonly Project[]): ProjectCounts {
+  const counts: ProjectCounts = {
+    total: projects.length,
+    featured: 0,
+    'in-progress': 0,
+    shipped: 0,
+    archived: 0,
+  }
+  for (const project of projects) {
+    counts[project.status]++
+    if (project.featured) counts.featured++
+  }
+  return counts
+}
 
 /**
  * Filters projects that are currently in progress
@@ -6,7 +31,7 @@ import type { Project } from '@/types'
  * @returns Array of projects that are in progress
  */
 export function getInProgressProjects(projects: Project[]): Project[] {
-  return projects.filter((project) => project.inProgress)
+  return projects.filter((project) => project.status === 'in-progress')
 }
 
 /**
@@ -20,7 +45,7 @@ export function getFeaturedProjects(
   limit?: number
 ): Project[] {
   const featured = projects.filter(
-    (project) => project.featured && !project.inProgress
+    (project) => project.featured && project.status !== 'in-progress'
   )
   return limit ? featured.slice(0, limit) : featured
 }

@@ -5,11 +5,10 @@ export const shiniJsLogger: Project = {
   slug: 'shinijs-logger',
   title: '@shinijs/logger',
   summary:
-    'A Pino-based structured logger for NestJS applications with file rotation, pretty printing, and comprehensive TypeScript support.',
+    'Pino-based structured logger for NestJS with file rotation, pretty printing in development and full TypeScript types.',
   description: [
-    '@shinijs/logger is a fast, low-overhead structured logging solution designed specifically for the NestJS ecosystem. Built on top of Pino, one of the fastest logging libraries in the Node.js ecosystem, it provides beautiful colorized console output during development and efficient JSON-structured logging for production environments.',
-    'The library seamlessly integrates with NestJS through dependency injection, offering both traditional NestJS LoggerService patterns and a flexible LoggerFactory approach. It includes automatic daily log file rotation, ensuring your logs are organized and manageable over time. The context-aware logging system allows you to create scoped loggers that automatically tag all messages with relevant context information for better debugging and tracing.',
-    'Built with TypeScript-first principles, the library provides full type safety and IntelliSense support throughout. Configuration is entirely environment-based with sensible defaults, making it trivial to switch between development and production logging modes. The library also integrates seamlessly with other @shinijs packages, particularly @shinijs/rate-limit, for comprehensive application monitoring.',
+    '@shinijs/logger is a structured logger for NestJS built on Pino. In development it prints colorized output through pino-pretty; in production it writes JSON logs, optionally to daily-rotated files alongside the console.',
+    'It plugs into NestJS dependency injection as a LoggerService and also offers a LoggerFactory for scoped, context-tagged loggers. Configuration comes from environment variables with sensible defaults, so switching between development and production needs no code changes. It pairs with @shinijs/rate-limit.',
   ],
   projectType: 'library',
   gallery: [],
@@ -23,8 +22,8 @@ export const shiniJsLogger: Project = {
   ],
   features: [
     'Fast, low-overhead structured logging powered by Pino',
-    'Seamless NestJS integration via dependency injection',
-    'Beautiful colorized console output with pino-pretty',
+    'NestJS integration via dependency injection',
+    'Colorized console output with pino-pretty',
     'Automatic daily log file rotation',
     'Environment-based configuration with sensible defaults',
     'Full TypeScript support with type safety',
@@ -35,8 +34,8 @@ export const shiniJsLogger: Project = {
     'Simultaneous console and file logging',
     'Global module pattern (import once, use everywhere)',
     'Integration with @nestjs/config for configuration',
-    'Comprehensive VitePress documentation site',
-    'Battle-tested with Jest test coverage',
+    'VitePress documentation site',
+    'Jest test suite',
   ],
   techDetails: {
     stack: [
@@ -51,6 +50,7 @@ export const shiniJsLogger: Project = {
     ],
   },
   completedDate: 'November 2025',
+  status: 'shipped',
   duration: '1 day',
   demoUrl: 'https://shinijs.github.io/logger/',
   githubUrl: 'https://github.com/shinijs/logger',

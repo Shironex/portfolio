@@ -8,6 +8,10 @@ import {
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
+import { countProjects } from '@/lib/utils/projects'
+
+import { projectsData } from '@/data/projects-data'
+
 import type { AppDescriptor, AppId, WindowId } from './types'
 
 /*
@@ -24,7 +28,7 @@ export const APPS: AppDescriptor[] = [
 ]
 
 /**
- * Lucide icon for a window's title bar — the app's own icon, or Diamond for
+ * Lucide icon for a window's title bar: the app's own icon, or Diamond for
  * project windows. Keeps title bars in the same icon system as the taskbar,
  * start menu, and desktop instead of the old Unicode glyphs.
  */
@@ -45,23 +49,27 @@ export const APP_WINDOW_DEFAULTS: Record<
 
 /*
  * Three short, factual lines shown in the TerminalPanel. Not a fake boot
- * sequence — just a real-enough shell transcript that surfaces concrete
+ * sequence, just a real-enough shell transcript that surfaces concrete
  * claims about the work, location, and availability.
  */
+const counts = countProjects(projectsData)
+
 export const TERMINAL_BLOCKS: Array<{ prompt: string; output: string[] }> = [
   {
     prompt: 'cat about.md',
     output: [
-      'Full-stack developer, Poland. Remote-first.',
-      'Four years of TypeScript, mostly Electron and Next.js.',
+      'Full-stack developer: TypeScript and Rust.',
+      'Remote from Poland, CET (UTC+1). English C1.',
     ],
   },
   {
     prompt: 'ls projects/ | wc -l',
-    output: ['16: two featured, five in-progress, eight shipped.'],
+    output: [
+      `${counts.total}: ${counts.shipped} shipped, ${counts['in-progress']} in progress, ${counts.archived} archived.`,
+    ],
   },
   {
     prompt: 'cat availability.txt',
-    output: ['Open to full-time (remote) and freelance work.'],
+    output: ['Open to full-time remote roles and contracts or MVPs.'],
   },
 ]

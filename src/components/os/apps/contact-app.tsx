@@ -75,7 +75,8 @@ export default function ContactApp() {
         Get in touch
       </h2>
       <p className="font-body text-ink-2 mb-6">
-        Freelance, full-time, or just to talk. I reply within 24 hours.
+        Full-time roles, contracts, MVPs, or just to talk. I reply within 24
+        hours.
       </p>
 
       <div className="grid gap-6 md:grid-cols-[1fr_320px]">

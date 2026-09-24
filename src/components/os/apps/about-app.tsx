@@ -60,28 +60,72 @@ export default function AboutApp() {
         <div>
           <h2 className="font-display text-ink mb-2 text-3xl font-semibold tracking-tight">
             I&apos;m <em className="text-ink font-bold not-italic">Kacper</em>,
-            full-stack developer, Poland
+            a full-stack developer from Poland
           </h2>
           <p className="text-ink-2 text-sm leading-relaxed">
-            Four years in, mostly TypeScript, with a soft spot for Electron. I
-            build the tools I wanted to use: a file renamer that turned into
-            AutoMaker, a multi-session CLI that turned into Omniscribe.
+            I work in TypeScript and Rust, remotely, on CET (UTC+1). Most of
+            what I build started as a tool I wanted for myself: a music player I
+            later rewrote from Electron to Rust, a desktop app for running AI
+            coding sessions in parallel, ESLint plugins for the bugs code review
+            kept catching.
           </p>
         </div>
       </div>
 
       <section className="mb-8">
         <h3 className="font-display text-ink mb-2 text-lg font-semibold">
-          What I ship
+          What I work on
         </h3>
         <p className="text-ink-2 text-sm leading-relaxed">
-          Desktop apps with Electron, typed backends on Node and NestJS, Next.js
-          App Router for the web. I spend more than the usual amount of time on
-          the parts most people skip:{' '}
+          Desktop apps with Rust and Tauri or Electron, typed backends on Node
+          (NestJS, tRPC) with PostgreSQL, and React frontends. I spend more than
+          the usual amount of time on the parts most people skip:{' '}
           <em className="text-ink font-semibold not-italic">
             empty states, 404s, focus rings
           </em>
           . The second click matters.
+        </p>
+        <p className="text-ink-2 mt-3 text-sm leading-relaxed">
+          For more than two years I have self-hosted everything I run: Coolify
+          on Hetzner and OVH, Cloudflare Tunnels, Tailscale, S3-compatible
+          storage, and my own DNS and mail. Before that I used AWS with
+          Terraform.
+        </p>
+      </section>
+
+      <section className="mb-8">
+        <h3 className="font-display text-ink mb-2 text-lg font-semibold">
+          Recent work
+        </h3>
+        <ul className="text-ink-2 list-disc space-y-1 pl-5 text-sm leading-relaxed">
+          <li>
+            <span className="text-ink font-semibold">Shiranami 2.0</span>: moved
+            my music player from Electron to a Rust core in Tauri. The Windows
+            installer went from 110 MB to 12.5 MB and idle memory from about 688
+            MB to about 291 MB, with 1,500+ Rust tests and no user data lost.
+          </li>
+          <li>
+            <span className="text-ink font-semibold">AutoMaker</span>: I was the
+            #1 contributor to this open-source AI development studio, which
+            passed 3,000 GitHub stars.
+          </li>
+          <li>
+            <span className="text-ink font-semibold">
+              @noctcore/eslint-plugins
+            </span>
+            : 13 packages with 110+ rules for cross-file boundaries, IO
+            contracts and production-only bugs.
+          </li>
+        </ul>
+      </section>
+
+      <section className="mb-8">
+        <h3 className="font-display text-ink mb-2 text-lg font-semibold">
+          Working with me
+        </h3>
+        <p className="text-ink-2 text-sm leading-relaxed">
+          I&apos;m open to full-time remote roles and to contracts or MVPs. I
+          work in English (C1) and Polish. Remote from Poland, CET (UTC+1).
         </p>
       </section>
 

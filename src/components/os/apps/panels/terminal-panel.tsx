@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { TERMINAL_BLOCKS } from '@/components/os/constants'
 
 /**
- * TerminalPanel — static zsh-style transcript that surfaces three concrete
+ * TerminalPanel: static zsh-style transcript that surfaces three concrete
  * claims (who, what, when). Lines reveal in sequence with a short stagger
  * on mount, then settle into a solid readable state.
  */
@@ -33,7 +33,7 @@ export function TerminalPanel() {
           <span className="bg-mint/60 size-2 rounded-full" />
         </span>
         <span className="text-ink flex-1 font-mono text-xs font-bold">
-          ~/kacper - zsh
+          ~/kacper · zsh
         </span>
       </div>
 

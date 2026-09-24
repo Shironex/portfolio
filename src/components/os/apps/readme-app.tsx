@@ -3,9 +3,14 @@ import Image from 'next/image'
 import { Kbd } from '@/components/os/kbd'
 
 import { GITHUB_URL } from '@/lib/constants'
+import { countProjects } from '@/lib/utils/projects'
+
+import { projectsData } from '@/data/projects-data'
+
+const projectCount = countProjects(projectsData).total
 
 /**
- * readme.md window — short welcome note for ShiroOS.
+ * readme.md window: short welcome note for ShiroOS.
  */
 export default function ReadmeApp() {
   return (
@@ -38,20 +43,20 @@ export default function ReadmeApp() {
       </h3>
       <ul className="list-disc space-y-1 pl-5">
         <li>
-          <span className="text-ink font-semibold">Projects</span>: 16 things I
-          made, filterable by status.
+          <span className="text-ink font-semibold">Projects</span>:{' '}
+          {projectCount} things I made, filterable by status.
         </li>
         <li>
-          <span className="text-ink font-semibold">About</span>: bio, things I
-          do outside the editor, a rough timeline.
+          <span className="text-ink font-semibold">About</span>: who I am, what
+          I work on, and what I do outside the editor.
         </li>
         <li>
           <span className="text-ink font-semibold">Monitor</span>: skills and
           tools I use daily.
         </li>
         <li>
-          <span className="text-ink font-semibold">Contact</span>: form + my
-          email and GitHub.
+          <span className="text-ink font-semibold">Contact</span>: a form, plus
+          my email and GitHub.
         </li>
       </ul>
 
@@ -60,14 +65,14 @@ export default function ReadmeApp() {
       </h3>
       <ul className="list-disc space-y-1 pl-5">
         <li>
-          <Kbd>⌘K</Kbd> - command palette
+          <Kbd>⌘K</Kbd>: command palette
         </li>
         <li>
-          <Kbd>Esc</Kbd> - close the focused window
+          <Kbd>Esc</Kbd>: close the focused window
         </li>
         <li>
-          Arrow keys on a focused title bar - move the window; <Kbd>Shift</Kbd>{' '}
-          + arrows to resize.
+          Arrow keys on a focused title bar: move the window. <Kbd>Shift</Kbd> +
+          arrows to resize.
         </li>
       </ul>
 
