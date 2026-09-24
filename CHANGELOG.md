@@ -1,3 +1,12 @@
+# [2.15.0](https://github.com/Shironex/portfolio/compare/v2.14.0...v2.15.0) (2026-09-24)
+
+
+### Features
+
+* **projects:** archive the shinijs logger and rate-limit packages ([41e2cc0](https://github.com/Shironex/portfolio/commit/41e2cc00da23477adf80641178f47d0b399221a4))
+* **projects:** show the eslint plugins docs showcase images ([c7a1da5](https://github.com/Shironex/portfolio/commit/c7a1da5e2974af7b5538e8481e99874b33a2eb1b))
+* **projects:** show the shirone.blog showcase images ([795151f](https://github.com/Shironex/portfolio/commit/795151f2ac507ec22cc3fc36e443c9c133f4b3a7))
+
 # [2.14.0](https://github.com/Shironex/portfolio/compare/v2.13.2...v2.14.0) (2026-09-24)
 
 
