@@ -5,10 +5,11 @@ export const shiniJsLogger: Project = {
   slug: 'shinijs-logger',
   title: '@shinijs/logger',
   summary:
-    'Pino-based structured logger for NestJS with file rotation, pretty printing in development and full TypeScript types.',
+    'Pino-based structured logger for NestJS with file rotation, pretty printing in development and full TypeScript types. Archived.',
   description: [
     '@shinijs/logger is a structured logger for NestJS built on Pino. In development it prints colorized output through pino-pretty; in production it writes JSON logs, optionally to daily-rotated files alongside the console.',
     'It plugs into NestJS dependency injection as a LoggerService and also offers a LoggerFactory for scoped, context-tagged loggers. Configuration comes from environment variables with sensible defaults, so switching between development and production needs no code changes. It pairs with @shinijs/rate-limit.',
+    'I stopped maintaining it in September 2026 and deprecated the package on npm.',
   ],
   projectType: 'library',
   gallery: [],
@@ -50,7 +51,7 @@ export const shiniJsLogger: Project = {
     ],
   },
   completedDate: 'November 2025',
-  status: 'shipped',
+  status: 'archived',
   duration: '1 day',
   demoUrl: 'https://shinijs.github.io/logger/',
   githubUrl: 'https://github.com/shinijs/logger',

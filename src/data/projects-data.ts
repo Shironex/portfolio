@@ -38,8 +38,6 @@ export const projectsData: Project[] = [
   shironeBlog,
   sudeko,
   matmajka,
-  shiniJsLogger,
-  shiniJsRateLimit,
   // Archive
   kireiManga,
   gitchorus,
@@ -47,4 +45,6 @@ export const projectsData: Project[] = [
   claudeCodeDiscordBot,
   cliTemplate,
   ghLabelsCli,
+  shiniJsLogger,
+  shiniJsRateLimit,
 ] as const
