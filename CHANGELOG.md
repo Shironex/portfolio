@@ -1,3 +1,28 @@
+# [2.14.0](https://github.com/Shironex/portfolio/compare/v2.13.2...v2.14.0) (2026-09-24)
+
+
+### Bug Fixes
+
+* **projects:** count automaker as completed, not archived ([2fd8111](https://github.com/Shironex/portfolio/commit/2fd8111c8f83c044b0505ba95e7de169c151a279))
+* **projects:** describe automaker in the past tense ([4297b3b](https://github.com/Shironex/portfolio/commit/4297b3b4bc6be7823fdd5843a4539381ce7d838d)), closes [#1](https://github.com/Shironex/portfolio/issues/1)
+* **seo:** drop the unverified twitter handle from the metadata ([4e47d86](https://github.com/Shironex/portfolio/commit/4e47d8669147ddc5bf151845a892edae3ba2ff07))
+* **hero:** fit the hero on short laptop screens ([fcac3c6](https://github.com/Shironex/portfolio/commit/fcac3c6fc568a541fd8231cede103f166a147b2c))
+* **hero:** put the automaker proof line in the past tense ([a762041](https://github.com/Shironex/portfolio/commit/a7620418188b165dda3bc90766c12096d647e2f3)), closes [#1](https://github.com/Shironex/portfolio/issues/1)
+* **projects:** refresh shiroani, moekoder, omniscribe and kireimanga ([fe0b790](https://github.com/Shironex/portfolio/commit/fe0b7902d3cf15909d35693b5864bffd0dc7ac0c))
+* **projects:** tidy sudeko, matmajka and shinijs copy ([03e33c8](https://github.com/Shironex/portfolio/commit/03e33c891d0f6311fe7a6b7fe322bd71ee6188c9))
+
+
+### Features
+
+* **projects:** add eslint-plugins, nysia, shirone.blog, rumi and the erp ([5b64af4](https://github.com/Shironex/portfolio/commit/5b64af4453157805d586411f22beb0cca1d1f59f))
+* **skills:** add rust, tauri and a self-hosted infra group ([a7fa708](https://github.com/Shironex/portfolio/commit/a7fa708921b2b8a316643594b01a69041735521e))
+* **og:** generate the open graph card from code ([673411d](https://github.com/Shironex/portfolio/commit/673411d655c1b74fbaabd6bf8a429ddb09def432))
+* **seo:** lead metadata with the full-stack role and add person schema ([e28f864](https://github.com/Shironex/portfolio/commit/e28f8646bcf0c2cf00402fb8e0a8a2ac531eb01d))
+* **projects:** move finished tools into an archive group ([a04c74a](https://github.com/Shironex/portfolio/commit/a04c74a234dd9ff91da998efa0691f45500858b3))
+* **hero:** rewrite hero, about and availability copy around the role ([057c04a](https://github.com/Shironex/portfolio/commit/057c04a25497717ff96ae9b88a2143b05a7cf924))
+* **projects:** rewrite the shiranami entry for the v2 rust core ([85c3260](https://github.com/Shironex/portfolio/commit/85c326060e18de237f3e275abf85e595521c519f))
+* **projects:** show the shiranami v2 showcase images ([646ba86](https://github.com/Shironex/portfolio/commit/646ba86fe21217dabcc21632c851e6d80d47a62b))
+
 ## [2.13.2](https://github.com/Shironex/portfolio/compare/v2.13.1...v2.13.2) (2026-09-22)
 
 
