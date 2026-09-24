@@ -66,7 +66,7 @@ export const automaker: Project = {
     ],
   },
   completedDate: 'May 2026',
-  status: 'archived',
+  status: 'shipped',
   duration: '6 months',
   demoUrl: '',
   githubUrl: 'https://github.com/AutoMaker-Org/automaker',
