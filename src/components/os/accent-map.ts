@@ -61,6 +61,11 @@ export const projectAccent: Record<string, AccentRole> = {
   'gh-labels-cli': 'bright',
   'shinijs-logger': 'primary',
   'shinijs-rate-limit': 'warm',
+  'eslint-plugins': 'primary',
+  nysia: 'deep',
+  'shirone-blog': 'bright',
+  rumi: 'warm-2',
+  'business-erp': 'warm',
 }
 
 export const DEFAULT_ACCENT: AccentRole = 'primary'
