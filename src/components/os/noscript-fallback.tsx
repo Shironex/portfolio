@@ -1,9 +1,14 @@
-import { AUTHOR_NAME, EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
+import {
+  AUTHOR_FULL_NAME,
+  AUTHOR_NAME,
+  EMAIL_CONTACT,
+  GITHUB_URL,
+} from '@/lib/constants'
 
 /**
  * Plain HTML fallback rendered inside `<noscript>` for clients without JS.
- * ShiroOS is a heavily stateful SPA — without React the desktop can't boot,
- * so we surface the essentials (name, contact, GitHub) in a tiny card.
+ * ShiroOS is a heavily stateful SPA. Without React the desktop can't boot,
+ * so this surfaces the essentials (name, contact, GitHub) in a tiny card.
  */
 export function NoscriptFallback() {
   return (
@@ -62,8 +67,11 @@ export function NoscriptFallback() {
             }}
           >
             <li>
-              <strong>{AUTHOR_NAME}</strong>, full-stack developer, Poland
-              (remote)
+              <strong>{AUTHOR_FULL_NAME}</strong> ({AUTHOR_NAME}), full-stack
+              developer, TypeScript + Rust
+            </li>
+            <li>
+              Remote from Poland (CET), open to full-time roles and contracts
             </li>
             <li>
               Email:{' '}

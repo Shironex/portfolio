@@ -1,4 +1,6 @@
 export const GITHUB_URL = 'https://github.com/shironex'
 export const AUTHOR_NAME = 'Shironex'
+export const AUTHOR_FULL_NAME = 'Kacper Lachowicz'
+export const BLOG_URL = 'https://shirone.blog'
 export const EMAIL_SENDER = '"shironex" <noreply@shirone.dev>'
 export const EMAIL_CONTACT = 'support@shirone.dev'

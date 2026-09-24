@@ -4,7 +4,11 @@ import type React from 'react'
 
 import { Toaster } from '@/components/ui/sonner'
 
-import { defaultMetadata, siteConfig } from '@/lib/metadata-config'
+import {
+  defaultMetadata,
+  personJsonLd,
+  siteConfig,
+} from '@/lib/metadata-config'
 import { APPEARANCE_BOOT_SCRIPT, DEFAULT_PALETTE } from '@/lib/os/appearance'
 
 import '@/styles/globals.css'
@@ -58,6 +62,13 @@ export default function RootLayout({ children }: RootLayoutProps) {
           // Applies the stored mode and palette before first paint. Inline and
           // blocking on purpose; a deferred script paints the default first.
           dangerouslySetInnerHTML={{ __html: APPEARANCE_BOOT_SCRIPT }}
+        />
+        <script
+          type="application/ld+json"
+          // Escape `<` so no string in the data can close the script tag.
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(personJsonLd).replace(/</g, '\\u003c'),
+          }}
         />
       </head>
       <body
