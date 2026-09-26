@@ -1,153 +1,151 @@
-<a id="readme-top"></a>
-
-[![Contributors][contributors-shield]][contributors-url]
-[![Forks][forks-shield]][forks-url]
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
-
-<!-- PROJECT LOGO -->
-<br />
 <div align="center">
-  <a href="https://shirone.dev/">
-    <img src="./src/app/icon.png" alt="Logo" width="40" height="40" style="border-radius: 50%;">
-  </a>
+  <img src="assets/showcase/hero.webp" alt="shirone.dev: my portfolio, built as a small desktop OS" width="100%" />
 
-  <h3 align="center">My Portfolio</h3>
+  <h1>shirone.dev</h1>
 
-  <p align="center">
-    A showcase of my development skills, projects, and contributions in full-stack development.
-    <br />
-    <a href="https://shirone.dev/"><strong>Demo Live »</strong></a>
+  <p><strong>My portfolio, built as a small desktop OS in the browser.</strong></p>
+
+  <p>
+    <a href="https://github.com/Shironex/portfolio/releases/latest">
+      <img src="https://img.shields.io/github/v/release/Shironex/portfolio?style=flat&color=0f7c74" alt="Latest release" />
+    </a>
+    <a href="https://github.com/Shironex/portfolio/actions/workflows/build.yaml">
+      <img src="https://img.shields.io/github/actions/workflow/status/Shironex/portfolio/build.yaml?branch=master&style=flat&label=build" alt="Build" />
+    </a>
+    <a href="LICENSE.txt">
+      <img src="https://img.shields.io/badge/License-MIT-lightgrey?style=flat" alt="MIT License" />
+    </a>
   </p>
+
+  <p>
+    <a href="https://shirone.dev"><strong>Live site</strong></a>
+    &nbsp;·&nbsp;
+    <a href="CHANGELOG.md"><strong>Changelog</strong></a>
+  </p>
+
+  <blockquote>
+    <p>Windows, a dock, a command palette and a terminal that tells you who I am. Click around, or press Ctrl+K.</p>
+  </blockquote>
 </div>
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#license">License</a></li>
-  </ol>
-</details>
+---
 
-<!-- ABOUT THE PROJECT -->
+### What is this?
 
-## About The Project
+This is my portfolio. Instead of a long scrolling page, it opens as a desktop: my projects, a short about page, the tools I use and a contact form each live in their own window, and everything can be reached from the command palette. On a phone it turns into a simple feed with a dock.
 
-This portfolio showcases my skills as a full-stack developer, focusing on modern technologies such as Next.js, TypeScript, TailwindCSS, and Framer Motion.
+### Screenshots
 
-### Key Highlights:
+<table>
+  <tr>
+    <td width="50%"><img src="assets/showcase/desktop.webp" alt="shirone.dev: Desktop" /></td>
+    <td width="50%"><img src="assets/showcase/projects.webp" alt="shirone.dev: Projects" /></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>The desktop: who I am, a short shell transcript, featured projects and my GitHub activity.</sub></td>
+    <td align="center"><sub>Projects: everything I have built, filterable by status.</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="assets/showcase/project.webp" alt="shirone.dev: Project detail" /></td>
+    <td width="50%"><img src="assets/showcase/about.webp" alt="shirone.dev: About" /></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>A project window, scrolled to its tech stack and screenshot gallery.</sub></td>
+    <td align="center"><sub>About: who I am, what I work on and what I do away from code.</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="assets/showcase/monitor.webp" alt="shirone.dev: Monitor" /></td>
+    <td width="50%"><img src="assets/showcase/contact.webp" alt="shirone.dev: Contact" /></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Monitor: the languages, frameworks and tools I use every day.</sub></td>
+    <td align="center"><sub>Contact: a form, plus my email and GitHub.</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="assets/showcase/palette.webp" alt="shirone.dev: Command palette" /></td>
+    <td width="50%"><img src="assets/showcase/readme.webp" alt="shirone.dev: Readme" /></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>The command palette: open any app or project, switch the theme or the palette.</sub></td>
+    <td align="center"><sub>Readme: a short welcome note and the keyboard shortcuts.</sub></td>
+  </tr>
+</table>
 
-- Clean and maintainable code.
-- TailwindCSS for styling.
-- motion react for animation.
-- Cloudflare Turnstile for secure, bot-free interactions.
-- Rate limiting with Redis.
-- Contact form with Resend.
-- Form validation with Zod and react-hook-form.
-- MDX for blog posts.
-- Send Discord notification with image snapshot using bullmq and puppeteer
+### What's inside
 
-Feel free to explore the code, suggest changes, or get in touch for any questions!
+|                      |                                                                                                                 |
+| -------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Desktop shell**    | Menu bar, desktop icons, windows you can drag, resize, minimize and maximize, a taskbar and a start menu        |
+| **Command palette**  | Ctrl+K (Cmd+K on macOS) opens any app or project, switches the theme and the palette, and copies my email       |
+| **Keyboard windows** | On a focused title bar: arrow keys move the window, Shift+arrows resize it, Ctrl+W closes, Ctrl+M minimizes     |
+| **Themes**           | Light and dark mode and six colour palettes, applied before the first paint so there is no flash                |
+| **Mobile layout**    | Below 768px the desktop becomes a vertical feed with a bottom dock, and windows open as full-screen sheets      |
+| **Projects**         | Every project is a typed data file, filterable by status and searchable, with its own window and a gallery      |
+| **GitHub activity**  | A contribution heatmap from GitHub's GraphQL API, cached for six hours; it turns on when `GITHUB_TOKEN` is set  |
+| **Contact form**     | next-safe-action and Zod, Cloudflare Turnstile, a honeypot, a Redis rate limit, Resend email and a Discord ping |
+| **Boot splash**      | A short greeting once per tab, skippable, and skipped entirely when you prefer reduced motion                   |
+| **Fast first paint** | The hero text is server-rendered under the client shell, with a plain HTML fallback when JavaScript is off      |
+| **Security headers** | A Content Security Policy and the usual hardening headers, set in `src/proxy.ts`                                |
+| **Social images**    | Open Graph and Twitter images rendered by the app itself                                                        |
+| **Analytics**        | PostHog, loaded only once the browser is idle or you interact with the page                                     |
+| **End to end tests** | Playwright specs for the responsive layout and the theme toggle                                                 |
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### Built with
 
-### Built With
+|           |                                                                                |
+| --------- | ------------------------------------------------------------------------------ |
+| Framework | Next.js 16 (App Router, Turbopack, Cache Components), React 19                 |
+| Language  | TypeScript 6                                                                   |
+| Styling   | Tailwind CSS 4, Radix UI primitives, Lucide icons                              |
+| Forms     | React Hook Form, Zod 4, next-safe-action                                       |
+| Services  | Resend and React Email, Redis (ioredis), Cloudflare Turnstile, PostHog         |
+| Quality   | ESLint 10 with my `@noctcore` plugins, Prettier, Playwright, Husky, commitlint |
+| Releases  | semantic-release on GitHub Actions                                             |
 
-This portfolio is built with a selection of modern tools and libraries f:
+### Getting started
 
-- Next js 15
-- TailwindCSS
-- motion react
-- Cloudflare Turnstile
-- Redis
-- Resend
-- Shadcn ui
-- React-hook-form
-- Zod
-- Next safe action
-- Docker-compose
-- Bullmq
-- puppeteer
-- axios
+You need [Node.js](https://nodejs.org/) 22.13 or newer and [pnpm](https://pnpm.io/) 10.9 or newer.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+```bash
+git clone https://github.com/Shironex/portfolio.git
+cd portfolio
+pnpm install
+cp .env.example .env    # on Windows cmd: copy .env.example .env
+pnpm dev
+```
 
-<!-- GETTING STARTED -->
+The placeholder values in `.env.example` are enough to run the site locally: the Turnstile keys are Cloudflare's
+always-pass test keys, and Redis is only used for the contact form's rate limit, which is skipped in development. For a
+local production build, `docker compose up -d` starts Redis. Set `GITHUB_TOKEN` (a fine-grained token with read-only access to public
+repositories) to see the GitHub heatmap.
 
-## Getting Started
+| Command          | What it does                                    |
+| ---------------- | ----------------------------------------------- |
+| `pnpm dev`       | Dev server with Turbopack on port 3000          |
+| `pnpm dev:email` | React Email preview of the templates, port 3001 |
+| `pnpm build`     | Production build                                |
+| `pnpm start`     | Serve the production build                      |
+| `pnpm lint`      | ESLint                                          |
+| `pnpm typecheck` | TypeScript, no emit                             |
+| `pnpm format`    | Prettier over `src/`                            |
+| `pnpm test:e2e`  | Playwright end to end tests                     |
 
-### Prerequisites
+### Showcase images
 
-To use this project, you need to have pnpm installed.
+The images in this README and the project galleries are captured with
+[`@noctcore/showcase-kit`](https://www.npmjs.com/package/@noctcore/showcase-kit):
 
-- pnpm
-  ```sh
-  npm install -g pnpm
-  ```
+- `pnpm showcase:portfolio` builds this site on mock values and captures `assets/showcase/`, hero included (stop
+  `pnpm dev` first, it rebuilds `.next`).
+- `pnpm showcase:blog` captures shirone.blog into `public/projects/shirone-blog/`.
+- `pnpm showcase:eslint` captures the ESLint plugins docs into `public/projects/eslint-plugins/`.
 
-### Installation
+### Releases
 
-1. Clone the repo
-   ```sh
-   git clone https://github.com/Shironex/portfolio.git
-   ```
-2. Install NPM packages
-   ```sh
-   pnpm install
-   ```
-3. Run docker-compose to start Redis instance
-   ```sh
-   docker-compose up -d
-   ```
-4. Create a `.env` file based on the `.env.example` file
+Every push to `master` runs [semantic-release](https://semantic-release.gitbook.io/): it reads the conventional
+commits, bumps the version, updates [CHANGELOG.md](CHANGELOG.md) and publishes a
+[GitHub release](https://github.com/Shironex/portfolio/releases).
 
-5. Start the development server
-   ```sh
-   pnpm run dev
-   ```
+### License
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- ROADMAP -->
-
-## Roadmap
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- LICENSE -->
-
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/shironex/portfolio/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/shironex/portfolio.svg?style=for-the-badge
-[forks-url]: https://github.com/shironex/portfolio/network/members
-[stars-shield]: https://img.shields.io/github/stars/shironex/portfolio.svg?style=for-the-badge
-[stars-url]: https://github.com/shironex/portfolio/stargazers
-[issues-shield]: https://img.shields.io/github/issues/shironex/portfolio.svg?style=for-the-badge
-[issues-url]: https://github.com/shironex/portfolio/issues
-[license-shield]: https://img.shields.io/github/license/shironex/portfolio.svg?style=for-the-badge
-[license-url]: https://github.com/shironex/portfolio/blob/master/LICENSE.txt
+MIT, see [LICENSE.txt](LICENSE.txt).
