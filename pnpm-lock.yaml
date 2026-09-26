@@ -136,8 +136,8 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0(eslint@10.10.0(jiti@2.7.0))(typescript@6.0.3)
       '@noctcore/showcase-kit':
-        specifier: 0.1.1
-        version: 0.1.1(@types/node@25.9.5)(playwright@1.63.0)
+        specifier: 0.2.0
+        version: 0.2.0(@types/node@25.9.5)(playwright@1.63.0)
       '@playwright/test':
         specifier: ^1.63.0
         version: 1.63.0
@@ -1119,12 +1119,19 @@ packages:
       eslint: '>=9.0.0'
       typescript: '>=5.0.0'
 
-  '@noctcore/showcase-kit@0.1.1':
-    resolution: {integrity: sha512-F/DHDgel/IBia5a7LcwrBIQxRYe/KiU76vmjF8TxlzL31B24bzH2+8eSeUaCzag3TBS7BHbpRSsJhrCT5mLLKQ==}
+  '@noctcore/showcase-kit@0.2.0':
+    resolution: {integrity: sha512-2mkzdgvznGvuY//tiDCBwOO+O3ogE0CQcZYDhB2BfX4MATvR4cxwlhNBw+wne/nsWCGuKGGX5+2LiCxNM+KsWA==}
     engines: {node: '>=22'}
     hasBin: true
     peerDependencies:
+      '@lydell/node-pty': '>=1.2.0-beta.15'
+      node-pty: '>=1.1.0'
       playwright: '>=1.50.0'
+    peerDependenciesMeta:
+      '@lydell/node-pty':
+        optional: true
+      node-pty:
+        optional: true
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1779,6 +1786,9 @@ packages:
     resolution: {integrity: sha512-nAB74NfSNKknqQ1RrYj6uz8FcXEomu/MATJZxh/x+BArzN2U3JbOYC0APYzUIGhVY3m5hRxA8VPNdPBoG8txlA==}
     cpu: [x64]
     os: [win32]
+
+  '@xterm/headless@6.0.0':
+    resolution: {integrity: sha512-5Yj1QINYCyzrZtf8OFIHi47iQtI+0qYFPHmouEfG8dHNxbZ9Tb9YGSuLcsEwj9Z+OL75GJqPyJbyoFer80a2Hw==}
 
   JSONStream@1.3.5:
     resolution: {integrity: sha512-E+iruNOY8VV9s4JEbe1aNEm6MiszPRr/UfcHMz0TQh1BXSxHK+ASV1R6W4HpjBhSeS+54PIsAMCBmwD06LLsqQ==}
@@ -5939,8 +5949,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@noctcore/showcase-kit@0.1.1(@types/node@25.9.5)(playwright@1.63.0)':
+  '@noctcore/showcase-kit@0.2.0(@types/node@25.9.5)(playwright@1.63.0)':
     dependencies:
+      '@xterm/headless': 6.0.0
       playwright: 1.63.0
       sharp: 0.35.4(@types/node@25.9.5)
     transitivePeerDependencies:
@@ -6630,6 +6641,8 @@ snapshots:
 
   '@unrs/resolver-binding-win32-x64-msvc@1.12.2':
     optional: true
+
+  '@xterm/headless@6.0.0': {}
 
   JSONStream@1.3.5:
     dependencies:

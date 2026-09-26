@@ -1,14 +1,12 @@
 import { defineConfig } from '@noctcore/showcase-kit'
 
-// Path navs resolve against the origin, not the docs base path, so every
-// path below carries the /eslint-plugins/ prefix.
-const BASE = '/eslint-plugins'
-
+// Path navs resolve under the target url's path (the docs base path), so the
+// paths below leave out the /eslint-plugins/ prefix.
 export default defineConfig({
   name: 'noctcore ESLint plugins',
   slug: 'eslint-plugins',
   root: '..',
-  target: { mode: 'url', url: `https://noctcore.github.io${BASE}/` },
+  target: { mode: 'url', url: 'https://noctcore.github.io/eslint-plugins/' },
   ready: 'main',
   viewport: { width: 1440, height: 900 },
   deviceScaleFactor: 2,
@@ -22,21 +20,21 @@ export default defineConfig({
       id: 'home',
       title: 'Docs home',
       caption: 'Docs home: what the plugins catch and who they are for.',
-      nav: `${BASE}/`,
+      nav: '/',
     },
     {
       id: 'plugin',
       title: 'async-safety plugin',
       caption:
         'A plugin overview: what async-safety solves, what it reports and how to install it.',
-      nav: `${BASE}/packages/async-safety/`,
+      nav: '/packages/async-safety/',
     },
     {
       id: 'rule',
       title: 'require-fetch-timeout rule',
       caption:
         'A rule page: why the rule exists, with incorrect and correct examples.',
-      nav: `${BASE}/rules/async-safety/require-fetch-timeout/#why`,
+      nav: '/rules/async-safety/require-fetch-timeout/#why',
       delayMs: 300,
     },
   ],
