@@ -201,8 +201,12 @@ export function Window({
         height: win.h,
         zIndex: win.z,
       }}
+      // No `overflow-hidden` here: a rounded clip around the scroller below
+      // makes Chrome hit-test and scroll it on the main thread, so the title
+      // bar rounds its own corners and the scroller stops short of the bottom
+      // radius instead.
       className={[
-        'border-rule-2 bg-surf-2 absolute flex flex-col overflow-hidden rounded-xl border backdrop-blur-xl',
+        'border-rule-2 bg-surf-solid absolute flex flex-col rounded-xl border',
         'transition-shadow duration-200 motion-reduce:animate-none',
         leaving ? 'animate-win-close' : 'animate-win-open',
         // Focused window carries the deeper shadow + accent ring; unfocused
@@ -218,7 +222,7 @@ export function Window({
         aria-label={`${win.title} window controls. Arrow keys move, Shift+Arrow resizes, Ctrl+W closes, Ctrl+M minimizes, Ctrl+Shift+M toggles maximize.`}
         onMouseDown={startDrag}
         onKeyDown={handleTitleKey}
-        className="focus-ring border-rule bg-surf-1 flex h-9 cursor-grab items-center justify-between gap-3 border-b px-3 select-none active:cursor-grabbing pointer-coarse:h-11"
+        className="focus-ring border-rule bg-surf-1 flex h-9 cursor-grab items-center justify-between gap-3 rounded-t-xl border-b px-3 select-none active:cursor-grabbing pointer-coarse:h-11"
       >
         <div className="flex items-center gap-2">
           <span
@@ -239,7 +243,10 @@ export function Window({
           onClose={requestClose}
         />
       </div>
-      <div className="font-body text-ink flex-1 overflow-auto p-6">
+      {/* Opaque and square so Chrome composites it (threaded scrolling keeps
+          LCD text only on an opaque scroller at DPR 1); `mb-3` keeps its
+          corners inside the window's rounded bottom edge. */}
+      <div className="font-body text-ink bg-surf-solid mb-3 flex-1 overflow-auto px-6 pt-6 pb-3">
         {children}
       </div>
 
@@ -268,22 +275,22 @@ export function Window({
           <div
             aria-hidden
             onMouseDown={startResize('ne')}
-            className="hover:bg-miku/20 absolute top-0 right-0 z-10 size-3 cursor-ne-resize"
+            className="hover:bg-miku/20 absolute top-0 right-0 z-10 size-3 cursor-ne-resize rounded-tr-xl"
           />
           <div
             aria-hidden
             onMouseDown={startResize('nw')}
-            className="hover:bg-miku/20 absolute top-0 left-0 z-10 size-3 cursor-nw-resize"
+            className="hover:bg-miku/20 absolute top-0 left-0 z-10 size-3 cursor-nw-resize rounded-tl-xl"
           />
           <div
             aria-hidden
             onMouseDown={startResize('se')}
-            className="hover:bg-miku/20 absolute right-0 bottom-0 z-10 size-3 cursor-se-resize"
+            className="hover:bg-miku/20 absolute right-0 bottom-0 z-10 size-3 cursor-se-resize rounded-br-xl"
           />
           <div
             aria-hidden
             onMouseDown={startResize('sw')}
-            className="hover:bg-miku/20 absolute bottom-0 left-0 z-10 size-3 cursor-sw-resize"
+            className="hover:bg-miku/20 absolute bottom-0 left-0 z-10 size-3 cursor-sw-resize rounded-bl-xl"
           />
         </>
       )}
