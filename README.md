@@ -116,7 +116,7 @@ pnpm dev
 
 The placeholder values in `.env.example` are enough to run the site locally: the Turnstile keys are Cloudflare's
 always-pass test keys, and Redis is only used for the contact form's rate limit, which is skipped in development. For a
-local production build, `docker compose up -d` starts Redis. Set `GITHUB_TOKEN` (a fine-grained token with read-only access to public
+local production build, `docker compose up -d` starts Redis. Uncomment `GITHUB_TOKEN` and set it (a fine-grained token with read-only access to public
 repositories) to see the GitHub heatmap.
 
 | Command          | What it does                                    |
