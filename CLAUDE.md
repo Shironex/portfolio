@@ -25,16 +25,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Git & Release
 
 - `pnpm commit` - Use commitizen for conventional commits
-- `pnpm release` - Create a new release with standard-version
+- `pnpm release` - Local standard-version release (real releases come from semantic-release on push to `master`)
 - Pre-commit hooks run automatically via Husky
 
 ## Architecture Overview
 
 ### Tech Stack
 
-- **Framework**: Next.js 15 with App Router and Turbo mode
+- **Framework**: Next.js 16 with App Router and Turbo mode
 - **Language**: TypeScript with strict mode
-- **Styling**: TailwindCSS with custom animations
+- **Styling**: Tailwind CSS 4 with custom animations
 - **UI Components**: Shadcn UI + Radix UI primitives
 - **Form Handling**: React Hook Form + Zod validation
 - **State Management**: Next Safe Action for server actions
@@ -46,14 +46,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `/src/app/` - Next.js App Router pages and layouts
 - `/src/components/` - Reusable React components
   - `/ui/` - Shadcn UI components
-  - `/layout/` - Layout components (navbar, footer)
-  - `/sections/` - Page sections
-  - `/card/` - Card components
+  - `/os/` - ShiroOS desktop shell (windows, apps, taskbar, command palette)
+  - `/icons/` - Icon components
 - `/src/lib/` - Core utilities and integrations
   - `/discord/` - Discord webhook integration
   - `/mail/` - Email templates and rendering
   - `/ratelimit/` - Redis-based rate limiting
-- `/src/content/` - MDX content for articles
+- `/src/data/` - Project and skills data
 - `/src/env/` - Type-safe environment variables (client.ts, server.ts)
 
 ### Key Patterns
@@ -61,12 +60,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 1. **Server Actions**: Uses Next Safe Action for type-safe server mutations
 2. **Environment Variables**: Validated with Zod through @t3-oss/env-nextjs
 3. **Error Handling**: Custom error classes in `/lib/errors/`
-4. **MDX Processing**: Articles use MDX with syntax highlighting and custom components
-5. **Image Optimization**: Project screenshots stored in `/public/projects/`
+4. **Image Optimization**: Project screenshots stored in `/public/projects/`
 
 ### Important Considerations
 
-- Node.js >= 22.11.0 and pnpm >= 10.9.0 required
+- Node.js >= 22.13.0 and pnpm >= 10.9.0 required
 - Environment variables must be set based on `.env.example`
 - Redis and mail server run via Docker Compose
 - File/folder naming uses kebab-case (enforced by ESLint)
