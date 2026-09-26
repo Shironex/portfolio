@@ -1,3 +1,15 @@
+## [2.15.1](https://github.com/Shironex/portfolio/compare/v2.15.0...v2.15.1) (2026-09-26)
+
+
+### Bug Fixes
+
+* **os:** keep window scrolling on the compositor thread ([5e69147](https://github.com/Shironex/portfolio/commit/5e69147af521a9deaf3fe8ace08de8121db1b54d))
+
+
+### Performance Improvements
+
+* **projects:** size gallery thumbnails to their grid cell ([6771008](https://github.com/Shironex/portfolio/commit/6771008b9d267280517ef86df5926f1bf07f9da1))
+
 # [2.15.0](https://github.com/Shironex/portfolio/compare/v2.14.0...v2.15.0) (2026-09-24)
 
 
