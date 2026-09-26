@@ -20,7 +20,8 @@
     "prepare": "husky",
     "commit": "git-cz",
     "showcase:blog": "showcase all -c showcase/shirone-blog.config.mjs",
-    "showcase:eslint": "showcase all -c showcase/eslint-plugins.config.mjs"
+    "showcase:eslint": "showcase all -c showcase/eslint-plugins.config.mjs",
+    "showcase:portfolio": "showcase all -c showcase/portfolio.config.mjs && showcase hero -c showcase/portfolio.config.mjs"
   },
   "engines": {
     "node": ">=22.13.0",
