@@ -280,6 +280,7 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
                   src={item.src}
                   alt={item.alt}
                   fill
+                  sizes="(min-width: 768px) 384px, 50vw"
                   className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
                 <span
