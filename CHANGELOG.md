@@ -1,3 +1,15 @@
+# [2.16.0](https://github.com/Shironex/portfolio/compare/v2.15.1...v2.16.0) (2026-09-26)
+
+
+### Bug Fixes
+
+* **env:** comment out the empty github token in the env example ([d119ef9](https://github.com/Shironex/portfolio/commit/d119ef92f765898391f9b35ee0ae4c5f067e7c48))
+
+
+### Features
+
+* **showcase:** capture the portfolio itself for the readme ([68b0f47](https://github.com/Shironex/portfolio/commit/68b0f47409084216b96885edad6553c5ed849bd5))
+
 ## [2.15.1](https://github.com/Shironex/portfolio/compare/v2.15.0...v2.15.1) (2026-09-26)
 
 
