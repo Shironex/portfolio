@@ -11,8 +11,56 @@ export const rumi: Project = {
     'It lists apps, services and databases with their health, filters them as you type, and runs start, stop, restart and deploy behind a confirm prompt. It tails runtime and build logs, follows a deploy you just triggered, inspects and edits environment variables (masked by default), and switches between Coolify instances using the same config file as the official CLI.',
     'Rumi is written in TypeScript with React on OpenTUI and runs on Bun, compiled to a single binary for macOS, Linux and Windows, and it can update itself. It is early and still has rough edges.',
   ],
+  image: '/projects/rumi/hero.webp',
   projectType: 'cli',
-  gallery: [],
+  gallery: [
+    {
+      src: '/projects/rumi/resources.webp',
+      alt: 'Rumi resource list with a detail panel',
+      caption: 'Apps, services and databases with live health and details',
+    },
+    {
+      src: '/projects/rumi/deploy-logs.webp',
+      alt: 'Rumi deploy log panel for an app',
+      caption:
+        'Following a deploy from the first build step to the new container',
+    },
+    {
+      src: '/projects/rumi/runtime-logs.webp',
+      alt: 'Rumi runtime log tail for an app',
+      caption: 'Runtime logs tailed live, with warnings and errors colored',
+    },
+    {
+      src: '/projects/rumi/config-env.webp',
+      alt: 'Rumi config and environment variable inspector',
+      caption: 'Env vars masked by default, plus the build and runtime config',
+    },
+    {
+      src: '/projects/rumi/nav-demo.webp',
+      alt: 'Rumi keyboard navigation demo',
+      caption: 'Moving through resources, logs and views from the keyboard',
+    },
+    {
+      src: '/projects/rumi/confirm-restart.webp',
+      alt: 'Rumi restart confirmation prompt',
+      caption: 'Start, stop, restart and deploy always ask first',
+    },
+    {
+      src: '/projects/rumi/context-switch.webp',
+      alt: 'Rumi context switcher',
+      caption: 'Switching between Coolify instances, like prod and staging',
+    },
+    {
+      src: '/projects/rumi/servers.webp',
+      alt: 'Rumi servers view',
+      caption: 'Servers with their IPs and reachability',
+    },
+    {
+      src: '/projects/rumi/help.webp',
+      alt: 'Rumi keybinding help overlay',
+      caption: 'Every keybinding one ? away',
+    },
+  ],
   technologies: ['TypeScript', 'Bun', 'React', 'OpenTUI'],
   features: [
     'Live list of apps, services and databases with health status and filtering',

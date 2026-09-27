@@ -15,12 +15,12 @@ export const moekoder: Project = {
   projectType: 'desktop',
   gallery: [
     {
-      src: '/projects/moekoder/preview.png',
+      src: '/projects/moekoder/idle.webp',
       alt: 'Moekoder home screen, idle',
       caption: 'Home screen: drop an MKV, point at an ASS, pick a target',
     },
     {
-      src: '/projects/moekoder/encoding.png',
+      src: '/projects/moekoder/encoding.webp',
       alt: 'Moekoder active encoding view',
       caption: 'Live encode UI: progress ring, filmstrip, fps, speed and ETA',
     },
