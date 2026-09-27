@@ -1,3 +1,10 @@
+# [2.19.0](https://github.com/Shironex/portfolio/compare/v2.18.0...v2.19.0) (2026-09-27)
+
+
+### Features
+
+* **projects:** refresh the rumi and moekoder showcase screenshots ([8e6db2c](https://github.com/Shironex/portfolio/commit/8e6db2c6614cbc305f29b2f2a7791f812e73cacc))
+
 # [2.18.0](https://github.com/Shironex/portfolio/compare/v2.17.0...v2.18.0) (2026-09-27)
 
 
