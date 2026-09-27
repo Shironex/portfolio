@@ -1,3 +1,10 @@
+# [2.17.0](https://github.com/Shironex/portfolio/compare/v2.16.0...v2.17.0) (2026-09-27)
+
+
+### Features
+
+* **projects:** refresh the shiroani gallery with showcase screenshots ([1284b76](https://github.com/Shironex/portfolio/commit/1284b7698df06f0b63de841d69ce4a40773c64a5))
+
 # [2.16.0](https://github.com/Shironex/portfolio/compare/v2.15.1...v2.16.0) (2026-09-26)
 
 
