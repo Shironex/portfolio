@@ -1,3 +1,11 @@
+# [2.18.0](https://github.com/Shironex/portfolio/compare/v2.17.0...v2.18.0) (2026-09-27)
+
+
+### Features
+
+* **projects:** add moekoder showcase screenshots ([436b907](https://github.com/Shironex/portfolio/commit/436b90752ed7987947fe23e3a6924222acc3f123))
+* **projects:** add rumi showcase screenshots ([07f03cf](https://github.com/Shironex/portfolio/commit/07f03cf45155c203fd43860ad78bbad03dacd247))
+
 # [2.17.0](https://github.com/Shironex/portfolio/compare/v2.16.0...v2.17.0) (2026-09-27)
 
 
