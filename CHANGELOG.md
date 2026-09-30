@@ -1,3 +1,10 @@
+# [2.20.0](https://github.com/Shironex/portfolio/compare/v2.19.0...v2.20.0) (2026-09-30)
+
+
+### Features
+
+* **projects:** add prev and next navigation to the gallery lightbox ([65784e3](https://github.com/Shironex/portfolio/commit/65784e3f3fb385d8f24ef412503e85880302a9c6))
+
 # [2.19.0](https://github.com/Shironex/portfolio/compare/v2.18.0...v2.19.0) (2026-09-27)
 
 
