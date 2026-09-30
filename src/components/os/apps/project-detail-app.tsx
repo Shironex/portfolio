@@ -6,15 +6,29 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import {
+  type TouchEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 
-import { Calendar, Clock, ExternalLink, Maximize2, X } from 'lucide-react'
+import {
+  Calendar,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  ExternalLink,
+  Maximize2,
+  X,
+} from 'lucide-react'
 import { createPortal } from 'react-dom'
 
 import { GithubIcon } from '@/components/icons/github-icon'
 import { accentColor, accentFor, accentTint } from '@/components/os/accent-map'
 
-import { onBackdropDismiss } from '@/lib/utils'
+import { cn, onBackdropDismiss } from '@/lib/utils'
 import { formatDate } from '@/lib/utils/format-date'
 
 import { useFocusTrap } from '@/hooks/use-focus-trap'
@@ -26,37 +40,95 @@ interface ProjectDetailAppProps {
 }
 
 interface GalleryLightboxProps {
-  item: GalleryItem
+  items: GalleryItem[]
+  index: number
+  onIndexChange: (index: number) => void
   onClose: () => void
 }
 
+/** Minimum horizontal travel (px) for a touch drag to count as a swipe. */
+const SWIPE_THRESHOLD = 50
+
+const NAV_BUTTON_CLASS =
+  'focus-ring bg-surf-solid/85 text-ink hover:bg-surf-solid shadow-elev-2 absolute top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full backdrop-blur-sm transition-colors'
+
 /**
- * Full-screen viewer for a gallery screenshot. Portals to <body> so it
+ * Full-screen viewer for the gallery screenshots. Portals to <body> so it
  * escapes the window's stacking context and covers the whole desktop.
  * Escape is intercepted in the capture phase — otherwise the shell's global
  * Escape handler would close the project window underneath at the same time.
+ * Arrow keys, the side buttons and horizontal swipes step through the
+ * gallery, wrapping at both ends.
  */
-function GalleryLightbox({ item, onClose }: GalleryLightboxProps) {
+function GalleryLightbox({
+  items,
+  index,
+  onIndexChange,
+  onClose,
+}: GalleryLightboxProps) {
   const panelRef = useRef<HTMLDivElement>(null)
+  const touchStart = useRef<{ x: number; y: number } | null>(null)
+  const item = items[index]
+  const hasMany = items.length > 1
 
   useScrollLock(true)
   useFocusTrap(panelRef, true)
 
+  const showPrev = useCallback(
+    () => onIndexChange((index - 1 + items.length) % items.length),
+    [index, items.length, onIndexChange]
+  )
+  const showNext = useCallback(
+    () => onIndexChange((index + 1) % items.length),
+    [index, items.length, onIndexChange]
+  )
+
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (event.key !== 'Escape') return
-      event.preventDefault()
-      event.stopImmediatePropagation()
-      onClose()
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        event.stopImmediatePropagation()
+        onClose()
+        return
+      }
+      if (!hasMany) return
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault()
+        event.stopImmediatePropagation()
+        showPrev()
+      } else if (event.key === 'ArrowRight') {
+        event.preventDefault()
+        event.stopImmediatePropagation()
+        showNext()
+      }
     }
     window.addEventListener('keydown', onKey, { capture: true })
     return () => window.removeEventListener('keydown', onKey, { capture: true })
-  }, [onClose])
+  }, [hasMany, onClose, showPrev, showNext])
+
+  const onTouchStart = (event: TouchEvent<HTMLDivElement>) => {
+    const touch = event.touches[0]
+    touchStart.current = { x: touch.clientX, y: touch.clientY }
+  }
+
+  const onTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
+    const start = touchStart.current
+    touchStart.current = null
+    if (!start || !hasMany) return
+    const touch = event.changedTouches[0]
+    const dx = touch.clientX - start.x
+    const dy = touch.clientY - start.y
+    if (Math.abs(dx) < SWIPE_THRESHOLD || Math.abs(dx) < Math.abs(dy)) return
+    if (dx > 0) showPrev()
+    else showNext()
+  }
 
   return createPortal(
     <div
       className="fixed inset-0 z-[600] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm md:p-10"
       onMouseDown={onBackdropDismiss(onClose)}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
     >
       <div
         ref={panelRef}
@@ -65,27 +137,57 @@ function GalleryLightbox({ item, onClose }: GalleryLightboxProps) {
         aria-label={item.alt}
         className="animate-cp-in relative flex max-h-full max-w-5xl flex-col items-center motion-reduce:animate-none"
       >
-        <Image
-          src={item.src}
-          alt={item.alt}
-          width={1920}
-          height={1080}
-          sizes="90vw"
-          className="shadow-elev-4 max-h-[80vh] w-auto rounded-xl object-contain"
-        />
-        {item.caption && (
-          <p className="font-body text-cloud mt-3 max-w-2xl text-center text-sm">
-            {item.caption}
-          </p>
-        )}
+        {/* First in DOM order so the focus trap lands on it when opening. */}
         <button
           type="button"
           onClick={onClose}
           aria-label="Close image view"
-          className="focus-ring bg-surf-solid text-ink hover:bg-surf-soft shadow-elev-2 absolute -top-3 -right-3 flex size-9 items-center justify-center rounded-full transition-colors"
+          className="focus-ring bg-surf-solid text-ink hover:bg-surf-soft shadow-elev-2 absolute -top-3 -right-3 z-10 flex size-9 items-center justify-center rounded-full transition-colors"
         >
           <X aria-hidden size={16} />
         </button>
+        <div className="relative">
+          <Image
+            key={item.src}
+            src={item.src}
+            alt={item.alt}
+            width={1920}
+            height={1080}
+            sizes="90vw"
+            className="shadow-elev-4 max-h-[80vh] w-auto rounded-xl object-contain select-none"
+            draggable={false}
+          />
+          {hasMany && (
+            <>
+              <button
+                type="button"
+                onClick={showPrev}
+                aria-label="Previous image"
+                className={cn(NAV_BUTTON_CLASS, 'left-2 md:left-3')}
+              >
+                <ChevronLeft aria-hidden size={20} />
+              </button>
+              <button
+                type="button"
+                onClick={showNext}
+                aria-label="Next image"
+                className={cn(NAV_BUTTON_CLASS, 'right-2 md:right-3')}
+              >
+                <ChevronRight aria-hidden size={20} />
+              </button>
+            </>
+          )}
+        </div>
+        {(item.caption || hasMany) && (
+          <p className="font-body text-cloud mt-3 max-w-2xl text-center text-sm">
+            {hasMany && (
+              <span className="text-cloud/70 mr-2 font-mono text-xs">
+                {index + 1} / {items.length}
+              </span>
+            )}
+            {item.caption}
+          </p>
+        )}
       </div>
     </div>,
     document.body
@@ -101,7 +203,8 @@ function hasUsableDemo(demoUrl: string): boolean {
 }
 
 export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
-  const [lightbox, setLightbox] = useState<GalleryItem | null>(null)
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
+  const closeLightbox = useCallback(() => setLightboxIndex(null), [])
   const accent = accentFor(project.slug)
   const completed = formatDate(project.completedDate, {
     locale: 'en-US',
@@ -268,11 +371,11 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
             gallery
           </h2>
           <div className="mt-3 grid grid-cols-2 gap-2">
-            {project.gallery.map((item) => (
+            {project.gallery.map((item, i) => (
               <button
                 key={item.src}
                 type="button"
-                onClick={() => setLightbox(item)}
+                onClick={() => setLightboxIndex(i)}
                 aria-label={`View full size: ${item.alt}`}
                 className="focus-ring group border-rule relative aspect-video cursor-zoom-in overflow-hidden rounded-lg border"
               >
@@ -302,8 +405,13 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
         </section>
       )}
 
-      {lightbox && (
-        <GalleryLightbox item={lightbox} onClose={() => setLightbox(null)} />
+      {lightboxIndex !== null && (
+        <GalleryLightbox
+          items={project.gallery}
+          index={lightboxIndex}
+          onIndexChange={setLightboxIndex}
+          onClose={closeLightbox}
+        />
       )}
     </div>
   )
