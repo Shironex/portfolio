@@ -97,6 +97,45 @@ test.describe('desktop', () => {
   })
 })
 
+test.describe('slow network', () => {
+  test.use({ viewport: { width: 1440, height: 900 } })
+
+  test('the frame and buttons hold still while the next image loads', async ({
+    page,
+  }) => {
+    // Hold every optimised image for 1.5s so a step lands mid-load, like a
+    // cold cache in production. Preloaded neighbours are delayed too, so this
+    // exercises the frame, not the preload.
+    await page.route('**/_next/image**', async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+      await route.continue()
+    })
+
+    const { count } = await openGallery(page)
+    const box = lightbox(page)
+    const next = box.getByRole('button', { name: 'Next image' })
+    const prev = box.getByRole('button', { name: 'Previous image' })
+    await expect(box.getByText(`1 / ${count}`)).toBeVisible()
+    // Let the scale-in open animation settle before measuring.
+    await box.evaluate((el) =>
+      Promise.all(el.getAnimations().map((animation) => animation.finished))
+    )
+
+    const before = {
+      next: await next.boundingBox(),
+      prev: await prev.boundingBox(),
+    }
+
+    await page.keyboard.press('ArrowRight')
+    await page.keyboard.press('ArrowRight')
+    await expect(box.getByText(`3 / ${count}`)).toBeVisible()
+
+    expect(await next.boundingBox()).toEqual(before.next)
+    expect(await prev.boundingBox()).toEqual(before.prev)
+    expect(before.next!.x - before.prev!.x).toBeGreaterThan(600)
+  })
+})
+
 test.describe('mobile', () => {
   test.use({ viewport: { width: 390, height: 844 }, hasTouch: true })
 

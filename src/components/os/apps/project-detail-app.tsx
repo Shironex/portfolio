@@ -49,6 +49,9 @@ interface GalleryLightboxProps {
 /** Minimum horizontal travel (px) for a touch drag to count as a swipe. */
 const SWIPE_THRESHOLD = 50
 
+/** Shared by the shown image and the preloaded neighbours so they resolve to the same URL. */
+const LIGHTBOX_SIZES = '(min-width: 1136px) 1024px, 90vw'
+
 const NAV_BUTTON_CLASS =
   'focus-ring bg-surf-solid/85 text-ink hover:bg-surf-solid shadow-elev-2 absolute top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full backdrop-blur-sm transition-colors'
 
@@ -70,6 +73,13 @@ function GalleryLightbox({
   const touchStart = useRef<{ x: number; y: number } | null>(null)
   const item = items[index]
   const hasMany = items.length > 1
+  // Preload both neighbours so stepping either way is instant.
+  const neighbours = Array.from(
+    new Set([
+      items[(index - 1 + items.length) % items.length],
+      items[(index + 1) % items.length],
+    ])
+  ).filter((neighbour) => neighbour !== item)
 
   useScrollLock(true)
   useFocusTrap(panelRef, true)
@@ -146,17 +156,33 @@ function GalleryLightbox({
         >
           <X aria-hidden size={16} />
         </button>
-        <div className="relative">
+        {/* Fixed 16:9 frame: screenshots vary in aspect ratio, so sizing the
+            box off the image would collapse it while the next one loads and
+            make the nav buttons jump. The <img> is reused across steps (no
+            key), so the browser keeps the old picture up until the new one
+            has decoded. */}
+        <div className="relative aspect-video w-[min(90vw,64rem,142vh)]">
           <Image
-            key={item.src}
             src={item.src}
             alt={item.alt}
-            width={1920}
-            height={1080}
-            sizes="90vw"
-            className="shadow-elev-4 max-h-[80vh] w-auto rounded-xl object-contain select-none"
+            fill
+            sizes={LIGHTBOX_SIZES}
+            className="object-contain drop-shadow-2xl select-none"
             draggable={false}
           />
+          {hasMany &&
+            neighbours.map((neighbour) => (
+              <Image
+                key={neighbour.src}
+                src={neighbour.src}
+                alt=""
+                aria-hidden
+                fill
+                sizes={LIGHTBOX_SIZES}
+                loading="eager"
+                className="invisible"
+              />
+            ))}
           {hasMany && (
             <>
               <button
@@ -179,7 +205,7 @@ function GalleryLightbox({
           )}
         </div>
         {(item.caption || hasMany) && (
-          <p className="font-body text-cloud mt-3 max-w-2xl text-center text-sm">
+          <p className="font-body text-cloud mt-3 min-h-10 max-w-2xl text-center text-sm">
             {hasMany && (
               <span className="text-cloud/70 mr-2 font-mono text-xs">
                 {index + 1} / {items.length}
