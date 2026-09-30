@@ -11,7 +11,7 @@ export const moekoder: Project = {
     'It is an Electron app with a React, Vite and Tailwind renderer, an Astro landing page, and a shared package for IPC channel types and theme tokens. ffmpeg is not bundled: on first launch a small installer fetches the right build for the OS and verifies its SHA-256, which keeps the app download small.',
     'Recent releases added hardware encoding on AMD GPUs (AMF), a probe that test-encodes one frame before offering an encoder, soft-sub muxing, subtitle extraction, a preset editor with a benchmark mode, and a full English and Polish UI. It is still pre-1.0 and ships for Windows and macOS through GitHub Releases.',
   ],
-  image: '/projects/moekoder/thumbnail.png',
+  image: '/projects/moekoder/thumbnail.webp',
   projectType: 'desktop',
   gallery: [
     {
@@ -23,6 +23,37 @@ export const moekoder: Project = {
       src: '/projects/moekoder/encoding.webp',
       alt: 'Moekoder active encoding view',
       caption: 'Live encode UI: progress ring, filmstrip, fps, speed and ETA',
+    },
+    {
+      src: '/projects/moekoder/done.webp',
+      alt: 'Moekoder finished encode summary',
+      caption: 'Finished encode: duration, average fps, output size and speed',
+    },
+    {
+      src: '/projects/moekoder/queue.webp',
+      alt: 'Moekoder batch queue with running, waiting and failed jobs',
+      caption: 'Batch queue: parallel jobs, pause, retries and per-item status',
+    },
+    {
+      src: '/projects/moekoder/extract.webp',
+      alt: 'Moekoder subtitle extraction screen',
+      caption: 'Extract embedded subtitle tracks to ASS or SRT, no re-encode',
+    },
+    {
+      src: '/projects/moekoder/onboarding.webp',
+      alt: 'Moekoder first-launch hardware detection step',
+      caption:
+        'First launch: the probe picks the fastest encoder on this machine',
+    },
+    {
+      src: '/projects/moekoder/settings-encoding.webp',
+      alt: 'Moekoder encoding settings',
+      caption: 'Encoding settings: codec, encoder, quality tier and CQ',
+    },
+    {
+      src: '/projects/moekoder/settings-appearance.webp',
+      alt: 'Moekoder appearance settings with six themes',
+      caption: 'Six themes and an English and Polish UI, applied instantly',
     },
   ],
   technologies: [
