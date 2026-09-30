@@ -1,3 +1,10 @@
+## [2.20.1](https://github.com/Shironex/portfolio/compare/v2.20.0...v2.20.1) (2026-09-30)
+
+
+### Bug Fixes
+
+* **projects:** wire all moekoder showcase screenshots into the gallery ([e03959d](https://github.com/Shironex/portfolio/commit/e03959d884fc368e724619bcede99a392942c024))
+
 # [2.20.0](https://github.com/Shironex/portfolio/compare/v2.19.0...v2.20.0) (2026-09-30)
 
 
