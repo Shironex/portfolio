@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useCallback, useEffect, useSyncExternalStore } from 'react'
 
 /**
  * Everything Escape can close, bottom to top. One press closes only the
@@ -29,6 +29,20 @@ interface Entry {
 /** Open layers in the order they registered. */
 const entries: Entry[] = []
 
+/** Notified whenever a layer opens or closes. */
+const listeners = new Set<() => void>()
+
+function subscribe(onChange: () => void) {
+  listeners.add(onChange)
+  return () => {
+    listeners.delete(onChange)
+  }
+}
+
+function notify() {
+  for (const listener of listeners) listener()
+}
+
 /**
  * Whether a layer ranked above `layer` is open. Something that would open
  * `layer` checks this first, so it never mounts under what covers it.
@@ -36,6 +50,18 @@ const entries: Entry[] = []
 export function isLayerOpenAbove(layer: EscapeLayer): boolean {
   const rank = ESCAPE_LAYERS.indexOf(layer)
   return entries.some((entry) => entry.rank > rank)
+}
+
+const noLayerOnServer = () => false
+
+/**
+ * {@link isLayerOpenAbove} as state: re-renders when a layer above `layer`
+ * opens or the last one closes. `AmbientPause` holds the wallpaper
+ * animations still on it while anything is open over the desktop.
+ */
+export function useLayerOpenAbove(layer: EscapeLayer): boolean {
+  const getSnapshot = useCallback(() => isLayerOpenAbove(layer), [layer])
+  return useSyncExternalStore(subscribe, getSnapshot, noLayerOnServer)
 }
 
 function onKeyDown(event: KeyboardEvent) {
@@ -71,11 +97,13 @@ export function useEscapeLayer(
     }
     if (entries.length === 0) window.addEventListener('keydown', onKeyDown)
     entries.push(entry)
+    notify()
     return () => {
       entries.splice(entries.indexOf(entry), 1)
       if (entries.length === 0) {
         window.removeEventListener('keydown', onKeyDown)
       }
+      notify()
     }
   }, [layer, onEscape, active])
 }

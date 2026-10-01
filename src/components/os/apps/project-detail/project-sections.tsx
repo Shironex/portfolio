@@ -4,7 +4,7 @@
  * (server) render the same markup from the same data.
  */
 import Image from 'next/image'
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 
 import {
   BookOpen,
@@ -96,10 +96,11 @@ export function ProjectHero({ project, titleLevel = 1 }: ProjectProps) {
 
   return (
     <section className="border-rule-2 bg-surf-soft relative mb-8 overflow-hidden rounded-2xl border p-6 md:p-8">
+      {/* A gradient glow (`orb`) in the project's accent, not a blurred disc. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-16 -right-16 h-48 w-48 rounded-full opacity-60 blur-3xl"
-        style={{ backgroundColor: accentColor(accent) }}
+        className="orb pointer-events-none absolute -top-[172px] -right-[172px] size-[408px]"
+        style={{ '--orb-color': accentTint(accent, 40.5) } as CSSProperties}
       />
       <div className="relative">
         <div className="mb-3 flex items-center gap-2">
@@ -276,7 +277,7 @@ export function GalleryThumb({ item }: GalleryThumbProps) {
         alt={item.alt}
         fill
         sizes="(min-width: 768px) 384px, 50vw"
-        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+        className="object-cover transition-transform duration-200 ease-out group-hover:scale-105"
       />
       {/* Fixed dark scrim, theme-independent, so the caption stays
           readable over any screenshot in light and dark mode alike. */}

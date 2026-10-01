@@ -20,13 +20,15 @@ export function NotFoundScreen() {
   return (
     <main className="from-sky-0 via-sky-1 to-sky-2 font-body relative min-h-dvh overflow-hidden bg-gradient-to-br">
       <span aria-hidden className="grain-layer" />
+      {/* Gradient glows (`orb`), as on the desktop: nothing is blurred live.
+          The offsets keep each centre where its 256px and 288px disc sat. */}
       <span
         aria-hidden
-        className="bg-miku/10 motion-safe:animate-floaty pointer-events-none absolute top-[18%] right-[12%] size-64 rounded-full blur-3xl"
+        className="orb motion-safe:animate-floaty ambient-loop pointer-events-none absolute top-[calc(18%-10rem)] right-[calc(12%-10rem)] size-[36rem] [--orb-color:color-mix(in_oklab,var(--color-miku)_8.6%,transparent)]"
       />
       <span
         aria-hidden
-        className="bg-miku-2/10 motion-safe:animate-floaty pointer-events-none absolute bottom-[15%] left-[10%] size-72 rounded-full blur-3xl"
+        className="orb motion-safe:animate-floaty ambient-loop pointer-events-none absolute bottom-[calc(15%-10rem)] left-[calc(10%-10rem)] size-[38rem] [--orb-color:color-mix(in_oklab,var(--color-miku-2)_9.2%,transparent)]"
         style={{ animationDelay: '-3s' }}
       />
 

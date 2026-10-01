@@ -81,7 +81,7 @@ export function StartMenu({
         role="dialog"
         aria-modal="true"
         aria-label="Start menu"
-        className="border-rule-2 bg-surf-solid/95 shadow-elev-4 animate-cp-in font-body absolute bottom-20 left-4 w-[min(640px,calc(100vw-2rem))] overflow-hidden rounded-2xl border backdrop-blur-xl motion-reduce:animate-none md:left-8"
+        className="border-rule-2 bg-surf-solid/95 shadow-elev-4 animate-cp-in font-body absolute bottom-20 left-4 w-[min(640px,calc(100vw-2rem))] overflow-hidden rounded-2xl border motion-reduce:animate-none md:left-8"
       >
         <button
           ref={searchRef}

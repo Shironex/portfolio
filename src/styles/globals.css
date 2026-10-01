@@ -49,14 +49,96 @@
   box-shadow: var(--shiro-elev-4);
 }
 
+/*
+ * A window's shadow lives on two pseudo-elements, the resting one and the
+ * deeper focused one (`data-focused`), and a focus change cross-fades their
+ * opacity. Animating `box-shadow` itself repaints a 60px blur on the main
+ * thread for every frame; these are painted once.
+ */
+@utility window-shadow {
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    /* The border box: `inset: 0` would stop at the padding edge. */
+    inset: -1px;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    transition: opacity 0.2s var(--default-transition-timing-function);
+  }
+
+  &::before {
+    box-shadow: var(--shiro-elev-2);
+  }
+
+  &::after {
+    box-shadow: var(--shiro-elev-3);
+    opacity: 0;
+  }
+
+  &[data-focused]::before {
+    opacity: 0;
+  }
+
+  &[data-focused]::after {
+    opacity: 1;
+  }
+}
+
+/*
+ * Film grain over the desktop: white noise at a low alpha. The tile has a
+ * fixed size (the noise is stitched, so it repeats without seams); left to
+ * size itself it is fitted to the viewport, and the turbulence filter is run
+ * again at that size on first paint and on every resize. Plain alpha, no
+ * blend mode: a blended full-viewport layer makes the compositor read back
+ * everything that moves under it. The two opacities match what
+ * `mix-blend-mode: overlay` at 0.06 gave on the light and the dark ground.
+ */
 @utility grain-layer {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 100;
-  opacity: 0.06;
-  mix-blend-mode: overlay;
+  opacity: 0.05;
+  background-size: 200px 200px;
   background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+
+  &:is(.dark *) {
+    opacity: 0.0075;
+  }
+}
+
+/*
+ * A soft glow: the falloff of a disc under a wide gaussian blur, painted as a
+ * gradient, so nothing is filtered when it moves. `--orb-color` is the colour
+ * at the centre; the glow fades out at the edge of the element.
+ */
+@utility orb {
+  background-image: radial-gradient(closest-side,
+      var(--orb-color) 0%,
+      color-mix(in oklab, var(--orb-color) 97%, transparent) 10%,
+      color-mix(in oklab, var(--orb-color) 87%, transparent) 20%,
+      color-mix(in oklab, var(--orb-color) 73%, transparent) 30%,
+      color-mix(in oklab, var(--orb-color) 54%, transparent) 40%,
+      color-mix(in oklab, var(--orb-color) 36%, transparent) 50%,
+      color-mix(in oklab, var(--orb-color) 21%, transparent) 60%,
+      color-mix(in oklab, var(--orb-color) 10%, transparent) 70%,
+      color-mix(in oklab, var(--orb-color) 4%, transparent) 80%,
+      color-mix(in oklab, var(--orb-color) 1.5%, transparent) 90%,
+      transparent 100%);
+}
+
+/*
+ * Easings. `static` so the variables are emitted even though only the
+ * animation tokens below read them.
+ */
+@theme static {
+  /* ease-out-quart: calm deceleration, the curve of every enter and exit. */
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  /* The mobile sheet: a touch more glide at the end of a long travel. */
+  --ease-sheet: cubic-bezier(0.2, 0.9, 0.3, 1);
 }
 
 @theme {
@@ -205,20 +287,27 @@
   --animate-sparkle: sparkle 4s ease-in-out infinite;
   --animate-blink: blink 1s steps(2) infinite;
   /*
-   * Easing tokens: ease-out-quart (0.25, 1, 0.5, 1) for calm deceleration.
-   * Intentionally not using bounce/overshoot curves — they read as dated.
+   * Interaction feedback stays at or under 200ms and animates only transform
+   * and opacity. Easings are the tokens above; intentionally no bounce or
+   * overshoot curves, they read as dated.
    */
-  --animate-win-open: winOpen 0.28s cubic-bezier(0.25, 1, 0.5, 1);
-  --animate-win-close: winClose 0.14s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-  --animate-sheet-up: sheetUp 0.22s cubic-bezier(0.2, 0.9, 0.3, 1);
-  --animate-cp-in: cpIn 0.22s cubic-bezier(0.25, 1, 0.5, 1);
+  --animate-win-open: winOpen 0.2s var(--ease-out-quart);
+  --animate-win-close: winClose 0.14s var(--ease-out-quart) forwards;
+  --animate-sheet-up: sheetUp 0.2s var(--ease-sheet);
+  --animate-cp-in: cpIn 0.18s var(--ease-out-quart);
+  --animate-menu-in: menuIn 0.15s var(--ease-out-quart);
   --animate-pulse-slow: pulse 1.8s ease-in-out infinite;
   --animate-bob-note: bobNote 1.4s ease-in-out infinite;
-  --animate-logo-pop: logoPop 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  --animate-logo-pop: logoPop 0.6s var(--ease-out-quart);
   --animate-boot-out: bootOut 0.5s ease 1.9s forwards;
   --animate-boot-fill: bootFill 3s ease-out forwards;
-  --animate-term-in: termIn 0.3s ease forwards;
-  --animate-fade-in: fadeIn 0.3s ease;
+  /*
+   * `backwards`: a line with an `animation-delay` stays hidden until its
+   * turn, and holds nothing once it is in (its keyframes end on its own
+   * style), so no finished animation keeps a `transform` on it.
+   */
+  --animate-term-in: termIn 0.3s ease backwards;
+  --animate-fade-in: fadeIn 0.15s ease;
   --animate-ring-fast: spinSlow 1.8s linear infinite;
   --animate-ring-slow: spinSlow 2.6s linear infinite reverse;
 
@@ -341,6 +430,14 @@
   @keyframes cpIn {
     from {
       transform: translateY(-20px) scale(0.96);
+      opacity: 0;
+    }
+  }
+
+  /* A dropdown is small and opens next to its trigger: a short drop, no scale. */
+  @keyframes menuIn {
+    from {
+      transform: translateY(-4px);
       opacity: 0;
     }
   }
@@ -534,4 +631,32 @@
   :not(pre)>code {
     @apply rounded bg-muted px-1.5 py-0.5 text-sm;
   }
+}
+
+/*
+ * Decorative loops (the wallpaper notes and glows, the terminal cursor) stand
+ * still while they cannot be seen or are not the point: `AmbientPause` marks
+ * the shell paused under a maximized window or an open overlay, a window
+ * gesture marks the document while it drags or resizes, and a theme
+ * cross-fade holds them for its 200ms. Unlayered, so the play state wins over
+ * the `animation` shorthand of the utility that starts the loop.
+ */
+[data-ambient='paused'] .ambient-loop,
+[data-gesture] .ambient-loop {
+  animation-play-state: paused;
+}
+
+:root:active-view-transition .ambient-loop {
+  animation-play-state: paused;
+}
+
+/*
+ * Theme switch (`useTheme`): the default root transition, a plain opacity
+ * cross-fade of two snapshots with no geometry in it, shortened from the
+ * browser's 250ms.
+ */
+::view-transition-group(root),
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.2s;
 }

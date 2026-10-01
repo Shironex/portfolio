@@ -207,7 +207,9 @@ function MenuBarImpl({
   }
 
   return (
-    <header className="border-rule bg-surf-1 z-chrome fixed inset-x-0 top-0 flex h-11 items-center gap-3 border-b px-3 backdrop-blur-md">
+    // Near opaque like the taskbar, in place of a thinner fill over a
+    // backdrop blur that resampled the wallpaper on every frame.
+    <header className="border-rule bg-surf-2 z-chrome fixed inset-x-0 top-0 flex h-11 items-center gap-3 border-b px-3">
       {/* Left: logo chip */}
       <div className="flex items-center gap-2">
         <Image

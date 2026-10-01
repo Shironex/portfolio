@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { memo } from 'react'
 
 import { HeroText } from '@/components/os/hero-text'
 import { Kbd } from '@/components/os/kbd'
@@ -22,20 +23,17 @@ interface HeroPlateProps {
  * tight on purpose: the activity strip needs to stay above the fold on
  * 1080p and 1440x900 at 100% zoom; below 840px of height it is hidden.
  */
-export function HeroPlate({
+function HeroPlateImpl({
   onOpenCmd,
   onOpenContact,
   headingLevel,
 }: HeroPlateProps) {
   return (
     <div className="border-rule-2 bg-surf-solid shadow-elev-3 relative flex h-full w-full flex-col overflow-hidden rounded-3xl border px-5 py-6 md:px-8 md:py-7">
+      {/* A pre-blurred glow (`orb`), paused with the rest of the wallpaper. */}
       <span
         aria-hidden
-        className="animate-floaty pointer-events-none absolute -top-16 -right-10 size-56 rounded-full opacity-60 blur-3xl motion-reduce:animate-none"
-        style={{
-          background:
-            'radial-gradient(circle, var(--color-miku-3), transparent 70%)',
-        }}
+        className="orb animate-floaty ambient-loop pointer-events-none absolute -top-[172px] -right-[148px] size-[440px] [--orb-color:color-mix(in_oklab,var(--color-miku-3)_20%,transparent)] motion-reduce:animate-none"
       />
 
       <HeroText headingLevel={headingLevel} />
@@ -91,3 +89,5 @@ export function HeroPlate({
     </div>
   )
 }
+
+export const HeroPlate = memo(HeroPlateImpl)
