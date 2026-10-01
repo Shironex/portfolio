@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { type Page, expect, test } from '@playwright/test'
 
 import {
   AFTER_RELOAD,
@@ -30,6 +30,17 @@ const PROJECT_TITLE = 'Shiranami'
 const PROJECT_PATH = `/projects/${PROJECT_SLUG}`
 
 const SITE_TITLE = /^Kacper Lachowicz: .* \| ShiroOS$/
+
+/** The hero headline: the page `h1` wherever nothing else is. */
+const HERO_HEADLINE = /^hi, I'm Kacper\./
+
+/**
+ * Every `h1` assistive tech can reach. An inert layer keeps its headings in
+ * the DOM, and a role query alone still finds them.
+ */
+function exposedH1(page: Page) {
+  return page.locator('h1:not([inert] *):not([aria-hidden="true"] *)')
+}
 
 test.beforeEach(async ({ page }) => {
   await mockFeeds(page)
@@ -82,15 +93,27 @@ test.describe('desktop', () => {
     expect(html).toContain('Desktop music player for the library on your disk')
     expect(html).toContain(`rel="canonical" href="http://`)
     expect(html).toContain('"@type":"SoftwareSourceCode"')
+    // Until the shell hydrates, the article is the one `main` in the HTML.
+    expect(html.match(/<main[\s>]/g)).toHaveLength(1)
+    expect(html).not.toContain('role="main"')
 
     // Once the shell is up the static copy is inert, so assistive tech meets
-    // the project once: in its window.
+    // the project once: in its window, as an `h2` under the shell's own `h1`,
+    // the hero headline inside the shell's `main`.
     await page.goto(PROJECT_PATH)
-    await expect(osWindow(page, `${PROJECT_SLUG}.app`)).toBeVisible()
+    const win = osWindow(page, `${PROJECT_SLUG}.app`)
+    await expect(win).toBeVisible()
     await expect(page.locator('[data-ssr-project]')).toHaveAttribute('inert')
     await expect(page.getByRole('heading', { level: 1 })).toHaveText([
-      PROJECT_TITLE,
+      HERO_HEADLINE,
     ])
+    await expect(page.getByRole('main')).toHaveCount(1)
+    await expect(
+      page.getByRole('main').getByRole('heading', { level: 1 })
+    ).toHaveCount(1)
+    await expect(
+      win.getByRole('heading', { level: 2, name: PROJECT_TITLE, exact: true })
+    ).toBeVisible()
   })
 
   test('an unknown project slug is a 404', async ({ page }) => {
@@ -101,6 +124,8 @@ test.describe('desktop', () => {
     await expect(
       page.locator('meta[name="robots"]:not([content*="noindex"])')
     ).toHaveCount(0)
+    // The home canonical of the root metadata does not reach this page.
+    await expect(page.locator('link[rel="canonical"]')).toHaveCount(0)
     await expect(taskbar(page)).toHaveCount(0)
   })
 
@@ -283,10 +308,15 @@ test.describe('mobile', () => {
     await expect(sheet).toBeVisible()
     await expect(bootSplash(page)).toBeHidden()
     await expect(sheet).toHaveAttribute('aria-modal', 'true')
+    // The feed and the static article are both inert under the sheet, so the
+    // project title in it is the page `h1`.
+    await expect(exposedH1(page)).toHaveText([PROJECT_TITLE])
+    await expect(sheet.locator('h1')).toHaveText(PROJECT_TITLE)
 
     await sheet.getByRole('button', { name: 'Close', exact: true }).tap()
     await expect(sheet).toBeHidden()
     await expect.poll(() => location(page)).toBe('/')
+    await expect(exposedH1(page)).toHaveText([HERO_HEADLINE])
   })
 })
 

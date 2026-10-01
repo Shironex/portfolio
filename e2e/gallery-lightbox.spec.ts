@@ -96,6 +96,15 @@ test.describe('desktop', () => {
     await page.keyboard.press('ArrowRight')
     await expect(box.getByText(`1 / ${count}`)).toBeVisible()
 
+    // The palette ranks under the lightbox, so its shortcut does nothing
+    // here: the lightbox stays in front and keeps working.
+    await page.keyboard.press('Control+k')
+    await box.getByRole('button', { name: 'Next image' }).click()
+    await expect(box.getByText(`2 / ${count}`)).toBeVisible()
+    await expect(
+      page.getByRole('dialog', { name: 'Command palette' })
+    ).toHaveCount(0)
+
     // Escape closes only the lightbox, not the project window beneath it.
     await page.keyboard.press('Escape')
     await expect(box).toBeHidden()

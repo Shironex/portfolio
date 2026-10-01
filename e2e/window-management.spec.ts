@@ -61,8 +61,15 @@ async function zIndexOf(win: Locator) {
   return win.evaluate((el) => Number(getComputedStyle(el).zIndex))
 }
 
-/** Press the title bar clear of the controls and move the pointer to a point. */
+/**
+ * Press the title bar clear of the controls and move the pointer to a point.
+ * A window that just opened is still scaling in, and a box measured then is
+ * not where the title bar ends up, so the open animation is waited out first.
+ */
 async function dragTitleBarTo(page: Page, win: Locator, x: number, y: number) {
+  await win.evaluate((el) =>
+    Promise.all(el.getAnimations().map((animation) => animation.finished))
+  )
   const box = await rectOf(win)
   await page.mouse.move(box.x + 120, box.y + 18)
   await page.mouse.down()
@@ -281,6 +288,23 @@ test.describe('keyboard and double-click', () => {
     await expect.poll(() => rectOf(about)).toEqual(ABOUT_RECT)
   })
 
+  test('a maximized window stays clear of the bottom safe area', async ({
+    page,
+  }) => {
+    const inset = 34
+    await openDesktop(page)
+    // No home indicator on a test browser: stand in for the inset.
+    await page.evaluate((px) => {
+      document.documentElement.style.setProperty('--safe-area-bottom', px)
+    }, `${inset}px`)
+    const about = await launch(page, 'About', 'about.me')
+
+    await titleBar(about).dblclick({ position: { x: 120, y: 18 } })
+    await expect
+      .poll(() => rectOf(about))
+      .toEqual({ ...AREA, height: AREA.height - inset })
+  })
+
   test('double-clicking a control button does not toggle maximize', async ({
     page,
     context,
@@ -361,7 +385,7 @@ test.describe('session restore', () => {
     await expect.poll(() => rectOf(about)).toEqual(LEFT_HALF)
     expect(await zIndexOf(projects)).toBeGreaterThan(await zIndexOf(about))
     // Restored z-indexes are renumbered from the bottom of the stack.
-    expect(await zIndexOf(projects)).toBeLessThanOrEqual(103)
+    expect(await zIndexOf(projects)).toBeLessThanOrEqual(3)
     await expect(readme).toBeHidden()
     await expect(
       taskbar(page).getByRole('button', {
@@ -447,15 +471,15 @@ test.describe('session restore', () => {
     await openDesktop(page)
 
     await expect(osWindows(page)).toHaveCount(3)
-    expect(await zIndexOf(osWindow(page, 'projects.app'))).toBe(101)
-    expect(await zIndexOf(osWindow(page, 'readme.md'))).toBe(102)
-    expect(await zIndexOf(osWindow(page, 'about.me'))).toBe(103)
+    expect(await zIndexOf(osWindow(page, 'projects.app'))).toBe(1)
+    expect(await zIndexOf(osWindow(page, 'readme.md'))).toBe(2)
+    expect(await zIndexOf(osWindow(page, 'about.me'))).toBe(3)
 
     // Pressing the window that is already on top does not spend a z-index.
     await titleBar(osWindow(page, 'about.me')).click({
       position: { x: 120, y: 18 },
     })
-    expect(await zIndexOf(osWindow(page, 'about.me'))).toBe(103)
+    expect(await zIndexOf(osWindow(page, 'about.me'))).toBe(3)
   })
 
   test('a mobile viewport does not restore a sheet', async ({ page }) => {

@@ -2,6 +2,11 @@ import { type Locator, type Page, expect } from '@playwright/test'
 import { join } from 'node:path'
 
 import { BOOT_STORAGE_KEY } from '../src/components/os/boot'
+import {
+  SHELL_READY_ATTRIBUTE,
+  SHELL_ROOT_ATTRIBUTE,
+} from '../src/components/os/noscript-fallback'
+import { MODE_STORAGE_KEY } from '../src/lib/os/appearance'
 
 /** API routes answered from the showcase fixtures, so no test waits on GitHub or the blog. */
 const FIXTURE_ROUTES = ['github-activity', 'github-contributions', 'blog-posts']
@@ -38,6 +43,23 @@ export async function skipBootSplash(page: Page) {
   await page.addInitScript((key) => {
     window.sessionStorage.setItem(key, '1')
   }, BOOT_STORAGE_KEY)
+}
+
+/**
+ * Keep Turnstile off the network: its script never loads, so the widget
+ * stays empty and no token arrives. For every test that opens the contact
+ * form. Call before the first `goto`.
+ */
+export async function blockTurnstile(page: Page) {
+  await page.route('**/challenges.cloudflare.com/**', (route) => route.abort())
+}
+
+/** Store the site's mode, as the theme toggle would. Call before the first `goto`. */
+export async function useMode(page: Page, mode: 'light' | 'dark') {
+  await page.addInitScript(
+    ([key, value]) => window.localStorage.setItem(key, value),
+    [MODE_STORAGE_KEY, mode]
+  )
 }
 
 export function bootSplash(page: Page) {
@@ -82,8 +104,17 @@ export async function desktopReady(page: Page, options?: { timeout: number }) {
   await expect(taskbar(page).locator('time[datetime]')).toBeVisible(options)
 }
 
-/** The mobile shell only replaces the desktop one after hydration. */
+/** The shell root once it has hydrated. */
+export function readyShell(page: Page) {
+  return page.locator(`[${SHELL_ROOT_ATTRIBUTE}][${SHELL_READY_ATTRIBUTE}]`)
+}
+
+/**
+ * The mobile shell is in the server HTML and shown by CSS, so its launcher
+ * being visible proves nothing; the shell marks itself once it has hydrated.
+ */
 export async function mobileReady(page: Page, options?: { timeout: number }) {
+  await expect(readyShell(page)).toBeVisible(options)
   await expect(mobileLauncher(page)).toBeVisible(options)
 }
 
