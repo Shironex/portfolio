@@ -19,6 +19,16 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # semantic-release itself declares engines ^22.14.0 || >=24.10.0, but the
+      # two plugins below declare ^22.22.2 || >=24.15. A runner sitting between
+      # those, say Node 24.12, satisfies the tool and fails the plugins. The job
+      # never runs `pnpm install`, so nothing else decides the version either:
+      # without this step it is whatever the runner image happens to ship.
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24.15'
+
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@61680d0e9b02ff86f5648ade99e01be17f0260a4 # v4
         with:
