@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 
 import {
+  SESSION_WRITE_DEBOUNCE_MS,
   readStoredSession,
   serializeSession,
   writeStoredSession,
@@ -11,10 +12,7 @@ import {
 import { MOBILE_QUERY } from './use-is-mobile'
 import type { OsWindowsApi } from './use-os-windows'
 
-/** Quiet time after the last window change before the session is written. */
-const WRITE_DEBOUNCE_MS = 250
-
-/** Read at call time: `useIsMobile` only settles after the mount effects. */
+/** Read at call time, straight from the media query, not from render state. */
 function isMobileViewport(): boolean {
   return window.matchMedia?.(MOBILE_QUERY).matches ?? false
 }
@@ -66,7 +64,7 @@ export function useSessionRestore(
 
   useEffect(() => {
     latest.current = windows
-    const timer = window.setTimeout(save, WRITE_DEBOUNCE_MS)
+    const timer = window.setTimeout(save, SESSION_WRITE_DEBOUNCE_MS)
     return () => window.clearTimeout(timer)
   }, [windows, save])
 

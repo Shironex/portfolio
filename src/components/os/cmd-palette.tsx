@@ -23,8 +23,8 @@ import { copyToClipboard } from '@/lib/utils/copy-to-clipboard'
 import { pluralWord } from '@/lib/utils/plural'
 
 import { projectsData } from '@/data/projects-data'
+import { useEscapeLayer } from '@/hooks/use-escape-layer'
 import { useFocusTrap } from '@/hooks/use-focus-trap'
-import { useHotkeys } from '@/hooks/use-hotkeys'
 import type { Theme } from '@/hooks/use-theme'
 import type { Project } from '@/types'
 
@@ -68,8 +68,10 @@ interface PaletteItem {
 /**
  * ⌘K command palette overlay. Merges APPS + system actions + projects into a
  * filterable list. Implements the combobox/listbox pattern for arrow-key
- * navigation, traps focus while open, and returns focus to the previously
- * focused element on close.
+ * navigation: focus stays on the input and `aria-activedescendant` points at
+ * the selected option, so the options themselves are not tab stops. A modal
+ * layer: traps focus, makes everything behind inert, and returns focus to the
+ * previously focused element on close.
  */
 export function CmdPalette({
   onClose,
@@ -89,7 +91,7 @@ export function CmdPalette({
   const listId = useId()
 
   useFocusTrap(panelRef, true)
-  useHotkeys(useMemo(() => ({ escape: onClose }), [onClose]))
+  useEscapeLayer('palette', onClose)
 
   const items = useMemo<PaletteItem[]>(() => {
     const appItems: PaletteItem[] = APPS.map((app) => {
@@ -240,6 +242,11 @@ export function CmdPalette({
       ?.scrollIntoView({ block: 'nearest' })
   }, [sel, listId])
 
+  const clearSearch = () => {
+    setQ('')
+    inputRef.current?.focus()
+  }
+
   const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault()
@@ -255,7 +262,7 @@ export function CmdPalette({
 
   return (
     <div
-      className="bg-ink/30 fixed inset-0 z-[500] flex items-start justify-center pt-[12vh] backdrop-blur-sm"
+      className="bg-ink/30 z-palette fixed inset-0 flex items-start justify-center pt-[12dvh] backdrop-blur-sm"
       onMouseDown={onBackdropDismiss(onClose)}
     >
       <div
@@ -281,31 +288,35 @@ export function CmdPalette({
             }
             role="combobox"
             aria-expanded="true"
-            className="focus-ring text-ink placeholder:text-ink-4 flex-1 rounded bg-transparent text-sm outline-none"
+            // No `outline-none` here: as a utility it would beat `.focus-ring`,
+            // which already clears the default outline.
+            className="focus-ring text-ink placeholder:text-ink-4 flex-1 rounded bg-transparent text-sm"
           />
           <Kbd className="pointer-coarse:hidden">esc</Kbd>
         </div>
 
+        {/* A sibling of the listbox, not a child: a listbox owns only options. */}
+        <div
+          role="status"
+          className="text-ink-4 px-4 pt-3.5 pb-1.5 font-mono text-[10px] tracking-wider uppercase"
+        >
+          {q
+            ? `${items.length} ${pluralWord(items.length, 'result', 'results')}`
+            : 'quick actions'}
+        </div>
         <div
           id={listId}
           role="listbox"
           aria-label="Results"
-          className="max-h-[50vh] overflow-auto py-2"
+          className="max-h-[50dvh] overflow-auto pb-2"
         >
-          <div
-            aria-live="polite"
-            className="text-ink-4 px-4 py-1.5 font-mono text-[10px] tracking-wider uppercase"
-          >
-            {q
-              ? `${items.length} ${pluralWord(items.length, 'result', 'results')}`
-              : 'quick actions'}
-          </div>
           {items.map((item, i) => (
             <button
               key={`${item.label}-${i}`}
               id={`${listId}-item-${i}`}
               type="button"
               role="option"
+              tabIndex={-1}
               aria-selected={i === sel}
               onClick={item.onClick}
               onMouseEnter={() => setSel(i)}
@@ -330,13 +341,22 @@ export function CmdPalette({
               </span>
             </button>
           ))}
-          {items.length === 0 && (
-            <div className="text-ink-3 px-6 py-8 text-center font-mono text-xs">
+        </div>
+        {items.length === 0 && (
+          <div className="text-ink-3 flex flex-col items-center gap-3 px-6 pt-4 pb-8 text-center font-mono text-xs">
+            <p>
               No matches for &ldquo;{q}&rdquo;. Try &ldquo;about&rdquo;,
               &ldquo;automaker&rdquo;, or any tech name.
-            </div>
-          )}
-        </div>
+            </p>
+            <button
+              type="button"
+              onClick={clearSearch}
+              className="focus-ring border-rule-2 bg-surf-0 text-ink hover:bg-surf-soft rounded-lg border px-3 py-1.5"
+            >
+              Clear search
+            </button>
+          </div>
+        )}
 
         <div className="border-rule bg-surf-soft text-ink-4 flex items-center gap-4 border-t px-4 py-2 font-mono text-[10px] pointer-coarse:hidden">
           <span>

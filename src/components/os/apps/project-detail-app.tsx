@@ -21,10 +21,12 @@ import { createPortal } from 'react-dom'
 
 import { cn, onBackdropDismiss } from '@/lib/utils'
 
+import { useEscapeLayer } from '@/hooks/use-escape-layer'
 import { useFocusTrap } from '@/hooks/use-focus-trap'
 import { useScrollLock } from '@/hooks/use-scroll-lock'
 import type { GalleryItem, Project } from '@/types'
 
+import type { HeadingLevel } from '../types'
 import {
   GALLERY_CELL_CLASS,
   GalleryThumb,
@@ -34,6 +36,8 @@ import {
 
 interface ProjectDetailAppProps {
   project: Project
+  /** See `ProjectSections`; `2` in a desktop window, `1` in a mobile sheet. */
+  titleLevel?: HeadingLevel
 }
 
 interface GalleryLightboxProps {
@@ -54,11 +58,11 @@ const NAV_BUTTON_CLASS =
 
 /**
  * Full-screen viewer for the gallery screenshots. Portals to <body> so it
- * escapes the window's stacking context and covers the whole desktop.
- * Escape is intercepted in the capture phase — otherwise the shell's global
- * Escape handler would close the project window underneath at the same time.
- * Arrow keys, the side buttons and horizontal swipes step through the
- * gallery, wrapping at both ends.
+ * escapes the windows layer (an isolated stacking context) and covers the
+ * whole shell, and so the shell as a whole goes inert behind it. Escape goes
+ * through the shell's Escape layers, where the lightbox outranks the window
+ * underneath. Arrow keys, the side buttons and horizontal swipes step through
+ * the gallery, wrapping at both ends.
  */
 function GalleryLightbox({
   items,
@@ -90,14 +94,10 @@ function GalleryLightbox({
     [index, items.length, onIndexChange]
   )
 
+  useEscapeLayer('lightbox', onClose)
+
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        event.preventDefault()
-        event.stopImmediatePropagation()
-        onClose()
-        return
-      }
       if (!hasMany) return
       if (event.key === 'ArrowLeft') {
         event.preventDefault()
@@ -111,7 +111,7 @@ function GalleryLightbox({
     }
     window.addEventListener('keydown', onKey, { capture: true })
     return () => window.removeEventListener('keydown', onKey, { capture: true })
-  }, [hasMany, onClose, showPrev, showNext])
+  }, [hasMany, showPrev, showNext])
 
   const onTouchStart = (event: TouchEvent<HTMLDivElement>) => {
     const touch = event.touches[0]
@@ -132,7 +132,7 @@ function GalleryLightbox({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[600] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm md:p-10"
+      className="z-lightbox fixed inset-0 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm md:p-10"
       onMouseDown={onBackdropDismiss(onClose)}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
@@ -204,7 +204,7 @@ function GalleryLightbox({
         {(item.caption || hasMany) && (
           <p className="font-body text-cloud mt-3 min-h-10 max-w-2xl text-center text-sm">
             {hasMany && (
-              <span className="text-cloud/70 mr-2 font-mono text-xs">
+              <span className="text-cloud/70 mr-2 font-mono text-xs tabular-nums">
                 {index + 1} / {items.length}
               </span>
             )}
@@ -217,14 +217,17 @@ function GalleryLightbox({
   )
 }
 
-export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
+export default function ProjectDetailApp({
+  project,
+  titleLevel = 2,
+}: ProjectDetailAppProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const closeLightbox = useCallback(() => setLightboxIndex(null), [])
 
   return (
-    <ProjectSections project={project}>
+    <ProjectSections project={project} titleLevel={titleLevel}>
       {project.gallery.length > 0 && (
-        <ProjectGallery>
+        <ProjectGallery titleLevel={titleLevel}>
           {project.gallery.map((item, i) => (
             <button
               key={item.src}

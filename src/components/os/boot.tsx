@@ -1,11 +1,12 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { type DeepLinkTarget, initialDeepLinkTarget } from '@/lib/os/deep-link'
 
-import { useHotkeys } from '@/hooks/use-hotkeys'
+import { useEscapeLayer } from '@/hooks/use-escape-layer'
+import { useFocusTrap } from '@/hooks/use-focus-trap'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 const STEPS = [
@@ -52,7 +53,8 @@ function writeBootFlag(): void {
 /**
  * ShiroOS boot splash. Shown only once per tab session; skippable via Esc or
  * the "skip" button. Respects `prefers-reduced-motion` by collapsing to an
- * instant dismiss. Auto-dismisses at ~2.4s for first-time visitors.
+ * instant dismiss. Auto-dismisses at ~2.4s for first-time visitors. While it
+ * shows it is a modal layer: focus stays on it and the desktop behind is inert.
  *
  * A deep link skips it too: someone sent to a specific window should land on
  * that window, not on a greeting. `initialWindow` is a window handed in by a
@@ -64,6 +66,8 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
   const [gone, setGone] = useState(false)
   const [step, setStep] = useState(0)
   const skipButtonRef = useRef<HTMLButtonElement>(null)
+  const splashRef = useRef<HTMLDivElement>(null)
+  const showing = ready && !gone
 
   // Determine whether to show the boot splash at all. We can't read session
   // storage during SSR, so we defer the decision to a mount effect and render
@@ -103,12 +107,9 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
     return () => timers.forEach((id) => window.clearTimeout(id))
   }, [ready])
 
-  useHotkeys(
-    useMemo(
-      () => ({ escape: ready ? () => setGone(true) : undefined }),
-      [ready]
-    )
-  )
+  const dismiss = useCallback(() => setGone(true), [])
+  useEscapeLayer('boot', dismiss, showing)
+  useFocusTrap(splashRef, showing)
 
   useEffect(() => {
     // Once dismissed the component renders null but stays mounted, so this
@@ -129,19 +130,20 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
 
   return (
     <div
+      ref={splashRef}
       role="dialog"
       aria-modal="true"
       aria-label="ShiroOS boot sequence"
-      className="bg-sky-1 animate-boot-out fixed inset-0 z-[9999] overflow-hidden motion-reduce:animate-none"
+      className="bg-sky-1 animate-boot-out z-boot fixed inset-0 overflow-hidden motion-reduce:animate-none"
     >
       <span
         aria-hidden
-        className="font-display text-ink/[0.06] dark:text-ink/[0.08] pointer-events-none absolute -top-[8vh] -right-[4vw] text-[48vh] leading-none font-bold select-none"
+        className="font-display text-ink/[0.06] dark:text-ink/[0.08] pointer-events-none absolute -top-[8dvh] -right-[4vw] text-[48dvh] leading-none font-bold select-none"
       >
         白
       </span>
 
-      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center gap-6 px-6">
+      <div className="relative z-10 flex min-h-dvh flex-col items-center justify-center gap-6 px-6">
         <div className="relative">
           <span
             aria-hidden
@@ -225,7 +227,7 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
                   {state === 'done' ? '✓' : state === 'run' ? '●' : '○'}
                 </span>
                 <span>{s.label}</span>
-                <span className="text-ink-4 font-mono text-[9px] tracking-[0.1em]">
+                <span className="text-ink-4 font-mono text-[9px] tracking-[0.1em] tabular-nums">
                   {state === 'wait' ? '-' : s.detail}
                 </span>
               </div>
@@ -236,7 +238,8 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
         <button
           ref={skipButtonRef}
           type="button"
-          onClick={() => setGone(true)}
+          onClick={dismiss}
+          aria-keyshortcuts="Escape Enter Space"
           className="focus-ring border-rule-2 bg-surf-0 text-ink-3 hover:bg-surf-1 hover:text-ink rounded-full border px-4 py-1.5 font-mono text-[11px] tracking-[0.2em] uppercase transition-colors"
         >
           skip · esc

@@ -1,13 +1,13 @@
 import { isAppId } from '@/components/os/constants'
 import type { WindowState } from '@/components/os/types'
 
+import { measureDesktopArea } from '@/lib/os/dom'
 import {
   INITIAL_Z,
   type Rect,
   type SnapZone,
   clampWindowRect,
   clampWindowToViewport,
-  desktopArea,
   dockFlags,
   rectOf,
   snapBounds,
@@ -18,9 +18,13 @@ import {
   isProjectWindowId,
   projectSlugForWindow,
 } from '@/lib/os/window-factory'
+import { isRecord } from '@/lib/utils'
 import { findProjectBySlug } from '@/lib/utils/projects'
 
 export const SESSION_STORAGE_KEY = 'shiroos:windows'
+
+/** Quiet time after the last change before tab-session state is written. */
+export const SESSION_WRITE_DEBOUNCE_MS = 250
 
 /** The part of a window worth remembering; the rest is rebuilt from its id. */
 type StoredWindow = Pick<
@@ -36,10 +40,6 @@ type StoredWindow = Pick<
   | 'snapped'
   | 'prevGeometry'
 >
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return typeof value === 'object' && value !== null
-}
 
 function parseRect(value: unknown): Rect | null {
   if (!isRecord(value)) return null
@@ -92,7 +92,7 @@ function parseWindow(value: unknown): WindowState | null {
   return {
     ...win,
     ...(zone
-      ? snapBounds(zone, desktopArea(), win.minW)
+      ? snapBounds(zone, measureDesktopArea(), win.minW)
       : fitToViewport(rect, win)),
     ...dockFlags(zone),
     minimized: value.minimized === true,

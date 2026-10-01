@@ -18,6 +18,11 @@ export function onBackdropDismiss(onDismiss: () => void) {
   }
 }
 
+/** Whether untyped input (parsed storage, a JSON body) is a plain object. */
+export function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null
+}
+
 /**
  * Converts a hexadecimal string (e.g., a color code) to its decimal numeric value.
  *
