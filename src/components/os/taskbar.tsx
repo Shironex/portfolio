@@ -11,8 +11,10 @@ import type { AppId, WindowId } from './types'
 interface TaskbarProps {
   openIds: WindowId[]
   minimizedIds: WindowId[]
+  topmostId: WindowId | null
   onLaunch: (appId: AppId) => void
-  onRestore: (id: WindowId) => void
+  /** Restores a minimized window, minimizes the top one, raises any other. */
+  onActivate: (id: WindowId) => void
   onOpenStart: () => void
   onOpenCmd: () => void
 }
@@ -23,8 +25,9 @@ interface TaskbarProps {
 export function Taskbar({
   openIds,
   minimizedIds,
+  topmostId,
   onLaunch,
-  onRestore,
+  onActivate,
   onOpenStart,
   onOpenCmd,
 }: TaskbarProps) {
@@ -62,17 +65,20 @@ export function Taskbar({
           const isOpen = openIds.includes(app.id)
           const isMinimized = minimizedIds.includes(app.id)
           const Icon = app.icon
+          // The label names what the click will do, so it tracks `onActivate`.
           const label = isOpen
             ? isMinimized
               ? `${app.name} (minimized) - restore`
-              : `${app.name} - bring to front`
+              : app.id === topmostId
+                ? `${app.name} - minimize`
+                : `${app.name} - bring to front`
             : `Open ${app.name}`
           return (
             <div key={app.id} className="group relative">
               <button
                 type="button"
                 aria-label={label}
-                onClick={() => (isOpen ? onRestore(app.id) : onLaunch(app.id))}
+                onClick={() => (isOpen ? onActivate(app.id) : onLaunch(app.id))}
                 className="focus-ring hover:bg-surf-0 relative flex size-9 items-center justify-center rounded-lg transition-colors pointer-coarse:size-11"
               >
                 <span aria-hidden style={{ color: accentColor(app.accent) }}>

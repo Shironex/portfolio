@@ -24,7 +24,7 @@ export const MOVE_VIEWPORT_MARGIN = {
   bottom: 100,
 } as const
 
-/** Inset used to compute maximize bounds (use-os-windows). */
+/** Inset of the usable desktop area from the viewport edges. */
 export const MAXIMIZED_INSET = { top: 44, bottom: 64, side: 8 } as const
 
 /** Cascade origin + per-window step for newly opened project windows. */
@@ -49,11 +49,63 @@ export const RESIZE_VIEWPORT_MARGIN = {
   ssrFallback: 4096,
 } as const
 
-interface Rect {
+/** Smallest size a window can be resized to unless it sets its own. */
+export const DEFAULT_MIN_SIZE = { w: 320, h: 240 } as const
+
+/** Pointer travel before a drag pulls a snapped or maximized window loose. */
+export const UNDOCK_DRAG_THRESHOLD = 4
+
+/** Base z-index; the first window opened sits at {@link INITIAL_Z} + 1. */
+export const INITIAL_Z = 100
+
+export interface Rect {
   x: number
   y: number
   w: number
   h: number
+}
+
+export interface Point {
+  x: number
+  y: number
+}
+
+/** Half of the desktop a window can be snapped to. */
+export type SnapSide = 'left' | 'right'
+
+/** Edge of the desktop a dragged window can be dropped on. */
+export type SnapZone = SnapSide | 'top'
+
+/** The two flags a window stores its dock state in. */
+interface DockFlags {
+  maximized: boolean
+  snapped?: SnapSide
+}
+
+interface MinSize {
+  minW?: number
+  minH?: number
+}
+
+/** The plain rect of anything that carries one (a window, a stored entry). */
+export function rectOf({ x, y, w, h }: Rect): Rect {
+  return { x, y, w, h }
+}
+
+/** Zone a window is docked on: `top` when maximized, `null` when it floats. */
+export function dockZoneOf(win: DockFlags): SnapZone | null {
+  return win.maximized ? 'top' : (win.snapped ?? null)
+}
+
+/** Flags for a window docked on `zone`; `null` clears both. */
+export function dockFlags(zone: SnapZone | null): {
+  maximized: boolean
+  snapped: SnapSide | undefined
+} {
+  return {
+    maximized: zone === 'top',
+    snapped: zone === 'left' || zone === 'right' ? zone : undefined,
+  }
 }
 
 /**
@@ -77,10 +129,10 @@ export function clampWindowToViewport(
 }
 
 /**
- * Maximize bounds for a window. Matches the original `viewportGeometry`
- * in `use-os-windows.ts` (1200×600 SSR fallback).
+ * Usable desktop area: the viewport minus the menubar, the taskbar and the
+ * side gutter. A maximized window fills it (1200x600 SSR fallback).
  */
-export function maximizeBounds(): Rect {
+export function desktopArea(): Rect {
   if (typeof window === 'undefined') {
     return { x: MAXIMIZED_INSET.side, y: MAXIMIZED_INSET.top, w: 1200, h: 600 }
   }
@@ -135,5 +187,71 @@ export function clampResize(
     ),
     w: Math.min(maxWidth, nextW),
     h: Math.min(maxHeight, nextH),
+  }
+}
+
+/** {@link clampResize} with the window's own minimum size, or the default. */
+export function clampWindowRect(
+  win: MinSize,
+  rect: Rect,
+  patch: Partial<Rect>
+): Rect {
+  return clampResize(
+    rect,
+    patch,
+    win.minW ?? DEFAULT_MIN_SIZE.w,
+    win.minH ?? DEFAULT_MIN_SIZE.h
+  )
+}
+
+/**
+ * Snap zone under a pointer, or `null` when it is not at an edge. The side
+ * zones start where the desktop area ends; the top zone is the strip of
+ * menubar above the highest spot a title bar can sit, so a window parked at
+ * the top can still be grabbed without maximizing. Takes a plain point so it
+ * works for any input event.
+ */
+export function snapZoneAt(point: Point, area: Rect): SnapZone | null {
+  if (point.x <= area.x) return 'left'
+  if (point.x >= area.x + area.w) return 'right'
+  if (point.y <= MOVE_VIEWPORT_MARGIN.minY) return 'top'
+  return null
+}
+
+/**
+ * Rect a window takes when dropped on `zone`: a half, or the whole area. A
+ * half is never narrower than `minW`, up to the full width of the area.
+ */
+export function snapBounds(
+  zone: SnapZone,
+  area: Rect,
+  minW: number = DEFAULT_MIN_SIZE.w
+): Rect {
+  if (zone === 'top') return area
+  const w = Math.min(area.w, Math.max(minW, Math.floor(area.w / 2)))
+  return {
+    x: zone === 'left' ? area.x : area.x + area.w - w,
+    y: area.y,
+    w,
+    h: area.h,
+  }
+}
+
+/**
+ * Rect for a snapped or maximized window that is being dragged loose: its
+ * previous size, placed so the pointer keeps the same relative spot on the
+ * title bar (same fraction across, same distance down).
+ */
+export function undockRect(
+  size: { w: number; h: number },
+  docked: Rect,
+  point: Point
+): Rect {
+  const fraction = docked.w > 0 ? (point.x - docked.x) / docked.w : 0.5
+  return {
+    x: Math.round(point.x - size.w * Math.min(1, Math.max(0, fraction))),
+    y: docked.y,
+    w: size.w,
+    h: size.h,
   }
 }

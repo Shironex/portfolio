@@ -12,6 +12,11 @@ export function projectWindowId(slug: string): WindowId {
   return `${PROJECT_WINDOW_PREFIX}${slug}`
 }
 
+/** Whether an id has the shape of a project window id. */
+export function isProjectWindowId(id: string): id is `project-${string}` {
+  return id.startsWith(PROJECT_WINDOW_PREFIX)
+}
+
 /** Slug of the project a project window shows; inverse of {@link projectWindowId}. */
 export function projectSlugForWindow(id: WindowId): string {
   return id.slice(PROJECT_WINDOW_PREFIX.length)

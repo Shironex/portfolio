@@ -78,6 +78,12 @@ export default function ReadmeApp() {
           Arrow keys on a focused title bar: move the window. <Kbd>Shift</Kbd> +
           arrows to resize.
         </li>
+        <li>
+          <Kbd>Ctrl</Kbd> + <Kbd>Alt</Kbd> + arrows on a focused title bar: left
+          or right snaps the window to that half, up maximizes, down restores.
+          Dragging a window to a screen edge does the same.
+        </li>
+        <li>Double-click a title bar: maximize or restore the window.</li>
       </ul>
 
       <p className="text-ink-3 mt-8 text-sm">

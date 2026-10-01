@@ -2,7 +2,7 @@
 
 import { useMediaQuery } from '@/hooks/use-media-query'
 
-const MOBILE_QUERY = '(max-width: 767px)'
+export const MOBILE_QUERY = '(max-width: 767px)'
 
 /**
  * SSR-safe matchMedia hook for the mobile breakpoint (< 768px).

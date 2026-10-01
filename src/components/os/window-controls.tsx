@@ -16,7 +16,8 @@ interface WindowControlsProps {
 /**
  * Windows 11 style title-bar controls (copy link, minimize, maximize, close).
  * Each button stops mousedown propagation so the window drag handler
- * does not begin when a control is pressed.
+ * does not begin when a control is pressed. The title bar ignores
+ * double-clicks that land on a button, so they never toggle maximize.
  */
 export function WindowControls({
   onCopyLink,

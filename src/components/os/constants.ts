@@ -13,7 +13,7 @@ import { countProjects } from '@/lib/utils/projects'
 
 import { projectsData } from '@/data/projects-data'
 
-import type { AppDescriptor, AppId, WindowId } from './types'
+import type { AppDescriptor, AppId, WindowId, WindowState } from './types'
 
 /*
  * Each app names an accent role rather than a colour, so the active palette
@@ -51,6 +51,15 @@ export const SKELETON_BAR =
  */
 export function windowIconFor(id: WindowId): LucideIcon {
   return APPS.find((app) => app.id === id)?.icon ?? Diamond
+}
+
+/** What a window is called out loud: the app name or the project title. */
+export function windowNameFor(win: WindowState): string {
+  return (
+    win.project?.title ??
+    APPS.find((app) => app.id === win.id)?.name ??
+    win.title
+  )
 }
 
 export const APP_WINDOW_DEFAULTS: Record<

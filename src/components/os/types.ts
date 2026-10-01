@@ -1,5 +1,7 @@
 import type { LucideIcon } from 'lucide-react'
 
+import type { Rect, SnapSide } from '@/lib/os/geometry'
+
 import type { Project } from '@/types'
 
 import type { AccentRole } from './accent-map'
@@ -22,7 +24,9 @@ export interface WindowState {
   z: number
   minimized: boolean
   maximized: boolean
-  prevGeometry?: { x: number; y: number; w: number; h: number }
+  /** Half of the desktop the window is snapped to, if any. */
+  snapped?: SnapSide
+  prevGeometry?: Rect
   project?: Project
 }
 

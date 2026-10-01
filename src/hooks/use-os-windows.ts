@@ -61,8 +61,11 @@ export function useOsWindows() {
     move: stack.move,
     resize: stack.resize,
     minimize: stack.minimize,
-    toggleMinimize: stack.toggleMinimize,
     toggleMaximize: stack.toggleMaximize,
+    snap: stack.snap,
+    restore: stack.restore,
+    activate: stack.activate,
+    hydrate: stack.hydrate,
     topmostId: stack.topmostId,
     isOpen,
   }
