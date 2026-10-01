@@ -21,6 +21,7 @@
   --color-peach-2: #cf8a33;
   --color-cloud: #fbf7ed;
   --color-danger: #ff5b6a;
+  --color-danger-ink: #b8243a;
   --primary: 176 78% 27%;
   --ring: 176 78% 27%;
   --shiro-sky-0: #fbf7ed;
@@ -56,6 +57,7 @@
   --color-peach-2: #f0c477;
   --color-cloud: #02110f;
   --color-danger: #ff7c88;
+  --color-danger-ink: #ff7c88;
   --primary: 176 58% 53%;
   --ring: 176 58% 53%;
   --shiro-sky-0: #02110f;
@@ -92,6 +94,7 @@
   --color-peach-2: #cf8a33;
   --color-cloud: #fdf6f2;
   --color-danger: #e0453f;
+  --color-danger-ink: #b32a25;
   --primary: 341 54% 40%;
   --ring: 341 54% 40%;
   --shiro-sky-0: #fcf6f1;
@@ -127,6 +130,7 @@
   --color-peach-2: #f0c477;
   --color-cloud: #150409;
   --color-danger: #ff7c88;
+  --color-danger-ink: #ff7c88;
   --primary: 342 69% 71%;
   --ring: 342 69% 71%;
   --shiro-sky-0: #150409;
@@ -163,6 +167,7 @@
   --color-peach-2: #cf8a33;
   --color-cloud: #f8f7f2;
   --color-danger: #d84a52;
+  --color-danger-ink: #b22d36;
   --primary: 223 53% 39%;
   --ring: 223 53% 39%;
   --shiro-sky-0: #f8f7f2;
@@ -198,6 +203,7 @@
   --color-peach-2: #f0c477;
   --color-cloud: #05070f;
   --color-danger: #ff7c88;
+  --color-danger-ink: #ff7c88;
   --primary: 223 72% 70%;
   --ring: 223 72% 70%;
   --shiro-sky-0: #05070f;
@@ -234,6 +240,7 @@
   --color-peach-2: #c25f43;
   --color-cloud: #fdf8ea;
   --color-danger: #c0392b;
+  --color-danger-ink: #a82f22;
   --primary: 36 77% 31%;
   --ring: 36 77% 31%;
   --shiro-sky-0: #fdf8ea;
@@ -269,6 +276,7 @@
   --color-peach-2: #e89778;
   --color-cloud: #120c02;
   --color-danger: #ff7c66;
+  --color-danger-ink: #ff7c66;
   --primary: 39 73% 56%;
   --ring: 39 73% 56%;
   --shiro-sky-0: #120c02;
@@ -305,6 +313,7 @@
   --color-peach-2: #cf8a33;
   --color-cloud: #faf7f6;
   --color-danger: #cc3b48;
+  --color-danger-ink: #ad2a38;
   --primary: 268 44% 43%;
   --ring: 268 44% 43%;
   --shiro-sky-0: #faf7f6;
@@ -340,6 +349,7 @@
   --color-peach-2: #f0c477;
   --color-cloud: #0b0514;
   --color-danger: #ff7c88;
+  --color-danger-ink: #ff7c88;
   --primary: 262 67% 75%;
   --ring: 262 67% 75%;
   --shiro-sky-0: #0b0514;
@@ -376,6 +386,7 @@
   --color-peach-2: #cf8a33;
   --color-cloud: #fbf9f4;
   --color-danger: #b03a3a;
+  --color-danger-ink: #9c3030;
   --primary: 34 13% 20%;
   --ring: 34 13% 20%;
   --shiro-sky-0: #fbf9f4;
@@ -411,6 +422,7 @@
   --color-peach-2: #f0c477;
   --color-cloud: #0c0b09;
   --color-danger: #e06a6a;
+  --color-danger-ink: #e06a6a;
   --primary: 38 22% 80%;
   --ring: 38 22% 80%;
   --shiro-sky-0: #0c0b09;

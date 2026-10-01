@@ -2,8 +2,9 @@
  * Generates `src/styles/palettes.css` from the palette table below and gates
  * every palette on WCAG AA contrast. Run it after editing a colour:
  *
- *   node scripts/gen-palettes.mjs          write the stylesheet
- *   node scripts/gen-palettes.mjs --check  fail if the file is stale
+ *   node scripts/gen-palettes.mjs          write the stylesheet and the TS mirror
+ *   node scripts/gen-palettes.mjs --check  fail if either file is stale
+ *                                          (`pnpm palettes:check`, part of `pnpm lint`)
  *
  * The table is the only place a ShiroOS colour is written down. Component code
  * never carries a hex; it paints with an accent role that resolves to one of
@@ -32,6 +33,9 @@ const TS_OUT = join(ROOT, 'src', 'lib', 'os', 'palettes.generated.ts')
  *   ink..ink4      text, brightest to faintest    -> --shiro-ink{,-2,-3,-4}
  *   inkRgb         hairlines, shadows, scrollbar
  *   cloud          foreground on a filled accent  -> --color-cloud
+ *   danger         destructive fill and hover     -> --color-danger
+ *   dangerInk      danger as text on a surface    -> --color-danger-ink
+ *                  (light only: the dark danger already reads as text)
  */
 export const PALETTES = [
   {
@@ -43,7 +47,7 @@ export const PALETTES = [
       sky0: '#fbf7ed', sky1: '#f5efe0', sky2: '#ece4d0', sky3: '#ddd2b8',
       surfSolid: '#fdfaf0', surfSoft: '#f7f2e3', surfRgb: '253, 249, 237',
       ink: '#1a1714', ink2: '#3a3530', ink3: '#5f564b', ink4: '#7a6f60',
-      inkRgb: '26, 23, 20', cloud: '#fbf7ed', danger: '#ff5b6a',
+      inkRgb: '26, 23, 20', cloud: '#fbf7ed', danger: '#ff5b6a', dangerInk: '#b8243a',
     },
     dark: {
       acc: '#42ccc2', acc2: '#22a097', acc3: '#6fdfd6',
@@ -63,7 +67,7 @@ export const PALETTES = [
       sky0: '#fcf6f1', sky1: '#f7eee6', sky2: '#efe2d8', sky3: '#e2cfc4',
       surfSolid: '#fefaf6', surfSoft: '#f8f1ea', surfRgb: '254, 250, 246',
       ink: '#1c1512', ink2: '#3d322e', ink3: '#63524d', ink4: '#7e6a63',
-      inkRgb: '28, 21, 18', cloud: '#fdf6f2', danger: '#e0453f',
+      inkRgb: '28, 21, 18', cloud: '#fdf6f2', danger: '#e0453f', dangerInk: '#b32a25',
     },
     dark: {
       acc: '#e8809f', acc2: '#cf5c7f', acc3: '#f5a8bf',
@@ -83,7 +87,7 @@ export const PALETTES = [
       sky0: '#f8f7f2', sky1: '#f1efe6', sky2: '#e6e3d6', sky3: '#d5d1c0',
       surfSolid: '#fbfaf6', surfSoft: '#f3f1e9', surfRgb: '251, 250, 246',
       ink: '#17181c', ink2: '#34363d', ink3: '#565a63', ink4: '#6c7079',
-      inkRgb: '23, 24, 28', cloud: '#f8f7f2', danger: '#d84a52',
+      inkRgb: '23, 24, 28', cloud: '#f8f7f2', danger: '#d84a52', dangerInk: '#b22d36',
     },
     dark: {
       acc: '#7d9bea', acc2: '#5a79cc', acc3: '#a8bdf5',
@@ -103,7 +107,7 @@ export const PALETTES = [
       sky0: '#fdf8ea', sky1: '#f8f0dc', sky2: '#f0e5c8', sky3: '#e3d3ac',
       surfSolid: '#fffbef', surfSoft: '#faf3e0', surfRgb: '255, 251, 239',
       ink: '#1c1710', ink2: '#3d352a', ink3: '#635744', ink4: '#7d6f58',
-      inkRgb: '28, 23, 16', cloud: '#fdf8ea', danger: '#c0392b',
+      inkRgb: '28, 23, 16', cloud: '#fdf8ea', danger: '#c0392b', dangerInk: '#a82f22',
     },
     dark: {
       acc: '#e0a63c', acc2: '#bd8624', acc3: '#f2c877',
@@ -123,7 +127,7 @@ export const PALETTES = [
       sky0: '#faf7f6', sky1: '#f3eff0', sky2: '#e8e2e6', sky3: '#d6ced5',
       surfSolid: '#fdfbfb', surfSoft: '#f6f2f4', surfRgb: '253, 251, 251',
       ink: '#1a161d', ink2: '#38323e', ink3: '#5b5363', ink4: '#726a7b',
-      inkRgb: '26, 22, 29', cloud: '#faf7f6', danger: '#cc3b48',
+      inkRgb: '26, 22, 29', cloud: '#faf7f6', danger: '#cc3b48', dangerInk: '#ad2a38',
     },
     dark: {
       acc: '#b596ea', acc2: '#9370d1', acc3: '#d0bcf7',
@@ -143,7 +147,7 @@ export const PALETTES = [
       sky0: '#fbf9f4', sky1: '#f4f1e9', sky2: '#e9e5da', sky3: '#d8d2c3',
       surfSolid: '#fdfcf7', surfSoft: '#f6f3ec', surfRgb: '253, 252, 247',
       ink: '#16130f', ink2: '#37322b', ink3: '#5c5449', ink4: '#776e60',
-      inkRgb: '22, 19, 15', cloud: '#fbf9f4', danger: '#b03a3a',
+      inkRgb: '22, 19, 15', cloud: '#fbf9f4', danger: '#b03a3a', dangerInk: '#9c3030',
     },
     dark: {
       acc: '#d8d0c2', acc2: '#b5ab9a', acc3: '#efe9dd',
@@ -229,6 +233,7 @@ function tokens(t, mode) {
     ['--color-peach-2', t.sec2],
     ['--color-cloud', t.cloud],
     ['--color-danger', t.danger],
+    ['--color-danger-ink', t.dangerInk ?? t.danger],
     ['--primary', hsl(t.acc)],
     ['--ring', hsl(t.acc)],
     ['--shiro-sky-0', t.sky0],
@@ -272,6 +277,13 @@ function build() {
     gate(p.id, 'dark', 'on-accent', p.dark.cloud, p.dark.acc)
     gate(p.id, 'dark', 'ink-3', p.dark.ink3, p.dark.surfSolid)
     gate(p.id, 'dark', 'ink-4', p.dark.ink4, p.dark.surfSolid)
+    // Error text sits on windows, the soft chrome and the bare wallpaper.
+    for (const mode of ['light', 'dark']) {
+      const t = p[mode]
+      for (const bg of ['surfSolid', 'surfSoft', 'sky1']) {
+        gate(p.id, mode, `danger-ink on ${bg}`, t.dangerInk ?? t.danger, t[bg])
+      }
+    }
 
     blocks.push(`/* ${p.name} */`)
     blocks.push(block(`[data-palette='${p.id}']`, p.light, 'light'))
@@ -302,14 +314,24 @@ ${blocks.join('\n\n')}
 }
 
 function buildTs() {
-  const rows = PALETTES.map(
-    (p) => `  { id: '${p.id}', name: '${p.name}' },`
+  const rows = PALETTES.map((p) =>
+    [
+      '  {',
+      `    id: '${p.id}',`,
+      `    name: '${p.name}',`,
+      `    ground: { light: '${p.light.sky1}', dark: '${p.dark.sky1}' },`,
+      '  },',
+    ].join('\n')
   ).join('\n')
+  const fallback = PALETTES.find((p) => p.id === DEFAULT_PALETTE_ID)
   return `/**
  * GENERATED by scripts/gen-palettes.mjs. Do not edit by hand.
  *
  * Mirrors the palette table that produced src/styles/palettes.css, so the
  * picker cannot offer a palette the stylesheet has no block for.
+ *
+ * \`ground\` is the page ground (\`--shiro-sky-1\`) per mode, for the places
+ * CSS variables cannot reach: the \`theme-color\` meta and the manifest.
  */
 
 export const PALETTES = [
@@ -319,6 +341,9 @@ ${rows}
 export type PaletteId = (typeof PALETTES)[number]['id']
 
 export const DEFAULT_PALETTE: PaletteId = '${DEFAULT_PALETTE_ID}'
+
+/** Light accent of the default palette, for the manifest. */
+export const DEFAULT_THEME_COLOR = '${fallback.light.acc}'
 `
 }
 

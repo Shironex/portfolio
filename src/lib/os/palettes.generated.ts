@@ -3,17 +3,47 @@
  *
  * Mirrors the palette table that produced src/styles/palettes.css, so the
  * picker cannot offer a palette the stylesheet has no block for.
+ *
+ * `ground` is the page ground (`--shiro-sky-1`) per mode, for the places
+ * CSS variables cannot reach: the `theme-color` meta and the manifest.
  */
 
 export const PALETTES = [
-  { id: 'teal', name: 'Teal' },
-  { id: 'sakura', name: 'Sakura' },
-  { id: 'ai', name: 'Ai' },
-  { id: 'kohaku', name: 'Kohaku' },
-  { id: 'fuji', name: 'Fuji' },
-  { id: 'sumi', name: 'Sumi' },
+  {
+    id: 'teal',
+    name: 'Teal',
+    ground: { light: '#f5efe0', dark: '#041816' },
+  },
+  {
+    id: 'sakura',
+    name: 'Sakura',
+    ground: { light: '#f7eee6', dark: '#1c0710' },
+  },
+  {
+    id: 'ai',
+    name: 'Ai',
+    ground: { light: '#f1efe6', dark: '#080b18' },
+  },
+  {
+    id: 'kohaku',
+    name: 'Kohaku',
+    ground: { light: '#f8f0dc', dark: '#191204' },
+  },
+  {
+    id: 'fuji',
+    name: 'Fuji',
+    ground: { light: '#f3eff0', dark: '#10081c' },
+  },
+  {
+    id: 'sumi',
+    name: 'Sumi',
+    ground: { light: '#f4f1e9', dark: '#12100d' },
+  },
 ] as const
 
 export type PaletteId = (typeof PALETTES)[number]['id']
 
 export const DEFAULT_PALETTE: PaletteId = 'teal'
+
+/** Light accent of the default palette, for the manifest. */
+export const DEFAULT_THEME_COLOR = '#0f7c74'
