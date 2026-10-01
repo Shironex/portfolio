@@ -1,3 +1,12 @@
+## [2.21.1](https://github.com/Shironex/portfolio/compare/v2.21.0...v2.21.1) (2026-10-01)
+
+
+### Bug Fixes
+
+* **deps:** bump next family to 16.3.6 for GHSA-vcvr-r3jv-pc5j ([d3af994](https://github.com/Shironex/portfolio/commit/d3af994482c02107de084112389c3f62946e63eb))
+* **deps:** raise override floors for undici, brace-expansion, fast-uri, js-yaml ([36bd79e](https://github.com/Shironex/portfolio/commit/36bd79e8758a387064f3661498ec50e9c5f3059d))
+* **deps:** refresh dompurify to 3.4.16 and pin engine.io to 6.6.10 ([0266d0b](https://github.com/Shironex/portfolio/commit/0266d0bf27a3002a66f39c0dd7260f303b191797))
+
 # [2.21.0](https://github.com/Shironex/portfolio/compare/v2.20.1...v2.21.0) (2026-10-01)
 
 
