@@ -1,23 +1,23 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useId, useMemo, useRef } from 'react'
 
 import { Search, X } from 'lucide-react'
 
 import { GithubIcon } from '@/components/icons/github-icon'
 
 import { AUTHOR_NAME, EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
-import { onBackdropDismiss } from '@/lib/utils'
+import { cn, onBackdropDismiss } from '@/lib/utils'
 import { getPinnedProjects } from '@/lib/utils/projects'
 
 import { projectsData } from '@/data/projects-data'
+import { useEscapeLayer } from '@/hooks/use-escape-layer'
 import { useFocusTrap } from '@/hooks/use-focus-trap'
-import { useHotkeys } from '@/hooks/use-hotkeys'
 import type { Project } from '@/types'
 
 import { accentColor, accentFor, accentTint } from './accent-map'
-import { APPS } from './constants'
+import { APPS, CMD_PALETTE_SHORTCUT } from './constants'
 import { ExternalLink } from './external-link'
 import { Kbd } from './kbd'
 import { ProjectAvatar } from './project-avatar'
@@ -35,8 +35,13 @@ interface StartMenuProps {
  *
  * Modeled as a dialog (not an ARIA menu) because children include a mix of
  * buttons, links, and static content that don't fit the strict menuitem
- * pattern. Traps focus, restores it on close, dismisses on Esc or backdrop.
+ * pattern. A modal layer: traps focus, makes the desktop behind inert,
+ * restores focus on close, dismisses on Esc or backdrop.
  */
+
+const SECTION_HEADING_CLASS =
+  'text-ink-4 px-5 pb-1 font-mono text-[10px] font-normal tracking-widest uppercase'
+
 export function StartMenu({
   onClose,
   onLaunch,
@@ -45,6 +50,8 @@ export function StartMenu({
 }: StartMenuProps) {
   const panelRef = useRef<HTMLDivElement>(null)
   const searchRef = useRef<HTMLButtonElement>(null)
+  const pinnedId = useId()
+  const recentId = useId()
 
   useFocusTrap(panelRef, true)
 
@@ -62,11 +69,11 @@ export function StartMenu({
     searchRef.current?.focus()
   }, [])
 
-  useHotkeys(useMemo(() => ({ escape: onClose }), [onClose]))
+  useEscapeLayer('start', onClose)
 
   return (
     <div
-      className="bg-ink/20 fixed inset-0 z-[450] backdrop-blur-sm"
+      className="bg-ink/20 z-overlay fixed inset-0 backdrop-blur-sm"
       onMouseDown={onBackdropDismiss(onClose)}
     >
       <div
@@ -83,6 +90,7 @@ export function StartMenu({
             onOpenCmd()
             onClose()
           }}
+          aria-keyshortcuts={CMD_PALETTE_SHORTCUT}
           className="focus-ring border-rule bg-surf-soft text-ink-3 hover:bg-surf-1 flex w-full items-center gap-3 border-b px-5 py-3 text-left text-sm transition-colors"
         >
           <Search aria-hidden size={16} />
@@ -90,70 +98,75 @@ export function StartMenu({
           <Kbd>⌘K</Kbd>
         </button>
 
-        <div className="text-ink-4 px-5 pt-4 pb-1 font-mono text-[10px] tracking-widest uppercase">
+        <h2 id={pinnedId} className={cn(SECTION_HEADING_CLASS, 'pt-4')}>
           Pinned
-        </div>
-        <div className="grid grid-cols-3 gap-2 p-5 pt-2">
+        </h2>
+        <ul
+          aria-labelledby={pinnedId}
+          className="grid grid-cols-3 gap-2 p-5 pt-2"
+        >
           {APPS.map((app) => {
             const Icon = app.icon
             return (
-              <button
-                key={app.id}
-                type="button"
-                aria-label={`Open ${app.name}`}
-                onClick={() => {
-                  onLaunch(app.id)
-                  onClose()
-                }}
-                className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 hover:border-miku/40 flex flex-col items-center justify-center gap-2 rounded-xl border px-3 py-4 text-center transition-colors"
-              >
-                <span
-                  aria-hidden
-                  className="flex size-11 items-center justify-center rounded-xl"
-                  style={{
-                    backgroundColor: accentTint(app.accent, 15),
-                    color: accentColor(app.accent),
+              <li key={app.id} className="flex">
+                <button
+                  type="button"
+                  aria-label={`Open ${app.name}`}
+                  onClick={() => {
+                    onLaunch(app.id)
+                    onClose()
                   }}
+                  className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 hover:border-miku/40 flex flex-1 flex-col items-center justify-center gap-2 rounded-xl border px-3 py-4 text-center transition-colors"
                 >
-                  <Icon size={20} strokeWidth={1.75} />
-                </span>
-                <span className="font-body text-ink text-sm font-medium">
-                  {app.name}
-                </span>
-              </button>
+                  <span
+                    aria-hidden
+                    className="flex size-11 items-center justify-center rounded-xl"
+                    style={{
+                      backgroundColor: accentTint(app.accent, 15),
+                      color: accentColor(app.accent),
+                    }}
+                  >
+                    <Icon size={20} strokeWidth={1.75} />
+                  </span>
+                  <span className="font-body text-ink text-sm font-medium">
+                    {app.name}
+                  </span>
+                </button>
+              </li>
             )
           })}
-        </div>
+        </ul>
 
-        <div className="text-ink-4 px-5 pt-2 pb-1 font-mono text-[10px] tracking-widest uppercase">
+        <h2 id={recentId} className={cn(SECTION_HEADING_CLASS, 'pt-2')}>
           Recent
-        </div>
-        <div className="pb-3">
+        </h2>
+        <ul aria-labelledby={recentId} className="pb-3">
           {recentProjects.map((p) => (
-            <button
-              key={p.id}
-              type="button"
-              onClick={() => {
-                onOpenProject(p)
-                onClose()
-              }}
-              className="focus-ring hover:bg-surf-soft flex w-full items-center gap-3 px-5 py-2 text-left transition-colors"
-            >
-              <ProjectAvatar accent={accentFor(p.slug)} size={8} hidden>
-                {p.title[0]}
-              </ProjectAvatar>
-              <div className="min-w-0 flex-1">
-                <div className="font-body text-ink truncate text-sm">
-                  {p.title}
+            <li key={p.id}>
+              <button
+                type="button"
+                onClick={() => {
+                  onOpenProject(p)
+                  onClose()
+                }}
+                className="focus-ring hover:bg-surf-soft flex w-full items-center gap-3 px-5 py-2 text-left transition-colors"
+              >
+                <ProjectAvatar accent={accentFor(p.slug)} size={8} hidden>
+                  {p.title[0]}
+                </ProjectAvatar>
+                <div className="min-w-0 flex-1">
+                  <div className="font-body text-ink truncate text-sm">
+                    {p.title}
+                  </div>
+                  <div className="text-ink-4 truncate font-mono text-[10px]">
+                    {p.projectType ?? 'project'} ·{' '}
+                    {p.technologies.slice(0, 3).join(' · ')}
+                  </div>
                 </div>
-                <div className="text-ink-4 truncate font-mono text-[10px]">
-                  {p.projectType ?? 'project'} ·{' '}
-                  {p.technologies.slice(0, 3).join(' · ')}
-                </div>
-              </div>
-            </button>
+              </button>
+            </li>
           ))}
-        </div>
+        </ul>
 
         <div className="border-rule bg-surf-soft flex items-center gap-3 border-t px-5 py-3">
           <div className="border-rule-2 bg-miku/15 relative size-10 shrink-0 overflow-hidden rounded-full border">

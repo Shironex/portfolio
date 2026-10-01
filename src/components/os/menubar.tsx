@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image'
-import { useState } from 'react'
+import { memo, useCallback, useRef, useState } from 'react'
 
 import { Moon, Sun } from 'lucide-react'
 
@@ -12,11 +12,28 @@ import { copyToClipboard } from '@/lib/utils/copy-to-clipboard'
 import type { Theme } from '@/hooks/use-theme'
 
 import { Clock } from './clock'
-import { MenuDropdown, type MenuDropdownSection } from './menu-dropdown'
+import { CMD_PALETTE_SHORTCUT } from './constants'
+import {
+  MENU_TRIGGER_ATTRIBUTE,
+  MenuDropdown,
+  type MenuDropdownSection,
+  type MenuFocusEdge,
+  type MenuStep,
+} from './menu-dropdown'
 import { PalettePicker } from './palette-picker'
 import type { AppId } from './types'
 
-type DropdownId = 'file' | 'edit' | 'view' | 'go' | 'help'
+const MENU_IDS = ['file', 'edit', 'view', 'go', 'help'] as const
+
+type DropdownId = (typeof MENU_IDS)[number]
+
+const MENU_LABELS: Record<DropdownId, string> = {
+  file: 'File',
+  edit: 'Edit',
+  view: 'View',
+  go: 'Go',
+  help: 'Help',
+}
 
 interface MenuBarProps {
   onOpenCmd: () => void
@@ -29,11 +46,18 @@ interface MenuBarProps {
 }
 
 /**
- * Fixed top menu bar. Three sections: logo (left), menu items (center),
- * theme toggle + clock (right). File/Edit/View/Go/Help all expand into
- * dropdowns.
+ * Fixed top menu bar, the page's `<header>`. Three sections: logo (left),
+ * menu items (center), theme toggle + clock (right). File/Edit/View/Go/Help
+ * all expand into dropdowns.
+ *
+ * The menu items are a `role="menubar"` with a roving tabindex: one tab stop,
+ * Left/Right move between the menus (wrapping) and, when a menu is open, open
+ * the neighbour instead. The keys inside a menu are in `MenuDropdown`.
+ *
+ * Memoized: the shell re-renders on every frame of a window drag, and none
+ * of that reaches the bar.
  */
-export function MenuBar({
+function MenuBarImpl({
   onOpenCmd,
   onLaunchApp,
   onCloseAll,
@@ -42,11 +66,43 @@ export function MenuBar({
   palette,
   onSelectPalette,
 }: MenuBarProps) {
-  const [openId, setOpenId] = useState<DropdownId | null>(null)
+  const [open, setOpen] = useState<{
+    id: DropdownId
+    edge: MenuFocusEdge
+  } | null>(null)
+  // The one menu in the tab order.
+  const [rovingId, setRovingId] = useState<DropdownId>(MENU_IDS[0])
+  const barRef = useRef<HTMLDivElement>(null)
 
-  const toggle = (id: DropdownId) => () =>
-    setOpenId((current) => (current === id ? null : id))
-  const close = () => setOpenId(null)
+  // Closes only the menu that asks, so a menu losing focus to its neighbour
+  // does not close the neighbour that just opened.
+  const close = useCallback(
+    (id: DropdownId) =>
+      setOpen((current) => (current?.id === id ? null : current)),
+    []
+  )
+
+  const openMenu = useCallback(
+    (id: DropdownId, edge: MenuFocusEdge) => setOpen({ id, edge }),
+    []
+  )
+
+  const step = useCallback(
+    (from: DropdownId, direction: MenuStep, fromOpenMenu: boolean) => {
+      const index =
+        (MENU_IDS.indexOf(from) + direction + MENU_IDS.length) % MENU_IDS.length
+      const next = MENU_IDS[index]
+      setRovingId(next)
+      if (fromOpenMenu) {
+        setOpen({ id: next, edge: 'first' })
+        return
+      }
+      barRef.current
+        ?.querySelectorAll<HTMLElement>(`[${MENU_TRIGGER_ATTRIBUTE}]`)
+        [index]?.focus()
+    },
+    []
+  )
 
   const fileSections: MenuDropdownSection[] = [
     {
@@ -78,7 +134,14 @@ export function MenuBar({
 
   const goSections: MenuDropdownSection[] = [
     {
-      items: [{ label: 'Command palette', kbd: '⌘K', onClick: onOpenCmd }],
+      items: [
+        {
+          label: 'Command palette',
+          kbd: '⌘K',
+          keyShortcuts: CMD_PALETTE_SHORTCUT,
+          onClick: onOpenCmd,
+        },
+      ],
     },
     {
       divider: true,
@@ -110,7 +173,7 @@ export function MenuBar({
     },
     {
       divider: true,
-      node: <PalettePicker value={palette} onSelect={onSelectPalette} />,
+      node: <PalettePicker value={palette} onSelect={onSelectPalette} inMenu />,
     },
     {
       divider: true,
@@ -135,8 +198,16 @@ export function MenuBar({
     },
   ]
 
+  const sections: Record<DropdownId, MenuDropdownSection[]> = {
+    file: fileSections,
+    edit: editSections,
+    view: viewSections,
+    go: goSections,
+    help: helpSections,
+  }
+
   return (
-    <div className="border-rule bg-surf-1 fixed inset-x-0 top-0 z-[100] flex h-11 items-center gap-3 border-b px-3 backdrop-blur-md">
+    <header className="border-rule bg-surf-1 z-chrome fixed inset-x-0 top-0 flex h-11 items-center gap-3 border-b px-3 backdrop-blur-md">
       {/* Left: logo chip */}
       <div className="flex items-center gap-2">
         <Image
@@ -154,42 +225,27 @@ export function MenuBar({
       </div>
 
       {/* Center: menu items */}
-      <div className="flex items-center gap-0.5">
-        <MenuDropdown
-          label="File"
-          sections={fileSections}
-          isOpen={openId === 'file'}
-          onToggle={toggle('file')}
-          onClose={close}
-        />
-        <MenuDropdown
-          label="Edit"
-          sections={editSections}
-          isOpen={openId === 'edit'}
-          onToggle={toggle('edit')}
-          onClose={close}
-        />
-        <MenuDropdown
-          label="View"
-          sections={viewSections}
-          isOpen={openId === 'view'}
-          onToggle={toggle('view')}
-          onClose={close}
-        />
-        <MenuDropdown
-          label="Go"
-          sections={goSections}
-          isOpen={openId === 'go'}
-          onToggle={toggle('go')}
-          onClose={close}
-        />
-        <MenuDropdown
-          label="Help"
-          sections={helpSections}
-          isOpen={openId === 'help'}
-          onToggle={toggle('help')}
-          onClose={close}
-        />
+      <div
+        ref={barRef}
+        role="menubar"
+        aria-label="ShiroOS"
+        className="flex items-center gap-0.5"
+      >
+        {MENU_IDS.map((id) => (
+          <MenuDropdown
+            key={id}
+            id={id}
+            label={MENU_LABELS[id]}
+            sections={sections[id]}
+            isOpen={open?.id === id}
+            focusEdge={open?.edge ?? 'first'}
+            tabIndex={rovingId === id ? 0 : -1}
+            onOpen={openMenu}
+            onClose={close}
+            onStep={step}
+            onTriggerFocus={setRovingId}
+          />
+        ))}
       </div>
 
       {/* Right: theme toggle + status + date + time */}
@@ -210,6 +266,8 @@ export function MenuBar({
         </button>
         <Clock />
       </div>
-    </div>
+    </header>
   )
 }
+
+export const MenuBar = memo(MenuBarImpl)
