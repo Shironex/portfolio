@@ -26,7 +26,7 @@ const PREV_KEYS = ['ArrowLeft', 'ArrowUp']
  *
  * Each button carries its own `data-palette`, so the attribute-scoped tokens
  * in palettes.css paint it in the palette it offers rather than the one
- * currently active — the swatch previews the choice instead of restating a
+ * currently active: the swatch previews the choice instead of restating a
  * colour that would stop tracking the table in `scripts/gen-palettes.mjs`.
  *
  * On its own it is a radiogroup: one tab stop (the checked swatch), arrow

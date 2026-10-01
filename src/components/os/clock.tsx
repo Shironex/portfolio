@@ -13,14 +13,14 @@ interface ClockProps {
 }
 
 /**
- * Leaf clock — owns its own tick so siblings (menubar / taskbar chrome) stop
+ * Leaf clock: owns its own tick so siblings (menubar / taskbar chrome) stop
  * re-rendering each cadence. Memoized so upstream re-renders don't thrash it
  * either.
  */
 function ClockImpl({ className, showDate = true }: ClockProps) {
   const now = useClock()
 
-  // Pre-hydration there is no trustworthy clock — hold the space instead so the
+  // Pre-hydration there is no trustworthy clock: hold the space instead so the
   // chrome doesn't jump when the real time lands a frame later.
   if (!now) {
     return (

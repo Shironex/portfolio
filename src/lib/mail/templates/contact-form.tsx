@@ -116,7 +116,7 @@ ContactFormEmail.PreviewProps = {
 export default ContactFormEmail
 
 /*
- * Palette — ported from the ShiroOS @theme tokens so email chrome matches
+ * Palette: ported from the ShiroOS @theme tokens so email chrome matches
  * the portfolio (warm paper light theme, teal primary).
  *   paper-0  #fbf7ed   surface / body
  *   paper-1  #f5ecd4   elevated surface

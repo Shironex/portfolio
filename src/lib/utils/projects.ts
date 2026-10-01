@@ -79,7 +79,7 @@ interface PinnedOptions {
  * Merge featured + in-progress projects into a single deduped, capped list.
  *
  * Two surfaces consume this (start-menu recents, featured panel) with
- * divergent ordering, dedupe keys, and caps — each is preserved via
+ * divergent ordering, dedupe keys, and caps: each is preserved via
  * {@link PinnedOptions} rather than collapsed into one canonical output.
  */
 export function getPinnedProjects(

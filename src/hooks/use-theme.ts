@@ -19,7 +19,7 @@ export type { PaletteId }
  * Flip the appearance inside a View Transition so the palette cross-fades
  * instead of hard-swapping. Falls back to an instant swap when the API is
  * missing or the user prefers reduced motion. Only used for user-initiated
- * changes — the boot script has already applied the stored appearance before
+ * changes: the boot script has already applied the stored appearance before
  * first paint, so mount never animates.
  */
 function applyAnimated(next: Appearance) {

@@ -4,7 +4,7 @@ export function proxy(_req: NextRequest) {
   const res = NextResponse.next()
 
   // Construct CSP
-  // Note: nonce is intentionally omitted — when a nonce is present,
+  // Note: nonce is intentionally omitted: when a nonce is present,
   // browsers ignore 'unsafe-inline' per the CSP spec, which breaks
   // Next.js hydration inline scripts that don't carry the nonce.
   const csp = [

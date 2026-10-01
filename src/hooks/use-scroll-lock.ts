@@ -7,7 +7,7 @@ let previousOverflow: string | null = null
 
 /**
  * Lock `document.body` scroll while mounted. Ref-counted so stacked modals
- * don't fight over the `overflow` style — only the last unmount restores it.
+ * don't fight over the `overflow` style: only the last unmount restores it.
  */
 export function useScrollLock(active = true) {
   useEffect(() => {

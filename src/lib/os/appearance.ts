@@ -7,7 +7,7 @@ import {
 export { DEFAULT_PALETTE, PALETTES }
 export type { PaletteId }
 
-/** Light or dark ground. Orthogonal to the palette — every palette has both. */
+/** Light or dark ground. Orthogonal to the palette: every palette has both. */
 export type Mode = 'light' | 'dark'
 
 /**

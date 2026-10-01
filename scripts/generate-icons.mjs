@@ -4,11 +4,11 @@
  *
  * Source : public/mascot.png (square PNG, transparent background ideal)
  * Output :
- *   - src/app/icon.png         512x512 — Next.js App Router favicon
- *   - src/app/apple-icon.png   180x180 — Apple touch icon
- *   - public/icon-192.png      192x192 — PWA manifest icon
- *   - public/icon-512.png      512x512 — PWA manifest maskable
- *   - public/favicon.ico       multi-res (16/32/48) — legacy fallback
+ *   - src/app/icon.png         512x512, Next.js App Router favicon
+ *   - src/app/apple-icon.png   180x180, Apple touch icon
+ *   - public/icon-192.png      192x192, PWA manifest icon
+ *   - public/icon-512.png      512x512, PWA manifest maskable
+ *   - public/favicon.ico       multi-res (16/32/48), legacy fallback
  *
  * Patterned after the generate-icons scripts in the sibling Shiro-suite
  * projects (shiranami / moekoder). Web-specific: no .icns, no .ico past
