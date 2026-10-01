@@ -10,11 +10,11 @@
 import dynamic from 'next/dynamic'
 
 import { Clock, Copy, Mail, MapPin } from 'lucide-react'
-import { toast } from 'sonner'
 
 import { GithubIcon } from '@/components/icons/github-icon'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
+import { copyToClipboard } from '@/lib/utils/copy-to-clipboard'
 
 import { useTheme } from '@/hooks/use-theme'
 
@@ -121,12 +121,12 @@ export default function ContactApp() {
                     <button
                       type="button"
                       aria-label={`Copy ${row.label.toLowerCase()}`}
-                      onClick={async () => {
-                        await navigator.clipboard
-                          .writeText(row.copyValue ?? '')
-                          .catch(() => null)
-                        toast.success(`${row.label} copied`)
-                      }}
+                      onClick={() =>
+                        copyToClipboard(
+                          row.copyValue ?? '',
+                          `${row.label} copied`
+                        )
+                      }
                       className="focus-ring text-ink-4 hover:bg-surf-soft hover:text-miku-2 absolute top-1/2 right-2 -translate-y-1/2 rounded-md p-2 transition-colors"
                     >
                       <Copy aria-hidden className="size-3.5" />

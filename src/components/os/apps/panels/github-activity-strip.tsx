@@ -1,16 +1,19 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
+
+import { SKELETON_BAR } from '@/components/os/constants'
 
 import {
   type ContributionDay,
-  type GithubActivity,
   GithubActivitySchema,
 } from '@/lib/github/activity-schema'
 import { formatDate } from '@/lib/utils/format-date'
+import { pluralWord } from '@/lib/utils/plural'
+
+import { useApiFeed } from '@/hooks/use-api-feed'
 
 type Day = ContributionDay
-type Activity = GithubActivity
 
 const LEVEL_BG: Record<Day['level'], string> = {
   0: 'bg-rule',
@@ -22,23 +25,16 @@ const LEVEL_BG: Record<Day['level'], string> = {
 
 const WEEKS_SHOWN = 26
 const DAYS_SHOWN = WEEKS_SHOWN * 7
-const ACTIVITY_TIMEOUT_MS = 15_000
-
-type FetchState =
-  | { kind: 'loading' }
-  | { kind: 'ready'; data: Activity }
-  | { kind: 'unconfigured' }
-  | { kind: 'error' }
 
 function describeDay(d: Day) {
   const count = d.count === 0 ? 'No' : d.count.toLocaleString()
-  const plural = d.count === 1 ? 'contribution' : 'contributions'
+  const noun = pluralWord(d.count, 'contribution', 'contributions')
   const when =
     formatDate(d.date, {
       anchorToMidnight: true,
       format: { weekday: 'short', month: 'short', day: 'numeric' },
     }) ?? d.date
-  return `${count} ${plural} on ${when}`
+  return `${count} ${noun} on ${when}`
 }
 
 interface HoverState {
@@ -58,36 +54,9 @@ interface HoverState {
  * tooltip nodes.
  */
 export function GithubActivityStrip() {
-  const [state, setState] = useState<FetchState>({ kind: 'loading' })
+  const state = useApiFeed('/api/github-activity', GithubActivitySchema)
   const [hover, setHover] = useState<HoverState | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    let cancelled = false
-    fetch('/api/github-activity', {
-      signal: AbortSignal.timeout(ACTIVITY_TIMEOUT_MS),
-    })
-      .then(async (r) => {
-        if (cancelled) return
-        if (r.status === 501) {
-          setState({ kind: 'unconfigured' })
-          return
-        }
-        if (!r.ok) {
-          setState({ kind: 'error' })
-          return
-        }
-        const data = GithubActivitySchema.parse(await r.json())
-        if (cancelled) return
-        setState({ kind: 'ready', data })
-      })
-      .catch(() => {
-        if (!cancelled) setState({ kind: 'error' })
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [])
 
   const weeks = useMemo(() => {
     if (state.kind !== 'ready') return null
@@ -177,7 +146,7 @@ export function GithubActivityStrip() {
                         <div
                           key={j}
                           aria-hidden
-                          className="bg-rule animate-pulse-slow size-[11px] rounded-[2px] motion-reduce:animate-none"
+                          className={`${SKELETON_BAR} size-[11px] rounded-[2px]`}
                         />
                       ))}
                 </div>

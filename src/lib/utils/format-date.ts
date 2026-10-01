@@ -15,6 +15,12 @@ interface FormatDateOptions {
   fallbackToRaw?: boolean
 }
 
+/** `Sep 23, 2026`, the same for every visitor. */
+export const SHORT_DATE = {
+  locale: 'en-US',
+  format: { month: 'short', day: 'numeric', year: 'numeric' },
+} as const satisfies FormatDateOptions
+
 /**
  * Parse and format a date string. Returns `null` for empty input. Unparseable
  * input yields `null`, or the raw string when `fallbackToRaw` is set.

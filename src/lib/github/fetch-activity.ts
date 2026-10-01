@@ -2,14 +2,12 @@ import { unstable_cache } from 'next/cache'
 
 import { z } from 'zod'
 
-import { env } from '@/env/server'
+import { FEED_REVALIDATE_SECONDS } from '@/lib/feed-cache'
 
 import type { ContributionDay, GithubActivity } from './activity-schema'
+import { githubGraphql } from './graphql'
 
 export type { ContributionDay, GithubActivity } from './activity-schema'
-
-/** Revalidate window (seconds) for cached GitHub activity — 6 hours. */
-export const GITHUB_ACTIVITY_REVALIDATE_SECONDS = 21600
 
 const LEVEL_MAP = {
   NONE: 0,
@@ -18,8 +16,6 @@ const LEVEL_MAP = {
   THIRD_QUARTILE: 3,
   FOURTH_QUARTILE: 4,
 } as const
-
-const GITHUB_TIMEOUT_MS = 10_000
 
 const ContribLevelSchema = z.enum([
   'NONE',
@@ -54,7 +50,6 @@ const GraphQLResponseSchema = z.object({
         .nullish(),
     })
     .nullish(),
-  errors: z.array(z.object({ message: z.string() })).optional(),
 })
 
 const QUERY = `
@@ -77,30 +72,9 @@ const QUERY = `
 `
 
 async function fetchRaw(username: string): Promise<GithubActivity> {
-  if (!env.GITHUB_TOKEN) {
-    throw new Error('GITHUB_TOKEN not configured')
-  }
-
-  const res = await fetch('https://api.github.com/graphql', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${env.GITHUB_TOKEN}`,
-      'Content-Type': 'application/json',
-      'User-Agent': 'shironex-portfolio',
-    },
-    body: JSON.stringify({ query: QUERY, variables: { username } }),
-    signal: AbortSignal.timeout(GITHUB_TIMEOUT_MS),
-  })
-
-  if (!res.ok) {
-    throw new Error(`GitHub GraphQL returned ${res.status}`)
-  }
-
-  const json = GraphQLResponseSchema.parse(await res.json())
-  if (json.errors?.length) {
-    throw new Error(json.errors[0].message)
-  }
-
+  const json = GraphQLResponseSchema.parse(
+    await githubGraphql(QUERY, { username })
+  )
   const cal = json.data?.user?.contributionsCollection.contributionCalendar
   if (!cal) {
     throw new Error('Missing contribution calendar for user')
@@ -120,6 +94,6 @@ async function fetchRaw(username: string): Promise<GithubActivity> {
 }
 
 export const getGithubActivity = unstable_cache(fetchRaw, ['github-activity'], {
-  revalidate: GITHUB_ACTIVITY_REVALIDATE_SECONDS,
+  revalidate: FEED_REVALIDATE_SECONDS,
   tags: ['github-activity'],
 })

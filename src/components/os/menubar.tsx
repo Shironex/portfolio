@@ -4,10 +4,10 @@ import Image from 'next/image'
 import { useState } from 'react'
 
 import { Moon, Sun } from 'lucide-react'
-import { toast } from 'sonner'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
 import type { PaletteId } from '@/lib/os/appearance'
+import { copyToClipboard } from '@/lib/utils/copy-to-clipboard'
 
 import type { Theme } from '@/hooks/use-theme'
 
@@ -66,17 +66,11 @@ export function MenuBar({
       items: [
         {
           label: 'Copy email',
-          onClick: async () => {
-            await navigator.clipboard.writeText(EMAIL_CONTACT).catch(() => null)
-            toast.success('Email copied')
-          },
+          onClick: () => copyToClipboard(EMAIL_CONTACT, 'Email copied'),
         },
         {
           label: 'Copy GitHub URL',
-          onClick: async () => {
-            await navigator.clipboard.writeText(GITHUB_URL).catch(() => null)
-            toast.success('GitHub URL copied')
-          },
+          onClick: () => copyToClipboard(GITHUB_URL, 'GitHub URL copied'),
         },
       ],
     },

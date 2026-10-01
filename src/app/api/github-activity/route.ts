@@ -1,13 +1,10 @@
 import { NextResponse } from 'next/server'
 
-import {
-  GITHUB_ACTIVITY_REVALIDATE_SECONDS,
-  getGithubActivity,
-} from '@/lib/github/fetch-activity'
+import { FEED_CACHE_CONTROL } from '@/lib/feed-cache'
+import { getGithubActivity } from '@/lib/github/fetch-activity'
+import { GITHUB_USERNAME } from '@/lib/github/graphql'
 
 import { env } from '@/env/server'
-
-const USERNAME = 'shironex'
 
 export async function GET() {
   if (!env.GITHUB_TOKEN) {
@@ -15,11 +12,9 @@ export async function GET() {
   }
 
   try {
-    const data = await getGithubActivity(USERNAME)
+    const data = await getGithubActivity(GITHUB_USERNAME)
     return NextResponse.json(data, {
-      headers: {
-        'Cache-Control': `public, s-maxage=${GITHUB_ACTIVITY_REVALIDATE_SECONDS}, stale-while-revalidate=86400`,
-      },
+      headers: { 'Cache-Control': FEED_CACHE_CONTROL },
     })
   } catch (error) {
     console.error(error)
