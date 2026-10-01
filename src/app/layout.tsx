@@ -11,17 +11,18 @@ import {
   siteConfig,
 } from '@/lib/metadata-config'
 import { APPEARANCE_BOOT_SCRIPT, DEFAULT_PALETTE } from '@/lib/os/appearance'
+import { cn } from '@/lib/utils'
 
 import '@/styles/globals.css'
 
 /*
  * Typography:
- *   - Display: Fraunces — variable serif with optical sizing. Used for
+ *   - Display: Fraunces, a variable serif with optical sizing. Used for
  *     headlines and the brand mark. Carries more character than the
  *     previous rounded-friendly pairing.
- *   - Body: Geist — distinctive neutral sans from Vercel. Replaces the
+ *   - Body: Geist, a distinctive neutral sans from Vercel. Replaces the
  *     generic Nunito for copy.
- *   - Mono: JetBrains Mono — unchanged, used in terminal and kbd.
+ *   - Mono: JetBrains Mono, unchanged, used in terminal and kbd.
  * Weights trimmed to what's actually rendered.
  */
 
@@ -80,7 +81,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
         />
       </head>
       <body
-        className={`${fraunces.variable} ${geist.variable} ${jetbrainsMono.variable} font-body antialiased`}
+        className={cn(
+          fraunces.variable,
+          geist.variable,
+          jetbrainsMono.variable,
+          'font-body antialiased'
+        )}
         suppressHydrationWarning
       >
         {children}

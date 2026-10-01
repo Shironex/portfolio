@@ -93,8 +93,8 @@ interface OsShellProps {
  * layer does not go through this component at all (`AmbientPause`).
  *
  * The boot splash, cmd palette, and noscript fallback are shared across both
- * modes, and so is the live region that announces keyboard window snaps. Hotkeys stay bound in both (⌘K still works on tablets with a
- * keyboard).
+ * modes, and so is the live region that announces keyboard window snaps.
+ * Hotkeys stay bound in both (⌘K still works on tablets with a keyboard).
  *
  * `initialWindow` lets a server route boot the shell with a window already
  * open (and the boot splash skipped). Without it the shell falls back to the
@@ -188,15 +188,15 @@ export default function OsShell({ initialWindow }: OsShellProps) {
     // Opaque cream ground for the whole shell. On desktop `DesktopCanvas`
     // paints its richer wallpaper over this, so it's invisible there; on
     // mobile `MobileShell` renders a transparent feed, so this layer is what
-    // the user actually sees behind the cards — without it the near-black
-    // `body` background and the SSR `StaticHero` bleed through the gaps.
+    // the user actually sees behind the cards: without it the `body` ground
+    // and the SSR `StaticHero` bleed through the gaps.
     <div
       ref={rootRef}
       {...{
         [SHELL_ROOT_ATTRIBUTE]: '',
         [SHELL_READY_ATTRIBUTE]: hydrated ? '' : undefined,
       }}
-      className="text-ink from-sky-0 via-sky-1 to-sky-2 fixed inset-0 overflow-hidden bg-gradient-to-br"
+      className="text-ink from-sky-0 via-sky-1 to-sky-2 fixed inset-0 overflow-hidden bg-linear-to-br"
     >
       <AmbientPause rootRef={rootRef} covered={desktopCovered} />
       {onProjectRoute ? <NoscriptStaticPage /> : <NoscriptFallback />}

@@ -13,6 +13,7 @@ import {
 } from '@/lib/os/dom'
 import { type Rect, type SnapZone, snapBounds } from '@/lib/os/geometry'
 import { windowKeyAction } from '@/lib/os/window-keys'
+import { cn } from '@/lib/utils'
 
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import { type ResizeDir, useWindowDrag } from '@/hooks/use-window-drag'
@@ -291,9 +292,10 @@ function WindowImpl({
         // The focused window carries the deeper shadow and the others recede,
         // so the stack reads at a glance (`window-shadow` in globals.css).
         data-focused={isFocused ? '' : undefined}
-        className={`border-rule-2 bg-surf-solid window-shadow absolute flex flex-col rounded-xl border motion-reduce:animate-none ${
+        className={cn(
+          'border-rule-2 bg-surf-solid window-shadow absolute flex flex-col rounded-xl border motion-reduce:animate-none',
           leaving ? 'animate-win-close' : 'animate-win-open'
-        }`}
+        )}
       >
         <div
           role="toolbar"
@@ -310,12 +312,15 @@ function WindowImpl({
           <div className="flex items-center gap-2">
             <span
               aria-hidden
-              className={isFocused ? 'text-miku-2' : 'text-ink-4'}
+              className={isFocused ? 'text-miku-2-icon' : 'text-ink-4'}
             >
               <TitleIcon size={14} strokeWidth={1.75} />
             </span>
             <h2
-              className={`font-mono text-xs font-normal tracking-normal ${isFocused ? 'text-ink-2' : 'text-ink-4'}`}
+              className={cn(
+                'font-mono text-xs font-normal tracking-normal',
+                isFocused ? 'text-ink-2' : 'text-ink-4'
+              )}
             >
               {win.title}
             </h2>
@@ -355,7 +360,10 @@ function WindowImpl({
               onMouseDown={preventDefault}
               // The tint is for a pointer that hovers; under a finger it
               // would stick after the touch.
-              className={`pointer-fine:hover:bg-miku/20 absolute z-10 touch-none ${className}`}
+              className={cn(
+                'pointer-fine:hover:bg-miku/20 absolute z-10 touch-none',
+                className
+              )}
             />
           ))}
       </div>
