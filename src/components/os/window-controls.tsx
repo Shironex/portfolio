@@ -1,6 +1,6 @@
 'use client'
 
-import type { MouseEvent } from 'react'
+import type { PointerEvent } from 'react'
 
 import { Link } from 'lucide-react'
 
@@ -13,11 +13,16 @@ interface WindowControlsProps {
   onClose: () => void
 }
 
+/** Box of a control button; each adds its own hover colours. */
+const CONTROL_CLASS =
+  'focus-ring text-ink-2 flex h-8 w-10 items-center justify-center text-xs transition-colors pointer-coarse:h-11 pointer-coarse:w-12'
+
 /**
  * Windows 11 style title-bar controls (copy link, minimize, maximize, close).
- * Each button stops mousedown propagation so the window drag handler
- * does not begin when a control is pressed. The title bar ignores
- * double-clicks that land on a button, so they never toggle maximize.
+ * Each button stops pointerdown propagation so the window drag handler
+ * does not begin when a control is pressed. The title bar counts its double
+ * taps from that same handler, so two presses on a button never toggle
+ * maximize.
  */
 export function WindowControls({
   onCopyLink,
@@ -25,7 +30,7 @@ export function WindowControls({
   onMaximize,
   onClose,
 }: WindowControlsProps) {
-  const stopMouseDown = (e: MouseEvent<HTMLButtonElement>) => {
+  const stopPointerDown = (e: PointerEvent<HTMLButtonElement>) => {
     e.stopPropagation()
   }
 
@@ -34,9 +39,9 @@ export function WindowControls({
       <button
         type="button"
         aria-label={COPY_LINK_LABEL}
-        onMouseDown={stopMouseDown}
+        onPointerDown={stopPointerDown}
         onClick={onCopyLink}
-        className="focus-ring text-ink-2 hover:bg-rule hover:text-ink flex h-8 w-10 items-center justify-center text-xs transition-colors pointer-coarse:h-11 pointer-coarse:w-12"
+        className={`${CONTROL_CLASS} hover:bg-rule hover:text-ink`}
       >
         <Link aria-hidden size={13} strokeWidth={1.75} />
       </button>
@@ -44,9 +49,9 @@ export function WindowControls({
         type="button"
         aria-label="Minimize window"
         aria-keyshortcuts="Control+M"
-        onMouseDown={stopMouseDown}
+        onPointerDown={stopPointerDown}
         onClick={onMinimize}
-        className="focus-ring text-ink-2 hover:bg-rule hover:text-ink flex h-8 w-10 items-center justify-center text-xs transition-colors pointer-coarse:h-11 pointer-coarse:w-12"
+        className={`${CONTROL_CLASS} hover:bg-rule hover:text-ink`}
       >
         <span aria-hidden>⎯</span>
       </button>
@@ -54,9 +59,9 @@ export function WindowControls({
         type="button"
         aria-label="Toggle maximize window"
         aria-keyshortcuts="Control+Shift+M"
-        onMouseDown={stopMouseDown}
+        onPointerDown={stopPointerDown}
         onClick={onMaximize}
-        className="focus-ring text-ink-2 hover:bg-rule hover:text-ink flex h-8 w-10 items-center justify-center text-xs transition-colors pointer-coarse:h-11 pointer-coarse:w-12"
+        className={`${CONTROL_CLASS} hover:bg-rule hover:text-ink`}
       >
         <span aria-hidden>▢</span>
       </button>
@@ -64,9 +69,9 @@ export function WindowControls({
         type="button"
         aria-label="Close window"
         aria-keyshortcuts="Control+W"
-        onMouseDown={stopMouseDown}
+        onPointerDown={stopPointerDown}
         onClick={onClose}
-        className="focus-ring text-ink-2 hover:bg-danger hover:text-cloud flex h-8 w-10 items-center justify-center text-xs transition-colors pointer-coarse:h-11 pointer-coarse:w-12"
+        className={`${CONTROL_CLASS} hover:bg-danger hover:text-cloud`}
       >
         <span aria-hidden>✕</span>
       </button>

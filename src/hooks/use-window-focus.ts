@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 
-import type { WindowId, WindowState } from '@/components/os/types'
+import type { WindowId } from '@/components/os/types'
 
 import {
   WINDOW_ID_ATTRIBUTE,
@@ -10,6 +10,8 @@ import {
   canTakeFocus,
   focusedElement,
 } from '@/lib/os/dom'
+
+import type { StackIds } from './use-stack-ids'
 
 /** How long after a user action a change to the stack still counts as theirs. */
 const USER_ACTION_WINDOW_MS = 1000
@@ -62,7 +64,7 @@ function windowIdOf(element: HTMLElement): string | null {
  * window `id` on the user's behalf.
  */
 export function useWindowFocus(
-  windows: WindowState[],
+  { openIds, minimizedIds }: StackIds,
   topmostId: WindowId | null,
   enabled: boolean
 ) {
@@ -77,19 +79,17 @@ export function useWindowFocus(
     userAction.current = { id, at: performance.now() }
   }, [])
 
-  // Keyed on ids and minimized flags, which is all the memo reads. A drag or
-  // resize hands in a new `windows` array for every frame with the same stack
-  // in it, and must not re-run the effect.
-  const stackKey = windows
-    .map((w) => `${w.minimized ? '-' : '+'}${w.id}`)
-    .join(' ')
-  const stack = useMemo(
-    () => ({
-      open: new Set(windows.map((w) => w.id)),
-      visible: new Set(windows.filter((w) => !w.minimized).map((w) => w.id)),
-    }),
-    [stackKey]
-  )
+  // The lists from `useStackIds` change only when a window opens, closes,
+  // minimizes or is restored. A move, a resize or a restack commits a new
+  // `windows` array with the same stack in it, and must not re-run the
+  // effect.
+  const stack = useMemo(() => {
+    const minimized = new Set(minimizedIds)
+    return {
+      open: new Set(openIds),
+      visible: new Set(openIds.filter((id) => !minimized.has(id))),
+    }
+  }, [openIds, minimizedIds])
 
   useEffect(() => {
     if (!enabled) return

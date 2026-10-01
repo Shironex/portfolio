@@ -1,31 +1,25 @@
 'use client'
 
-import type { KeyboardEvent, MouseEvent, ReactNode } from 'react'
-import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import type { AnimationEvent, KeyboardEvent, PointerEvent } from 'react'
+import { memo, useId, useLayoutEffect, useRef, useState } from 'react'
 
 import { WindowControls } from '@/components/os/window-controls'
 
 import {
   WINDOW_ID_ATTRIBUTE,
   WINDOW_TITLE_BAR_ATTRIBUTE,
+  focusedElement,
   measureDesktopArea,
 } from '@/lib/os/dom'
-import {
-  type Point,
-  type Rect,
-  type SnapZone,
-  UNDOCK_DRAG_THRESHOLD,
-  dockZoneOf,
-  rectOf,
-  snapBounds,
-  snapZoneAt,
-  undockRect,
-} from '@/lib/os/geometry'
+import { type Rect, type SnapZone, snapBounds } from '@/lib/os/geometry'
+import { windowKeyAction } from '@/lib/os/window-keys'
 
-import { usePointerDrag } from '@/hooks/use-pointer-drag'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
+import { type ResizeDir, useWindowDrag } from '@/hooks/use-window-drag'
+import type { Project } from '@/types'
 
 import { useAnnounce } from './announcer'
+import { AppBody } from './app-registry'
 import { windowIconFor, windowNameFor } from './constants'
 import type { WindowId, WindowState } from './types'
 
@@ -41,21 +35,11 @@ interface WindowProps {
   onRestore: (id: WindowId, rect?: Rect) => void
   onResize: (id: WindowId, patch: Partial<Rect>) => void
   onCopyLink: (id: WindowId) => void
-  children: ReactNode
+  onOpenProject: (project: Project) => void
 }
 
-type ResizeDir = 'n' | 's' | 'e' | 'w' | 'ne' | 'nw' | 'se' | 'sw'
-
-const KEYBOARD_MOVE_STEP = 20
-const KEYBOARD_RESIZE_STEP = 24
-/** Duration of the close/minimize exit animation (matches animate-win-close). */
-const EXIT_ANIMATION_MS = 140
-
-const ARROW_SNAP_ZONES: Partial<Record<string, SnapZone>> = {
-  ArrowLeft: 'left',
-  ArrowRight: 'right',
-  ArrowUp: 'top',
-}
+/** Keyframes of `animate-win-close` in globals.css. */
+const EXIT_ANIMATION_NAME = 'winClose'
 
 const SNAP_ANNOUNCEMENT: Record<SnapZone, string> = {
   left: 'snapped left',
@@ -67,28 +51,80 @@ const RESTORE_ANNOUNCEMENT = 'restored'
 const SHORTCUT_HINT =
   'Arrow keys move, Shift+Arrow resizes, Ctrl+Alt+Left or Right snaps to that half, Ctrl+Alt+Up maximizes, Ctrl+Alt+Down restores, Ctrl+W closes, Ctrl+M minimizes, Ctrl+Shift+M toggles maximize.'
 
-/** The one place a gesture reads its input event; everything after is points. */
-function pointOf(event: globalThis.MouseEvent): Point {
-  return { x: event.clientX, y: event.clientY }
-}
+/**
+ * Edge and corner resize handles. A fine pointer gets a 4px edge and a 12px
+ * corner inside the window. A coarse one gets a 16px strip along each side
+ * and a 24px square off each corner, all outside the window box (the offsets
+ * count from inside its 1px border): a handle over the box would take presses
+ * meant for the title bar controls, and (handles are `touch-action: none`)
+ * scrolling meant for the app body.
+ */
+const RESIZE_HANDLES: ReadonlyArray<{ dir: ResizeDir; className: string }> = [
+  {
+    dir: 'n',
+    className:
+      'top-0 right-2 left-2 h-1 cursor-n-resize pointer-coarse:inset-x-0 pointer-coarse:-top-[17px] pointer-coarse:h-4',
+  },
+  {
+    dir: 's',
+    className:
+      'right-2 bottom-0 left-2 h-1 cursor-s-resize pointer-coarse:inset-x-0 pointer-coarse:-bottom-[17px] pointer-coarse:h-4',
+  },
+  {
+    dir: 'e',
+    className:
+      'top-2 right-0 bottom-2 w-1 cursor-e-resize pointer-coarse:inset-y-0 pointer-coarse:-right-[17px] pointer-coarse:w-4',
+  },
+  {
+    dir: 'w',
+    className:
+      'top-2 bottom-2 left-0 w-1 cursor-w-resize pointer-coarse:inset-y-0 pointer-coarse:-left-[17px] pointer-coarse:w-4',
+  },
+  {
+    dir: 'ne',
+    className:
+      'top-0 right-0 size-3 cursor-ne-resize rounded-tr-xl pointer-coarse:-top-[25px] pointer-coarse:-right-[25px] pointer-coarse:size-6',
+  },
+  {
+    dir: 'nw',
+    className:
+      'top-0 left-0 size-3 cursor-nw-resize rounded-tl-xl pointer-coarse:-top-[25px] pointer-coarse:-left-[25px] pointer-coarse:size-6',
+  },
+  {
+    dir: 'se',
+    className:
+      'right-0 bottom-0 size-3 cursor-se-resize rounded-br-xl pointer-coarse:-right-[25px] pointer-coarse:-bottom-[25px] pointer-coarse:size-6',
+  },
+  {
+    dir: 'sw',
+    className:
+      'bottom-0 left-0 size-3 cursor-sw-resize rounded-bl-xl pointer-coarse:-bottom-[25px] pointer-coarse:-left-[25px] pointer-coarse:size-6',
+  },
+]
 
 /**
  * Draggable OS window with keyboard parity.
- * - Mouse: drag via title bar, resize via 8 edge/corner handles, control buttons.
- *   Dragging the pointer to the left or right edge of the desktop snaps the
- *   window to that half, the top edge maximizes it, and dragging a snapped or
- *   maximized window away gives it its old size back. Double-clicking the
- *   title bar toggles maximize.
+ * - Pointer (mouse, pen, touch): drag via title bar, resize via 8 edge/corner
+ *   handles, control buttons. Dragging to the left or right edge of the
+ *   desktop snaps the window to that half, the top edge maximizes it, and
+ *   dragging a snapped or maximized window away gives it its old size back.
+ *   Two clicks or taps on the title bar toggle maximize. The gestures live in
+ *   `useWindowDrag`.
  * - Keyboard: title bar is a focusable toolbar. Arrow keys nudge the window,
  *   Shift+Arrow resizes from the bottom-right, Ctrl+Alt+Left/Right snaps to a
  *   half, Ctrl+Alt+Up maximizes, Ctrl+Alt+Down restores, Ctrl+W closes,
- *   Ctrl+M minimizes, Ctrl+Shift+M toggles maximize.
- * - Renders `null` when minimized; the taskbar surfaces minimized windows.
+ *   Ctrl+M minimizes, Ctrl+Shift+M toggles maximize (`windowKeyAction`).
+ * - Renders `null` when minimized, once its exit animation has played; the
+ *   taskbar surfaces minimized windows.
  * - Its z-index is its rank in the windows layer of `OsShell`, never a page
  *   level value. `useWindowFocus` moves keyboard focus to the title bar when
  *   the user opens the window.
+ *
+ * Memoized, and it renders its own app body: with the stable callbacks
+ * `OsShell` hands in, a window re-renders only when its own state changes,
+ * and its body only when the window is a different app or project.
  */
-export function Window({
+function WindowImpl({
   window: win,
   isFocused,
   onClose,
@@ -100,193 +136,111 @@ export function Window({
   onRestore,
   onResize,
   onCopyLink,
-  children,
+  onOpenProject,
 }: WindowProps) {
   const shortcutHintId = useId()
   const say = useAnnounce()
   const rootRef = useRef<HTMLDivElement | null>(null)
-  // Per-gesture handlers set at mousedown; the shared pointer-drag hook
-  // dispatches every move through `onGestureMove` and clears both on release.
-  const onGestureMove = useRef<((point: Point) => void) | null>(null)
-  const onGestureEnd = useRef<(() => void) | null>(null)
-  // Zone the dragged window would snap to if released now; drives the preview.
-  const [snapZone, setSnapZone] = useState<SnapZone | null>(null)
   const reducedMotion = useReducedMotion()
-  // Close/minimize play a short exit animation before the state change lands.
-  const [leaving, setLeaving] = useState(false)
+  // Close plays the exit animation first and lands in the stack when it ends.
+  const [closing, setClosing] = useState(false)
+  // A minimize is in the stack right away, wherever it came from (title bar,
+  // taskbar, keyboard); the window stays up until its exit animation ends.
+  const [exited, setExited] = useState(win.minimized)
+  if (!win.minimized && exited) setExited(false)
+  // With reduced motion no animation runs, so there is no end to wait for;
+  // and the window counts as gone, so a later change of the preference does
+  // not play its exit from nowhere.
+  if (win.minimized && reducedMotion && !exited) setExited(true)
+  const leaving = closing || win.minimized
 
-  const startPointer = usePointerDrag({
-    onMove: useCallback((event: globalThis.MouseEvent) => {
-      onGestureMove.current?.(pointOf(event))
-    }, []),
-    onEnd: useCallback(() => {
-      onGestureEnd.current?.()
-      onGestureMove.current = null
-      onGestureEnd.current = null
-    }, []),
+  const { snapZone, startDrag, startResize, cancelGesture } = useWindowDrag({
+    win,
+    rootRef,
+    onFocus,
+    onMove,
+    onResize,
+    onSnap,
+    onRestore,
+    onMaximize,
   })
 
-  // The component stays mounted while minimized (it renders null), so the
-  // leaving flag must clear on restore or the exit animation would replay.
-  useEffect(() => {
-    if (!win.minimized) setLeaving(false)
-  }, [win.minimized])
+  // A window on its way out gives focus up before `useWindowFocus` looks for
+  // it, so focus moves on with the stack instead of going down with the DOM.
+  // A gesture still in flight ends here too: its title bar or handle is about
+  // to leave the DOM, and the exit animation needs the window's transform.
+  useLayoutEffect(() => {
+    if (!leaving) return
+    cancelGesture()
+    const active = focusedElement()
+    if (active && rootRef.current?.contains(active)) active.blur()
+  }, [leaving, cancelGesture])
 
-  if (win.minimized) return null
+  if (win.minimized && exited) return null
 
-  const exitThen = (commit: () => void) => {
-    if (reducedMotion || leaving) {
-      commit()
-      return
-    }
-    setLeaving(true)
-    globalThis.setTimeout(commit, EXIT_ANIMATION_MS)
+  const requestClose = () => {
+    if (reducedMotion) onClose(win.id)
+    else setClosing(true)
   }
-  const requestClose = () => exitThen(() => onClose(win.id))
-  const requestMinimize = () => exitThen(() => onMinimize(win.id))
+  const requestMinimize = () => onMinimize(win.id)
 
-  const startDrag = (e: MouseEvent<HTMLDivElement>) => {
-    onFocus(win.id)
-    const el = rootRef.current
-    if (!el) return
-    const rect = el.getBoundingClientRect()
-    const start = pointOf(e.nativeEvent)
-    let dx = start.x - rect.left
-    const dy = start.y - rect.top
-    const current = rectOf(win)
-    // Rect the window goes back to if this drag ends in a snap zone.
-    const home = win.prevGeometry ?? current
-    const area = measureDesktopArea()
-    let docked = dockZoneOf(win) !== null
-    let zone: SnapZone | null = null
-
-    onGestureMove.current = (point) => {
-      if (docked) {
-        // A click or a shaky double-click must not pull the window loose.
-        const travel = Math.hypot(point.x - start.x, point.y - start.y)
-        if (travel < UNDOCK_DRAG_THRESHOLD) return
-        const loose = undockRect(home, current, point)
-        dx = point.x - loose.x
-        docked = false
-        onRestore(win.id, loose)
-      }
-      onMove(win.id, point.x - dx, point.y - dy)
-      zone = snapZoneAt(point, area)
-      setSnapZone(zone)
-    }
-    onGestureEnd.current = () => {
-      if (!zone) return
-      setSnapZone(null)
-      onSnap(win.id, zone, home)
-    }
-    startPointer()
-  }
-
-  const handleTitleDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
-    if ((e.target as Element).closest('button')) return
-    onMaximize(win.id)
-  }
-
-  const startResize = (dir: ResizeDir) => (e: MouseEvent<HTMLDivElement>) => {
-    e.stopPropagation()
-    e.preventDefault()
-    onFocus(win.id)
-
-    const start = {
-      x: win.x,
-      y: win.y,
-      w: win.w,
-      h: win.h,
-      mouseX: e.clientX,
-      mouseY: e.clientY,
-    }
-
-    onGestureMove.current = (point) => {
-      const dx = point.x - start.mouseX
-      const dy = point.y - start.mouseY
-      const patch: Partial<Rect> = {}
-      if (dir.includes('e')) patch.w = start.w + dx
-      if (dir.includes('s')) patch.h = start.h + dy
-      if (dir.includes('w')) {
-        patch.x = start.x + dx
-        patch.w = start.w - dx
-      }
-      if (dir.includes('n')) {
-        patch.y = start.y + dy
-        patch.h = start.h - dy
-      }
-      onResize(win.id, patch)
-    }
-    startPointer()
+  const handleAnimationEnd = (event: AnimationEvent<HTMLDivElement>) => {
+    // Animations inside the window bubble up to here too.
+    if (event.target !== event.currentTarget) return
+    if (event.animationName !== EXIT_ANIMATION_NAME) return
+    if (closing) onClose(win.id)
+    else if (win.minimized) setExited(true)
   }
 
   // Keyboard snaps have no pointer feedback, so they are said out loud.
   const announce = (change: string) => say(`${windowNameFor(win)} ${change}`)
 
   const handleTitleKey = (event: KeyboardEvent<HTMLDivElement>) => {
-    const ctrlish = event.ctrlKey || event.metaKey
-    const dockedOn = dockZoneOf(win)
-    if (ctrlish && event.key.toLowerCase() === 'w') {
-      event.preventDefault()
-      requestClose()
-      return
-    }
-    if (ctrlish && event.key.toLowerCase() === 'm') {
-      event.preventDefault()
-      if (event.shiftKey) {
+    const action = windowKeyAction(event, win)
+    if (!action) return
+    event.preventDefault()
+    switch (action.type) {
+      case 'close':
+        requestClose()
+        return
+      case 'minimize':
+        requestMinimize()
+        return
+      case 'toggle-maximize':
         onMaximize(win.id)
         announce(
           win.maximized && win.prevGeometry
             ? RESTORE_ANNOUNCEMENT
             : SNAP_ANNOUNCEMENT.top
         )
-      } else requestMinimize()
-      return
-    }
-    if (
-      event.key !== 'ArrowUp' &&
-      event.key !== 'ArrowDown' &&
-      event.key !== 'ArrowLeft' &&
-      event.key !== 'ArrowRight'
-    ) {
-      return
-    }
-    event.preventDefault()
-    if (event.ctrlKey && event.altKey) {
-      const zone = ARROW_SNAP_ZONES[event.key]
-      if (zone) {
-        onSnap(win.id, zone)
-        announce(SNAP_ANNOUNCEMENT[zone])
-      } else if (dockedOn !== null) {
+        return
+      case 'snap':
+        onSnap(win.id, action.zone)
+        announce(SNAP_ANNOUNCEMENT[action.zone])
+        return
+      case 'restore':
         onRestore(win.id)
         announce(RESTORE_ANNOUNCEMENT)
-      }
-      return
+        return
+      case 'resize':
+        onFocus(win.id)
+        onResize(win.id, action.patch)
+        return
+      case 'move':
+        onFocus(win.id)
+        if (action.undockTo) onRestore(win.id, action.undockTo)
+        onMove(win.id, action.x, action.y)
+        return
+      case 'none':
+        return
     }
-    onFocus(win.id)
-    const step = event.shiftKey ? KEYBOARD_RESIZE_STEP : KEYBOARD_MOVE_STEP
-    if (event.shiftKey) {
-      const patch: Partial<Rect> = {}
-      if (event.key === 'ArrowRight') patch.w = win.w + step
-      if (event.key === 'ArrowLeft') patch.w = Math.max(1, win.w - step)
-      if (event.key === 'ArrowDown') patch.h = win.h + step
-      if (event.key === 'ArrowUp') patch.h = Math.max(1, win.h - step)
-      onResize(win.id, patch)
-      return
-    }
-    let nx = win.x
-    let ny = win.y
-    if (event.key === 'ArrowRight') nx += step
-    if (event.key === 'ArrowLeft') nx -= step
-    if (event.key === 'ArrowDown') ny += step
-    if (event.key === 'ArrowUp') ny -= step
-    // A docked window comes loose first, the way a drag pulls it loose: its
-    // old size, with the corner it is being moved by left in place.
-    if (dockedOn !== null) {
-      const current = rectOf(win)
-      onRestore(win.id, undockRect(win.prevGeometry ?? current, current, win))
-    }
-    onMove(win.id, nx, ny)
+  }
+
+  // Mouse only: keeps a press on a handle from moving focus or selecting.
+  const preventDefault = (event: { preventDefault: () => void }) =>
+    event.preventDefault()
+  const focusWindow = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.isPrimary) onFocus(win.id)
   }
 
   const showHandles = !win.maximized
@@ -311,7 +265,7 @@ export function Window({
             height: preview.h,
             zIndex: win.z,
           }}
-          className="border-miku/50 bg-miku/15 pointer-events-none absolute animate-[fadeIn_0.15s_ease] rounded-xl border motion-reduce:animate-none"
+          className="border-miku/50 bg-miku/15 animate-fade-in pointer-events-none absolute rounded-xl border motion-reduce:animate-none"
         />
       )}
       <div
@@ -319,8 +273,10 @@ export function Window({
         role="dialog"
         aria-label={win.title}
         aria-modal={false}
+        inert={leaving}
         {...{ [WINDOW_ID_ATTRIBUTE]: win.id }}
-        onMouseDown={() => onFocus(win.id)}
+        onPointerDown={focusWindow}
+        onAnimationEnd={handleAnimationEnd}
         style={{
           left: win.x,
           top: win.y,
@@ -332,16 +288,12 @@ export function Window({
         // makes Chrome hit-test and scroll it on the main thread, so the title
         // bar rounds its own corners and the scroller stops short of the bottom
         // radius instead.
-        className={[
-          'border-rule-2 bg-surf-solid absolute flex flex-col rounded-xl border',
-          'transition-shadow duration-200 motion-reduce:animate-none',
-          leaving ? 'animate-win-close' : 'animate-win-open',
-          // Focused window carries the deeper shadow + accent ring; unfocused
-          // windows recede so the stack reads at a glance.
-          isFocused ? 'shadow-elev-3 ring-miku/30 ring-1' : 'shadow-elev-2',
-        ]
-          .filter(Boolean)
-          .join(' ')}
+        // The focused window carries the deeper shadow and the others recede,
+        // so the stack reads at a glance (`window-shadow` in globals.css).
+        data-focused={isFocused ? '' : undefined}
+        className={`border-rule-2 bg-surf-solid window-shadow absolute flex flex-col rounded-xl border motion-reduce:animate-none ${
+          leaving ? 'animate-win-close' : 'animate-win-open'
+        }`}
       >
         <div
           role="toolbar"
@@ -349,10 +301,11 @@ export function Window({
           {...{ [WINDOW_TITLE_BAR_ATTRIBUTE]: '' }}
           aria-label={`${win.title} window controls`}
           aria-describedby={shortcutHintId}
-          onMouseDown={startDrag}
-          onDoubleClick={handleTitleDoubleClick}
+          onPointerDown={startDrag}
           onKeyDown={handleTitleKey}
-          className="focus-ring border-rule bg-surf-1 flex h-9 cursor-grab items-center justify-between gap-3 rounded-t-xl border-b px-3 select-none active:cursor-grabbing pointer-coarse:h-11"
+          // `touch-none`: a finger on the title bar drags the window, it does
+          // not scroll or zoom the page.
+          className="focus-ring border-rule bg-surf-1 flex h-9 cursor-grab touch-none items-center justify-between gap-3 rounded-t-xl border-b px-3 select-none active:cursor-grabbing pointer-coarse:h-11"
         >
           <div className="flex items-center gap-2">
             <span
@@ -381,56 +334,33 @@ export function Window({
         </div>
         {/* Opaque and square so Chrome composites it (threaded scrolling keeps
           LCD text only on an opaque scroller at DPR 1); `mb-3` keeps its
-          corners inside the window's rounded bottom edge. */}
-        <div className="font-body text-ink bg-surf-solid mb-3 flex-1 overflow-auto px-6 pt-6 pb-3">
-          {children}
+          corners inside the window's rounded bottom edge. Contained: layout
+          and paint inside an app never reach past the scroller, which clips
+          at the same box anyway (the lightbox and toasts are portals). */}
+        <div className="font-body text-ink bg-surf-solid mb-3 flex-1 overflow-auto px-6 pt-6 pb-3 contain-layout contain-paint contain-style">
+          <AppBody
+            id={win.id}
+            project={win.project}
+            onOpenProject={onOpenProject}
+          />
         </div>
 
-        {showHandles && (
-          <>
+        {showHandles &&
+          RESIZE_HANDLES.map(({ dir, className }) => (
             <div
+              key={dir}
               aria-hidden
-              onMouseDown={startResize('n')}
-              className="hover:bg-miku/20 absolute top-0 right-2 left-2 z-10 h-1 cursor-n-resize"
+              data-resize-handle={dir}
+              onPointerDown={startResize(dir)}
+              onMouseDown={preventDefault}
+              // The tint is for a pointer that hovers; under a finger it
+              // would stick after the touch.
+              className={`pointer-fine:hover:bg-miku/20 absolute z-10 touch-none ${className}`}
             />
-            <div
-              aria-hidden
-              onMouseDown={startResize('s')}
-              className="hover:bg-miku/20 absolute right-2 bottom-0 left-2 z-10 h-1 cursor-s-resize"
-            />
-            <div
-              aria-hidden
-              onMouseDown={startResize('e')}
-              className="hover:bg-miku/20 absolute top-2 right-0 bottom-2 z-10 w-1 cursor-e-resize"
-            />
-            <div
-              aria-hidden
-              onMouseDown={startResize('w')}
-              className="hover:bg-miku/20 absolute top-2 bottom-2 left-0 z-10 w-1 cursor-w-resize"
-            />
-            <div
-              aria-hidden
-              onMouseDown={startResize('ne')}
-              className="hover:bg-miku/20 absolute top-0 right-0 z-10 size-3 cursor-ne-resize rounded-tr-xl"
-            />
-            <div
-              aria-hidden
-              onMouseDown={startResize('nw')}
-              className="hover:bg-miku/20 absolute top-0 left-0 z-10 size-3 cursor-nw-resize rounded-tl-xl"
-            />
-            <div
-              aria-hidden
-              onMouseDown={startResize('se')}
-              className="hover:bg-miku/20 absolute right-0 bottom-0 z-10 size-3 cursor-se-resize rounded-br-xl"
-            />
-            <div
-              aria-hidden
-              onMouseDown={startResize('sw')}
-              className="hover:bg-miku/20 absolute bottom-0 left-0 z-10 size-3 cursor-sw-resize rounded-bl-xl"
-            />
-          </>
-        )}
+          ))}
       </div>
     </>
   )
 }
+
+export const Window = memo(WindowImpl)

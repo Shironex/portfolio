@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 
 import type { DeepLinkTarget } from '@/lib/os/deep-link'
 import { isEditable } from '@/lib/os/dom'
@@ -14,12 +14,13 @@ import { useHydrated } from '@/hooks/use-hydrated'
 import { useIsMobile } from '@/hooks/use-is-mobile'
 import { useOsWindows } from '@/hooks/use-os-windows'
 import { useSessionRestore } from '@/hooks/use-session-restore'
+import { useStackIds } from '@/hooks/use-stack-ids'
 import { useTheme } from '@/hooks/use-theme'
 import { useWindowFocus } from '@/hooks/use-window-focus'
 import type { Project } from '@/types'
 
+import { AmbientPause } from './ambient-pause'
 import { Announcer } from './announcer'
-import { AppBody } from './app-registry'
 import { FeaturedPanel } from './apps/panels/featured-panel'
 import { HeroPlate } from './apps/panels/hero-plate'
 import { TerminalPanel } from './apps/panels/terminal-panel'
@@ -83,6 +84,14 @@ interface OsShellProps {
  * Landmarks: the menubar is the `<header>`, the desktop content the `<main>`,
  * the taskbar the `<nav>`; the mobile shell has its own three.
  *
+ * Each `Window` is memoized and gets only stable callbacks, so a drag (which
+ * does not touch state until release), a focus change or a re-render of the
+ * shell for its own reasons re-renders just the windows whose state changed,
+ * and never the app inside one. The desktop panels, the icons and the taskbar
+ * are memoized the same way, and the taskbar's id lists keep their identity
+ * while the stack does (`useStackIds`). Pausing the wallpaper under an open
+ * layer does not go through this component at all (`AmbientPause`).
+ *
  * The boot splash, cmd palette, and noscript fallback are shared across both
  * modes, and so is the live region that announces keyboard window snaps. Hotkeys stay bound in both (⌘K still works on tablets with a
  * keyboard).
@@ -103,6 +112,7 @@ export default function OsShell({ initialWindow }: OsShellProps) {
   const { theme, palette, toggleTheme, setPalette } = useTheme()
   const isMobile = useIsMobile()
   const hydrated = useHydrated()
+  const rootRef = useRef<HTMLDivElement | null>(null)
   // Before useDeepLink, so a deep-linked window that was also in the stored
   // session keeps its rect and is raised instead of being opened fresh.
   useSessionRestore(os)
@@ -111,7 +121,8 @@ export default function OsShell({ initialWindow }: OsShellProps) {
   // exposed until the shell hydrates and that article goes inert.
   const onProjectRoute = initialWindow?.kind === 'project'
   const heroHeadingLevel = onProjectRoute && !hydrated ? 2 : 1
-  const markUserAction = useWindowFocus(os.windows, os.topmostId, !isMobile)
+  const stackIds = useStackIds(os.windows)
+  const markUserAction = useWindowFocus(stackIds, os.topmostId, !isMobile)
 
   const toggleCmd = useCallback(() => {
     // Under a lightbox or the boot splash the palette would mount below what
@@ -167,11 +178,7 @@ export default function OsShell({ initialWindow }: OsShellProps) {
 
   useHotkeys(useMemo(() => ({ 'mod+k': toggleCmd }), [toggleCmd]))
 
-  const openIds = useMemo(() => os.windows.map((w) => w.id), [os.windows])
-  const minimizedIds = useMemo(
-    () => os.windows.filter((w) => w.minimized).map((w) => w.id),
-    [os.windows]
-  )
+  const desktopCovered = os.windows.some((w) => w.maximized && !w.minimized)
 
   // Until hydration both shells are in the tree, as in the server HTML.
   const showMobile = !hydrated || isMobile
@@ -184,12 +191,14 @@ export default function OsShell({ initialWindow }: OsShellProps) {
     // the user actually sees behind the cards — without it the near-black
     // `body` background and the SSR `StaticHero` bleed through the gaps.
     <div
+      ref={rootRef}
       {...{
         [SHELL_ROOT_ATTRIBUTE]: '',
         [SHELL_READY_ATTRIBUTE]: hydrated ? '' : undefined,
       }}
       className="text-ink from-sky-0 via-sky-1 to-sky-2 fixed inset-0 overflow-hidden bg-gradient-to-br"
     >
+      <AmbientPause rootRef={rootRef} covered={desktopCovered} />
       {onProjectRoute ? <NoscriptStaticPage /> : <NoscriptFallback />}
       <Boot initialWindow={initialWindow} />
       {showMobile && (
@@ -257,16 +266,15 @@ export default function OsShell({ initialWindow }: OsShellProps) {
                   onRestore={os.restore}
                   onResize={os.resize}
                   onCopyLink={copyLink}
-                >
-                  <AppBody window={w} onOpenProject={launchProject} />
-                </Window>
+                  onOpenProject={launchProject}
+                />
               ))}
             </div>
           </Announcer>
 
           <Taskbar
-            openIds={openIds}
-            minimizedIds={minimizedIds}
+            openIds={stackIds.openIds}
+            minimizedIds={stackIds.minimizedIds}
             topmostId={os.topmostId}
             onLaunch={launchApp}
             onActivate={activateWindow}

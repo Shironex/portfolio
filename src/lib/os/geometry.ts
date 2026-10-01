@@ -52,8 +52,12 @@ export const RESIZE_VIEWPORT_MARGIN = {
 /** Smallest size a window can be resized to unless it sets its own. */
 export const DEFAULT_MIN_SIZE = { w: 320, h: 240 } as const
 
-/** Pointer travel before a drag pulls a snapped or maximized window loose. */
-export const UNDOCK_DRAG_THRESHOLD = 4
+/**
+ * Pointer travel under which a press and release is a tap, not a drag. Below
+ * it a window does not move, snap or come loose from where it is docked, so
+ * a shaky click or the first tap of a double tap changes nothing.
+ */
+export const DRAG_SLOP = 6
 
 /**
  * Base z-index inside the windows layer; the stack is numbered densely from
@@ -72,6 +76,11 @@ export interface Rect {
 export interface Point {
   x: number
   y: number
+}
+
+export interface Size {
+  w: number
+  h: number
 }
 
 /** Half of the desktop a window can be snapped to. */
@@ -96,6 +105,20 @@ export function rectOf({ x, y, w, h }: Rect): Rect {
   return { x, y, w, h }
 }
 
+export function distance(a: Point, b: Point): number {
+  return Math.hypot(a.x - b.x, a.y - b.y)
+}
+
+export function sameRect(a: Rect, b: Rect): boolean {
+  return a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h
+}
+
+/** The viewport as it is now, or `null` when there is none (SSR). */
+export function viewportSize(): Size | null {
+  if (typeof window === 'undefined') return null
+  return { w: window.innerWidth, h: window.innerHeight }
+}
+
 /** Zone a window is docked on: `top` when maximized, `null` when it floats. */
 export function dockZoneOf(win: DockFlags): SnapZone | null {
   return win.maximized ? 'top' : (win.snapped ?? null)
@@ -114,20 +137,22 @@ export function dockFlags(zone: SnapZone | null): {
 
 /**
  * Clamp a window's top-left position into the viewport for `move`.
- * Matches the original `clampToViewport` in `use-os-windows.ts`.
+ * Matches the original `clampToViewport` in `use-os-windows.ts`. A gesture
+ * passes the `viewport` it measured when it started.
  */
 export function clampWindowToViewport(
   x: number,
-  y: number
+  y: number,
+  viewport: Size | null = viewportSize()
 ): { x: number; y: number } {
-  if (typeof window === 'undefined') return { x, y }
+  if (!viewport) return { x, y }
   const nx = Math.max(
     MOVE_VIEWPORT_MARGIN.minX,
-    Math.min(window.innerWidth - MOVE_VIEWPORT_MARGIN.right, x)
+    Math.min(viewport.w - MOVE_VIEWPORT_MARGIN.right, x)
   )
   const ny = Math.max(
     MOVE_VIEWPORT_MARGIN.minY,
-    Math.min(window.innerHeight - MOVE_VIEWPORT_MARGIN.bottom, y)
+    Math.min(viewport.h - MOVE_VIEWPORT_MARGIN.bottom, y)
   )
   return { x: nx, y: ny }
 }
@@ -174,18 +199,17 @@ export function clampResize(
   current: Rect,
   patch: Partial<Rect>,
   minW: number,
-  minH: number
+  minH: number,
+  viewport: Size | null = viewportSize()
 ): Rect {
   const nextW = Math.max(minW, patch.w ?? current.w)
   const nextH = Math.max(minH, patch.h ?? current.h)
-  const maxWidth =
-    typeof window !== 'undefined'
-      ? window.innerWidth - RESIZE_VIEWPORT_MARGIN.right
-      : RESIZE_VIEWPORT_MARGIN.ssrFallback
-  const maxHeight =
-    typeof window !== 'undefined'
-      ? window.innerHeight - RESIZE_VIEWPORT_MARGIN.bottom
-      : RESIZE_VIEWPORT_MARGIN.ssrFallback
+  const maxWidth = viewport
+    ? viewport.w - RESIZE_VIEWPORT_MARGIN.right
+    : RESIZE_VIEWPORT_MARGIN.ssrFallback
+  const maxHeight = viewport
+    ? viewport.h - RESIZE_VIEWPORT_MARGIN.bottom
+    : RESIZE_VIEWPORT_MARGIN.ssrFallback
   return {
     x: Math.max(
       RESIZE_VIEWPORT_MARGIN.minX,
@@ -204,13 +228,15 @@ export function clampResize(
 export function clampWindowRect(
   win: MinSize,
   rect: Rect,
-  patch: Partial<Rect>
+  patch: Partial<Rect>,
+  viewport?: Size | null
 ): Rect {
   return clampResize(
     rect,
     patch,
     win.minW ?? DEFAULT_MIN_SIZE.w,
-    win.minH ?? DEFAULT_MIN_SIZE.h
+    win.minH ?? DEFAULT_MIN_SIZE.h,
+    viewport
   )
 }
 

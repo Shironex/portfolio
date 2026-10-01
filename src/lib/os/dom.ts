@@ -11,6 +11,20 @@ export const WINDOW_ID_ATTRIBUTE = 'data-window-id'
 /** Marks the title bar of a window: the stop keyboard users land on. */
 export const WINDOW_TITLE_BAR_ATTRIBUTE = 'data-window-title-bar'
 
+/**
+ * Set on the shell root while the desktop is covered (see `AmbientPause`),
+ * and on the document root while a window is dragged or resized: both hold
+ * the decorative loops still (`ambient-loop` in globals.css).
+ */
+export const AMBIENT_ATTRIBUTE = 'data-ambient'
+export const AMBIENT_PAUSED = 'paused'
+export const GESTURE_ATTRIBUTE = 'data-gesture'
+
+/** Mark a window gesture as running, or as over. */
+export function markGesture(active: boolean) {
+  document.documentElement.toggleAttribute(GESTURE_ATTRIBUTE, active)
+}
+
 const EDITABLE_SELECTOR =
   'input, textarea, select, [contenteditable]:not([contenteditable="false"])'
 

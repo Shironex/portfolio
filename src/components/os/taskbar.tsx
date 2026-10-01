@@ -1,5 +1,7 @@
 'use client'
 
+import { memo } from 'react'
+
 import { Search } from 'lucide-react'
 
 import { accentColor } from './accent-map'
@@ -22,8 +24,14 @@ interface TaskbarProps {
 /**
  * Bottom taskbar: Start button, search pill, app launcher icons, tray/clock.
  * The page's `<nav>`: every stop in it opens or switches to something.
+ *
+ * `bg-surf-2` is near opaque, so the bar carries no backdrop blur: a blur
+ * would resample the wallpaper behind it on every frame for nothing visible.
+ *
+ * Memoized: its id lists come from `useStackIds`, so moving, resizing or
+ * restacking a window does not re-render it.
  */
-export function Taskbar({
+function TaskbarImpl({
   openIds,
   minimizedIds,
   topmostId,
@@ -35,7 +43,7 @@ export function Taskbar({
   return (
     <nav
       aria-label="Taskbar"
-      className="border-rule-2 bg-surf-2 shadow-elev-2 font-body z-chrome fixed bottom-[calc(0.5rem+env(safe-area-inset-bottom))] left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-2xl border px-3 py-2 backdrop-blur-xl"
+      className="border-rule-2 bg-surf-2 shadow-elev-2 font-body z-chrome fixed bottom-[calc(0.5rem+env(safe-area-inset-bottom))] left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-2xl border px-3 py-2"
     >
       <button
         type="button"
@@ -89,15 +97,15 @@ export function Taskbar({
                 {isOpen && (
                   <span
                     aria-hidden
-                    className={`absolute -bottom-0.5 left-1/2 h-1 -translate-x-1/2 rounded-full transition-all ${
-                      isMinimized ? 'bg-miku/40 w-1' : 'bg-miku w-2.5'
+                    className={`absolute -bottom-0.5 left-1/2 h-1 w-2.5 -translate-x-1/2 rounded-full transition-[scale,background-color] duration-150 ${
+                      isMinimized ? 'bg-miku/40 scale-x-40' : 'bg-miku'
                     }`}
                   />
                 )}
               </button>
               <span
                 aria-hidden
-                className="border-rule-2 bg-surf-solid text-ink pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 translate-y-1 rounded-md border px-2 py-1 font-mono text-[10px] whitespace-nowrap opacity-0 shadow-sm transition-all duration-150 group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100"
+                className="border-rule-2 bg-surf-solid text-ink pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 translate-y-1 rounded-md border px-2 py-1 font-mono text-[10px] whitespace-nowrap opacity-0 shadow-sm transition-[translate,opacity] duration-150 group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100"
               >
                 {app.name}
               </span>
@@ -115,3 +123,5 @@ export function Taskbar({
     </nav>
   )
 }
+
+export const Taskbar = memo(TaskbarImpl)

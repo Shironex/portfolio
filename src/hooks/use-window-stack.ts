@@ -16,6 +16,7 @@ import {
   rectOf,
   snapBounds,
 } from '@/lib/os/geometry'
+import { rafThrottle } from '@/lib/utils/raf-throttle'
 
 /**
  * Renumber the stack densely from the bottom up (1..n above `INITIAL_Z`),
@@ -121,9 +122,7 @@ export function useWindowStack() {
 
   // Docked windows follow the desktop area when the viewport changes size.
   useEffect(() => {
-    let frame = 0
-    const redock = () => {
-      frame = 0
+    const redock = rafThrottle(() => {
       setWindows((ws) => {
         if (!ws.some((w) => dockZoneOf(w) !== null)) return ws
         const area = measureDesktopArea()
@@ -132,14 +131,11 @@ export function useWindowStack() {
           return zone ? { ...w, ...snapBounds(zone, area, w.minW) } : w
         })
       })
-    }
-    const onResize = () => {
-      if (frame === 0) frame = window.requestAnimationFrame(redock)
-    }
-    window.addEventListener('resize', onResize)
+    })
+    window.addEventListener('resize', redock.schedule)
     return () => {
-      window.removeEventListener('resize', onResize)
-      window.cancelAnimationFrame(frame)
+      window.removeEventListener('resize', redock.schedule)
+      redock.cancel()
     }
   }, [])
 

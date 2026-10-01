@@ -1,5 +1,7 @@
 'use client'
 
+import { memo } from 'react'
+
 import { accentColor, accentTint } from './accent-map'
 import { APPS } from './constants'
 import type { AppId } from './types'
@@ -13,7 +15,7 @@ interface DesktopIconsProps {
  * visitors don't expect the double-click ritual, and a click that only
  * "selects" reads as broken.
  */
-export function DesktopIcons({ onLaunch }: DesktopIconsProps) {
+function DesktopIconsImpl({ onLaunch }: DesktopIconsProps) {
   return (
     <div className="z-desktop absolute top-16 left-4 flex flex-col gap-4">
       {APPS.map((app) => {
@@ -43,3 +45,5 @@ export function DesktopIcons({ onLaunch }: DesktopIconsProps) {
     </div>
   )
 }
+
+export const DesktopIcons = memo(DesktopIconsImpl)

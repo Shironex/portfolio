@@ -99,10 +99,12 @@ export function MobileShell({
 
   return (
     <>
-      {/* Top bar */}
+      {/* Top bar. A solid surface, in place of a see-through fill over a
+          backdrop blur that resampled the feed scrolling under it on every
+          frame; the dock below is the same. */}
       <header
         className={cn(
-          'border-rule bg-surf-1 z-chrome fixed inset-x-0 top-0 flex items-center justify-between gap-3 border-b backdrop-blur-md',
+          'border-rule bg-surf-solid z-chrome fixed inset-x-0 top-0 flex items-center justify-between gap-3 border-b',
           MOBILE_BAR_CLASS,
           MOBILE_GUTTER_CLASS
         )}
@@ -167,11 +169,7 @@ export function MobileShell({
           <div className="border-rule-2 bg-surf-solid shadow-elev-2 relative overflow-hidden rounded-2xl border p-5">
             <span
               aria-hidden
-              className="pointer-events-none absolute -top-12 -right-8 size-40 rounded-full opacity-50 blur-3xl"
-              style={{
-                background:
-                  'radial-gradient(circle, var(--color-pink), transparent 70%)',
-              }}
+              className="orb pointer-events-none absolute -top-[156px] -right-[140px] size-[376px] [--orb-color:color-mix(in_oklab,var(--color-pink)_10.3%,transparent)]"
             />
             <div className="relative">
               <h2 className="font-display text-ink text-lg font-bold">
@@ -200,7 +198,7 @@ export function MobileShell({
       {/* Bottom dock */}
       <nav
         aria-label="Dock"
-        className="border-rule bg-surf-1/95 z-chrome fixed inset-x-0 bottom-0 border-t pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] backdrop-blur-md"
+        className="border-rule bg-surf-solid z-chrome fixed inset-x-0 bottom-0 border-t pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]"
       >
         {/* Seven 44px targets fill a 320px screen edge to edge, so below
             440px search is an icon and the apps spread across what is left;
@@ -318,7 +316,8 @@ export function MobileShell({
               onCopyLink={() => onCopyLink(topSheet.id)}
             >
               <AppBody
-                window={topSheet}
+                id={topSheet.id}
+                project={topSheet.project}
                 onOpenProject={os.openProject}
                 projectTitleLevel={1}
               />
