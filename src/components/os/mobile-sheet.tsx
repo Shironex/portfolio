@@ -2,17 +2,24 @@
 
 import { type ReactNode, useMemo, useRef } from 'react'
 
-import { X } from 'lucide-react'
+import { Link, X } from 'lucide-react'
 
 import { useFocusTrap } from '@/hooks/use-focus-trap'
 import { useHotkeys } from '@/hooks/use-hotkeys'
 import { useScrollLock } from '@/hooks/use-scroll-lock'
+
+import { COPY_LINK_LABEL } from './constants'
+
+const HEADER_BUTTON_CLASS =
+  'focus-ring text-ink-3 hover:bg-surf-0 hover:text-ink flex size-11 items-center justify-center rounded-md transition-colors'
 
 interface MobileSheetProps {
   title: string
   /** Rendered in the header — typically a lucide icon element. */
   icon?: ReactNode
   onClose: () => void
+  /** Shows a copy-link button beside close when provided. */
+  onCopyLink?: () => void
   zIndex?: number
   children: ReactNode
 }
@@ -26,6 +33,7 @@ export function MobileSheet({
   title,
   icon,
   onClose,
+  onCopyLink,
   zIndex = 400,
   children,
 }: MobileSheetProps) {
@@ -54,14 +62,26 @@ export function MobileSheet({
           )}
           <span className="text-ink-2 font-mono text-xs">{title}</span>
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close"
-          className="focus-ring text-ink-3 hover:bg-surf-0 hover:text-ink -mr-1 flex size-11 items-center justify-center rounded-md transition-colors"
-        >
-          <X aria-hidden size={18} />
-        </button>
+        <div className="-mr-1 flex items-center">
+          {onCopyLink && (
+            <button
+              type="button"
+              onClick={onCopyLink}
+              aria-label={COPY_LINK_LABEL}
+              className={HEADER_BUTTON_CLASS}
+            >
+              <Link aria-hidden size={16} />
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className={HEADER_BUTTON_CLASS}
+          >
+            <X aria-hidden size={18} />
+          </button>
+        </div>
       </div>
       <div className="font-body text-ink flex-1 overflow-y-auto px-4 py-5">
         {children}

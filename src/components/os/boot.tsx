@@ -3,6 +3,8 @@
 import Image from 'next/image'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
+import { parseDeepLink } from '@/lib/os/deep-link'
+
 import { useHotkeys } from '@/hooks/use-hotkeys'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
@@ -51,8 +53,12 @@ function writeBootFlag(): void {
  * ShiroOS boot splash. Shown only once per tab session; skippable via Esc or
  * the "skip" button. Respects `prefers-reduced-motion` by collapsing to an
  * instant dismiss. Auto-dismisses at ~2.4s for first-time visitors.
+ *
+ * A deep link skips it too: someone sent to a specific window should land on
+ * that window, not on a greeting. `skip` covers a window handed in by a server
+ * route; the `?open=` / `?project=` params are read here on mount.
  */
-export function Boot() {
+export function Boot({ skip = false }: { skip?: boolean }) {
   const reducedMotion = useReducedMotion()
   const [ready, setReady] = useState(false)
   const [gone, setGone] = useState(false)
@@ -68,12 +74,13 @@ export function Boot() {
       return
     }
     const alreadyBooted = readBootFlag()
-    if (alreadyBooted || reducedMotion) {
+    const deepLinked = skip || parseDeepLink(window.location.search) !== null
+    if (alreadyBooted || reducedMotion || deepLinked) {
       setGone(true)
       return
     }
     setReady(true)
-  }, [reducedMotion])
+  }, [reducedMotion, skip])
 
   // Mark the session as booted once we've committed to showing (or skipping)
   // the splash — so subsequent navigations don't replay it.

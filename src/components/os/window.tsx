@@ -23,6 +23,7 @@ interface WindowProps {
     id: WindowId,
     patch: Partial<{ x: number; y: number; w: number; h: number }>
   ) => void
+  onCopyLink: (id: WindowId) => void
   children: ReactNode
 }
 
@@ -50,6 +51,7 @@ export function Window({
   onMinimize,
   onMaximize,
   onResize,
+  onCopyLink,
   children,
 }: WindowProps) {
   const rootRef = useRef<HTMLDivElement | null>(null)
@@ -238,6 +240,7 @@ export function Window({
           </span>
         </div>
         <WindowControls
+          onCopyLink={() => onCopyLink(win.id)}
           onMinimize={requestMinimize}
           onMaximize={() => onMaximize(win.id)}
           onClose={requestClose}

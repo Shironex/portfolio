@@ -1,3 +1,4 @@
+import { projectsData } from '@/data/projects-data'
 import type { Project, ProjectStatus } from '@/types'
 
 export type ProjectCounts = Record<ProjectStatus, number> & {
@@ -23,6 +24,11 @@ export function countProjects(projects: readonly Project[]): ProjectCounts {
     if (project.featured) counts.featured++
   }
   return counts
+}
+
+/** The project a slug points at, or `undefined` for an unknown slug. */
+export function findProjectBySlug(slug: string): Project | undefined {
+  return projectsData.find((project) => project.slug === slug)
 }
 
 /**

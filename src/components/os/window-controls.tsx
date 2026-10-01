@@ -2,18 +2,24 @@
 
 import type { MouseEvent } from 'react'
 
+import { Link } from 'lucide-react'
+
+import { COPY_LINK_LABEL } from './constants'
+
 interface WindowControlsProps {
+  onCopyLink: () => void
   onMinimize: () => void
   onMaximize: () => void
   onClose: () => void
 }
 
 /**
- * Windows 11 style title-bar controls (minimize, maximize, close).
+ * Windows 11 style title-bar controls (copy link, minimize, maximize, close).
  * Each button stops mousedown propagation so the window drag handler
  * does not begin when a control is pressed.
  */
 export function WindowControls({
+  onCopyLink,
   onMinimize,
   onMaximize,
   onClose,
@@ -24,6 +30,15 @@ export function WindowControls({
 
   return (
     <div className="flex items-center">
+      <button
+        type="button"
+        aria-label={COPY_LINK_LABEL}
+        onMouseDown={stopMouseDown}
+        onClick={onCopyLink}
+        className="focus-ring text-ink-2 hover:bg-rule hover:text-ink flex h-8 w-10 items-center justify-center text-xs transition-colors pointer-coarse:h-11 pointer-coarse:w-12"
+      >
+        <Link aria-hidden size={13} strokeWidth={1.75} />
+      </button>
       <button
         type="button"
         aria-label="Minimize window"

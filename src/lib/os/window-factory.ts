@@ -5,6 +5,18 @@ import { cascadeOrigin } from '@/lib/os/geometry'
 
 import type { Project } from '@/types'
 
+const PROJECT_WINDOW_PREFIX = 'project-'
+
+/** Id of the window that shows the project with this slug. */
+export function projectWindowId(slug: string): WindowId {
+  return `${PROJECT_WINDOW_PREFIX}${slug}`
+}
+
+/** Slug of the project a project window shows; inverse of {@link projectWindowId}. */
+export function projectSlugForWindow(id: WindowId): string {
+  return id.slice(PROJECT_WINDOW_PREFIX.length)
+}
+
 /**
  * Build a fresh app `WindowState` from its registry defaults at z-index `z`.
  * Collapses the construction half of the old `openApp`.
@@ -36,7 +48,7 @@ export function createProjectWindow(
 ): WindowState {
   const origin = cascadeOrigin(openCount)
   return {
-    id: `project-${project.slug}` as WindowId,
+    id: projectWindowId(project.slug),
     title: `${project.slug}.app`,
     icon: '◆',
     x: origin.x,

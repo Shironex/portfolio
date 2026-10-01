@@ -6,19 +6,21 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import {
   Copy,
   Diamond,
+  Link,
   Moon,
   Palette,
   Search,
   SquareX,
   Sun,
 } from 'lucide-react'
-import { toast } from 'sonner'
 
 import { GithubIcon } from '@/components/icons/github-icon'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
 import { PALETTES, type PaletteId } from '@/lib/os/appearance'
 import { onBackdropDismiss } from '@/lib/utils'
+import { copyToClipboard } from '@/lib/utils/copy-to-clipboard'
+import { pluralWord } from '@/lib/utils/plural'
 
 import { projectsData } from '@/data/projects-data'
 import { useFocusTrap } from '@/hooks/use-focus-trap'
@@ -32,7 +34,7 @@ import {
   accentFor,
   accentTint,
 } from './accent-map'
-import { APPS } from './constants'
+import { APPS, COPY_LINK_LABEL } from './constants'
 import { Kbd } from './kbd'
 import type { AppId } from './types'
 
@@ -43,6 +45,8 @@ interface CmdPaletteProps {
   theme: Theme
   onToggleTheme: () => void
   onCloseAll: () => void
+  /** Copies a link to the topmost window; absent when nothing is open. */
+  onCopyLink?: () => void
   palette: PaletteId
   onSelectPalette: (id: PaletteId) => void
 }
@@ -74,6 +78,7 @@ export function CmdPalette({
   theme,
   onToggleTheme,
   onCloseAll,
+  onCopyLink,
   palette,
   onSelectPalette,
 }: CmdPaletteProps) {
@@ -126,12 +131,26 @@ export function CmdPalette({
         label: 'Copy email address',
         hint: 'action',
         onClick: async () => {
-          await navigator.clipboard.writeText(EMAIL_CONTACT).catch(() => null)
-          toast.success('Email copied')
+          await copyToClipboard(EMAIL_CONTACT, 'Email copied')
           onClose()
         },
         search: 'copy email address contact mail',
       },
+      ...(onCopyLink
+        ? [
+            {
+              ic: <Link size={14} strokeWidth={1.75} />,
+              accent: 'primary',
+              label: COPY_LINK_LABEL,
+              hint: 'action',
+              onClick: () => {
+                onCopyLink()
+                onClose()
+              },
+              search: 'copy link url share window deep link',
+            } satisfies PaletteItem,
+          ]
+        : []),
       {
         ic: <GithubIcon className="size-3.5" />,
         accent: 'deep',
@@ -200,6 +219,7 @@ export function CmdPalette({
     theme,
     onToggleTheme,
     onCloseAll,
+    onCopyLink,
     palette,
     onSelectPalette,
   ])
@@ -277,7 +297,7 @@ export function CmdPalette({
             className="text-ink-4 px-4 py-1.5 font-mono text-[10px] tracking-wider uppercase"
           >
             {q
-              ? `${items.length} result${items.length === 1 ? '' : 's'}`
+              ? `${items.length} ${pluralWord(items.length, 'result', 'results')}`
               : 'quick actions'}
           </div>
           {items.map((item, i) => (

@@ -2,9 +2,13 @@
 
 import { useCallback } from 'react'
 
-import type { AppId, WindowId } from '@/components/os/types'
+import type { AppId } from '@/components/os/types'
 
-import { createAppWindow, createProjectWindow } from '@/lib/os/window-factory'
+import {
+  createAppWindow,
+  createProjectWindow,
+  projectWindowId,
+} from '@/lib/os/window-factory'
 
 import type { Project } from '@/types'
 
@@ -36,7 +40,7 @@ export function useOsWindows() {
 
   const openProject = useCallback(
     (project: Project) => {
-      const id: WindowId = `project-${project.slug}`
+      const id = projectWindowId(project.slug)
       if (isOpen(id)) {
         focus(id)
         return

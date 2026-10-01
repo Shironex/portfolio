@@ -3,6 +3,9 @@
 import dynamic from 'next/dynamic'
 import { useCallback, useMemo, useState } from 'react'
 
+import type { DeepLinkTarget } from '@/lib/os/deep-link'
+
+import { useDeepLink } from '@/hooks/use-deep-link'
 import { useHotkeys } from '@/hooks/use-hotkeys'
 import { useIsMobile } from '@/hooks/use-is-mobile'
 import { useOsWindows } from '@/hooks/use-os-windows'
@@ -32,6 +35,10 @@ const StartMenu = dynamic(
   { ssr: false }
 )
 
+interface OsShellProps {
+  initialWindow?: DeepLinkTarget
+}
+
 /**
  * Root ShiroOS shell.
  *
@@ -45,13 +52,18 @@ const StartMenu = dynamic(
  * The boot splash, cmd palette, and noscript fallback are shared across both
  * modes. Hotkeys stay bound in both (⌘K still works on tablets with a
  * keyboard).
+ *
+ * `initialWindow` lets a server route boot the shell with a window already
+ * open (and the boot splash skipped). Without it the shell falls back to the
+ * `?open=` / `?project=` deep-link params.
  */
-export default function OsShell() {
+export default function OsShell({ initialWindow }: OsShellProps) {
   const [cmdOpen, setCmdOpen] = useState(false)
   const [startOpen, setStartOpen] = useState(false)
   const os = useOsWindows()
   const { theme, palette, toggleTheme, setPalette } = useTheme()
   const isMobile = useIsMobile()
+  const { copyLink } = useDeepLink(os, initialWindow)
 
   const toggleCmd = useCallback(() => {
     setStartOpen(false)
@@ -62,6 +74,11 @@ export default function OsShell() {
   const openStart = useCallback(() => setStartOpen(true), [])
   const closeStart = useCallback(() => setStartOpen(false), [])
   const openContact = useCallback(() => os.openApp('contact'), [os])
+  const { topmostId } = os
+  const copyTopmostLink = useMemo(
+    () => (topmostId ? () => copyLink(topmostId) : undefined),
+    [topmostId, copyLink]
+  )
 
   const handleEscape = useCallback(() => {
     if (cmdOpen) {
@@ -94,11 +111,12 @@ export default function OsShell() {
     // `body` background and the SSR `StaticHero` bleed through the gaps.
     <div className="text-ink from-sky-0 via-sky-1 to-sky-2 fixed inset-0 overflow-hidden bg-gradient-to-br">
       <NoscriptFallback />
-      <Boot />
+      <Boot skip={initialWindow !== undefined} />
       {isMobile ? (
         <MobileShell
           os={os}
           onOpenCmd={openCmd}
+          onCopyLink={copyLink}
           theme={theme}
           onToggleTheme={toggleTheme}
           palette={palette}
@@ -141,6 +159,7 @@ export default function OsShell() {
               onMinimize={os.minimize}
               onMaximize={os.toggleMaximize}
               onResize={os.resize}
+              onCopyLink={copyLink}
             >
               <AppBody window={w} onOpenProject={os.openProject} />
             </Window>
@@ -174,6 +193,7 @@ export default function OsShell() {
           theme={theme}
           onToggleTheme={toggleTheme}
           onCloseAll={os.closeAll}
+          onCopyLink={copyTopmostLink}
           palette={palette}
           onSelectPalette={setPalette}
         />
