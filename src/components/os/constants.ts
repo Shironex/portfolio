@@ -4,6 +4,7 @@ import {
   Diamond,
   FolderKanban,
   Mail,
+  PenLine,
   UserRound,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
@@ -24,8 +25,24 @@ export const APPS: AppDescriptor[] = [
   { id: 'about', name: 'About', icon: UserRound, accent: 'bright' },
   { id: 'skills', name: 'Monitor', icon: Activity, accent: 'deep' },
   { id: 'contact', name: 'Contact', icon: Mail, accent: 'warm' },
+  { id: 'writing', name: 'Writing', icon: PenLine, accent: 'warm-2' },
   { id: 'readme', name: 'Readme', icon: BookOpen, accent: 'bright' },
 ]
+
+export function isAppId(value: string): value is AppId {
+  return APPS.some((app) => app.id === value)
+}
+
+/** Name of every control that copies a deep link to a window. */
+export const COPY_LINK_LABEL = 'Copy link to this window'
+
+/** Text link inside running copy. */
+export const INLINE_LINK_CLASS =
+  'focus-ring text-miku-2 rounded-sm underline underline-offset-2'
+
+/** Pulsing placeholder fill; callers add the size and radius. */
+export const SKELETON_BAR =
+  'bg-rule animate-pulse-slow motion-reduce:animate-none'
 
 /**
  * Lucide icon for a window's title bar: the app's own icon, or Diamond for
@@ -44,6 +61,7 @@ export const APP_WINDOW_DEFAULTS: Record<
   about: { title: 'about.me', icon: '◌', x: 180, y: 120, w: 820, h: 580 },
   skills: { title: 'monitor.sys', icon: '▤', x: 220, y: 130, w: 780, h: 560 },
   contact: { title: 'contact.app', icon: '✉', x: 260, y: 110, w: 820, h: 580 },
+  writing: { title: 'writing.rss', icon: '✎', x: 340, y: 100, w: 720, h: 600 },
   readme: { title: 'readme.md', icon: '¶', x: 300, y: 150, w: 640, h: 500 },
 }
 

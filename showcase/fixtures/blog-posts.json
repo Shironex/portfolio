@@ -1,0 +1,52 @@
+{
+  "posts": [
+    {
+      "title": "Green Is Not Evidence: How I Keep AI-Written Code Honest",
+      "url": "https://shirone.blog/blog/green-is-not-evidence/",
+      "date": "2026-09-23T00:00:00.000Z",
+      "excerpt": "AI agents write most of the code in the ERP I am building. Type safety and lint rules catch the typos. What they do not catch is a false claim. Here is the harness I built for that."
+    },
+    {
+      "title": "Swapping the Engine Mid-Flight: Shiranami 2 and a 186k-Line Merge",
+      "url": "https://shirone.blog/blog/shiranami-v2-rust-rewrite/",
+      "date": "2026-09-23T00:00:00.000Z",
+      "excerpt": "I rewrote the backend of my music player from Electron to Rust and Tauri on one long-lived branch, then merged 390 commits into master without users losing a single track. Here is the plan, the guardrails, and the Windows bugs no test caught."
+    },
+    {
+      "title": "Taming 12 Terminals: How I Stopped the UI from Freezing",
+      "url": "https://shirone.blog/blog/terminal-performance-at-scale/",
+      "date": "2026-03-16T14:00:00.000Z",
+      "excerpt": "Running 12 AI coding sessions at once means 12 terminals generating output simultaneously. Here is how I kept the UI responsive."
+    },
+    {
+      "title": "Building an Activity Feed Without Opening a Single Port",
+      "url": "https://shirone.blog/blog/activity-feed-no-http/",
+      "date": "2026-03-16T12:00:00.000Z",
+      "excerpt": "How I built a \"currently watching\" feed for my Discord community — and why I ditched the HTTP endpoint in favor of something already running."
+    },
+    {
+      "title": "I Put a Browser Inside Electron (and Rewrote It Twice)",
+      "url": "https://shirone.blog/blog/browser-inside-electron/",
+      "date": "2026-03-16T10:00:00.000Z",
+      "excerpt": "The story of building an embedded browser for an anime tracking app — from native overlays to DOM elements, z-index nightmares, and why the \"deprecated\" approach won."
+    },
+    {
+      "title": "From if-statements to Plugins in 17 Days",
+      "url": "https://shirone.blog/blog/hardcoded-to-plugin-architecture/",
+      "date": "2026-03-15T00:00:00.000Z",
+      "excerpt": "How I extracted a hardcoded AI provider into a plugin architecture with 57 documented decisions, and why I chose bundled plugins over a marketplace."
+    },
+    {
+      "title": "7 Pitfalls I Predicted (and All 7 Happened)",
+      "url": "https://shirone.blog/blog/seven-pitfalls-before-code/",
+      "date": "2026-03-14T00:00:00.000Z",
+      "excerpt": "I wrote a pitfall analysis before writing a single line of feature code. Every prediction materialized. Here is what I learned about research-driven development."
+    },
+    {
+      "title": "The AI Reports Its Own State: MCP as a Feedback Loop",
+      "url": "https://shirone.blog/blog/mcp-feedback-loop/",
+      "date": "2026-03-13T00:00:00.000Z",
+      "excerpt": "Instead of parsing terminal output to figure out what an AI agent is doing, I gave it a tool to tell me. Here is how MCP creates a real-time feedback loop."
+    }
+  ]
+}

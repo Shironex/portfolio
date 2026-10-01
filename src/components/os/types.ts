@@ -4,7 +4,8 @@ import type { Project } from '@/types'
 
 import type { AccentRole } from './accent-map'
 
-export type AppId = 'projects' | 'about' | 'skills' | 'contact' | 'readme'
+export type AppId =
+  'projects' | 'about' | 'skills' | 'contact' | 'writing' | 'readme'
 
 export type WindowId = AppId | `project-${string}`
 

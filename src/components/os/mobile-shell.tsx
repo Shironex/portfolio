@@ -18,13 +18,15 @@ import { AppBody } from './app-registry'
 import { FeaturedPanel } from './apps/panels/featured-panel'
 import { HeroPlate } from './apps/panels/hero-plate'
 import { APPS, windowIconFor } from './constants'
+import { ExternalLink } from './external-link'
 import { MobileSheet } from './mobile-sheet'
 import { PalettePicker } from './palette-picker'
-import type { AppId } from './types'
+import type { AppId, WindowId } from './types'
 
 interface MobileShellProps {
   os: OsWindowsApi
   onOpenCmd: () => void
+  onCopyLink: (id: WindowId) => void
   theme: Theme
   onToggleTheme: () => void
   palette: PaletteId
@@ -46,6 +48,7 @@ interface MobileShellProps {
 export function MobileShell({
   os,
   onOpenCmd,
+  onCopyLink,
   theme,
   onToggleTheme,
   palette,
@@ -163,16 +166,22 @@ export function MobileShell({
         className="border-rule bg-surf-1/95 fixed inset-x-0 bottom-0 z-[200] border-t backdrop-blur-md"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
-        <div className="flex h-14 items-center gap-2 px-3">
+        {/* Seven 44px targets fill a 320px screen edge to edge, so below
+            440px search is an icon and the apps spread across what is left;
+            from there up it grows back into the labelled pill. */}
+        <div className="flex h-14 items-center px-1.5 min-[360px]:gap-2 min-[360px]:px-3">
           <button
             type="button"
             onClick={onOpenCmd}
-            className="focus-ring bg-surf-0 text-ink-3 flex h-11 flex-1 items-center gap-2 rounded-lg px-3 text-xs"
+            aria-label="Search apps and projects"
+            className="focus-ring bg-surf-0 text-ink-3 flex size-11 shrink-0 items-center justify-center gap-2 rounded-lg text-xs min-[440px]:w-auto min-[440px]:min-w-0 min-[440px]:flex-1 min-[440px]:shrink min-[440px]:justify-start min-[440px]:px-3"
           >
-            <Search aria-hidden size={14} />
-            <span className="truncate">search apps &amp; projects…</span>
+            <Search aria-hidden size={14} className="shrink-0" />
+            <span aria-hidden className="hidden truncate min-[440px]:inline">
+              search apps &amp; projects…
+            </span>
           </button>
-          <div className="flex items-center gap-1">
+          <div className="flex flex-1 items-center justify-between min-[440px]:flex-none min-[440px]:justify-start min-[440px]:gap-1">
             {APPS.map((app) => {
               const isOpen = os.isOpen(app.id)
               const Icon = app.icon
@@ -182,7 +191,7 @@ export function MobileShell({
                   type="button"
                   onClick={() => openApp(app.id)}
                   aria-label={`Open ${app.name}`}
-                  className="focus-ring hover:bg-surf-0 relative flex size-11 items-center justify-center rounded-lg transition-colors"
+                  className="focus-ring hover:bg-surf-0 relative flex size-11 shrink-0 items-center justify-center rounded-lg transition-colors"
                 >
                   <span aria-hidden style={{ color: accentColor(app.accent) }}>
                     <Icon size={18} strokeWidth={1.75} />
@@ -247,23 +256,20 @@ export function MobileShell({
                   </button>
                 )
               })}
-              {/* Sixth tile completes the 3x2 grid — no dead cell. */}
-              <a
+            </div>
+
+            <div className="border-rule mt-6 border-t pt-5">
+              <div className="text-ink-4 mb-3 font-mono text-[10px] tracking-[0.22em] uppercase">
+                Elsewhere
+              </div>
+              <ExternalLink
                 href={GITHUB_URL}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Open GitHub profile (opens in new tab)"
                 onClick={() => setLauncherOpen(false)}
-                className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 flex flex-col items-center gap-2 rounded-xl border px-2 py-4 transition-colors"
+                className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 text-ink flex h-11 items-center gap-3 rounded-xl border px-3 text-sm transition-colors"
               >
-                <span
-                  aria-hidden
-                  className="bg-miku/15 text-miku flex size-12 items-center justify-center rounded-xl"
-                >
-                  <GithubIcon className="size-[22px]" />
-                </span>
-                <span className="font-display text-ink text-sm">GitHub</span>
-              </a>
+                <GithubIcon className="text-miku size-[18px]" />
+                GitHub profile
+              </ExternalLink>
             </div>
 
             <div className="border-rule mt-6 border-t pt-5">
@@ -287,6 +293,7 @@ export function MobileShell({
               icon={<SheetIcon size={16} strokeWidth={1.75} />}
               zIndex={400 + topSheet.z}
               onClose={() => os.close(topSheet.id)}
+              onCopyLink={() => onCopyLink(topSheet.id)}
             >
               <AppBody window={topSheet} onOpenProject={os.openProject} />
             </MobileSheet>

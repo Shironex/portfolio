@@ -12,9 +12,11 @@
 // answers on port 3210 the kit reuses it instead of building.
 //
 // What would move between runs is pinned: the clock is fixed, the GitHub
-// heatmap is served from showcase/fixtures/github-activity.json (refresh it
-// with `curl -o showcase/fixtures/github-activity.json
-// https://shirone.dev/api/github-activity`), PostHog is blocked, and the kit
+// heatmap, the open source list and the blog posts are served from
+// showcase/fixtures/ (refresh them with `curl -o
+// showcase/fixtures/github-activity.json
+// https://shirone.dev/api/github-activity` and the same for
+// github-contributions and blog-posts), PostHog is blocked, and the kit
 // asks for reduced motion, which also skips the boot splash. The site keeps
 // its theme in localStorage, not prefers-color-scheme, so setup seeds it:
 // dark mode with the default teal palette.
@@ -28,9 +30,17 @@ const MODE = 'dark'
 const PALETTE = 'teal'
 const READY = '[aria-label="Taskbar"]'
 
-const githubActivity = await readFile(
-  new URL('./fixtures/github-activity.json', import.meta.url),
-  'utf8'
+/** Routes answered from showcase/fixtures/<name>.json. */
+const FIXTURE_ROUTES = ['github-activity', 'github-contributions', 'blog-posts']
+
+const fixtures = await Promise.all(
+  FIXTURE_ROUTES.map(async (name) => ({
+    name,
+    body: await readFile(
+      new URL(`./fixtures/${name}.json`, import.meta.url),
+      'utf8'
+    ),
+  }))
 )
 
 /** Wait until the terminal panel has typed its last line (it uses timers). */
@@ -94,9 +104,11 @@ export default defineConfig({
   colorScheme: MODE,
   setup: async ({ page, context }) => {
     await page.clock.setFixedTime(NOW)
-    await context.route('**/api/github-activity', (route) =>
-      route.fulfill({ contentType: 'application/json', body: githubActivity })
-    )
+    for (const { name, body } of fixtures) {
+      await context.route(`**/api/${name}`, (route) =>
+        route.fulfill({ contentType: 'application/json', body })
+      )
+    }
     await context.route(/posthog\.com/, (route) => route.abort())
     // The Turnstile widget loads from Cloudflare at its own pace; leaving it
     // out keeps the contact shot the same on every run.

@@ -18,6 +18,7 @@ import type { Project } from '@/types'
 
 import { accentColor, accentFor, accentTint } from './accent-map'
 import { APPS } from './constants'
+import { ExternalLink } from './external-link'
 import { Kbd } from './kbd'
 import { ProjectAvatar } from './project-avatar'
 import type { AppId } from './types'
@@ -122,26 +123,6 @@ export function StartMenu({
               </button>
             )
           })}
-          {/* Sixth tile fills the 3x2 grid — no dead cell — and gives the
-              GitHub profile a first-class launch surface. */}
-          <a
-            href={GITHUB_URL}
-            target="_blank"
-            rel="noreferrer"
-            aria-label="Open GitHub profile (opens in new tab)"
-            onClick={onClose}
-            className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 hover:border-miku/40 flex flex-col items-center justify-center gap-2 rounded-xl border px-3 py-4 text-center transition-colors"
-          >
-            <span
-              aria-hidden
-              className="bg-miku/15 text-miku flex size-11 items-center justify-center rounded-xl"
-            >
-              <GithubIcon className="size-5" />
-            </span>
-            <span className="font-body text-ink text-sm font-medium">
-              GitHub
-            </span>
-          </a>
         </div>
 
         <div className="text-ink-4 px-5 pt-2 pb-1 font-mono text-[10px] tracking-widest uppercase">
@@ -195,6 +176,14 @@ export function StartMenu({
               {EMAIL_CONTACT}
             </a>
           </div>
+          <ExternalLink
+            href={GITHUB_URL}
+            aria-label="Open GitHub profile"
+            onClick={onClose}
+            className="focus-ring text-ink-3 hover:bg-rule hover:text-ink rounded p-1"
+          >
+            <GithubIcon className="size-3.5" />
+          </ExternalLink>
           <button
             type="button"
             onClick={onClose}

@@ -58,6 +58,10 @@ export default function ReadmeApp() {
           <span className="text-ink font-semibold">Contact</span>: a form, plus
           my email and GitHub.
         </li>
+        <li>
+          <span className="text-ink font-semibold">Writing</span>: the latest
+          posts from my blog, where I write up what I build and what broke.
+        </li>
       </ul>
 
       <h3 className="font-display text-ink mt-7 mb-2 text-lg font-semibold">

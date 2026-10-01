@@ -8,6 +8,7 @@ import ProjectDetailApp from './apps/project-detail-app'
 import ProjectsApp from './apps/projects-app'
 import ReadmeApp from './apps/readme-app'
 import SkillsApp from './apps/skills-app'
+import WritingApp from './apps/writing-app'
 import type { WindowState } from './types'
 
 interface AppBodyProps {
@@ -31,6 +32,8 @@ export function AppBody({ window: win, onOpenProject }: AppBodyProps) {
       return <SkillsApp />
     case 'contact':
       return <ContactApp />
+    case 'writing':
+      return <WritingApp />
     case 'readme':
       return <ReadmeApp />
     default:
