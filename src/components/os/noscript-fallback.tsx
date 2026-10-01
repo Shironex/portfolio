@@ -14,6 +14,7 @@ export function NoscriptFallback() {
   return (
     <noscript>
       <div
+        className="z-noscript"
         style={{
           position: 'fixed',
           inset: 0,
@@ -22,7 +23,6 @@ export function NoscriptFallback() {
           justifyContent: 'center',
           background: 'var(--color-sky-1)',
           padding: '2rem',
-          zIndex: 10_000,
           fontFamily: 'system-ui, -apple-system, "Segoe UI", Geist, sans-serif',
         }}
       >
@@ -97,6 +97,9 @@ export function NoscriptFallback() {
 
 /** Marks the shell root, so {@link NoscriptStaticPage} can hide it. */
 export const SHELL_ROOT_ATTRIBUTE = 'data-os-shell'
+
+/** Set on the shell root once it has hydrated and its handlers are live. */
+export const SHELL_READY_ATTRIBUTE = 'data-shell-ready'
 
 /**
  * For a route that server-renders its own content under the shell. Without JS
