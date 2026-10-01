@@ -7,12 +7,22 @@ import { projectsData } from '@/data/projects-data'
 
 const PRIORITY = { home: 1.0, featured: 0.8, project: 0.6 } as const
 
+/**
+ * The home page lists every project, so it last changed when the newest one
+ * was completed. ISO year-month strings sort as dates.
+ */
+const HOME_LAST_MODIFIED = projectsData
+  .map(completedDateIso)
+  .filter((date) => date !== undefined)
+  .sort()
+  .at(-1)
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   'use cache'
   return [
     {
       url: siteConfig.url,
-      lastModified: new Date().toISOString(),
+      lastModified: HOME_LAST_MODIFIED,
       changeFrequency: 'weekly' as const,
       priority: PRIORITY.home,
     },

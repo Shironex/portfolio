@@ -39,9 +39,11 @@ export async function generateMetadata({
 }: ProjectRouteProps): Promise<Metadata> {
   const { slug } = await params
   const project = findProjectBySlug(slug)
+  if (project) return projectMetadata(project)
   // An unknown slug renders the 404 screen; keep the root `index, follow`
-  // from sitting next to the noindex tag that comes with it.
-  return project ? projectMetadata(project) : { robots: { index: false } }
+  // from sitting next to the noindex tag that comes with it, and the home
+  // canonical from claiming a URL that does not exist.
+  return { robots: { index: false }, alternates: { canonical: null } }
 }
 
 /**

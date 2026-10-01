@@ -6,6 +6,8 @@ import {
   BLOG_URL,
   GITHUB_URL,
 } from '@/lib/constants'
+import { DEFAULT_APPEARANCE, groundColor } from '@/lib/os/appearance'
+import { DEFAULT_THEME_COLOR } from '@/lib/os/palettes.generated'
 import {
   completedDateIso,
   hasUsableDemo,
@@ -42,7 +44,13 @@ export const siteConfig = {
     'Poland',
   ],
   author: AUTHOR_FULL_NAME,
-  themeColor: '#0f7c74',
+  themeColor: DEFAULT_THEME_COLOR,
+  /**
+   * Page ground of the default appearance (light mode, default palette), for
+   * the places CSS variables cannot reach: the `theme-color` meta as served
+   * and the manifest.
+   */
+  ground: groundColor(DEFAULT_APPEARANCE),
 }
 
 /** Absolute URL of a root-relative path on this site. */
@@ -78,6 +86,8 @@ export const defaultMetadata: Metadata = {
   keywords: siteConfig.keywords,
   authors: [{ name: siteConfig.author, url: siteConfig.url }],
   creator: siteConfig.author,
+  // The home page; a page with its own URL sets its own (see projectMetadata).
+  alternates: { canonical: '/' },
   openGraph: {
     type: 'website',
     locale: 'en_US',

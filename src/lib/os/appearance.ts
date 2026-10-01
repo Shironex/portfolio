@@ -30,6 +30,22 @@ export const DEFAULT_APPEARANCE: Appearance = {
 
 const PALETTE_IDS: readonly string[] = PALETTES.map((p) => p.id)
 
+const THEME_COLOR_SELECTOR = 'meta[name="theme-color"]'
+
+/** `[light, dark]` ground per palette id, in the shape the boot script reads. */
+const GROUND_BY_PALETTE = Object.fromEntries(
+  PALETTES.map((p) => [p.id, [p.ground.light, p.ground.dark]])
+)
+
+/**
+ * Page ground of an appearance as a plain colour, for the `theme-color` meta:
+ * the browser chrome around the page takes the colour of the page.
+ */
+export function groundColor({ mode, palette }: Appearance): string {
+  const row = PALETTES.find((p) => p.id === palette) ?? PALETTES[0]
+  return row.ground[mode]
+}
+
 export function isPaletteId(value: unknown): value is PaletteId {
   return typeof value === 'string' && PALETTE_IDS.includes(value)
 }
@@ -66,12 +82,25 @@ export function writeStoredAppearance(next: Appearance) {
   }
 }
 
-/** Both axes land on <html>: the mode as a class, the palette as an attribute. */
-export function applyAppearance({ mode, palette }: Appearance) {
+/**
+ * Both axes land on <html>: the mode as a class, the palette as an attribute.
+ * The `theme-color` meta follows, since the mode is the site's own setting
+ * and not the OS colour scheme a media query on the meta could track.
+ */
+export function applyAppearance(appearance: Appearance) {
   if (typeof document === 'undefined') return
   const root = document.documentElement
-  root.classList.toggle('dark', mode === 'dark')
-  root.dataset.palette = palette
+  root.classList.toggle('dark', appearance.mode === 'dark')
+  root.dataset.palette = appearance.palette
+  const color = groundColor(appearance)
+  const metas = document.querySelectorAll<HTMLMetaElement>(THEME_COLOR_SELECTOR)
+  if (metas.length === 0) {
+    const meta = document.createElement('meta')
+    meta.name = 'theme-color'
+    meta.content = color
+    document.head.append(meta)
+  }
+  for (const meta of metas) meta.content = color
 }
 
 /**
@@ -83,14 +112,21 @@ export function applyAppearance({ mode, palette }: Appearance) {
  * The default is written first so a throwing localStorage (private mode,
  * blocked cookies) still leaves the document with a palette; every token in
  * palettes.css is attribute-scoped, so an unset attribute renders unstyled.
+ *
+ * It also points the `theme-color` meta, which the server renders for the
+ * default appearance just above this script, at the ground that was applied.
  */
 export const APPEARANCE_BOOT_SCRIPT = [
-  '(function(){var r=document.documentElement;',
-  `r.dataset.palette=${JSON.stringify(DEFAULT_PALETTE)};`,
+  '(function(){var r=document.documentElement,d=false,',
+  `p=${JSON.stringify(DEFAULT_PALETTE)};`,
+  'r.dataset.palette=p;',
   'try{',
-  `var m=localStorage.getItem(${JSON.stringify(MODE_STORAGE_KEY)});`,
-  "if(m==='dark')r.classList.add('dark');",
-  `var p=localStorage.getItem(${JSON.stringify(PALETTE_STORAGE_KEY)});`,
-  `if(${JSON.stringify(PALETTE_IDS)}.indexOf(p)>-1)r.dataset.palette=p;`,
-  '}catch(e){}})()',
+  `d=localStorage.getItem(${JSON.stringify(MODE_STORAGE_KEY)})==='dark';`,
+  "if(d)r.classList.add('dark');",
+  `var s=localStorage.getItem(${JSON.stringify(PALETTE_STORAGE_KEY)});`,
+  `if(${JSON.stringify(PALETTE_IDS)}.indexOf(s)>-1)r.dataset.palette=p=s;`,
+  '}catch(e){}',
+  `var t=document.querySelector(${JSON.stringify(THEME_COLOR_SELECTOR)});`,
+  `if(t)t.content=${JSON.stringify(GROUND_BY_PALETTE)}[p][d?1:0];`,
+  '})()',
 ].join('')

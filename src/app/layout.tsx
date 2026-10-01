@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Fraunces, Geist, JetBrains_Mono } from 'next/font/google'
 import type React from 'react'
 
@@ -51,6 +51,15 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
 }
 
+export const viewport: Viewport = {
+  // The mobile shell pads with env(safe-area-inset-*), which needs `cover`.
+  viewportFit: 'cover',
+  // The default appearance. The mode is the site's own setting, not the OS
+  // colour scheme, so the boot script below and `applyAppearance` keep this
+  // tag on the ground that is actually shown.
+  themeColor: siteConfig.ground,
+}
+
 interface RootLayoutProps {
   children: React.ReactNode
 }
@@ -60,8 +69,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <html lang="en" data-palette={DEFAULT_PALETTE} suppressHydrationWarning>
       <head>
         <script
-          // Applies the stored mode and palette before first paint. Inline and
-          // blocking on purpose; a deferred script paints the default first.
+          // Applies the stored mode and palette (and the matching theme
+          // colour) before first paint. Inline and blocking on purpose; a
+          // deferred script paints the default first.
           dangerouslySetInnerHTML={{ __html: APPEARANCE_BOOT_SCRIPT }}
         />
         <script
