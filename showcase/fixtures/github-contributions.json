@@ -1,0 +1,70 @@
+{
+  "total": 131,
+  "repoCount": 5,
+  "capped": false,
+  "repos": [
+    {
+      "name": "AutoMaker-Org/automaker",
+      "url": "https://github.com/AutoMaker-Org/automaker",
+      "count": 119
+    },
+    {
+      "name": "AgentSystemLabs/agent-office",
+      "url": "https://github.com/AgentSystemLabs/agent-office",
+      "count": 6
+    },
+    {
+      "name": "AgentSystemLabs/mission-control-agent",
+      "url": "https://github.com/AgentSystemLabs/mission-control-agent",
+      "count": 3
+    },
+    {
+      "name": "Imonlykiwi/tankdle",
+      "url": "https://github.com/Imonlykiwi/tankdle",
+      "count": 2
+    },
+    {
+      "name": "webdevcody/survive-the-night-sim",
+      "url": "https://github.com/webdevcody/survive-the-night-sim",
+      "count": 1
+    }
+  ],
+  "pulls": [
+    {
+      "title": "refactor(core): split main.ts, server.ts and the other hub files into registries",
+      "url": "https://github.com/AgentSystemLabs/agent-office/pull/215",
+      "repo": "AgentSystemLabs/agent-office",
+      "mergedAt": "2026-09-30T22:56:41Z"
+    },
+    {
+      "title": "feat(models): the lounge furniture and the desk books and mugs from blender",
+      "url": "https://github.com/AgentSystemLabs/agent-office/pull/186",
+      "repo": "AgentSystemLabs/agent-office",
+      "mergedAt": "2026-09-29T22:16:15Z"
+    },
+    {
+      "title": "feat(models): blender model pipeline, the office dog in five breeds, and a loading screen",
+      "url": "https://github.com/AgentSystemLabs/agent-office/pull/177",
+      "repo": "AgentSystemLabs/agent-office",
+      "mergedAt": "2026-09-29T16:27:36Z"
+    },
+    {
+      "title": "fix(player): take the mouse back once the Esc that closed a window is up",
+      "url": "https://github.com/AgentSystemLabs/agent-office/pull/115",
+      "repo": "AgentSystemLabs/agent-office",
+      "mergedAt": "2026-09-28T14:51:39Z"
+    },
+    {
+      "title": "See changed pictures in the Changes window, before and after",
+      "url": "https://github.com/AgentSystemLabs/agent-office/pull/113",
+      "repo": "AgentSystemLabs/agent-office",
+      "mergedAt": "2026-09-27T22:42:16Z"
+    },
+    {
+      "title": "Install on Windows with one PowerShell line",
+      "url": "https://github.com/AgentSystemLabs/agent-office/pull/102",
+      "repo": "AgentSystemLabs/agent-office",
+      "mergedAt": "2026-09-27T21:12:59Z"
+    }
+  ]
+}

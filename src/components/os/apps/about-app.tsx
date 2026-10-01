@@ -3,6 +3,8 @@ import Image from 'next/image'
 import { Bike, Film, Music, Puzzle } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
+import { OpenSourcePanel } from './panels/open-source-panel'
+
 interface Hobby {
   icon: LucideIcon
   title: string
@@ -117,6 +119,13 @@ export default function AboutApp() {
             contracts and production-only bugs.
           </li>
         </ul>
+      </section>
+
+      <section className="mb-8">
+        <h3 className="font-display text-ink mb-2 text-lg font-semibold">
+          Open source
+        </h3>
+        <OpenSourcePanel />
       </section>
 
       <section className="mb-8">
