@@ -2,6 +2,8 @@
 
 import { memo } from 'react'
 
+import { cn } from '@/lib/utils'
+
 import { useClock } from '@/hooks/use-clock'
 
 interface ClockProps {
@@ -22,7 +24,7 @@ function ClockImpl({ className, showDate = true }: ClockProps) {
   // chrome doesn't jump when the real time lands a frame later.
   if (!now) {
     return (
-      <time className={className}>
+      <time className={cn('tabular-nums', className)}>
         <span className="invisible">00:00</span>
         {showDate && <span className="invisible ml-2">Mon, Jan 00</span>}
       </time>
@@ -42,13 +44,19 @@ function ClockImpl({ className, showDate = true }: ClockProps) {
     : null
 
   return (
+    // No `aria-label`: a <time> has no role to hang a name on, so the text
+    // itself is what gets read. The comma only exists for that reading.
     <time
       dateTime={now.toISOString()}
-      aria-label={date ? `${time}, ${date}` : time}
-      className={className}
+      className={cn('tabular-nums', className)}
     >
       <span>{time}</span>
-      {date && <span className="ml-2">{date}</span>}
+      {date && (
+        <>
+          <span className="sr-only">, </span>
+          <span className="ml-2">{date}</span>
+        </>
+      )}
     </time>
   )
 }

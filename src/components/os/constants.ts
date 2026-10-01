@@ -36,6 +36,17 @@ export function isAppId(value: string): value is AppId {
 /** Name of every control that copies a deep link to a window. */
 export const COPY_LINK_LABEL = 'Copy link to this window'
 
+/** `aria-keyshortcuts` of every control that opens the command palette. */
+export const CMD_PALETTE_SHORTCUT = 'Control+K Meta+K'
+
+/** Height and top padding of a mobile top bar, status-bar inset included. */
+export const MOBILE_BAR_CLASS =
+  'h-[calc(3rem+env(safe-area-inset-top))] pt-[env(safe-area-inset-top)]'
+
+/** Side padding of mobile content: 1rem, or the safe-area inset when larger. */
+export const MOBILE_GUTTER_CLASS =
+  'pr-[max(1rem,env(safe-area-inset-right))] pl-[max(1rem,env(safe-area-inset-left))]'
+
 /** Text link inside running copy. */
 export const INLINE_LINK_CLASS =
   'focus-ring text-miku-2 rounded-sm underline underline-offset-2'

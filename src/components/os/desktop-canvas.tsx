@@ -12,7 +12,7 @@ interface DesktopCanvasProps {
  */
 export function DesktopCanvas({ children }: DesktopCanvasProps) {
   return (
-    <div className="from-sky-0 via-sky-1 to-sky-2 relative min-h-screen overflow-hidden bg-gradient-to-br">
+    <div className="from-sky-0 via-sky-1 to-sky-2 relative min-h-dvh overflow-hidden bg-gradient-to-br">
       <span aria-hidden className="grain-layer" />
       <span
         aria-hidden

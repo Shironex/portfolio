@@ -11,6 +11,7 @@ import { Fragment, useMemo, useState } from 'react'
 import { accentFor } from '@/components/os/accent-map'
 import { ProjectAvatar } from '@/components/os/project-avatar'
 
+import { pluralWord } from '@/lib/utils/plural'
 import { countProjects } from '@/lib/utils/projects'
 
 import { projectsData } from '@/data/projects-data'
@@ -72,7 +73,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
   return (
     <div className="font-body">
       <div className="mb-6">
-        <h2 className="font-display text-ink mb-1 text-3xl font-bold">
+        <h2 className="font-display text-ink mb-1 text-3xl font-bold tabular-nums">
           {projectsData.length} projects
         </h2>
         <p className="text-ink-3 text-sm">
@@ -96,7 +97,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
               }`}
             >
               {f.label}{' '}
-              <span aria-hidden className="opacity-60">
+              <span aria-hidden className="tabular-nums opacity-60">
                 {counts[f.id]}
               </span>
             </button>
@@ -106,10 +107,16 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="search projects…"
-          className="focus-ring border-rule-2 bg-surf-0 focus:border-miku ml-auto min-w-[200px] rounded-lg border px-3 py-1.5 text-sm outline-none"
+          className="focus-ring border-rule-2 bg-surf-0 focus:border-miku ml-auto min-w-[200px] rounded-lg border px-3 py-1.5 text-sm"
           aria-label="Search projects"
         />
       </div>
+
+      {/* Filtering and searching change the grid without moving focus. */}
+      <p role="status" className="sr-only">
+        {shown.length} of {projectsData.length}{' '}
+        {pluralWord(projectsData.length, 'project', 'projects')} shown
+      </p>
 
       <div className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-2">
         {shown.length === 0 ? (
