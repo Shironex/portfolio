@@ -1,5 +1,14 @@
 import { type Page, expect, test } from '@playwright/test'
 
+import {
+  DESKTOP_VIEWPORT,
+  MOBILE_VIEWPORT,
+  mockFeeds,
+  openDesktop,
+  openMobile,
+  skipBootSplash,
+} from './helpers'
+
 /**
  * Gallery lightbox navigation on the project detail view.
  *
@@ -9,14 +18,13 @@ import { type Page, expect, test } from '@playwright/test'
  */
 const PROJECT = 'Shiranami'
 
-async function openGallery(page: Page) {
-  await page.goto('/', { waitUntil: 'networkidle' })
+test.beforeEach(async ({ page }) => {
+  await mockFeeds(page)
+  await skipBootSplash(page)
+})
 
-  const boot = page.getByRole('dialog', { name: 'ShiroOS boot sequence' })
-  if (await boot.isVisible().catch(() => false)) {
-    await page.keyboard.press('Escape')
-    await boot.waitFor({ state: 'hidden' }).catch(() => {})
-  }
+async function openGallery(page: Page, open = openDesktop) {
+  await open(page)
 
   await page
     .getByRole('button', { name: `Open ${PROJECT}`, exact: true })
@@ -61,7 +69,7 @@ async function swipe(page: Page, fromX: number, toX: number) {
 }
 
 test.describe('desktop', () => {
-  test.use({ viewport: { width: 1440, height: 900 } })
+  test.use({ viewport: DESKTOP_VIEWPORT })
 
   test('buttons and arrow keys step through the gallery', async ({ page }) => {
     const { count } = await openGallery(page)
@@ -98,7 +106,7 @@ test.describe('desktop', () => {
 })
 
 test.describe('slow network', () => {
-  test.use({ viewport: { width: 1440, height: 900 } })
+  test.use({ viewport: DESKTOP_VIEWPORT })
 
   test('the frame and buttons hold still while the next image loads', async ({
     page,
@@ -137,10 +145,10 @@ test.describe('slow network', () => {
 })
 
 test.describe('mobile', () => {
-  test.use({ viewport: { width: 390, height: 844 }, hasTouch: true })
+  test.use({ viewport: MOBILE_VIEWPORT, hasTouch: true })
 
   test('buttons and swipes step through the gallery', async ({ page }) => {
-    const { count } = await openGallery(page)
+    const { count } = await openGallery(page, openMobile)
     expect(count).toBeGreaterThan(1)
 
     const box = lightbox(page)

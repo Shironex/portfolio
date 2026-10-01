@@ -2,6 +2,13 @@ import { expect, test } from '@playwright/test'
 import { existsSync, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 
+import {
+  MOBILE_VIEWPORT,
+  mockFeeds,
+  openMobile,
+  skipBootSplash,
+} from './helpers'
+
 /**
  * Regression cover for mobile theme switching.
  *
@@ -20,14 +27,10 @@ test.beforeAll(() => {
 test('mobile top bar toggles between light and dark themes', async ({
   page,
 }) => {
-  await page.setViewportSize({ width: 390, height: 844 })
-  await page.goto('/', { waitUntil: 'networkidle' })
-
-  const boot = page.getByRole('dialog', { name: 'ShiroOS boot sequence' })
-  if (await boot.isVisible().catch(() => false)) {
-    await page.keyboard.press('Escape')
-    await boot.waitFor({ state: 'hidden' }).catch(() => {})
-  }
+  await mockFeeds(page)
+  await skipBootSplash(page)
+  await page.setViewportSize(MOBILE_VIEWPORT)
+  await openMobile(page)
   await page.waitForTimeout(400)
 
   const html = page.locator('html')
