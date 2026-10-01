@@ -258,7 +258,7 @@ export function MenuDropdown<Id extends string>({
           role="menu"
           aria-label={label}
           onKeyDown={handleMenuKey}
-          className="animate-cp-in border-rule-2 bg-surf-solid shadow-elev-3 z-menu absolute top-full left-0 mt-1 min-w-[200px] rounded-lg border py-1 motion-reduce:animate-none"
+          className="animate-menu-in border-rule-2 bg-surf-solid shadow-elev-3 z-menu absolute top-full left-0 mt-1 min-w-[200px] rounded-lg border py-1 motion-reduce:animate-none"
         >
           {sections.map((section, sectionIndex) => (
             <div key={sectionIndex} role="none">

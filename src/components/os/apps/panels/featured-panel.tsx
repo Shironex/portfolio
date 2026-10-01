@@ -1,6 +1,6 @@
 'use client'
 
-import { useId } from 'react'
+import { memo, useId } from 'react'
 
 import { accentFor } from '@/components/os/accent-map'
 import { ProjectAvatar } from '@/components/os/project-avatar'
@@ -25,7 +25,7 @@ interface FeaturedPanelProps {
   onOpenProject: (project: Project) => void
 }
 
-export function FeaturedPanel({ onOpenProject }: FeaturedPanelProps) {
+function FeaturedPanelImpl({ onOpenProject }: FeaturedPanelProps) {
   const headingId = useId()
   const pinned = getPinnedProjects(projectsData, {
     cap: MAX_PINNED,
@@ -77,7 +77,7 @@ export function FeaturedPanel({ onOpenProject }: FeaturedPanelProps) {
                 </div>
                 <span
                   aria-hidden
-                  className="text-ink-4 group-hover:text-miku transition-all group-hover:translate-x-0.5"
+                  className="text-ink-4 group-hover:text-miku transition-[translate,color] duration-150 group-hover:translate-x-0.5"
                 >
                   →
                 </span>
@@ -89,3 +89,5 @@ export function FeaturedPanel({ onOpenProject }: FeaturedPanelProps) {
     </section>
   )
 }
+
+export const FeaturedPanel = memo(FeaturedPanelImpl)

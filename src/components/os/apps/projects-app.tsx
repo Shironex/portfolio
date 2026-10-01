@@ -158,7 +158,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                 type="button"
                 onClick={() => onOpenProject(p)}
                 aria-label={`Open ${p.title}`}
-                className="focus-ring group border-rule-2 bg-surf-solid hover:border-miku/40 hover:shadow-elev-2 relative rounded-xl border p-4 text-left transition-all hover:-translate-y-0.5"
+                className="focus-ring group border-rule-2 bg-surf-solid hover:border-miku/40 hover:shadow-elev-2 relative rounded-xl border p-4 text-left transition-[translate,border-color,box-shadow] duration-150 hover:-translate-y-0.5"
               >
                 <div className="flex items-start gap-3">
                   <ProjectAvatar accent={accent} className="shrink-0">
@@ -197,7 +197,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                       ))}
                     </div>
                   </div>
-                  <span className="text-ink-4 group-hover:text-miku transition-all group-hover:translate-x-0.5">
+                  <span className="text-ink-4 group-hover:text-miku transition-[translate,color] duration-150 group-hover:translate-x-0.5">
                     →
                   </span>
                 </div>
