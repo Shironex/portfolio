@@ -1,27 +1,27 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import type { CSSProperties } from 'react'
+import { memo } from 'react'
 
 import { TERMINAL_BLOCKS } from '@/components/os/constants'
 
+/** Gap between one line starting to appear and the next. */
+const LINE_STAGGER_MS = 180
+
+/** Delays the reveal of the line at `index`; inert without the animation. */
+function staggerAt(index: number): CSSProperties {
+  return { animationDelay: `${index * LINE_STAGGER_MS}ms` }
+}
+
 /**
  * TerminalPanel: static zsh-style transcript that surfaces three concrete
- * claims (who, what, when). Lines reveal in sequence with a short stagger
- * on mount, then settle into a solid readable state.
+ * claims (who, what, when). Every line is in the markup from the start, so it
+ * is there for assistive tech and in the server HTML; the reveal in sequence
+ * is CSS only (`animate-term-in` with a per-line delay), and with reduced
+ * motion the whole transcript simply shows. The cursor blink is an
+ * `ambient-loop`, paused with the wallpaper while the desktop is covered.
  */
-export function TerminalPanel() {
-  const [revealed, setRevealed] = useState(0)
-  const totalLines = TERMINAL_BLOCKS.reduce(
-    (n, b) => n + 1 + b.output.length,
-    0
-  )
-
-  useEffect(() => {
-    if (revealed >= totalLines) return
-    const t = setTimeout(() => setRevealed((n) => n + 1), 180)
-    return () => clearTimeout(t)
-  }, [revealed, totalLines])
-
+function TerminalPanelImpl() {
   let cursor = 0
 
   return (
@@ -39,8 +39,7 @@ export function TerminalPanel() {
 
       <div className="text-ink-2 min-h-[200px] p-4 font-mono text-xs">
         {TERMINAL_BLOCKS.map((block, blockIdx) => {
-          const promptIdx = cursor
-          cursor += 1
+          const promptIdx = cursor++
           const outputIndices = block.output.map(() => cursor++)
           const isLast = blockIdx === TERMINAL_BLOCKS.length - 1
           return (
@@ -48,30 +47,33 @@ export function TerminalPanel() {
               key={block.prompt}
               className={blockIdx > 0 ? 'mt-3' : undefined}
             >
-              {revealed > promptIdx && (
-                <div className="motion-safe:animate-term-in">
-                  <span className="text-miku-2 font-bold">~/kacper</span>
-                  <span className="text-miku mx-1.5 font-bold">❯</span>
-                  <span className="text-ink">{block.prompt}</span>
+              <div
+                className="motion-safe:animate-term-in"
+                style={staggerAt(promptIdx)}
+              >
+                <span className="text-miku-2 font-bold">~/kacper</span>
+                <span className="text-miku mx-1.5 font-bold">❯</span>
+                <span className="text-ink">{block.prompt}</span>
+              </div>
+              {block.output.map((line, i) => (
+                <div
+                  key={line}
+                  className="motion-safe:animate-term-in text-ink-3"
+                  style={staggerAt(outputIndices[i])}
+                >
+                  {line}
                 </div>
-              )}
-              {block.output.map((line, i) =>
-                revealed > outputIndices[i] ? (
-                  <div
-                    key={line}
-                    className="motion-safe:animate-term-in text-ink-3"
-                  >
-                    {line}
-                  </div>
-                ) : null
-              )}
-              {isLast && revealed >= totalLines && (
-                <div className="mt-3">
+              ))}
+              {isLast && (
+                <div
+                  className="motion-safe:animate-term-in mt-3"
+                  style={staggerAt(cursor)}
+                >
                   <span className="text-miku-2 font-bold">~/kacper</span>
                   <span className="text-miku mx-1.5 font-bold">❯</span>
                   <span
                     aria-hidden
-                    className="animate-blink text-miku ml-0.5 motion-reduce:animate-none"
+                    className="animate-blink ambient-loop text-miku ml-0.5 motion-reduce:animate-none"
                   >
                     ▌
                   </span>
@@ -84,3 +86,5 @@ export function TerminalPanel() {
     </div>
   )
 }
+
+export const TerminalPanel = memo(TerminalPanelImpl)

@@ -230,10 +230,6 @@ export function CmdPalette({
     inputRef.current?.focus()
   }, [])
 
-  useEffect(() => {
-    setSel(0)
-  }, [q])
-
   // Keep the keyboard selection visible — without this, arrowing past the
   // fold moves the active item out of the scrolled listbox.
   useEffect(() => {
@@ -242,8 +238,14 @@ export function CmdPalette({
       ?.scrollIntoView({ block: 'nearest' })
   }, [sel, listId])
 
+  // A new query starts at the top of its results.
+  const search = (value: string) => {
+    setQ(value)
+    setSel(0)
+  }
+
   const clearSearch = () => {
-    setQ('')
+    search('')
     inputRef.current?.focus()
   }
 
@@ -277,7 +279,7 @@ export function CmdPalette({
           <input
             ref={inputRef}
             value={q}
-            onChange={(e) => setQ(e.target.value)}
+            onChange={(e) => search(e.target.value)}
             onKeyDown={handleKey}
             placeholder="type a command or project name…"
             aria-label="Search apps and projects"
