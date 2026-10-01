@@ -5,6 +5,7 @@ import {
   DESKTOP_VIEWPORT,
   MOBILE_VIEWPORT,
   bootSplash,
+  closeWindow,
   desktopReady,
   location,
   mockFeeds,
@@ -164,13 +165,11 @@ test.describe('desktop', () => {
     await expect(page).toHaveTitle(SITE_TITLE)
     await expect(project).toBeVisible()
 
-    await about.getByRole('button', { name: 'Close window' }).click()
-    await expect(about).toBeHidden()
+    await closeWindow(about)
     await expect.poll(() => location(page)).toBe(PROJECT_PATH)
     await expect(page).toHaveTitle(`${PROJECT_TITLE} | ShiroOS`)
 
-    await project.getByRole('button', { name: 'Close window' }).click()
-    await expect(project).toBeHidden()
+    await closeWindow(project)
     await expect.poll(() => location(page)).toBe('/')
     await expect(page).toHaveTitle(SITE_TITLE)
 
@@ -238,13 +237,11 @@ test.describe('desktop', () => {
       .toBe('/?utm_source=test&open=projects')
 
     // Closing the top window hands the URL to the one left open.
-    await projects.getByRole('button', { name: 'Close window' }).click()
-    await expect(projects).toBeHidden()
+    await closeWindow(projects)
     await expect.poll(() => location(page)).toBe('/?utm_source=test&open=about')
 
     // Closing the last one clears the deep link and keeps the other param.
-    await about.getByRole('button', { name: 'Close window' }).click()
-    await expect(about).toBeHidden()
+    await closeWindow(about)
     await expect.poll(() => location(page)).toBe('/?utm_source=test')
 
     expect(await page.evaluate(() => window.history.length)).toBe(historyLength)

@@ -34,7 +34,7 @@ test.beforeEach(async ({ page }) => {
 })
 
 for (const vp of VIEWPORTS) {
-  test(`responsive review — ${vp.name}`, async ({ page }) => {
+  test(`responsive review: ${vp.name}`, async ({ page }) => {
     await page.setViewportSize({ width: vp.width, height: vp.height })
     await page.goto('/')
     await vp.ready(page)

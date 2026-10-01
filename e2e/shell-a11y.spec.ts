@@ -4,6 +4,8 @@ import {
   DESKTOP_VIEWPORT,
   MOBILE_VIEWPORT,
   blockTurnstile,
+  closeWindow,
+  cmdPalette,
   launch,
   mobileLauncher,
   mockFeeds,
@@ -13,6 +15,7 @@ import {
   osWindows,
   readyShell,
   skipBootSplash,
+  startMenu,
   taskbar,
   titleBar,
 } from './helpers'
@@ -32,10 +35,6 @@ import {
 const PROJECT_SLUG = 'shiranami'
 const PROJECT_TITLE = 'Shiranami'
 
-const palette = (page: Page) =>
-  page.getByRole('dialog', { name: 'Command palette' })
-const startMenu = (page: Page) =>
-  page.getByRole('dialog', { name: 'Start menu' })
 const menubar = (page: Page) => page.getByRole('menubar')
 const menuTrigger = (page: Page, name: string) =>
   menubar(page).getByRole('menuitem', { name, exact: true })
@@ -89,9 +88,9 @@ test.describe('escape', () => {
     const about = await launch(page, 'About', 'about.me')
 
     await page.keyboard.press('Control+k')
-    await expect(palette(page)).toBeVisible()
+    await expect(cmdPalette(page)).toBeVisible()
     await page.keyboard.press('Escape')
-    await expect(palette(page)).toBeHidden()
+    await expect(cmdPalette(page)).toBeHidden()
     await expect(about).toBeVisible()
 
     await taskbar(page).getByRole('button', { name: 'Open Start menu' }).click()
@@ -127,9 +126,9 @@ test.describe('escape', () => {
 
     // The palette over the form still closes, and hands focus back to it.
     await page.keyboard.press('Control+k')
-    await expect(palette(page)).toBeVisible()
+    await expect(cmdPalette(page)).toBeVisible()
     await page.keyboard.press('Escape')
-    await expect(palette(page)).toBeHidden()
+    await expect(cmdPalette(page)).toBeHidden()
     await expect(field).toBeFocused()
     await page.keyboard.press('Escape')
     await expect(contact).toBeVisible()
@@ -197,14 +196,14 @@ test.describe('layers', () => {
     await expect(sheet).toBeVisible()
 
     await page.keyboard.press('Control+k')
-    await expect(palette(page)).toBeVisible()
-    const input = palette(page).getByRole('combobox')
+    await expect(cmdPalette(page)).toBeVisible()
+    const input = cmdPalette(page).getByRole('combobox')
     await expect(input).toBeFocused()
-    expect(await paintsOnTop(input, palette(page))).toBe(true)
+    expect(await paintsOnTop(input, cmdPalette(page))).toBe(true)
 
     // One layer per press: the palette, then the sheet.
     await page.keyboard.press('Escape')
-    await expect(palette(page)).toBeHidden()
+    await expect(cmdPalette(page)).toBeHidden()
     await expect(sheet).toBeVisible()
     await page.keyboard.press('Escape')
     await expect(sheet).toBeHidden()
@@ -245,11 +244,11 @@ test.describe('mobile sheets', () => {
     // The palette opens from inside the sheet and replaces it with another:
     // what the palette would return to is gone along with that sheet.
     await page.keyboard.press('Control+k')
-    await palette(page).getByRole('combobox').fill('readme')
+    await cmdPalette(page).getByRole('combobox').fill('readme')
     await page.keyboard.press('Enter')
     const readme = osWindow(page, 'readme.md')
     await expect(readme).toBeVisible()
-    await expect(palette(page)).toBeHidden()
+    await expect(cmdPalette(page)).toBeHidden()
     expect(
       await readme.evaluate((el) => el.contains(document.activeElement))
     ).toBe(true)
@@ -436,8 +435,7 @@ test.describe('window focus', () => {
     const about = await launch(page, 'About', 'about.me')
     await expect(titleBar(about)).toBeFocused()
 
-    await about.getByRole('button', { name: 'Close window' }).click()
-    await expect(about).toBeHidden()
+    await closeWindow(about)
     await expect(titleBar(projects)).toBeFocused()
 
     // Minimize and restore: focus comes back with the window.
@@ -455,7 +453,7 @@ test.describe('window focus', () => {
     await openDesktop(page)
     const search = taskbar(page).getByRole('button', { name: /search apps/ })
     await search.click()
-    await palette(page).getByRole('combobox').fill('readme')
+    await cmdPalette(page).getByRole('combobox').fill('readme')
     await page.keyboard.press('Enter')
 
     const readme = osWindow(page, 'readme.md')
@@ -547,7 +545,7 @@ test.describe('command palette', () => {
   }) => {
     await openDesktop(page)
     await page.keyboard.press('Control+k')
-    const dialog = palette(page)
+    const dialog = cmdPalette(page)
     const input = dialog.getByRole('combobox')
     await expect(input).toBeFocused()
 
@@ -647,5 +645,17 @@ test.describe('landmarks and headings', () => {
     await win.getByRole('button', { name: 'Close window' }).click()
     await expect(osWindows(page)).toHaveCount(0)
     await expectOneMainAndH1(page)
+  })
+
+  test('the noscript card adds no second h1 to the home page', async ({
+    request,
+  }) => {
+    // Read from the server HTML: a browser with scripting on never parses
+    // what is inside `<noscript>` into elements.
+    const html = await (await request.get('/')).text()
+    const card = /<noscript>([\s\S]*?)<\/noscript>/.exec(html)?.[1] ?? ''
+    expect(card).toContain('ShiroOS needs JavaScript')
+    expect(card).toMatch(/<h2[ >]/)
+    expect(card).not.toMatch(/<h1[ >]/)
   })
 })

@@ -5,12 +5,14 @@ import {
   DESKTOP_VIEWPORT,
   MOBILE_VIEWPORT,
   ambientPlayStates,
+  cmdPalette,
   launch,
   mockFeeds,
   openDesktop,
   openMobile,
   recordAnimations,
   skipBootSplash,
+  startMenu,
   taskbar,
   titleBar,
 } from './helpers'
@@ -78,15 +80,13 @@ test.describe('decorative loops', () => {
     await openDesktop(page)
 
     await page.keyboard.press('Control+k')
-    await expect(
-      page.getByRole('dialog', { name: 'Command palette' })
-    ).toBeVisible()
+    await expect(cmdPalette(page)).toBeVisible()
     await expect.poll(() => ambientPlayStates(page)).toEqual(ALL_PAUSED)
     await page.keyboard.press('Escape')
     await expect.poll(() => ambientPlayStates(page)).toEqual(ALL_RUNNING)
 
     await taskbar(page).getByRole('button', { name: 'Open Start menu' }).click()
-    await expect(page.getByRole('dialog', { name: 'Start menu' })).toBeVisible()
+    await expect(startMenu(page)).toBeVisible()
     await expect.poll(() => ambientPlayStates(page)).toEqual(ALL_PAUSED)
     await page.keyboard.press('Escape')
     await expect.poll(() => ambientPlayStates(page)).toEqual(ALL_RUNNING)
@@ -205,9 +205,7 @@ test.describe('interaction timing', () => {
     await expect.poll(durations).toHaveProperty('menuIn')
     await page.keyboard.press('Escape')
     await page.keyboard.press('Control+k')
-    await expect(
-      page.getByRole('dialog', { name: 'Command palette' })
-    ).toBeVisible()
+    await expect(cmdPalette(page)).toBeVisible()
     await expect.poll(durations).toHaveProperty('cpIn')
 
     const { winOpen, menuIn, cpIn } = await durations()

@@ -3,6 +3,8 @@ import { type Page, expect, test } from '@playwright/test'
 import {
   DESKTOP_VIEWPORT,
   MOBILE_VIEWPORT,
+  cmdPalette,
+  lightbox,
   mockFeeds,
   openDesktop,
   openMobile,
@@ -36,12 +38,6 @@ async function openGallery(page: Page, open = openDesktop) {
   await thumbs.first().click()
 
   return { thumbs, count: await thumbs.count() }
-}
-
-function lightbox(page: Page) {
-  return page.locator('[role="dialog"][aria-modal="true"]').filter({
-    has: page.getByRole('button', { name: 'Close image view' }),
-  })
 }
 
 async function swipe(page: Page, fromX: number, toX: number) {
@@ -102,9 +98,7 @@ test.describe('desktop', () => {
     await page.keyboard.press('Control+k')
     await box.getByRole('button', { name: 'Next image' }).click()
     await expect(box.getByText(`2 / ${count}`)).toBeVisible()
-    await expect(
-      page.getByRole('dialog', { name: 'Command palette' })
-    ).toHaveCount(0)
+    await expect(cmdPalette(page)).toHaveCount(0)
 
     // Escape closes only the lightbox, not the project window beneath it.
     await page.keyboard.press('Escape')

@@ -6,7 +6,11 @@ import {
   SHELL_READY_ATTRIBUTE,
   SHELL_ROOT_ATTRIBUTE,
 } from '../src/components/os/noscript-fallback'
-import { MODE_STORAGE_KEY } from '../src/lib/os/appearance'
+import {
+  MODE_STORAGE_KEY,
+  PALETTE_STORAGE_KEY,
+  type PaletteId,
+} from '../src/lib/os/appearance'
 import { WINDOW_ID_ATTRIBUTE } from '../src/lib/os/dom'
 
 /** API routes answered from the showcase fixtures, so no test waits on GitHub or the blog. */
@@ -76,6 +80,14 @@ export async function useMode(page: Page, mode: 'light' | 'dark') {
   await page.addInitScript(
     ([key, value]) => window.localStorage.setItem(key, value),
     [MODE_STORAGE_KEY, mode]
+  )
+}
+
+/** Store the site's palette, as the picker would. Call before the first `goto`. */
+export async function usePalette(page: Page, palette: PaletteId) {
+  await page.addInitScript(
+    ([key, value]) => window.localStorage.setItem(key, value),
+    [PALETTE_STORAGE_KEY, palette]
   )
 }
 
@@ -170,6 +182,27 @@ export async function recordAnimations(page: Page, selector?: string) {
     )
 }
 
+/** Close a desktop window from its title bar and wait for it to go. */
+export async function closeWindow(win: Locator) {
+  await win.getByRole('button', { name: 'Close window' }).click()
+  await expect(win).toBeHidden()
+}
+
+export function cmdPalette(page: Page) {
+  return page.getByRole('dialog', { name: 'Command palette' })
+}
+
+export function startMenu(page: Page) {
+  return page.getByRole('dialog', { name: 'Start menu' })
+}
+
+/** The gallery lightbox: the modal dialog that holds the image-view close. */
+export function lightbox(page: Page) {
+  return page.locator('[role="dialog"][aria-modal="true"]').filter({
+    has: page.getByRole('button', { name: 'Close image view' }),
+  })
+}
+
 export function taskbar(page: Page) {
   return page.getByLabel('Taskbar')
 }
@@ -229,4 +262,408 @@ export async function launch(page: Page, appName: string, title: string) {
   const win = osWindow(page, title)
   await expect(win).toBeVisible()
   return win
+}
+
+/** WCAG AA: normal text, then large text and meaningful non-text UI. */
+export const AA_TEXT = 4.5
+export const AA_LARGE = 3
+
+/** One measured pairing: a run of text or an icon against what is behind it. */
+export interface ContrastReading {
+  kind: 'text' | 'icon'
+  /** The text itself (clipped), or the icon's class. */
+  what: string
+  /** Tag and classes of the element that carries the colour. */
+  where: string
+  ratio: number
+  /** What AA asks of it: 4.5, or 3 for large text and icons. */
+  required: number
+  foreground: string
+  background: string
+  /**
+   * Set when something the probe cannot read a colour from is painted behind
+   * the point (a picture, a video, a canvas, a `url()` background): the tag
+   * and classes of the topmost such layer. The ratio is then the worst the
+   * layer could make it, black or white behind whatever covers it.
+   */
+  over?: string
+  /** `over` is set and the caller listed the element as known to sit there. */
+  expected?: boolean
+}
+
+interface ProbeOptions {
+  /** Measure every visible text run and icon under the element, not just it. */
+  deep: boolean
+  /** Subtrees left out: pure decoration, listed by the caller. */
+  exempt: string[]
+  /** Layers that are not counted as a background at all. */
+  ignored: string[]
+  /** Text that is known to sit on a picture; see `ContrastReading.expected`. */
+  overImage: string[]
+  /** The AA thresholds: normal text, then large text and icons. */
+  aaText: number
+  aaLarge: number
+}
+
+/**
+ * Runs in the page. Paints what sits behind a point onto a canvas, bottom to
+ * top, then the text colour over it, and reads both back: the canvas blends
+ * the translucent layers and understands every colour syntax.
+ *
+ * The layers are the element's ancestors, plus whatever else is under it at
+ * that point (the wallpaper under a translucent window, a glow under a
+ * badge). Opacity counts for every layer and for the text. A gradient has no
+ * single colour, so it is measured once per colour stop and the worst ratio
+ * is the reading: text over a glow is measured as if it sat on its centre.
+ *
+ * A picture has no colour to read at all. It is painted once black and once
+ * white, the two ends of what it can be under the layers that cover it, and
+ * the reading is the worse of the two, or 1:1 when the text colour lies
+ * between them. Such a reading names the picture in `over`.
+ */
+function probeContrast(
+  root: Element,
+  { deep, exempt, ignored, overImage, aaText, aaLarge }: ProbeOptions
+): ContrastReading[] {
+  const LARGE_PX = 24
+  const LARGE_BOLD_PX = 18.66
+  const COLOR = /(rgba?|oklab|oklch|lab|lch|color|hsla?)\([^()]*\)/g
+  const PICTURE = 'img, picture, video, canvas, iframe, object, embed'
+
+  const canvas = document.createElement('canvas')
+  canvas.width = canvas.height = 1
+  const ctx = canvas.getContext('2d', { willReadFrequently: true })
+  if (!ctx) throw new Error('no 2d context')
+
+  const paint = (color: string, alpha = 1) => {
+    ctx.globalAlpha = alpha
+    ctx.fillStyle = color
+    ctx.fillRect(0, 0, 1, 1)
+  }
+  const read = () => Array.from(ctx.getImageData(0, 0, 1, 1).data).slice(0, 3)
+  const luminance = (rgb: number[]) => {
+    const [r, g, b] = rgb.map((v) => {
+      const s = v / 255
+      return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4
+    })
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+  }
+
+  const chainOf = (el: Element) => {
+    const chain: Element[] = []
+    for (let node: Element | null = el; node; node = node.parentElement) {
+      chain.unshift(node)
+    }
+    return chain
+  }
+  /**
+   * Opacity of an element as painted: its own times every ancestor's. Kept
+   * per element for this one call, since a walk asks for the same ancestors
+   * once per text run.
+   */
+  const opacities = new Map<Element, number>()
+  const opacityOf = (el: Element): number => {
+    const known = opacities.get(el)
+    if (known !== undefined) return known
+    const own = Number(getComputedStyle(el).opacity)
+    const alpha = el.parentElement ? own * opacityOf(el.parentElement) : own
+    opacities.set(el, alpha)
+    return alpha
+  }
+
+  const describe = (el: Element) =>
+    `${el.tagName.toLowerCase()}.${(el.getAttribute('class') ?? '').slice(0, 90)}`
+
+  /** Everything painted behind `el` at a point, bottom to top. */
+  const layersBehind = (el: Element, x: number, y: number) => {
+    const chain = chainOf(el)
+    const hits = document.elementsFromPoint(x, y)
+    // Whatever is above the element (another window, the grain) is not behind
+    // it. Off screen or clipped, nothing is hit and the ancestors are all.
+    const at = hits.findIndex((hit) => hit === el || el.contains(hit))
+    const under =
+      at === -1
+        ? []
+        : hits
+            .slice(at + 1)
+            .filter((hit) => !hit.contains(el))
+            .reverse()
+    // An element under the point paints right after the ancestor it shares
+    // with `el`, and before the next ancestor down.
+    const ordered = chain.map((node, depth) => ({ node, depth, sub: 0 }))
+    under.forEach((node, index) => {
+      let depth = 0
+      while (depth + 1 < chain.length && chain[depth + 1].contains(node)) {
+        depth += 1
+      }
+      ordered.push({ node, depth, sub: index + 1 })
+    })
+    ordered.sort((a, b) => a.depth - b.depth || a.sub - b.sub)
+    return ordered
+      .filter(({ node }) => !ignored.some((selector) => node.matches(selector)))
+      .map(({ node }) => {
+        const style = getComputedStyle(node)
+        const image = style.backgroundImage
+        return {
+          color: style.backgroundColor,
+          stops: image.includes('gradient(') ? (image.match(COLOR) ?? []) : [],
+          alpha: opacityOf(node),
+          // The element itself is never its own background (an icon is not).
+          picture:
+            node !== el && (node.matches(PICTURE) || image.includes('url('))
+              ? describe(node)
+              : null,
+        }
+      })
+  }
+
+  const measure = (el: Element, color: string, x: number, y: number) => {
+    const layers = layersBehind(el, x, y)
+    const scenarios = Math.max(1, ...layers.map((layer) => layer.stops.length))
+    const over = layers.findLast((layer) => layer.picture)?.picture ?? undefined
+    const alpha = opacityOf(el)
+    let worst = { ratio: Infinity, foreground: '', background: '' }
+    const keep = (
+      ratio: number,
+      foreground: number[],
+      background: number[]
+    ) => {
+      if (ratio >= worst.ratio) return
+      worst = {
+        ratio,
+        foreground: `rgb(${foreground.join(', ')})`,
+        background: `rgb(${background.join(', ')})`,
+      }
+    }
+    for (let k = 0; k < scenarios; k += 1) {
+      // Which side of the background the text is on, per shade of a picture.
+      const sides: boolean[] = []
+      for (const shade of over ? ['#000', '#fff'] : [null]) {
+        paint('#fff')
+        for (const layer of layers) {
+          paint(layer.color, layer.alpha)
+          if (layer.stops.length) {
+            paint(layer.stops[Math.min(k, layer.stops.length - 1)], layer.alpha)
+          }
+          if (layer.picture && shade) paint(shade, layer.alpha)
+        }
+        const background = read()
+        paint(color, alpha)
+        const foreground = read()
+        const [back, front] = [luminance(background), luminance(foreground)]
+        sides.push(front > back)
+        const [hi, lo] = [back, front].sort((a, b) => b - a)
+        keep((hi + 0.05) / (lo + 0.05), foreground, background)
+        // Lighter than the picture at one end and darker at the other: some
+        // shade in between is the text colour itself.
+        if (sides.length === 2 && sides[0] !== sides[1]) {
+          keep(1, foreground, background)
+        }
+      }
+    }
+    return { ...worst, over }
+  }
+
+  const reading = (
+    el: Element,
+    base: Pick<ContrastReading, 'kind' | 'what' | 'where' | 'required'>,
+    color: string,
+    rect: DOMRect
+  ): ContrastReading => {
+    const measured = measure(
+      el,
+      color,
+      rect.left + rect.width / 2,
+      rect.top + rect.height / 2
+    )
+    const expected =
+      measured.over !== undefined &&
+      overImage.some((selector) => el.closest(selector))
+    return expected
+      ? { ...base, ...measured, expected }
+      : { ...base, ...measured }
+  }
+
+  const textReading = (el: Element, rect: DOMRect, text: string) => {
+    const style = getComputedStyle(el)
+    const size = Number.parseFloat(style.fontSize)
+    const large =
+      size >= LARGE_PX ||
+      (size >= LARGE_BOLD_PX && Number(style.fontWeight) >= 700)
+    return reading(
+      el,
+      {
+        kind: 'text',
+        what: text.slice(0, 48),
+        where: describe(el),
+        required: large ? aaLarge : aaText,
+      },
+      style.color,
+      rect
+    )
+  }
+
+  const skipped = (el: Element) =>
+    !el.checkVisibility({ opacityProperty: true, visibilityProperty: true }) ||
+    el.closest(':disabled, [aria-disabled="true"], noscript, script, style') ||
+    exempt.some((selector) => el.closest(selector))
+
+  /**
+   * Bring an element under a point that can be hit. Nothing is hit outside
+   * the viewport or under a scrolled-away edge, and a reading taken there
+   * would see the element's ancestors and none of what else is behind it.
+   */
+  const reveal = (el: Element) => {
+    const box = el.getBoundingClientRect()
+    const inView =
+      box.top >= 0 &&
+      box.left >= 0 &&
+      box.bottom <= window.innerHeight &&
+      box.right <= window.innerWidth
+    const hit = document.elementFromPoint(
+      box.left + box.width / 2,
+      box.top + box.height / 2
+    )
+    const reached = hit && (hit === el || el.contains(hit) || hit.contains(el))
+    if (inView && reached) return
+    el.scrollIntoView({
+      block: 'center',
+      inline: 'center',
+      behavior: 'instant',
+    })
+  }
+
+  const walk = () => {
+    if (!deep) {
+      return [
+        textReading(root, root.getBoundingClientRect(), root.textContent ?? ''),
+      ]
+    }
+
+    const readings = new Map<string, ContrastReading>()
+    const keep = (next: ContrastReading) => {
+      const key = `${next.kind}|${next.where}|${next.foreground}|${next.background}`
+      const seen = readings.get(key)
+      if (!seen || next.ratio < seen.ratio) readings.set(key, next)
+    }
+
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT)
+    const range = document.createRange()
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const text = (node.textContent ?? '').trim()
+      const el = node.parentElement
+      if (!text || !el || el.closest('svg') || skipped(el)) continue
+      reveal(el)
+      range.selectNodeContents(node)
+      const rect = range.getBoundingClientRect()
+      // Nothing painted, or clipped to a pixel for screen readers only.
+      if (rect.width <= 1 || rect.height <= 1) continue
+      const box = el.getBoundingClientRect()
+      if (box.width <= 1 || box.height <= 1) continue
+      // A truncated line runs on past its element: measure the part in it.
+      const left = Math.max(rect.left, box.left)
+      const top = Math.max(rect.top, box.top)
+      const shown = new DOMRect(
+        left,
+        top,
+        Math.min(rect.right, box.right) - left,
+        Math.min(rect.bottom, box.bottom) - top
+      )
+      if (shown.width <= 1 || shown.height <= 1) continue
+      keep(textReading(el, shown, text))
+    }
+
+    for (const icon of Array.from(root.querySelectorAll('svg'))) {
+      if (skipped(icon)) continue
+      reveal(icon)
+      const rect = icon.getBoundingClientRect()
+      if (rect.width <= 1 || rect.height <= 1) continue
+      const style = getComputedStyle(icon)
+      const color = style.stroke !== 'none' ? style.stroke : style.fill
+      if (color === 'none') continue
+      keep(
+        reading(
+          icon,
+          {
+            kind: 'icon',
+            what: icon.getAttribute('class') ?? 'svg',
+            where: describe(icon.parentElement ?? icon),
+            required: aaLarge,
+          },
+          color,
+          rect
+        )
+      )
+    }
+
+    return Array.from(readings.values())
+  }
+
+  // Hit testing skips `pointer-events: none`, which is what every glow is.
+  const hittable = document.createElement('style')
+  hittable.textContent = '*{pointer-events:auto!important}'
+  document.head.append(hittable)
+  try {
+    return walk()
+  } finally {
+    hittable.remove()
+  }
+}
+
+/** What a walk leaves out or expects; see {@link contrastReadings}. */
+export interface ContrastWalk {
+  /** Subtrees of pure decoration, which AA does not cover. */
+  exempt?: string[]
+  /** Layers too faint to count as a background (the film grain). */
+  ignored?: string[]
+  /** Text known to sit on a picture, whose reading is not a failure. */
+  overImage?: string[]
+}
+
+/**
+ * WCAG contrast of an element's text against what is painted behind it.
+ * See {@link probeContrast}.
+ */
+export async function contrastRatio(target: Locator) {
+  const [reading] = await target.evaluate(probeContrast, {
+    deep: false,
+    exempt: [],
+    ignored: [],
+    overImage: [],
+    aaText: AA_TEXT,
+    aaLarge: AA_LARGE,
+  })
+  return reading.ratio
+}
+
+/**
+ * Every visible run of text and every icon under `target`, each measured
+ * against its composited background.
+ */
+export function contrastReadings(
+  target: Locator,
+  { exempt = [], ignored = [], overImage = [] }: ContrastWalk = {}
+) {
+  return target.evaluate(probeContrast, {
+    deep: true,
+    exempt,
+    ignored,
+    overImage,
+    aaText: AA_TEXT,
+    aaLarge: AA_LARGE,
+  })
+}
+
+/** The readings that miss AA, worst first, as lines a failure can print. */
+export function contrastFailures(readings: ContrastReading[]) {
+  return readings
+    .filter((reading) => reading.ratio < reading.required && !reading.expected)
+    .sort((a, b) => a.ratio - b.ratio)
+    .map((r) => {
+      const over = r.over ? `, worst case over ${r.over}` : ''
+      return (
+        `${r.ratio.toFixed(2)}:1 (needs ${r.required}) ${r.kind} "${r.what}" ` +
+        `${r.foreground} on ${r.background} in ${r.where}${over}`
+      )
+    })
 }

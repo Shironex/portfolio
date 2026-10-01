@@ -2,8 +2,11 @@ import { type Locator, type Page, expect, test } from '@playwright/test'
 
 import { CONTACT_DRAFT_STORAGE_KEY } from '../src/hooks/use-contact-draft'
 import {
+  AA_TEXT,
   DESKTOP_VIEWPORT,
   blockTurnstile,
+  closeWindow,
+  contrastRatio,
   desktopReady,
   launch,
   mockFeeds,
@@ -27,8 +30,6 @@ import {
  * and no token arrives. That is the "captcha not completed" state, without a
  * call to Cloudflare.
  */
-const AA_TEXT = 4.5
-
 const DRAFT = {
   name: 'Test Person',
   email: 'test@example.com',
@@ -98,48 +99,6 @@ async function openContact(page: Page) {
   const win = osWindow(page, 'contact.app')
   await expect(win.getByRole('button', { name: 'Send message' })).toBeVisible()
   return win
-}
-
-/**
- * WCAG contrast of an element's text against what is painted behind it.
- * Every background colour from the root down to the element is painted onto
- * a canvas, which blends the translucent ones and reads any colour syntax.
- */
-function contrastRatio(target: Locator) {
-  return target.evaluate((el) => {
-    const canvas = document.createElement('canvas')
-    canvas.width = canvas.height = 1
-    const ctx = canvas.getContext('2d', { willReadFrequently: true })
-    if (!ctx) throw new Error('no 2d context')
-
-    const paint = (color: string) => {
-      ctx.fillStyle = color
-      ctx.fillRect(0, 0, 1, 1)
-    }
-    const luminance = () => {
-      const [r, g, b] = Array.from(ctx.getImageData(0, 0, 1, 1).data)
-        .slice(0, 3)
-        .map((v) => {
-          const s = v / 255
-          return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4
-        })
-      return 0.2126 * r + 0.7152 * g + 0.0722 * b
-    }
-
-    const layers: string[] = []
-    for (let node: Element | null = el; node; node = node.parentElement) {
-      layers.unshift(getComputedStyle(node).backgroundColor)
-    }
-    paint('#fff')
-    layers.forEach(paint)
-    const background = luminance()
-
-    paint(getComputedStyle(el).color)
-    const text = luminance()
-
-    const [hi, lo] = [background, text].sort((a, b) => b - a)
-    return (hi + 0.05) / (lo + 0.05)
-  })
 }
 
 test.use({ viewport: DESKTOP_VIEWPORT })
@@ -221,8 +180,7 @@ test.describe('contact form', () => {
     let win = await launch(page, 'Contact', 'contact.app')
     await fillContact(win, DRAFT)
 
-    await win.getByRole('button', { name: 'Close window' }).click()
-    await expect(win).toBeHidden()
+    await closeWindow(win)
     win = await launch(page, 'Contact', 'contact.app')
     await expectContact(win, DRAFT)
 
