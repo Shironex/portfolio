@@ -15,7 +15,7 @@ interface DesktopIconsProps {
  */
 export function DesktopIcons({ onLaunch }: DesktopIconsProps) {
   return (
-    <div className="absolute top-16 left-4 z-10 flex flex-col gap-4">
+    <div className="z-desktop absolute top-16 left-4 flex flex-col gap-4">
       {APPS.map((app) => {
         const Icon = app.icon
         return (

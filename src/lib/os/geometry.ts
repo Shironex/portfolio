@@ -55,8 +55,12 @@ export const DEFAULT_MIN_SIZE = { w: 320, h: 240 } as const
 /** Pointer travel before a drag pulls a snapped or maximized window loose. */
 export const UNDOCK_DRAG_THRESHOLD = 4
 
-/** Base z-index; the first window opened sits at {@link INITIAL_Z} + 1. */
-export const INITIAL_Z = 100
+/**
+ * Base z-index inside the windows layer; the stack is numbered densely from
+ * {@link INITIAL_Z} + 1 up. The layer is its own stacking context, so these
+ * never compete with the chrome.
+ */
+export const INITIAL_Z = 0
 
 export interface Rect {
   x: number
@@ -131,8 +135,10 @@ export function clampWindowToViewport(
 /**
  * Usable desktop area: the viewport minus the menubar, the taskbar and the
  * side gutter. A maximized window fills it (1200x600 SSR fallback).
+ * `safeBottom` is the bottom safe-area inset the taskbar is lifted by; pass
+ * it in (see `measureDesktopArea`) so a docked window stays clear of it.
  */
-export function desktopArea(): Rect {
+export function desktopArea(safeBottom = 0): Rect {
   if (typeof window === 'undefined') {
     return { x: MAXIMIZED_INSET.side, y: MAXIMIZED_INSET.top, w: 1200, h: 600 }
   }
@@ -140,7 +146,11 @@ export function desktopArea(): Rect {
     x: MAXIMIZED_INSET.side,
     y: MAXIMIZED_INSET.top,
     w: window.innerWidth - MAXIMIZED_INSET.side * 2,
-    h: window.innerHeight - MAXIMIZED_INSET.top - MAXIMIZED_INSET.bottom,
+    h:
+      window.innerHeight -
+      MAXIMIZED_INSET.top -
+      MAXIMIZED_INSET.bottom -
+      safeBottom,
   }
 }
 

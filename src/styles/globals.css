@@ -175,6 +175,24 @@
   --color-rule: var(--shiro-rule);
   --color-rule-2: var(--shiro-rule-2);
   --color-danger: #ff5b6a;
+  --color-danger-ink: #b8243a;
+
+  /*
+   * Layers, bottom to top. Windows stack inside their own `isolate` container
+   * (1..n), so their z never competes with these. The grain overlay sits at
+   * 100, between the desktop and the windows. Lightbox and toast are mounted
+   * on <body>, above everything inside the shell.
+   */
+  --z-index-desktop: 10;
+  --z-index-windows: 110;
+  --z-index-chrome: 200;
+  --z-index-menu: 300;
+  --z-index-overlay: 400;
+  --z-index-palette: 500;
+  --z-index-boot: 600;
+  --z-index-noscript: 700;
+  --z-index-lightbox: 800;
+  --z-index-toast: 900;
 
   /* =================== ShiroOS fonts =================== */
   --font-display: var(--font-fraunces), 'Iowan Old Style', 'Palatino Linotype', Palatino, 'URW Palladio L', Georgia, serif;
@@ -347,6 +365,16 @@
 }
 
 /*
+ * The bottom safe-area inset as a registered length, so script can read it
+ * in px (`safeAreaBottom` in src/lib/os/dom.ts). Set on :root below.
+ */
+@property --safe-area-bottom {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+
+/*
   The default border color has changed to `currentcolor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
   looks the same as it did with Tailwind CSS v3.
@@ -399,6 +427,8 @@
     --input: 240 5% 15%;
 
     --radius: 0.5rem;
+
+    --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   }
 
   /* Custom scrollbar — webkit (Chrome, Safari, Edge) */
