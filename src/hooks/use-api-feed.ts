@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import type { z } from 'zod'
 
@@ -10,7 +10,7 @@ export type ApiFeedState<T> =
   | { kind: 'loading' }
   | { kind: 'ready'; data: T }
   | { kind: 'unconfigured' }
-  | { kind: 'error' }
+  | { kind: 'error'; retry: () => void }
 
 /** How a request that got an answer ends; failures reject instead. */
 type FeedResult<T> = Extract<
@@ -81,6 +81,8 @@ function cachedState<T>(path: string): ApiFeedState<T> {
  * The request is aborted if the last component reading it unmounts before it
  * lands.
  *
+ * The `error` state carries a `retry` that sends the request again.
+ *
  * Pass a module-level schema: a new schema identity re-subscribes.
  */
 export function useApiFeed<T>(
@@ -88,6 +90,14 @@ export function useApiFeed<T>(
   schema: z.ZodType<T>
 ): ApiFeedState<T> {
   const [state, setState] = useState<ApiFeedState<T>>(() => cachedState(path))
+  // Bumped by `retry`; a failed request is already dropped, so re-running the
+  // effect starts a new one.
+  const [attempt, setAttempt] = useState(0)
+
+  const retry = useCallback(() => {
+    setState({ kind: 'loading' })
+    setAttempt((n) => n + 1)
+  }, [])
 
   useEffect(() => {
     const request = requestFeed(path, schema)
@@ -98,7 +108,7 @@ export function useApiFeed<T>(
         if (!cancelled) setState(result)
       },
       () => {
-        if (!cancelled) setState({ kind: 'error' })
+        if (!cancelled) setState({ kind: 'error', retry })
       }
     )
     return () => {
@@ -108,7 +118,7 @@ export function useApiFeed<T>(
       drop(path, request as FeedRequest<unknown>)
       request.controller.abort()
     }
-  }, [path, schema])
+  }, [path, schema, attempt, retry])
 
   return state
 }

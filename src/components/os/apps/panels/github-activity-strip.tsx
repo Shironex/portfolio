@@ -1,9 +1,17 @@
 'use client'
 
-import { useMemo, useRef, useState } from 'react'
+import {
+  type CSSProperties,
+  type MouseEvent,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
-import { SKELETON_BAR } from '@/components/os/constants'
+import { INLINE_LINK_CLASS, SKELETON_BAR } from '@/components/os/constants'
+import { ExternalLink } from '@/components/os/external-link'
 
+import { GITHUB_URL } from '@/lib/constants'
 import {
   type ContributionDay,
   GithubActivitySchema,
@@ -24,7 +32,30 @@ const LEVEL_BG: Record<Day['level'], string> = {
 }
 
 const WEEKS_SHOWN = 26
-const DAYS_SHOWN = WEEKS_SHOWN * 7
+const DAYS_PER_WEEK = 7
+const DAYS_SHOWN = WEEKS_SHOWN * DAYS_PER_WEEK
+
+/** Cell edge and gap in px; keep in step with `size-[11px]` and `gap-[2px]`. */
+const CELL = 11
+const GAP = 2
+const PITCH = CELL + GAP
+
+/** Attribute a cell carries its index into the shown days in. */
+const DAY_INDEX_ATTRIBUTE = 'data-day'
+
+const cellMask = (direction: string) =>
+  `repeating-linear-gradient(${direction}, black 0 ${CELL}px, transparent ${CELL}px ${PITCH}px)`
+
+/**
+ * The loading grid as one block the size of the real one: a fill, masked
+ * down to cells by two crossed gradients.
+ */
+const SKELETON_STYLE: CSSProperties = {
+  width: WEEKS_SHOWN * PITCH - GAP,
+  height: DAYS_PER_WEEK * PITCH - GAP,
+  maskImage: `${cellMask('to right')}, ${cellMask('to bottom')}`,
+  maskComposite: 'intersect',
+}
 
 function describeDay(d: Day) {
   const count = d.count === 0 ? 'No' : d.count.toLocaleString()
@@ -49,40 +80,70 @@ interface HoverState {
  * last ~26 weeks as a 7-row grid. Gracefully degrades when `GITHUB_TOKEN`
  * isn't set (returns 501 → "not configured" copy).
  *
- * A single tooltip is shared across all cells — hover/focus on a cell
- * updates its position + content. Beats rendering ~182 always-mounted
- * tooltip nodes.
+ * A single tooltip is shared across all cells: hovering a cell updates its
+ * position + content. Beats rendering ~182 always-mounted tooltip nodes.
+ * The cells carry no handlers either: one on the graph reads which cell the
+ * pointer is over, and the grid is memoized so a hover re-renders only the
+ * tooltip.
+ *
+ * The graph is one `role="img"` with the total as its name. The cells are
+ * decoration inside it: not focusable, so the strip adds no tab stops.
  */
 export function GithubActivityStrip() {
   const state = useApiFeed('/api/github-activity', GithubActivitySchema)
   const [hover, setHover] = useState<HoverState | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const weeks = useMemo(() => {
-    if (state.kind !== 'ready') return null
-    const tail = state.data.days.slice(-DAYS_SHOWN)
-    const cols: Day[][] = []
-    for (let i = 0; i < tail.length; i += 7) {
-      cols.push(tail.slice(i, i + 7))
+  const days = useMemo(
+    () => (state.kind === 'ready' ? state.data.days.slice(-DAYS_SHOWN) : null),
+    [state]
+  )
+
+  const grid = useMemo(() => {
+    if (!days) return null
+    const weeks: Day[][] = []
+    for (let i = 0; i < days.length; i += DAYS_PER_WEEK) {
+      weeks.push(days.slice(i, i + DAYS_PER_WEEK))
     }
-    return cols
-  }, [state])
+    return (
+      <div className="flex gap-[2px]">
+        {weeks.map((week, w) => (
+          <div key={week[0].date} className="flex flex-col gap-[2px]">
+            {week.map((d, i) => (
+              <div
+                key={d.date}
+                {...{ [DAY_INDEX_ATTRIBUTE]: w * DAYS_PER_WEEK + i }}
+                className={`size-[11px] rounded-[2px] ${LEVEL_BG[d.level]}`}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+    )
+  }, [days])
 
   const total = state.kind === 'ready' ? state.data.total : null
 
-  const handleEnter = (day: Day, target: HTMLElement) => {
+  const handleLeave = () => setHover(null)
+
+  const handleOver = (event: MouseEvent<HTMLDivElement>) => {
     const container = containerRef.current
-    if (!container) return
+    const cell = event.target as HTMLElement
+    const index = cell.getAttribute(DAY_INDEX_ATTRIBUTE)
+    const day = index === null ? undefined : days?.[Number(index)]
+    // The gaps between cells are not a day.
+    if (!container || !day) {
+      handleLeave()
+      return
+    }
     const containerRect = container.getBoundingClientRect()
-    const rect = target.getBoundingClientRect()
+    const rect = cell.getBoundingClientRect()
     setHover({
       day,
       x: rect.left + rect.width / 2 - containerRect.left,
       y: rect.top - containerRect.top,
     })
   }
-
-  const handleLeave = () => setHover(null)
 
   return (
     <div
@@ -94,7 +155,7 @@ export function GithubActivityStrip() {
           <div className="text-miku font-mono text-[10px] tracking-[0.22em] uppercase">
             Activity
           </div>
-          <div className="font-display text-ink text-sm font-bold">
+          <div className="font-display text-ink text-sm font-bold tabular-nums">
             {total !== null
               ? `${total.toLocaleString()} contributions`
               : 'recent contributions'}
@@ -112,8 +173,20 @@ export function GithubActivityStrip() {
           to enable
         </div>
       ) : state.kind === 'error' ? (
-        <div className="text-ink-3 font-mono text-[11px]">
-          couldn&apos;t reach github · try again later
+        <div className="text-ink-3 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px]">
+          <span>couldn&apos;t reach github</span>
+          <span aria-hidden>·</span>
+          <button
+            type="button"
+            onClick={state.retry}
+            className={INLINE_LINK_CLASS}
+          >
+            retry
+          </button>
+          <span aria-hidden>·</span>
+          <ExternalLink href={GITHUB_URL} className={INLINE_LINK_CLASS}>
+            view my profile
+          </ExternalLink>
         </div>
       ) : (
         <div
@@ -123,36 +196,13 @@ export function GithubActivityStrip() {
               ? `${total.toLocaleString()} contributions in the last 6 months`
               : 'GitHub contribution graph'
           }
+          onMouseOver={handleOver}
+          onMouseLeave={handleLeave}
           className="relative overflow-x-auto"
         >
-          <div className="flex gap-[2px]">
-            {(weeks ?? Array.from({ length: WEEKS_SHOWN }, () => null)).map(
-              (w, i) => (
-                <div key={i} className="flex flex-col gap-[2px]">
-                  {w
-                    ? w.map((d) => (
-                        <button
-                          key={d.date}
-                          type="button"
-                          aria-label={describeDay(d)}
-                          onMouseEnter={(e) => handleEnter(d, e.currentTarget)}
-                          onFocus={(e) => handleEnter(d, e.currentTarget)}
-                          onMouseLeave={handleLeave}
-                          onBlur={handleLeave}
-                          className={`focus-ring size-[11px] rounded-[2px] ${LEVEL_BG[d.level]}`}
-                        />
-                      ))
-                    : Array.from({ length: 7 }).map((_, j) => (
-                        <div
-                          key={j}
-                          aria-hidden
-                          className={`${SKELETON_BAR} size-[11px] rounded-[2px]`}
-                        />
-                      ))}
-                </div>
-              )
-            )}
-          </div>
+          {grid ?? (
+            <div aria-hidden className={SKELETON_BAR} style={SKELETON_STYLE} />
+          )}
         </div>
       )}
 
