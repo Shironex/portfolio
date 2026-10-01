@@ -17,6 +17,7 @@
     "release": "standard-version",
     "debug-release": "node scripts/debug-release.js",
     "generate:icons": "node scripts/generate-icons.mjs",
+    "generate:og": "node scripts/generate-og-images.mjs",
     "prepare": "husky",
     "commit": "git-cz",
     "showcase:blog": "showcase all -c showcase/shirone-blog.config.mjs",
