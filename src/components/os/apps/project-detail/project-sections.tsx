@@ -21,6 +21,7 @@ import {
 import { GithubIcon } from '@/components/icons/github-icon'
 import { accentColor, accentFor, accentTint } from '@/components/os/accent-map'
 import { ExternalLink } from '@/components/os/external-link'
+import type { HeadingLevel } from '@/components/os/types'
 
 import { parseMonthYear } from '@/lib/utils/format-date'
 import {
@@ -31,12 +32,21 @@ import {
 
 import type { GalleryItem, Project, ProjectLinkKind } from '@/types'
 
+const HEADING_TAG = { 1: 'h1', 2: 'h2', 3: 'h3' } as const
+
 interface ProjectProps {
   project: Project
+  /**
+   * Level of the project title: the page `h1` on the static route and in a
+   * mobile sheet, `h2` inside a desktop window, where the hero headline of
+   * the shell is the `h1`. Section headings sit one level below it.
+   */
+  titleLevel?: HeadingLevel
 }
 
 interface ProjectSectionProps {
   title: string
+  titleLevel?: HeadingLevel
   children: ReactNode
 }
 
@@ -61,18 +71,24 @@ const LINK_ICON: Record<ProjectLinkKind, LucideIcon> = {
   other: LinkIcon,
 }
 
-export function ProjectSection({ title, children }: ProjectSectionProps) {
+export function ProjectSection({
+  title,
+  titleLevel = 1,
+  children,
+}: ProjectSectionProps) {
+  const Heading = HEADING_TAG[titleLevel === 1 ? 2 : 3]
   return (
     <section>
-      <h2 className="text-miku mt-8 mb-3 font-mono text-[11px] font-bold tracking-[0.22em] uppercase">
+      <Heading className="text-miku mt-8 mb-3 font-mono text-[11px] font-bold tracking-[0.22em] uppercase">
         {title}
-      </h2>
+      </Heading>
       {children}
     </section>
   )
 }
 
-export function ProjectHero({ project }: ProjectProps) {
+export function ProjectHero({ project, titleLevel = 1 }: ProjectProps) {
+  const Title = HEADING_TAG[titleLevel]
   const accent = accentFor(project.slug)
   // Free text ("Ongoing") is shown as written.
   const completed =
@@ -105,9 +121,9 @@ export function ProjectHero({ project }: ProjectProps) {
           )}
         </div>
 
-        <h1 className="font-display text-ink text-4xl font-bold">
+        <Title className="font-display text-ink text-4xl font-bold">
           {project.title}
-        </h1>
+        </Title>
         <p className="font-body text-ink-2 mt-3 max-w-2xl text-lg">
           {project.summary}
         </p>
@@ -173,10 +189,10 @@ export function ProjectHero({ project }: ProjectProps) {
   )
 }
 
-export function ProjectOverview({ project }: ProjectProps) {
+export function ProjectOverview({ project, titleLevel }: ProjectProps) {
   if (project.description.length === 0) return null
   return (
-    <ProjectSection title="overview">
+    <ProjectSection title="overview" titleLevel={titleLevel}>
       {project.description.map((paragraph, i) => (
         <p
           key={i}
@@ -189,10 +205,10 @@ export function ProjectOverview({ project }: ProjectProps) {
   )
 }
 
-export function ProjectFeatures({ project }: ProjectProps) {
+export function ProjectFeatures({ project, titleLevel }: ProjectProps) {
   if (project.features.length === 0) return null
   return (
-    <ProjectSection title="features">
+    <ProjectSection title="features" titleLevel={titleLevel}>
       <ul className="flex flex-col gap-2">
         {project.features.map((feature) => (
           <li
@@ -208,12 +224,12 @@ export function ProjectFeatures({ project }: ProjectProps) {
   )
 }
 
-export function ProjectTechStack({ project }: ProjectProps) {
+export function ProjectTechStack({ project, titleLevel }: ProjectProps) {
   const accent = accentFor(project.slug)
   const stack = projectStack(project)
   if (stack.length === 0) return null
   return (
-    <ProjectSection title="tech stack">
+    <ProjectSection title="tech stack" titleLevel={titleLevel}>
       <div className="flex flex-wrap gap-1.5">
         {stack.map((tech) => (
           <span
@@ -234,9 +250,15 @@ export function ProjectTechStack({ project }: ProjectProps) {
 }
 
 /** Gallery heading and grid; the caller supplies one cell per screenshot. */
-export function ProjectGallery({ children }: { children: ReactNode }) {
+export function ProjectGallery({
+  titleLevel,
+  children,
+}: {
+  titleLevel?: HeadingLevel
+  children: ReactNode
+}) {
   return (
-    <ProjectSection title="gallery">
+    <ProjectSection title="gallery" titleLevel={titleLevel}>
       <div className="mt-3 grid grid-cols-2 gap-2">{children}</div>
     </ProjectSection>
   )
@@ -275,13 +297,17 @@ export const GALLERY_CELL_CLASS =
  * Everything in the detail view except the gallery, which is passed as
  * `children` because the window makes it interactive and the page does not.
  */
-export function ProjectSections({ project, children }: ProjectSectionsProps) {
+export function ProjectSections({
+  project,
+  titleLevel,
+  children,
+}: ProjectSectionsProps) {
   return (
     <div className="font-body max-w-3xl">
-      <ProjectHero project={project} />
-      <ProjectOverview project={project} />
-      <ProjectFeatures project={project} />
-      <ProjectTechStack project={project} />
+      <ProjectHero project={project} titleLevel={titleLevel} />
+      <ProjectOverview project={project} titleLevel={titleLevel} />
+      <ProjectFeatures project={project} titleLevel={titleLevel} />
+      <ProjectTechStack project={project} titleLevel={titleLevel} />
       {children}
     </div>
   )

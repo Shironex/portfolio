@@ -30,6 +30,12 @@ export interface WindowState {
   project?: Project
 }
 
+/**
+ * Level of a heading that is the page `h1` in one place and steps down to
+ * `h2` where something else already is.
+ */
+export type HeadingLevel = 1 | 2
+
 export interface AppDescriptor {
   id: AppId
   name: string

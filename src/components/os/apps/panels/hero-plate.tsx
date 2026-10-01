@@ -4,6 +4,7 @@ import Image from 'next/image'
 
 import { HeroText } from '@/components/os/hero-text'
 import { Kbd } from '@/components/os/kbd'
+import type { HeadingLevel } from '@/components/os/types'
 
 import { GithubActivityStrip } from './github-activity-strip'
 
@@ -11,7 +12,7 @@ interface HeroPlateProps {
   onOpenCmd: () => void
   onOpenContact: () => void
   /** Passed to {@link HeroText}. */
-  headingLevel?: 1 | 2
+  headingLevel?: HeadingLevel
 }
 
 /**

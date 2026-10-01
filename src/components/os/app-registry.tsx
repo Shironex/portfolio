@@ -9,19 +9,29 @@ import ProjectsApp from './apps/projects-app'
 import ReadmeApp from './apps/readme-app'
 import SkillsApp from './apps/skills-app'
 import WritingApp from './apps/writing-app'
-import type { WindowState } from './types'
+import type { HeadingLevel, WindowState } from './types'
 
 interface AppBodyProps {
   window: WindowState
   onOpenProject: (p: Project) => void
+  /** Level of a project's title; see `ProjectSections`. */
+  projectTitleLevel?: HeadingLevel
 }
 
 /**
  * Dispatches the correct app body for a window state.
  * Project-detail windows are identified by `window.project` being set.
  */
-export function AppBody({ window: win, onOpenProject }: AppBodyProps) {
-  if (win.project) return <ProjectDetailApp project={win.project} />
+export function AppBody({
+  window: win,
+  onOpenProject,
+  projectTitleLevel,
+}: AppBodyProps) {
+  if (win.project) {
+    return (
+      <ProjectDetailApp project={win.project} titleLevel={projectTitleLevel} />
+    )
+  }
 
   switch (win.id) {
     case 'projects':

@@ -1,3 +1,5 @@
+import type { HeadingLevel } from './types'
+
 const HERO_COPY = {
   eyebrow: 'Full-stack developer · TypeScript + Rust · remote, CET',
   greeting: "hi, I'm Kacper.",
@@ -15,7 +17,7 @@ interface HeroTextProps {
    * Level of the headline. The page `h1` everywhere except on a route whose
    * own content already has one, where it steps down to `h2`.
    */
-  headingLevel?: 1 | 2
+  headingLevel?: HeadingLevel
 }
 
 /**
