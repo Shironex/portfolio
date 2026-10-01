@@ -1,5 +1,6 @@
 import Image from 'next/image'
 
+import { INLINE_LINK_CLASS } from '@/components/os/constants'
 import { Kbd } from '@/components/os/kbd'
 
 import { GITHUB_URL } from '@/lib/constants'
@@ -24,7 +25,7 @@ export default function ReadmeApp() {
           className="border-rule-2 bg-miku/10 shadow-elev-1 size-16 shrink-0 rounded-full border object-cover object-top"
         />
         <div>
-          <h2 className="font-display text-ink text-3xl font-semibold tracking-tight">
+          <h2 className="font-display text-ink text-3xl font-semibold">
             Welcome to ShiroOS
           </h2>
           <p className="text-ink-4 mt-0.5 font-mono text-[11px]">
@@ -92,7 +93,7 @@ export default function ReadmeApp() {
           href={GITHUB_URL}
           target="_blank"
           rel="noreferrer"
-          className="focus-ring text-miku-2 rounded-sm underline underline-offset-2"
+          className={INLINE_LINK_CLASS}
         >
           GitHub
         </a>

@@ -4,6 +4,8 @@ import type { PointerEvent } from 'react'
 
 import { Link } from 'lucide-react'
 
+import { cn } from '@/lib/utils'
+
 import { COPY_LINK_LABEL } from './constants'
 
 interface WindowControlsProps {
@@ -41,7 +43,7 @@ export function WindowControls({
         aria-label={COPY_LINK_LABEL}
         onPointerDown={stopPointerDown}
         onClick={onCopyLink}
-        className={`${CONTROL_CLASS} hover:bg-rule hover:text-ink`}
+        className={cn(CONTROL_CLASS, 'hover:bg-rule hover:text-ink')}
       >
         <Link aria-hidden size={13} strokeWidth={1.75} />
       </button>
@@ -51,7 +53,7 @@ export function WindowControls({
         aria-keyshortcuts="Control+M"
         onPointerDown={stopPointerDown}
         onClick={onMinimize}
-        className={`${CONTROL_CLASS} hover:bg-rule hover:text-ink`}
+        className={cn(CONTROL_CLASS, 'hover:bg-rule hover:text-ink')}
       >
         <span aria-hidden>⎯</span>
       </button>
@@ -61,7 +63,7 @@ export function WindowControls({
         aria-keyshortcuts="Control+Shift+M"
         onPointerDown={stopPointerDown}
         onClick={onMaximize}
-        className={`${CONTROL_CLASS} hover:bg-rule hover:text-ink`}
+        className={cn(CONTROL_CLASS, 'hover:bg-rule hover:text-ink')}
       >
         <span aria-hidden>▢</span>
       </button>
@@ -71,7 +73,8 @@ export function WindowControls({
         aria-keyshortcuts="Control+W"
         onPointerDown={stopPointerDown}
         onClick={onClose}
-        className={`${CONTROL_CLASS} hover:bg-danger hover:text-cloud`}
+        // The deep danger, not the fill: `cloud` only reads on the former.
+        className={cn(CONTROL_CLASS, 'hover:bg-danger-ink hover:text-cloud')}
       >
         <span aria-hidden>✕</span>
       </button>

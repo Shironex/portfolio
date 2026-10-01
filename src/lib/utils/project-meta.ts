@@ -9,6 +9,16 @@ export const STATUS_LABEL: Record<ProjectStatus, string> = {
   archived: 'archived',
 }
 
+/** The short form, for a chip in a list row. */
+export const STATUS_SHORT_LABEL: Record<ProjectStatus, string> = {
+  'in-progress': 'wip',
+  shipped: 'shipped',
+  archived: 'archived',
+}
+
+/** How the featured flag reads in a badge. */
+export const FEATURED_LABEL = 'featured'
+
 /** Root-relative path of the page for the project with this slug. */
 export function projectPath(slug: string): string {
   return `/projects/${slug}`

@@ -3,6 +3,8 @@ import Image from 'next/image'
 import { Bike, Film, Music, Puzzle } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
+import { cn } from '@/lib/utils'
+
 import { OpenSourcePanel } from './panels/open-source-panel'
 
 interface Hobby {
@@ -40,10 +42,10 @@ const hobbies: Hobby[] = [
 ]
 
 const hobbyTint: Record<Hobby['tint'], string> = {
-  teal: 'text-miku',
-  'teal-deep': 'text-miku-2',
-  'teal-light': 'text-miku-3',
-  ochre: 'text-peach',
+  teal: 'text-miku-icon',
+  'teal-deep': 'text-miku-2-icon',
+  'teal-light': 'text-miku-3-icon',
+  ochre: 'text-peach-icon',
 }
 
 export default function AboutApp() {
@@ -60,7 +62,7 @@ export default function AboutApp() {
           />
         </div>
         <div>
-          <h2 className="font-display text-ink mb-2 text-3xl font-semibold tracking-tight">
+          <h2 className="font-display text-ink mb-2 text-3xl font-semibold">
             I&apos;m <em className="text-ink font-bold not-italic">Kacper</em>,
             a full-stack developer from Poland
           </h2>
@@ -150,8 +152,8 @@ export default function AboutApp() {
                 key={h.title}
                 className="border-rule bg-surf-0 shadow-elev-1 rounded-2xl border p-4"
               >
-                <div className={`mb-2 ${hobbyTint[h.tint]}`}>
-                  <Icon size={20} strokeWidth={1.75} />
+                <div className={cn('mb-2', hobbyTint[h.tint])}>
+                  <Icon aria-hidden size={20} strokeWidth={1.75} />
                 </div>
                 <div className="font-display text-ink text-sm font-bold">
                   {h.title}

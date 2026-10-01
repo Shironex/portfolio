@@ -4,7 +4,9 @@ import { memo } from 'react'
 
 import { Search } from 'lucide-react'
 
-import { accentColor } from './accent-map'
+import { cn } from '@/lib/utils'
+
+import { accentIcon } from './accent-map'
 import { Clock } from './clock'
 import { APPS, CMD_PALETTE_SHORTCUT } from './constants'
 import { Kbd } from './kbd'
@@ -91,21 +93,22 @@ function TaskbarImpl({
                 onClick={() => (isOpen ? onActivate(app.id) : onLaunch(app.id))}
                 className="focus-ring hover:bg-surf-0 relative flex size-9 items-center justify-center rounded-lg transition-colors pointer-coarse:size-11"
               >
-                <span aria-hidden style={{ color: accentColor(app.accent) }}>
+                <span aria-hidden style={{ color: accentIcon(app.accent) }}>
                   <Icon size={18} strokeWidth={1.75} />
                 </span>
                 {isOpen && (
                   <span
                     aria-hidden
-                    className={`absolute -bottom-0.5 left-1/2 h-1 w-2.5 -translate-x-1/2 rounded-full transition-[scale,background-color] duration-150 ${
+                    className={cn(
+                      'absolute -bottom-0.5 left-1/2 h-1 w-2.5 -translate-x-1/2 rounded-full transition-[scale,background-color] duration-150',
                       isMinimized ? 'bg-miku/40 scale-x-40' : 'bg-miku'
-                    }`}
+                    )}
                   />
                 )}
               </button>
               <span
                 aria-hidden
-                className="border-rule-2 bg-surf-solid text-ink pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 translate-y-1 rounded-md border px-2 py-1 font-mono text-[10px] whitespace-nowrap opacity-0 shadow-sm transition-[translate,opacity] duration-150 group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100"
+                className="border-rule-2 bg-surf-solid text-ink shadow-elev-1 pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 translate-y-1 rounded-md border px-2 py-1 font-mono text-xs whitespace-nowrap opacity-0 transition-[translate,opacity] duration-150 group-focus-within:translate-y-0 group-focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100"
               >
                 {app.name}
               </span>
@@ -116,7 +119,7 @@ function TaskbarImpl({
 
       <span aria-hidden className="bg-rule-2 h-6 w-px" />
 
-      {/* Time only — the menubar already shows the full date. */}
+      {/* Time only: the menubar already shows the full date. */}
       <div className="text-ink-3 flex items-center gap-2 px-1 font-mono text-[11px]">
         <Clock showDate={false} />
       </div>

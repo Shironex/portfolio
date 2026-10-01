@@ -2,7 +2,7 @@
 
 import { memo } from 'react'
 
-import { accentColor, accentTint } from './accent-map'
+import { accentTileStyle } from './accent-map'
 import { APPS } from './constants'
 import type { AppId } from './types'
 
@@ -11,7 +11,7 @@ interface DesktopIconsProps {
 }
 
 /**
- * Desktop icons. A single click (or Enter/Space) launches the app — web
+ * Desktop icons. A single click (or Enter/Space) launches the app: web
  * visitors don't expect the double-click ritual, and a click that only
  * "selects" reads as broken.
  */
@@ -31,10 +31,7 @@ function DesktopIconsImpl({ onLaunch }: DesktopIconsProps) {
             <span
               aria-hidden
               className="shadow-elev-1 flex size-12 items-center justify-center rounded-xl"
-              style={{
-                backgroundColor: accentTint(app.accent, 15),
-                color: accentColor(app.accent),
-              }}
+              style={accentTileStyle(app.accent)}
             >
               <Icon size={22} strokeWidth={1.75} />
             </span>

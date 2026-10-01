@@ -4,6 +4,7 @@ import { memo, useId } from 'react'
 
 import { accentFor } from '@/components/os/accent-map'
 import { ProjectAvatar } from '@/components/os/project-avatar'
+import { StatusChip } from '@/components/os/status-chip'
 
 import { getPinnedProjects } from '@/lib/utils/projects'
 
@@ -11,7 +12,7 @@ import { projectsData } from '@/data/projects-data'
 import type { Project } from '@/types'
 
 /**
- * FeaturedPanel — pinned-work tile list that sits on the desktop canvas.
+ * FeaturedPanel: pinned-work tile list that sits on the desktop canvas.
  * Ported from new-design/index.html `function FeaturedPanel()`.
  *
  * Pins the top featured projects first, then fills remaining slots with
@@ -45,7 +46,7 @@ function FeaturedPanelImpl({ onOpenProject }: FeaturedPanelProps) {
         >
           Featured work
         </h2>
-        <span className="text-ink-4 font-mono text-[10px]">
+        <span className="text-ink-4 font-mono text-xs tabular-nums">
           {pinned.length} pinned
         </span>
       </div>
@@ -66,10 +67,10 @@ function FeaturedPanelImpl({ onOpenProject }: FeaturedPanelProps) {
                 </ProjectAvatar>
                 <div className="min-w-0 flex-1">
                   <div className="font-display text-ink flex items-center gap-1.5 text-sm">
-                    {p.title}
-                    <span className="bg-surf-0 text-ink-3 rounded px-1.5 py-0.5 font-mono text-[10px]">
-                      {(p.projectType ?? 'project').toUpperCase()}
-                    </span>
+                    <span className="truncate">{p.title}</span>
+                    <StatusChip tone="neutral">
+                      {p.projectType ?? 'project'}
+                    </StatusChip>
                   </div>
                   <div className="font-body text-ink-3 mt-0.5 line-clamp-2 text-xs">
                     {p.summary}
@@ -77,7 +78,7 @@ function FeaturedPanelImpl({ onOpenProject }: FeaturedPanelProps) {
                 </div>
                 <span
                   aria-hidden
-                  className="text-ink-4 group-hover:text-miku transition-[translate,color] duration-150 group-hover:translate-x-0.5"
+                  className="text-ink-4 group-hover:text-miku-ink transition-[translate,color] duration-150 group-hover:translate-x-0.5"
                 >
                   →
                 </span>

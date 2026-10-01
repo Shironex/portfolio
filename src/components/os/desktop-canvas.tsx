@@ -2,6 +2,10 @@
 
 import type { ReactNode } from 'react'
 
+import { GLOW } from '@/lib/os/palettes.generated'
+
+import { glowStyle } from './accent-map'
+
 interface DesktopCanvasProps {
   children?: ReactNode
 }
@@ -17,7 +21,7 @@ interface DesktopCanvasProps {
  */
 export function DesktopCanvas({ children }: DesktopCanvasProps) {
   return (
-    <div className="from-sky-0 via-sky-1 to-sky-2 relative min-h-dvh overflow-hidden bg-gradient-to-br">
+    <div className="from-sky-0 via-sky-1 to-sky-2 relative min-h-dvh overflow-hidden bg-linear-to-br">
       <span aria-hidden className="grain-layer" />
       <span
         aria-hidden
@@ -27,14 +31,14 @@ export function DesktopCanvas({ children }: DesktopCanvasProps) {
       </span>
       <span
         aria-hidden
-        className="text-pink/20 animate-drift ambient-loop pointer-events-none absolute top-[35%] right-[18%] text-5xl motion-reduce:animate-none"
+        className="text-miku/20 animate-drift ambient-loop pointer-events-none absolute top-[35%] right-[18%] text-5xl motion-reduce:animate-none"
         style={{ animationDelay: '-4s' }}
       >
         ♫
       </span>
       <span
         aria-hidden
-        className="text-lav/25 animate-drift ambient-loop pointer-events-none absolute top-[65%] left-[22%] text-3xl motion-reduce:animate-none"
+        className="text-ink-3/25 animate-drift ambient-loop pointer-events-none absolute top-[65%] left-[22%] text-3xl motion-reduce:animate-none"
         style={{ animationDelay: '-8s' }}
       >
         ♪
@@ -49,12 +53,16 @@ export function DesktopCanvas({ children }: DesktopCanvasProps) {
 
       <span
         aria-hidden
-        className="orb animate-floaty ambient-loop pointer-events-none absolute top-[calc(20%-10rem)] right-[calc(10%-10rem)] size-[36rem] [--orb-color:color-mix(in_oklab,var(--color-pink)_8.6%,transparent)] motion-reduce:animate-none"
+        className="orb animate-floaty ambient-loop pointer-events-none absolute top-[calc(20%-10rem)] right-[calc(10%-10rem)] size-[36rem] motion-reduce:animate-none"
+        style={glowStyle('primary', GLOW.wallpaper[0])}
       />
       <span
         aria-hidden
-        className="orb animate-floaty ambient-loop pointer-events-none absolute bottom-[calc(15%-10rem)] left-[calc(10%-10rem)] size-[38rem] [--orb-color:color-mix(in_oklab,var(--color-miku)_9.2%,transparent)] motion-reduce:animate-none"
-        style={{ animationDelay: '-3s' }}
+        className="orb animate-floaty ambient-loop pointer-events-none absolute bottom-[calc(15%-10rem)] left-[calc(10%-10rem)] size-[38rem] motion-reduce:animate-none"
+        style={{
+          ...glowStyle('primary', GLOW.wallpaper[1]),
+          animationDelay: '-3s',
+        }}
       />
 
       {children}

@@ -8,7 +8,11 @@
 
 import { ArrowUpRight } from 'lucide-react'
 
-import { INLINE_LINK_CLASS, SKELETON_BAR } from '@/components/os/constants'
+import {
+  EYEBROW_CLASS,
+  INLINE_LINK_CLASS,
+  SKELETON_BAR,
+} from '@/components/os/constants'
 import { ExternalLink } from '@/components/os/external-link'
 
 import {
@@ -17,6 +21,7 @@ import {
   BlogPostsSchema,
 } from '@/lib/blog/posts-schema'
 import { BLOG_URL } from '@/lib/constants'
+import { cn } from '@/lib/utils'
 import { SHORT_DATE, formatDate } from '@/lib/utils/format-date'
 
 import { type ApiFeedState, useApiFeed } from '@/hooks/use-api-feed'
@@ -43,10 +48,10 @@ function BlogLink({ children }: { children: React.ReactNode }) {
 function PostSkeleton() {
   return (
     <li aria-hidden className="border-rule bg-surf-0 rounded-2xl border p-4">
-      <div className={`${SKELETON_BAR} h-2.5 w-20 rounded`} />
-      <div className={`${SKELETON_BAR} mt-3 h-4 w-3/4 rounded`} />
-      <div className={`${SKELETON_BAR} mt-3 h-3 w-full rounded`} />
-      <div className={`${SKELETON_BAR} mt-2 h-3 w-2/3 rounded`} />
+      <div className={cn(SKELETON_BAR, 'h-2.5 w-20 rounded')} />
+      <div className={cn(SKELETON_BAR, 'mt-3 h-4 w-3/4 rounded')} />
+      <div className={cn(SKELETON_BAR, 'mt-3 h-3 w-full rounded')} />
+      <div className={cn(SKELETON_BAR, 'mt-2 h-3 w-2/3 rounded')} />
     </li>
   )
 }
@@ -74,7 +79,7 @@ function PostRow({ post }: { post: BlogPost }) {
           <ArrowUpRight
             aria-hidden
             size={16}
-            className="text-ink-3 group-hover:text-miku-2 mt-1 shrink-0 transition-colors"
+            className="text-ink-3 group-hover:text-miku-2-icon mt-1 shrink-0 transition-colors"
           />
         </span>
         {post.excerpt && (
@@ -132,10 +137,8 @@ export default function WritingApp() {
 
   return (
     <div className="font-body text-ink-2 max-w-[720px] text-[14px] leading-relaxed">
-      <div className="text-miku font-mono text-[10px] tracking-[0.22em] uppercase">
-        Writing
-      </div>
-      <h2 className="font-display text-ink text-3xl font-semibold tracking-tight">
+      <div className={cn(EYEBROW_CLASS, 'text-miku-ink')}>Writing</div>
+      <h2 className="font-display text-ink text-3xl font-semibold">
         Latest posts
       </h2>
       <p className="mt-1">

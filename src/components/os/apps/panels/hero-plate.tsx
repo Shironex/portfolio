@@ -3,9 +3,12 @@
 import Image from 'next/image'
 import { memo } from 'react'
 
+import { glowStyle } from '@/components/os/accent-map'
 import { HeroText } from '@/components/os/hero-text'
 import { Kbd } from '@/components/os/kbd'
 import type { HeadingLevel } from '@/components/os/types'
+
+import { GLOW } from '@/lib/os/palettes.generated'
 
 import { GithubActivityStrip } from './github-activity-strip'
 
@@ -29,11 +32,12 @@ function HeroPlateImpl({
   headingLevel,
 }: HeroPlateProps) {
   return (
-    <div className="border-rule-2 bg-surf-solid shadow-elev-3 relative flex h-full w-full flex-col overflow-hidden rounded-3xl border px-5 py-6 md:px-8 md:py-7">
+    <div className="border-rule-2 bg-surf-solid shadow-elev-3 relative flex size-full flex-col overflow-hidden rounded-3xl border px-5 py-6 md:px-8 md:py-7">
       {/* A pre-blurred glow (`orb`), paused with the rest of the wallpaper. */}
       <span
         aria-hidden
-        className="orb animate-floaty ambient-loop pointer-events-none absolute -top-[172px] -right-[148px] size-[440px] [--orb-color:color-mix(in_oklab,var(--color-miku-3)_20%,transparent)] motion-reduce:animate-none"
+        className="orb animate-floaty ambient-loop pointer-events-none absolute -top-[172px] -right-[148px] size-[440px] motion-reduce:animate-none"
+        style={glowStyle('bright', GLOW.hero)}
       />
 
       <HeroText headingLevel={headingLevel} />
@@ -54,7 +58,7 @@ function HeroPlateImpl({
           onClick={onOpenCmd}
           className="focus-ring bg-surf-0 border-rule-2 text-ink hover:bg-surf-soft flex items-center gap-2 rounded-lg border px-4 py-2 text-sm transition-colors"
         >
-          {/* Keyboard hints are noise on touch — relabel to what it does there. */}
+          {/* Keyboard hints are noise on touch: relabel to what it does there. */}
           <span className="pointer-coarse:hidden">Command palette</span>
           <span className="hidden pointer-coarse:inline">Search</span>
           <Kbd className="pointer-coarse:hidden">⌘K</Kbd>

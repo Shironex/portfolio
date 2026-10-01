@@ -18,7 +18,7 @@ import { GithubIcon } from '@/components/icons/github-icon'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
 import { PALETTES, type PaletteId } from '@/lib/os/appearance'
-import { onBackdropDismiss } from '@/lib/utils'
+import { cn, onBackdropDismiss } from '@/lib/utils'
 import { copyToClipboard } from '@/lib/utils/copy-to-clipboard'
 import { pluralWord } from '@/lib/utils/plural'
 
@@ -28,13 +28,8 @@ import { useFocusTrap } from '@/hooks/use-focus-trap'
 import type { Theme } from '@/hooks/use-theme'
 import type { Project } from '@/types'
 
-import {
-  type AccentRole,
-  accentColor,
-  accentFor,
-  accentTint,
-} from './accent-map'
-import { APPS, COPY_LINK_LABEL } from './constants'
+import { type AccentRole, accentFor, accentTileStyle } from './accent-map'
+import { APPS, COPY_LINK_LABEL, EYEBROW_CLASS } from './constants'
 import { Kbd } from './kbd'
 import type { AppId } from './types'
 
@@ -230,7 +225,7 @@ export function CmdPalette({
     inputRef.current?.focus()
   }, [])
 
-  // Keep the keyboard selection visible — without this, arrowing past the
+  // Keep the keyboard selection visible: without this, arrowing past the
   // fold moves the active item out of the scrolled listbox.
   useEffect(() => {
     document
@@ -300,7 +295,7 @@ export function CmdPalette({
         {/* A sibling of the listbox, not a child: a listbox owns only options. */}
         <div
           role="status"
-          className="text-ink-4 px-4 pt-3.5 pb-1.5 font-mono text-[10px] tracking-wider uppercase"
+          className={cn(EYEBROW_CLASS, 'text-ink-4 px-4 pt-3.5 pb-1.5')}
         >
           {q
             ? `${items.length} ${pluralWord(items.length, 'result', 'results')}`
@@ -322,25 +317,21 @@ export function CmdPalette({
               aria-selected={i === sel}
               onClick={item.onClick}
               onMouseEnter={() => setSel(i)}
-              className={`focus-ring flex w-full items-center gap-3 px-4 py-2 text-left text-sm ${
+              className={cn(
+                'focus-ring flex w-full items-center gap-3 px-4 py-2 text-left text-sm',
                 i === sel ? 'bg-miku/10' : 'hover:bg-surf-soft'
-              }`}
+              )}
             >
               <span
                 aria-hidden
                 data-palette={item.swatchPalette}
                 className="flex size-6 items-center justify-center rounded"
-                style={{
-                  backgroundColor: accentTint(item.accent, 12),
-                  color: accentColor(item.accent),
-                }}
+                style={accentTileStyle(item.accent)}
               >
                 {item.ic}
               </span>
               <span className="text-ink flex-1">{item.label}</span>
-              <span className="text-ink-4 font-mono text-[10px]">
-                {item.hint}
-              </span>
+              <span className="text-ink-4 font-mono text-xs">{item.hint}</span>
             </button>
           ))}
         </div>
@@ -360,7 +351,7 @@ export function CmdPalette({
           </div>
         )}
 
-        <div className="border-rule bg-surf-soft text-ink-4 flex items-center gap-4 border-t px-4 py-2 font-mono text-[10px] pointer-coarse:hidden">
+        <div className="border-rule bg-surf-soft text-ink-4 flex items-center gap-4 border-t px-4 py-2 font-mono text-[11px] pointer-coarse:hidden">
           <span>
             <Kbd>↑↓</Kbd> navigate
           </span>

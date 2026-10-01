@@ -1,19 +1,20 @@
 import type { ReactNode } from 'react'
 
+import { TINT } from '@/lib/os/palettes.generated'
 import { cn } from '@/lib/utils'
 
-import { type AccentRole, accentColor, accentTint } from './accent-map'
+import { type AccentRole, accentInk, accentTint } from './accent-map'
 
 type AvatarSize = 10 | 8
 
 interface ProjectAvatarProps {
   /** Accent role (e.g. from `accentFor(slug)`). */
   accent: AccentRole
-  /** Tile dimension — maps to Tailwind `size-10` / `size-8`. */
+  /** Tile dimension: maps to Tailwind `size-10` / `size-8`. */
   size?: AvatarSize
   /** Opacity of the accent behind the glyph, as a percentage. */
   tint?: number
-  /** Tile contents — typically the project's first letter. */
+  /** Tile contents: typically the project's first letter. */
   children: ReactNode
   /** Hide from the accessibility tree (the parent button labels itself). */
   hidden?: boolean
@@ -34,7 +35,7 @@ const SIZE_CLASS: Record<AvatarSize, string> = {
 export function ProjectAvatar({
   accent,
   size = 10,
-  tint = 15,
+  tint = TINT.icon,
   children,
   hidden,
   className,
@@ -49,7 +50,7 @@ export function ProjectAvatar({
       )}
       style={{
         backgroundColor: accentTint(accent, tint),
-        color: accentColor(accent),
+        color: accentInk(accent),
       }}
     >
       {children}

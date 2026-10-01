@@ -6,6 +6,9 @@
  *
  * `ground` is the page ground (`--shiro-sky-1`) per mode, for the places
  * CSS variables cannot reach: the `theme-color` meta and the manifest.
+ *
+ * `TINT` and `GLOW` are the strengths the contrast gate ran with, for the
+ * components that set one in an inline style.
  */
 
 export const PALETTES = [
@@ -47,3 +50,27 @@ export const DEFAULT_PALETTE: PaletteId = 'teal'
 
 /** Light accent of the default palette, for the manifest. */
 export const DEFAULT_THEME_COLOR = '#0f7c74'
+
+/**
+ * Strongest tint, in percent, the contrast gate allows behind a foreground:
+ * `text` under text of the tint's own accent, `icon` under an icon of it,
+ * `row` under plain ink on a selected row, `kbd` of ink under `cloud` on
+ * a filled button. A weaker tint is always safe.
+ */
+export const TINT = {
+  text: 20,
+  icon: 15,
+  row: 10,
+  kbd: 20,
+} as const
+
+/**
+ * Strength of each glow (`orb`) at its centre, in percent, as the contrast
+ * gate measured the text that crosses it.
+ */
+export const GLOW = {
+  wallpaper: [8.6, 9.2],
+  hero: 20,
+  card: 10.3,
+  detail: 40.5,
+} as const

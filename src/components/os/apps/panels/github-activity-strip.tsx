@@ -8,7 +8,12 @@ import {
   useState,
 } from 'react'
 
-import { INLINE_LINK_CLASS, SKELETON_BAR } from '@/components/os/constants'
+import {
+  EYEBROW_CLASS,
+  INLINE_LINK_CLASS,
+  LABEL_CLASS,
+  SKELETON_BAR,
+} from '@/components/os/constants'
 import { ExternalLink } from '@/components/os/external-link'
 
 import { GITHUB_URL } from '@/lib/constants'
@@ -16,6 +21,7 @@ import {
   type ContributionDay,
   GithubActivitySchema,
 } from '@/lib/github/activity-schema'
+import { cn } from '@/lib/utils'
 import { formatDate } from '@/lib/utils/format-date'
 import { pluralWord } from '@/lib/utils/plural'
 
@@ -113,7 +119,7 @@ export function GithubActivityStrip() {
               <div
                 key={d.date}
                 {...{ [DAY_INDEX_ATTRIBUTE]: w * DAYS_PER_WEEK + i }}
-                className={`size-[11px] rounded-[2px] ${LEVEL_BG[d.level]}`}
+                className={cn('size-[11px] rounded-[2px]', LEVEL_BG[d.level])}
               />
             ))}
           </div>
@@ -152,16 +158,14 @@ export function GithubActivityStrip() {
     >
       <div className="mb-2 flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <div className="text-miku font-mono text-[10px] tracking-[0.22em] uppercase">
-            Activity
-          </div>
+          <div className={cn(EYEBROW_CLASS, 'text-miku-ink')}>Activity</div>
           <div className="font-display text-ink text-sm font-bold tabular-nums">
             {total !== null
               ? `${total.toLocaleString()} contributions`
               : 'recent contributions'}
           </div>
         </div>
-        <div className="text-ink-4 font-mono text-[10px]">last 6 months</div>
+        <div className="text-ink-4 font-mono text-xs">last 6 months</div>
       </div>
 
       {state.kind === 'unconfigured' ? (
@@ -209,7 +213,7 @@ export function GithubActivityStrip() {
       {hover && (
         <div
           aria-hidden
-          className="border-rule-2 bg-surf-solid text-ink shadow-elev-2 animate-fade-in pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full rounded-md border px-2 py-1 font-mono text-[10px] motion-reduce:animate-none"
+          className="border-rule-2 bg-surf-solid text-ink shadow-elev-2 animate-fade-in pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full rounded-md border px-2 py-1 font-mono text-xs motion-reduce:animate-none"
           style={{ left: hover.x, top: hover.y - 6 }}
         >
           {describeDay(hover.day)}
@@ -217,7 +221,12 @@ export function GithubActivityStrip() {
       )}
 
       {state.kind === 'ready' && (
-        <div className="text-ink-4 mt-2 flex items-center gap-1.5 font-mono text-[9px] tracking-widest uppercase">
+        <div
+          className={cn(
+            LABEL_CLASS,
+            'text-ink-4 mt-2 flex items-center gap-1.5'
+          )}
+        >
           <span>less</span>
           <span aria-hidden className="bg-rule size-2 rounded-[2px]" />
           <span aria-hidden className="bg-miku/25 size-2 rounded-[2px]" />

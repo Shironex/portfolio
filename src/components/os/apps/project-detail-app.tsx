@@ -1,5 +1,5 @@
 /**
- * project.detail window — rich detail view for a single project.
+ * project.detail window: rich detail view for a single project.
  * Sections: hero + overview + features + tech stack + gallery. The static
  * sections live in `project-detail/project-sections.tsx`, shared with the
  * `/projects/<slug>` page; this file adds the interactive gallery.
@@ -164,6 +164,8 @@ function GalleryLightbox({
             alt={item.alt}
             fill
             sizes={LIGHTBOX_SIZES}
+            // A filter, not `shadow-elev-*`: the picture is letterboxed inside
+            // the frame, and a box shadow would trace the frame.
             className="object-contain drop-shadow-2xl select-none"
             draggable={false}
           />
@@ -202,9 +204,11 @@ function GalleryLightbox({
           )}
         </div>
         {(item.caption || hasMany) && (
-          <p className="font-body text-cloud mt-3 min-h-10 max-w-2xl text-center text-sm">
+          // Fixed white, like the scrim is fixed black: `cloud` follows the
+          // mode and would be dark on dark here.
+          <p className="font-body mt-3 min-h-10 max-w-2xl text-center text-sm text-white">
             {hasMany && (
-              <span className="text-cloud/70 mr-2 font-mono text-xs tabular-nums">
+              <span className="mr-2 font-mono text-xs text-white/70 tabular-nums">
                 {index + 1} / {items.length}
               </span>
             )}

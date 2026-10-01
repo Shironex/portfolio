@@ -6,7 +6,10 @@ import { useMemo } from 'react'
 
 import { AlertTriangle, ArrowLeft, Home } from 'lucide-react'
 
+import { glowStyle } from '@/components/os/accent-map'
 import { Kbd } from '@/components/os/kbd'
+
+import { GLOW } from '@/lib/os/palettes.generated'
 
 import { useHotkeys } from '@/hooks/use-hotkeys'
 
@@ -18,18 +21,22 @@ export function NotFoundScreen() {
   useHotkeys(useMemo(() => ({ escape: () => router.push('/') }), [router]))
 
   return (
-    <main className="from-sky-0 via-sky-1 to-sky-2 font-body relative min-h-dvh overflow-hidden bg-gradient-to-br">
+    <main className="from-sky-0 via-sky-1 to-sky-2 font-body relative min-h-dvh overflow-hidden bg-linear-to-br">
       <span aria-hidden className="grain-layer" />
       {/* Gradient glows (`orb`), as on the desktop: nothing is blurred live.
           The offsets keep each centre where its 256px and 288px disc sat. */}
       <span
         aria-hidden
-        className="orb motion-safe:animate-floaty ambient-loop pointer-events-none absolute top-[calc(18%-10rem)] right-[calc(12%-10rem)] size-[36rem] [--orb-color:color-mix(in_oklab,var(--color-miku)_8.6%,transparent)]"
+        className="orb motion-safe:animate-floaty ambient-loop pointer-events-none absolute top-[calc(18%-10rem)] right-[calc(12%-10rem)] size-[36rem]"
+        style={glowStyle('primary', GLOW.wallpaper[0])}
       />
       <span
         aria-hidden
-        className="orb motion-safe:animate-floaty ambient-loop pointer-events-none absolute bottom-[calc(15%-10rem)] left-[calc(10%-10rem)] size-[38rem] [--orb-color:color-mix(in_oklab,var(--color-miku-2)_9.2%,transparent)]"
-        style={{ animationDelay: '-3s' }}
+        className="orb motion-safe:animate-floaty ambient-loop pointer-events-none absolute bottom-[calc(15%-10rem)] left-[calc(10%-10rem)] size-[38rem]"
+        style={{
+          ...glowStyle('deep', GLOW.wallpaper[1]),
+          animationDelay: '-3s',
+        }}
       />
 
       <div className="relative flex min-h-dvh items-center justify-center px-4 py-12">
@@ -43,7 +50,7 @@ export function NotFoundScreen() {
             <div className="flex flex-1 items-center gap-2 px-3 py-2">
               <AlertTriangle
                 aria-hidden
-                className="text-peach size-3.5"
+                className="text-peach-icon size-3.5"
                 strokeWidth={2}
               />
               <span className="text-ink font-mono text-xs font-bold">
@@ -53,7 +60,7 @@ export function NotFoundScreen() {
             <Link
               href="/"
               aria-label="Close and return to desktop"
-              className="focus-ring text-ink-2 hover:bg-danger hover:text-cloud flex h-8 w-10 items-center justify-center text-xs transition-colors pointer-coarse:h-11 pointer-coarse:w-12"
+              className="focus-ring text-ink-2 hover:bg-danger-ink hover:text-cloud flex h-8 w-10 items-center justify-center text-xs transition-colors pointer-coarse:h-11 pointer-coarse:w-12"
             >
               <span aria-hidden>✕</span>
             </Link>
@@ -62,7 +69,7 @@ export function NotFoundScreen() {
           <div className="px-6 py-6">
             <h1
               id="not-found-title"
-              className="font-display text-ink mb-1 text-5xl font-bold tracking-tight"
+              className="font-display text-ink mb-1 text-5xl font-bold"
             >
               404
             </h1>
@@ -72,19 +79,23 @@ export function NotFoundScreen() {
 
             <div className="border-rule bg-surf-0 text-ink-2 mb-6 rounded-lg border px-3 py-3 font-mono text-xs">
               <div className="break-all">
-                <span className="text-miku-2 font-bold">~/kacper</span>
-                <span className="text-miku mx-1.5 font-bold">❯</span>
+                <span className="text-miku-2-ink font-bold">~/kacper</span>
+                <span aria-hidden className="text-miku-ink mx-1.5 font-bold">
+                  ❯
+                </span>
                 <span className="text-ink">cd .{pathname || '/unknown'}</span>
               </div>
-              <div className="text-peach mt-1">
+              <div className="text-peach-ink mt-1">
                 cd: no such file or directory: .{pathname || '/unknown'}
               </div>
               <div className="mt-2">
-                <span className="text-miku-2 font-bold">~/kacper</span>
-                <span className="text-miku mx-1.5 font-bold">❯</span>
+                <span className="text-miku-2-ink font-bold">~/kacper</span>
+                <span aria-hidden className="text-miku-ink mx-1.5 font-bold">
+                  ❯
+                </span>
                 <span
                   aria-hidden
-                  className="text-miku motion-safe:animate-blink ml-0.5"
+                  className="text-miku-ink motion-safe:animate-blink ml-0.5"
                 >
                   ▌
                 </span>

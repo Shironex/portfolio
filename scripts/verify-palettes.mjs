@@ -2,8 +2,8 @@
  * Drives the real app through every palette in both modes and asserts the
  * document actually repainted, then writes one screenshot per combination.
  *
- *   pnpm build && pnpm start          (in another shell)
- *   node scripts/verify-palettes.mjs  [--out <dir>] [--url http://localhost:3000]
+ *   pnpm build && pnpm start   (in another shell)
+ *   pnpm palettes:verify       [--out <dir>] [--url http://localhost:3000]
  *
  * The three things worth proving here, none of which a build catches:
  *   - the pre-paint boot script runs before React, so there is no flash of the
@@ -46,13 +46,16 @@ async function dismissBoot(page) {
     .catch(() => page.waitForTimeout(2600))
 }
 
-const browser = await chromium.launch({ channel: 'msedge' })
+const browser = await chromium.launch()
 
 for (const { id, name } of PALETTES) {
   for (const mode of ['light', 'dark']) {
     const context = await browser.newContext({
       viewport: { width: 1440, height: 900 },
     })
+    // The keys are `PALETTE_STORAGE_KEY` and `MODE_STORAGE_KEY` in
+    // src/lib/os/appearance.ts, which is TypeScript and cannot be imported
+    // here: a rename there has to be repeated on these two lines.
     await context.addInitScript(
       ([p, m]) => {
         localStorage.setItem('shiroos:palette', p)
@@ -113,4 +116,4 @@ if (failures.length) {
   for (const f of failures) console.error(`  ${f}`)
   process.exit(1)
 }
-console.log(`\nall checks pass — ${PALETTES.length * 2 + 1} screenshots in ${OUT}`)
+console.log(`\nall checks pass: ${PALETTES.length * 2 + 1} screenshots in ${OUT}`)

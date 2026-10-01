@@ -1,13 +1,15 @@
+import { cn } from '@/lib/utils'
+
 import { skillsData } from '@/data/skills-data'
 
 /**
- * Skills window — skill groups, not an animated system-monitor parody.
+ * Skills window: skill groups, not an animated system-monitor parody.
  */
 export default function SkillsApp() {
   return (
     <div className="font-body space-y-6">
       <header>
-        <h2 className="font-display text-ink text-3xl font-semibold tracking-tight">
+        <h2 className="font-display text-ink text-3xl font-semibold">
           Skills &amp; tools
         </h2>
         <p className="font-body text-ink-3 mt-1 max-w-prose text-sm">
@@ -30,13 +32,14 @@ export default function SkillsApp() {
               {col.items.map((item, i) => (
                 <span
                   key={item.n}
-                  className={`rounded-full border px-2.5 py-1 font-mono text-xs ${
+                  className={cn(
+                    'rounded-full border px-2.5 py-1 font-mono text-xs',
                     i === 0
-                      ? 'border-miku/40 bg-miku/10 text-miku-2 font-semibold'
+                      ? 'border-miku/40 bg-miku/10 text-miku-ink font-semibold'
                       : item.previously
                         ? 'border-rule-2 text-ink-3 border-dashed'
                         : 'border-rule-2 bg-surf-0 text-ink-2'
-                  }`}
+                  )}
                 >
                   {item.n}
                   {item.previously && (

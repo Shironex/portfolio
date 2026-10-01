@@ -49,7 +49,20 @@ export const MOBILE_GUTTER_CLASS =
 
 /** Text link inside running copy. */
 export const INLINE_LINK_CLASS =
-  'focus-ring text-miku-2 rounded-sm underline underline-offset-2'
+  'focus-ring text-miku-2-ink rounded-sm underline underline-offset-2'
+
+/**
+ * Small uppercase mono label over a section: the one eyebrow of the shell.
+ * Callers add the colour and the spacing.
+ */
+export const EYEBROW_CLASS =
+  'font-mono text-[11px] font-normal tracking-eyebrow uppercase'
+
+/**
+ * Small uppercase mono label of a badge or a legend, tighter than the eyebrow.
+ * Callers add the colour.
+ */
+export const LABEL_CLASS = 'font-mono text-[11px] tracking-label uppercase'
 
 /** Pulsing placeholder fill; callers add the size and radius. */
 export const SKELETON_BAR =

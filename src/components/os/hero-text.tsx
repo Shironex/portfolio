@@ -29,13 +29,14 @@ export function HeroText({ headingLevel = 1 }: HeroTextProps) {
   const Heading = headingLevel === 1 ? 'h1' : 'h2'
   return (
     <>
-      <div className="text-ink-3 relative mb-3 font-mono text-[11px]">
+      {/* `ink-2`: on a phone this line runs through the centre of the glow. */}
+      <div className="text-ink-2 relative mb-3 font-mono text-[11px]">
         {HERO_COPY.eyebrow}
       </div>
 
       {/* On desktop the size also tracks viewport height, so short laptop
           screens keep the headline to three lines. */}
-      <Heading className="font-display text-ink relative text-[clamp(32px,8vw,44px)] leading-[1.05] font-bold tracking-[-0.02em] md:text-[clamp(34px,min(3.2vw,5.6vh),54px)]">
+      <Heading className="font-display text-ink relative text-[clamp(32px,8vw,44px)] leading-[1.05] font-bold md:text-[clamp(34px,min(3.2vw,5.6vh),54px)]">
         {HERO_COPY.greeting}
         <br />I build typed{' '}
         <span className="whitespace-nowrap">full-stack</span> systems and
@@ -49,7 +50,7 @@ export function HeroText({ headingLevel = 1 }: HeroTextProps) {
       <ul className="font-body text-ink-3 relative mt-3 flex max-w-xl flex-col gap-1 text-[13px] leading-snug">
         {HERO_COPY.proof.map((line) => (
           <li key={line} className="flex gap-2">
-            <span aria-hidden className="text-miku">
+            <span aria-hidden className="text-miku-ink">
               ›
             </span>
             <span>{line}</span>

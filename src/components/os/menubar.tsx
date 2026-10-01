@@ -189,7 +189,7 @@ function MenuBarImpl({
       items: [
         { label: 'About ShiroOS', onClick: () => onLaunchApp('readme') },
         {
-          // The readme documents the full shortcut set — richer than the old
+          // The readme documents the full shortcut set, richer than the old
           // two-item toast.
           label: 'Keyboard shortcuts',
           onClick: () => onLaunchApp('readme'),
@@ -258,7 +258,7 @@ function MenuBarImpl({
           aria-label={
             theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
           }
-          className="focus-ring text-ink-3 hover:bg-surf-0 hover:text-miku-2 rounded p-1 transition-colors"
+          className="focus-ring text-ink-3 hover:bg-surf-0 hover:text-miku-2-icon rounded p-1 transition-colors"
         >
           {theme === 'dark' ? (
             <Sun aria-hidden size={14} />

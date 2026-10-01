@@ -57,7 +57,7 @@ export async function generateMetadata({
 function StaticProject({ project }: { project: Project }) {
   return (
     <StaticLayer
-      className="text-ink from-sky-0 via-sky-1 to-sky-2 fixed inset-0 overflow-y-auto bg-gradient-to-br"
+      className="text-ink from-sky-0 via-sky-1 to-sky-2 fixed inset-0 overflow-y-auto bg-linear-to-br"
       data-ssr-project
     >
       <article className="border-rule-2 bg-surf-solid shadow-elev-3 mx-auto my-6 w-[min(100%-2rem,52rem)] rounded-3xl border p-5 md:my-14 md:p-8">
@@ -74,7 +74,7 @@ function StaticProject({ project }: { project: Project }) {
         </ProjectSections>
         <p className="text-ink-3 mt-8 font-mono text-xs">
           One of my projects.{' '}
-          <Link href="/" prefetch={false} className="focus-ring text-miku">
+          <Link href="/" prefetch={false} className="focus-ring text-miku-ink">
             More on the {AUTHOR_FULL_NAME} desktop
           </Link>
         </p>

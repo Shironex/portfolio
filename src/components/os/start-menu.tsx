@@ -16,8 +16,8 @@ import { useEscapeLayer } from '@/hooks/use-escape-layer'
 import { useFocusTrap } from '@/hooks/use-focus-trap'
 import type { Project } from '@/types'
 
-import { accentColor, accentFor, accentTint } from './accent-map'
-import { APPS, CMD_PALETTE_SHORTCUT } from './constants'
+import { accentFor, accentTileStyle } from './accent-map'
+import { APPS, CMD_PALETTE_SHORTCUT, EYEBROW_CLASS } from './constants'
 import { ExternalLink } from './external-link'
 import { Kbd } from './kbd'
 import { ProjectAvatar } from './project-avatar'
@@ -39,8 +39,7 @@ interface StartMenuProps {
  * restores focus on close, dismisses on Esc or backdrop.
  */
 
-const SECTION_HEADING_CLASS =
-  'text-ink-4 px-5 pb-1 font-mono text-[10px] font-normal tracking-widest uppercase'
+const SECTION_HEADING_CLASS = cn(EYEBROW_CLASS, 'text-ink-4 px-5 pb-1')
 
 export function StartMenu({
   onClose,
@@ -121,10 +120,7 @@ export function StartMenu({
                   <span
                     aria-hidden
                     className="flex size-11 items-center justify-center rounded-xl"
-                    style={{
-                      backgroundColor: accentTint(app.accent, 15),
-                      color: accentColor(app.accent),
-                    }}
+                    style={accentTileStyle(app.accent)}
                   >
                     <Icon size={20} strokeWidth={1.75} />
                   </span>
@@ -158,7 +154,7 @@ export function StartMenu({
                   <div className="font-body text-ink truncate text-sm">
                     {p.title}
                   </div>
-                  <div className="text-ink-4 truncate font-mono text-[10px]">
+                  <div className="text-ink-4 truncate font-mono text-xs">
                     {p.projectType ?? 'project'} ·{' '}
                     {p.technologies.slice(0, 3).join(' · ')}
                   </div>
@@ -184,7 +180,7 @@ export function StartMenu({
             </div>
             <a
               href={`mailto:${EMAIL_CONTACT}`}
-              className="focus-ring text-ink-3 hover:text-miku-2 rounded font-mono text-[10px]"
+              className="focus-ring text-ink-3 hover:text-miku-2-ink block truncate rounded font-mono text-xs"
             >
               {EMAIL_CONTACT}
             </a>

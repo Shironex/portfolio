@@ -4,7 +4,7 @@
  * (server) render the same markup from the same data.
  */
 import Image from 'next/image'
-import type { CSSProperties, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 import {
   BookOpen,
@@ -19,16 +19,21 @@ import {
 } from 'lucide-react'
 
 import { GithubIcon } from '@/components/icons/github-icon'
-import { accentColor, accentFor, accentTint } from '@/components/os/accent-map'
+import {
+  accentFor,
+  accentInk,
+  accentTint,
+  glowStyle,
+} from '@/components/os/accent-map'
+import { EYEBROW_CLASS } from '@/components/os/constants'
 import { ExternalLink } from '@/components/os/external-link'
+import { StatusChip } from '@/components/os/status-chip'
 import type { HeadingLevel } from '@/components/os/types'
 
+import { GLOW } from '@/lib/os/palettes.generated'
+import { cn } from '@/lib/utils'
 import { parseMonthYear } from '@/lib/utils/format-date'
-import {
-  STATUS_LABEL,
-  hasUsableDemo,
-  projectStack,
-} from '@/lib/utils/project-meta'
+import { hasUsableDemo, projectStack } from '@/lib/utils/project-meta'
 
 import type { GalleryItem, Project, ProjectLinkKind } from '@/types'
 
@@ -79,7 +84,9 @@ export function ProjectSection({
   const Heading = HEADING_TAG[titleLevel === 1 ? 2 : 3]
   return (
     <section>
-      <Heading className="text-miku mt-8 mb-3 font-mono text-[11px] font-bold tracking-[0.22em] uppercase">
+      <Heading
+        className={cn(EYEBROW_CLASS, 'text-miku-ink mt-8 mb-3 font-bold')}
+      >
         {title}
       </Heading>
       {children}
@@ -100,25 +107,31 @@ export function ProjectHero({ project, titleLevel = 1 }: ProjectProps) {
       <div
         aria-hidden
         className="orb pointer-events-none absolute -top-[172px] -right-[172px] size-[408px]"
-        style={{ '--orb-color': accentTint(accent, 40.5) } as CSSProperties}
+        style={glowStyle(accent, GLOW.detail)}
       />
       <div className="relative">
+        {/* Each badge lays its tint over the opaque card colour: on a narrow
+            screen the glow reaches under them, and a tint over a glow is not
+            a ground the text was made for. */}
         <div className="mb-3 flex items-center gap-2">
           {project.projectType && (
-            <span
-              className="rounded-full px-2 py-0.5 font-mono text-[10px] tracking-widest uppercase"
-              style={{
-                backgroundColor: accentTint(accent, 13),
-                color: accentColor(accent),
-              }}
+            <StatusChip
+              tone="neutral"
+              size="md"
+              opaque
+              accent={accent}
+              className="rounded-full"
             >
               {project.projectType}
-            </span>
+            </StatusChip>
           )}
           {project.featured && (
-            <span className="bg-miku/15 text-miku rounded-full px-2 py-0.5 font-mono text-[10px] tracking-widest uppercase">
-              FEATURED
-            </span>
+            <StatusChip
+              tone="featured"
+              size="md"
+              opaque
+              className="rounded-full"
+            />
           )}
         </div>
 
@@ -140,15 +153,8 @@ export function ProjectHero({ project, titleLevel = 1 }: ProjectProps) {
               {completed}
             </span>
           )}
-          {project.status === 'in-progress' && (
-            <span className="bg-peach/20 text-peach rounded px-2 py-0.5 tracking-widest uppercase">
-              {STATUS_LABEL[project.status]}
-            </span>
-          )}
-          {project.status === 'archived' && (
-            <span className="bg-surf-0 text-ink-3 rounded px-2 py-0.5 tracking-widest uppercase">
-              {STATUS_LABEL[project.status]}
-            </span>
+          {project.status !== 'shipped' && (
+            <StatusChip tone={project.status} size="md" opaque />
           )}
         </div>
 
@@ -156,9 +162,9 @@ export function ProjectHero({ project, titleLevel = 1 }: ProjectProps) {
           {hasUsableDemo(project.demoUrl) && (
             <ExternalLink
               href={project.demoUrl}
-              className="focus-ring bg-miku text-cloud inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition hover:brightness-110"
+              className="focus-ring bg-miku text-cloud hover:bg-miku-2 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
             >
-              <ExternalLinkIcon aria-hidden className="h-4 w-4" />
+              <ExternalLinkIcon aria-hidden className="size-4" />
               demo
             </ExternalLink>
           )}
@@ -167,7 +173,7 @@ export function ProjectHero({ project, titleLevel = 1 }: ProjectProps) {
               href={project.githubUrl}
               className={SECONDARY_LINK_CLASS}
             >
-              <GithubIcon className="h-4 w-4" />
+              <GithubIcon className="size-4" />
               source
             </ExternalLink>
           )}
@@ -179,7 +185,7 @@ export function ProjectHero({ project, titleLevel = 1 }: ProjectProps) {
                 href={link.url}
                 className={SECONDARY_LINK_CLASS}
               >
-                <Icon aria-hidden className="h-4 w-4" />
+                <Icon aria-hidden className="size-4" />
                 {link.label}
               </ExternalLink>
             )
@@ -216,7 +222,9 @@ export function ProjectFeatures({ project, titleLevel }: ProjectProps) {
             key={feature}
             className="font-body text-ink-2 flex items-start gap-2"
           >
-            <span className="text-miku mt-0.5">✓</span>
+            <span aria-hidden className="text-miku-ink mt-0.5">
+              ✓
+            </span>
             <span>{feature}</span>
           </li>
         ))}
@@ -238,7 +246,7 @@ export function ProjectTechStack({ project, titleLevel }: ProjectProps) {
             className="rounded-full border px-2.5 py-1 font-mono text-xs"
             style={{
               borderColor: accentTint(accent, 25),
-              color: accentColor(accent),
+              color: accentInk(accent),
               backgroundColor: accentTint(accent, 6),
             }}
           >
@@ -280,9 +288,15 @@ export function GalleryThumb({ item }: GalleryThumbProps) {
         className="object-cover transition-transform duration-200 ease-out group-hover:scale-105"
       />
       {/* Fixed dark scrim, theme-independent, so the caption stays
-          readable over any screenshot in light and dark mode alike. */}
+          readable over any screenshot in light and dark mode alike. The
+          caption is held to one line, which sits in the lower half of the
+          scrim: under it the scrim never drops below 60% black, 5.7:1 on a
+          white shot. The whole caption is in the tooltip and the lightbox. */}
       {item.caption && (
-        <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent px-2.5 pt-6 pb-2 text-left text-[11px] font-medium text-white">
+        <span
+          title={item.caption}
+          className="pointer-events-none absolute inset-x-0 bottom-0 truncate bg-linear-to-t from-black/80 via-black/60 to-transparent px-2.5 pt-6 pb-2 text-left text-[11px] font-medium text-white"
+        >
           {item.caption}
         </span>
       )}

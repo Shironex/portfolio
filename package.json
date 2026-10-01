@@ -8,8 +8,9 @@
     "build": "next build --turbopack",
     "analyze": "ANALYZE=true next build --webpack",
     "start": "next start",
-    "lint": "eslint && pnpm palettes:check",
+    "lint": "eslint && node scripts/gen-palettes.mjs --check",
     "palettes:check": "node scripts/gen-palettes.mjs --check",
+    "palettes:verify": "node scripts/verify-palettes.mjs",
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
     "test:e2e:report": "playwright show-report",
@@ -52,7 +53,6 @@
     "server-only": "^0.0.1",
     "sonner": "^2.0.8",
     "tailwind-merge": "^3.6.0",
-    "tailwindcss-animate": "^1.0.7",
     "zod": "^4.6.2"
   },
   "devDependencies": {

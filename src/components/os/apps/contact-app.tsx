@@ -1,5 +1,5 @@
 /**
- * contact.app window — ShiroOS chrome around the real contact form.
+ * contact.app window: ShiroOS chrome around the real contact form.
  * Ported from new-design/components/apps.jsx `function ContactApp()`,
  * but wired into the production next-safe-action + Turnstile flow via
  * `@/lib/contact/contact-form`.
@@ -14,6 +14,7 @@ import { Clock, Copy, Mail, MapPin } from 'lucide-react'
 import { GithubIcon } from '@/components/icons/github-icon'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
+import { cn } from '@/lib/utils'
 import { copyToClipboard } from '@/lib/utils/copy-to-clipboard'
 
 import { useTheme } from '@/hooks/use-theme'
@@ -42,25 +43,25 @@ type ReachRow = {
 
 const rows: ReachRow[] = [
   {
-    icon: <Mail className="h-4 w-4" />,
+    icon: <Mail className="size-4" />,
     label: 'Email',
     value: EMAIL_CONTACT,
     href: `mailto:${EMAIL_CONTACT}`,
     copyValue: EMAIL_CONTACT,
   },
   {
-    icon: <GithubIcon className="h-4 w-4" />,
+    icon: <GithubIcon className="size-4" />,
     label: 'GitHub',
     value: GITHUB_URL.replace(/^https?:\/\//, ''),
     href: GITHUB_URL,
   },
   {
-    icon: <MapPin className="h-4 w-4" />,
+    icon: <MapPin className="size-4" />,
     label: 'Location',
     value: 'Poland · remote',
   },
   {
-    icon: <Clock className="h-4 w-4" />,
+    icon: <Clock className="size-4" />,
     label: 'Timezone',
     value: 'UTC+1 · CET',
   },
@@ -89,7 +90,7 @@ export default function ContactApp() {
           {rows.map((row) => {
             const inner = (
               <>
-                <span className="bg-miku/15 text-miku-2 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg">
+                <span className="bg-miku/15 text-miku-ink flex size-9 shrink-0 items-center justify-center rounded-lg">
                   {row.icon}
                 </span>
                 <div className="flex min-w-0 flex-col">
@@ -111,9 +112,10 @@ export default function ContactApp() {
                     target={row.href.startsWith('http') ? '_blank' : undefined}
                     rel={row.href.startsWith('http') ? 'noreferrer' : undefined}
                     aria-label={`${row.label}: ${row.value}`}
-                    className={`focus-ring border-rule bg-surf-0 hover:border-miku/40 hover:bg-surf-soft flex items-center gap-3 rounded-xl border p-3 transition-colors ${
-                      row.copyValue ? 'pr-11' : ''
-                    }`}
+                    className={cn(
+                      'focus-ring border-rule bg-surf-0 hover:border-miku/40 hover:bg-surf-soft flex items-center gap-3 rounded-xl border p-3 transition-colors',
+                      row.copyValue && 'pr-11'
+                    )}
                   >
                     {inner}
                   </a>
@@ -127,7 +129,7 @@ export default function ContactApp() {
                           `${row.label} copied`
                         )
                       }
-                      className="focus-ring text-ink-4 hover:bg-surf-soft hover:text-miku-2 absolute top-1/2 right-2 -translate-y-1/2 rounded-md p-2 transition-colors"
+                      className="focus-ring text-ink-4 hover:bg-surf-soft hover:text-miku-2-icon absolute top-1/2 right-2 -translate-y-1/2 rounded-md p-2 transition-colors"
                     >
                       <Copy aria-hidden className="size-3.5" />
                     </button>

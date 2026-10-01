@@ -11,6 +11,7 @@ import {
   GithubContributionsSchema,
   PULLS_SHOWN,
 } from '@/lib/github/contributions-schema'
+import { cn } from '@/lib/utils'
 import { SHORT_DATE, formatDate } from '@/lib/utils/format-date'
 import { plural } from '@/lib/utils/plural'
 
@@ -34,7 +35,10 @@ function Skeleton() {
       <p role="status" className="sr-only">
         Loading pull requests
       </p>
-      <div aria-hidden className={`h-4 w-3/4 rounded-[2px] ${SKELETON_BAR}`} />
+      <div
+        aria-hidden
+        className={cn('h-4 w-3/4 rounded-[2px]', SKELETON_BAR)}
+      />
       <div className="border-rule bg-surf-0 divide-rule mt-3 divide-y overflow-hidden rounded-2xl border">
         {Array.from({ length: PULLS_SHOWN }).map((_, i) => (
           <div
@@ -43,12 +47,12 @@ function Skeleton() {
             className="flex items-center justify-between gap-4 px-4 py-2.5"
           >
             <div className="min-w-0 flex-1">
-              <div className={`h-3.5 w-2/3 rounded-[2px] ${SKELETON_BAR}`} />
+              <div className={cn('h-3.5 w-2/3 rounded-[2px]', SKELETON_BAR)} />
               <div
-                className={`mt-2 h-2.5 w-1/3 rounded-[2px] ${SKELETON_BAR}`}
+                className={cn('mt-2 h-2.5 w-1/3 rounded-[2px]', SKELETON_BAR)}
               />
             </div>
-            <div className={`h-2.5 w-16 rounded-[2px] ${SKELETON_BAR}`} />
+            <div className={cn('h-2.5 w-16 rounded-[2px]', SKELETON_BAR)} />
           </div>
         ))}
       </div>
@@ -81,7 +85,9 @@ function Contributions({ data }: { data: GithubContributions }) {
               className="focus-ring border-rule bg-surf-0 text-ink-2 hover:bg-surf-soft inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[11px] transition"
             >
               {repo.name}
-              <span className="text-miku font-bold">{repo.count}</span>
+              <span className="text-miku-ink font-bold tabular-nums">
+                {repo.count}
+              </span>
             </ExternalLink>
           </li>
         ))}

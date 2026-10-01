@@ -26,7 +26,7 @@ interface MobileSheetProps {
   label?: string
   /** Name of the close button. */
   closeLabel?: string
-  /** Rendered in the header — typically a lucide icon element. */
+  /** Rendered in the header, typically a lucide icon element. */
   icon?: ReactNode
   onClose: () => void
   /** Shows a copy-link button beside close when provided. */
@@ -84,7 +84,7 @@ export function MobileSheet({
       >
         <div className="flex items-center gap-2">
           {icon && (
-            <span aria-hidden className="text-miku-2">
+            <span aria-hidden className="text-miku-2-icon">
               {icon}
             </span>
           )}

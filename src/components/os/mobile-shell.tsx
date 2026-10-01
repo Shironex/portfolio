@@ -9,18 +9,20 @@ import { GithubIcon } from '@/components/icons/github-icon'
 
 import { GITHUB_URL } from '@/lib/constants'
 import type { PaletteId } from '@/lib/os/appearance'
+import { GLOW } from '@/lib/os/palettes.generated'
 import { cn } from '@/lib/utils'
 
 import type { OsWindowsApi } from '@/hooks/use-os-windows'
 import type { Theme } from '@/hooks/use-theme'
 
-import { accentColor, accentTint } from './accent-map'
+import { accentIcon, accentTileStyle, glowStyle } from './accent-map'
 import { AppBody } from './app-registry'
 import { FeaturedPanel } from './apps/panels/featured-panel'
 import { HeroPlate } from './apps/panels/hero-plate'
 import {
   APPS,
   CMD_PALETTE_SHORTCUT,
+  EYEBROW_CLASS,
   MOBILE_BAR_CLASS,
   MOBILE_GUTTER_CLASS,
   windowIconFor,
@@ -31,8 +33,7 @@ import { PalettePicker } from './palette-picker'
 import { ShellMain } from './static-layer'
 import type { AppId, HeadingLevel, WindowId } from './types'
 
-const LAUNCHER_HEADING_CLASS =
-  'text-ink-4 mb-3 font-mono text-[10px] font-normal tracking-[0.22em] uppercase'
+const LAUNCHER_HEADING_CLASS = cn(EYEBROW_CLASS, 'text-ink-4 mb-3')
 
 interface MobileShellProps {
   os: OsWindowsApi
@@ -132,7 +133,7 @@ export function MobileShell({
                 ? 'Switch to light theme'
                 : 'Switch to dark theme'
             }
-            className="focus-ring text-ink-2 hover:bg-surf-0 hover:text-miku-2 flex size-11 items-center justify-center rounded-md"
+            className="focus-ring text-ink-2 hover:bg-surf-0 hover:text-miku-2-icon flex size-11 items-center justify-center rounded-md"
           >
             {theme === 'dark' ? (
               <Sun aria-hidden size={18} />
@@ -169,7 +170,8 @@ export function MobileShell({
           <div className="border-rule-2 bg-surf-solid shadow-elev-2 relative overflow-hidden rounded-2xl border p-5">
             <span
               aria-hidden
-              className="orb pointer-events-none absolute -top-[156px] -right-[140px] size-[376px] [--orb-color:color-mix(in_oklab,var(--color-pink)_10.3%,transparent)]"
+              className="orb pointer-events-none absolute -top-[156px] -right-[140px] size-[376px]"
+              style={glowStyle('primary', GLOW.card)}
             />
             <div className="relative">
               <h2 className="font-display text-ink text-lg font-bold">
@@ -189,7 +191,9 @@ export function MobileShell({
             </div>
           </div>
 
-          <div className="text-ink-4 pt-2 pb-4 text-center font-mono text-[10px] tracking-[0.22em] uppercase">
+          <div
+            className={cn(EYEBROW_CLASS, 'text-ink-4 pt-2 pb-4 text-center')}
+          >
             ShiroOS · シロOS
           </div>
         </div>
@@ -228,7 +232,7 @@ export function MobileShell({
                   aria-label={`Open ${app.name}`}
                   className="focus-ring hover:bg-surf-0 relative flex size-11 shrink-0 items-center justify-center rounded-lg transition-colors"
                 >
-                  <span aria-hidden style={{ color: accentColor(app.accent) }}>
+                  <span aria-hidden style={{ color: accentIcon(app.accent) }}>
                     <Icon size={18} strokeWidth={1.75} />
                   </span>
                   {isOpen && (
@@ -268,10 +272,7 @@ export function MobileShell({
                     <span
                       aria-hidden
                       className="flex size-12 items-center justify-center rounded-xl"
-                      style={{
-                        backgroundColor: accentTint(app.accent, 15),
-                        color: accentColor(app.accent),
-                      }}
+                      style={accentTileStyle(app.accent)}
                     >
                       <Icon size={22} strokeWidth={1.75} />
                     </span>
@@ -291,7 +292,7 @@ export function MobileShell({
               onClick={closeLauncher}
               className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 text-ink flex h-11 items-center gap-3 rounded-xl border px-3 text-sm transition-colors"
             >
-              <GithubIcon className="text-miku size-[18px]" />
+              <GithubIcon className="text-miku-icon size-[18px]" />
               GitHub profile
             </ExternalLink>
           </div>
@@ -303,7 +304,7 @@ export function MobileShell({
         </MobileSheet>
       )}
 
-      {/* Top mobile sheet only — the rest of the window stack waits behind it. */}
+      {/* Top mobile sheet only: the rest of the window stack waits behind it. */}
       {topSheet &&
         (() => {
           const SheetIcon = windowIconFor(topSheet.id)

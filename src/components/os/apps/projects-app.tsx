@@ -10,7 +10,9 @@ import { Fragment, useMemo, useState } from 'react'
 
 import { accentFor } from '@/components/os/accent-map'
 import { ProjectAvatar } from '@/components/os/project-avatar'
+import { StatusChip } from '@/components/os/status-chip'
 
+import { cn } from '@/lib/utils'
 import { pluralWord } from '@/lib/utils/plural'
 import { countProjects } from '@/lib/utils/projects'
 
@@ -90,14 +92,18 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
               type="button"
               onClick={() => setFilter(f.id)}
               aria-pressed={isActive}
-              className={`focus-ring rounded-full px-3 py-1 font-mono text-xs ${
+              className={cn(
+                'focus-ring rounded-full px-3 py-1 font-mono text-xs',
                 isActive
                   ? 'bg-miku text-cloud'
                   : 'bg-surf-0 text-ink-2 hover:bg-surf-1'
-              }`}
+              )}
             >
               {f.label}{' '}
-              <span aria-hidden className="tabular-nums opacity-60">
+              <span
+                aria-hidden
+                className={cn('tabular-nums', !isActive && 'text-ink-3')}
+              >
                 {counts[f.id]}
               </span>
             </button>
@@ -107,7 +113,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="search projects…"
-          className="focus-ring border-rule-2 bg-surf-0 focus:border-miku ml-auto min-w-[200px] rounded-lg border px-3 py-1.5 text-sm"
+          className="focus-ring border-rule-2 bg-surf-0 placeholder:text-ink-4 focus:border-miku ml-auto min-w-[200px] rounded-lg border px-3 py-1.5 text-sm"
           aria-label="Search projects"
         />
       </div>
@@ -167,21 +173,8 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                   <div className="min-w-0 flex-1">
                     <div className="font-display text-ink flex items-center gap-1.5 text-sm">
                       <span className="truncate">{p.title}</span>
-                      {p.featured && (
-                        <span className="bg-miku/15 text-miku shrink-0 rounded px-1.5 py-0.5 font-mono text-[10px]">
-                          FEATURED
-                        </span>
-                      )}
-                      {p.status === 'in-progress' && (
-                        <span className="bg-peach/20 text-peach shrink-0 rounded px-1.5 py-0.5 font-mono text-[10px]">
-                          WIP
-                        </span>
-                      )}
-                      {p.status === 'archived' && (
-                        <span className="bg-surf-0 text-ink-3 shrink-0 rounded px-1.5 py-0.5 font-mono text-[10px]">
-                          ARCHIVED
-                        </span>
-                      )}
+                      {p.featured && <StatusChip tone="featured" />}
+                      {p.status !== 'shipped' && <StatusChip tone={p.status} />}
                     </div>
                     <div className="font-body text-ink-3 mt-0.5 line-clamp-2 text-xs">
                       {p.summary}
@@ -190,14 +183,14 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                       {p.technologies.slice(0, 4).map((tech, i) => (
                         <Fragment key={tech}>
                           {i > 0 && <span className="text-ink-4">·</span>}
-                          <span className="text-ink-4 font-mono text-[10px]">
+                          <span className="text-ink-4 font-mono text-[11px]">
                             {tech}
                           </span>
                         </Fragment>
                       ))}
                     </div>
                   </div>
-                  <span className="text-ink-4 group-hover:text-miku transition-[translate,color] duration-150 group-hover:translate-x-0.5">
+                  <span className="text-ink-4 group-hover:text-miku-ink transition-[translate,color] duration-150 group-hover:translate-x-0.5">
                     →
                   </span>
                 </div>
