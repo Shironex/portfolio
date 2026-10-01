@@ -10,6 +10,8 @@ import { GithubActivityStrip } from './github-activity-strip'
 interface HeroPlateProps {
   onOpenCmd: () => void
   onOpenContact: () => void
+  /** Passed to {@link HeroText}. */
+  headingLevel?: 1 | 2
 }
 
 /**
@@ -19,7 +21,11 @@ interface HeroPlateProps {
  * tight on purpose: the activity strip needs to stay above the fold on
  * 1080p and 1440x900 at 100% zoom; below 840px of height it is hidden.
  */
-export function HeroPlate({ onOpenCmd, onOpenContact }: HeroPlateProps) {
+export function HeroPlate({
+  onOpenCmd,
+  onOpenContact,
+  headingLevel,
+}: HeroPlateProps) {
   return (
     <div className="border-rule-2 bg-surf-solid shadow-elev-3 relative flex h-full w-full flex-col overflow-hidden rounded-3xl border px-5 py-6 md:px-8 md:py-7">
       <span
@@ -31,7 +37,7 @@ export function HeroPlate({ onOpenCmd, onOpenContact }: HeroPlateProps) {
         }}
       />
 
-      <HeroText />
+      <HeroText headingLevel={headingLevel} />
 
       <div className="relative mt-4 flex flex-wrap gap-2">
         <button

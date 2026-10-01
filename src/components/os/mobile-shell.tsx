@@ -31,6 +31,8 @@ interface MobileShellProps {
   onToggleTheme: () => void
   palette: PaletteId
   onSelectPalette: (id: PaletteId) => void
+  /** Level of the hero headline; see `HeroText`. */
+  heroHeadingLevel?: 1 | 2
 }
 
 /**
@@ -53,6 +55,7 @@ export function MobileShell({
   onToggleTheme,
   palette,
   onSelectPalette,
+  heroHeadingLevel,
 }: MobileShellProps) {
   const [launcherOpen, setLauncherOpen] = useState(false)
 
@@ -125,7 +128,11 @@ export function MobileShell({
       {/* Feed */}
       <div className="fixed inset-0 overflow-y-auto pt-12 pb-[calc(56px+env(safe-area-inset-bottom)+16px)]">
         <div className="flex flex-col gap-4 px-4 pt-4">
-          <HeroPlate onOpenCmd={onOpenCmd} onOpenContact={openContact} />
+          <HeroPlate
+            onOpenCmd={onOpenCmd}
+            onOpenContact={openContact}
+            headingLevel={heroHeadingLevel}
+          />
           <FeaturedPanel onOpenProject={os.openProject} />
 
           <div className="border-rule-2 bg-surf-solid shadow-elev-2 relative overflow-hidden rounded-2xl border p-5">

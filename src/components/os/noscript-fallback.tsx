@@ -94,3 +94,19 @@ export function NoscriptFallback() {
     </noscript>
   )
 }
+
+/** Marks the shell root, so {@link NoscriptStaticPage} can hide it. */
+export const SHELL_ROOT_ATTRIBUTE = 'data-os-shell'
+
+/**
+ * For a route that server-renders its own content under the shell. Without JS
+ * the shell cannot boot and would only cover that content, so it is hidden and
+ * the static content is the page.
+ */
+export function NoscriptStaticPage() {
+  return (
+    <noscript>
+      <style>{`[${SHELL_ROOT_ATTRIBUTE}]{display:none}`}</style>
+    </noscript>
+  )
+}

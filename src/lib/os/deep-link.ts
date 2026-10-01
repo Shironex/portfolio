@@ -2,11 +2,15 @@ import { isAppId } from '@/components/os/constants'
 import type { AppId, WindowId } from '@/components/os/types'
 
 import { projectSlugForWindow, projectWindowId } from '@/lib/os/window-factory'
+import { projectPath } from '@/lib/utils/project-meta'
 import { findProjectBySlug } from '@/lib/utils/projects'
 
 /** Query param naming the app window to open: `/?open=about`. */
 export const OPEN_PARAM = 'open'
-/** Query param naming the project window to open: `/?project=<slug>`. */
+/**
+ * Legacy query param naming the project window to open: `/?project=<slug>`.
+ * Still read on load so old links work; new links use `/projects/<slug>`.
+ */
 export const PROJECT_PARAM = 'project'
 
 /**
@@ -31,6 +35,16 @@ export function parseDeepLink(search: string): DeepLinkTarget | null {
   return null
 }
 
+/**
+ * The window a page load asks for: the one its server route handed in, or
+ * failing that the one named in the query string. Browser only.
+ */
+export function initialDeepLinkTarget(
+  initialWindow?: DeepLinkTarget
+): DeepLinkTarget | null {
+  return initialWindow ?? parseDeepLink(window.location.search)
+}
+
 /** The deep-link target that reopens the window with this id. */
 export function targetForWindow(id: WindowId): DeepLinkTarget {
   if (isAppId(id)) return { kind: 'app', appId: id }
@@ -44,8 +58,10 @@ export function windowIdForTarget(target: DeepLinkTarget): WindowId {
 
 /**
  * Root-relative href for a target, or for the bare desktop when `target` is
- * `null`. Unrelated params in `currentSearch` (campaign tags and the like)
- * are kept; only the two deep-link params are replaced.
+ * `null`. Apps live in a query param on the desktop (`/?open=about`); projects
+ * have their own server-rendered route (`/projects/<slug>`). Unrelated params
+ * in `currentSearch` (campaign tags and the like) are kept; only the two
+ * deep-link params are dropped.
  */
 export function deepLinkHref(
   target: DeepLinkTarget | null,
@@ -55,7 +71,7 @@ export function deepLinkHref(
   params.delete(OPEN_PARAM)
   params.delete(PROJECT_PARAM)
   if (target?.kind === 'app') params.set(OPEN_PARAM, target.appId)
-  if (target?.kind === 'project') params.set(PROJECT_PARAM, target.slug)
+  const path = target?.kind === 'project' ? projectPath(target.slug) : '/'
   const query = params.toString()
-  return query ? `/?${query}` : '/'
+  return query ? `${path}?${query}` : path
 }

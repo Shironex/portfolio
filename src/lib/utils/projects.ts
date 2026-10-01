@@ -31,6 +31,16 @@ export function findProjectBySlug(slug: string): Project | undefined {
   return projectsData.find((project) => project.slug === slug)
 }
 
+/** Props of everything under `/projects/[slug]`: the page and its images. */
+export interface ProjectRouteProps {
+  params: Promise<{ slug: string }>
+}
+
+/** One `/projects/[slug]` entry per project, for `generateStaticParams`. */
+export function projectStaticParams(): { slug: string }[] {
+  return projectsData.map((project) => ({ slug: project.slug }))
+}
+
 /**
  * Filters projects that are currently in progress
  * @param projects - Array of all projects

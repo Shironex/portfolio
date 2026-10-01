@@ -10,12 +10,21 @@ const HERO_COPY = {
   ],
 } as const
 
+interface HeroTextProps {
+  /**
+   * Level of the headline. The page `h1` everywhere except on a route whose
+   * own content already has one, where it steps down to `h2`.
+   */
+  headingLevel?: 1 | 2
+}
+
 /**
  * Text block of the hero: role line, headline, availability and proof
  * points. Rendered by both the server StaticHero and the client HeroPlate
  * so the first paint matches the hydrated desktop.
  */
-export function HeroText() {
+export function HeroText({ headingLevel = 1 }: HeroTextProps) {
+  const Heading = headingLevel === 1 ? 'h1' : 'h2'
   return (
     <>
       <div className="text-ink-3 relative mb-3 font-mono text-[11px]">
@@ -24,12 +33,12 @@ export function HeroText() {
 
       {/* On desktop the size also tracks viewport height, so short laptop
           screens keep the headline to three lines. */}
-      <h1 className="font-display text-ink relative text-[clamp(32px,8vw,44px)] leading-[1.05] font-bold tracking-[-0.02em] md:text-[clamp(34px,min(3.2vw,5.6vh),54px)]">
+      <Heading className="font-display text-ink relative text-[clamp(32px,8vw,44px)] leading-[1.05] font-bold tracking-[-0.02em] md:text-[clamp(34px,min(3.2vw,5.6vh),54px)]">
         {HERO_COPY.greeting}
         <br />I build typed{' '}
         <span className="whitespace-nowrap">full-stack</span> systems and
         desktop apps.
-      </h1>
+      </Heading>
 
       <p className="font-body text-ink-2 relative mt-3 max-w-xl text-[15px] leading-relaxed">
         {HERO_COPY.availability}

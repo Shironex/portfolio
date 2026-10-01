@@ -7,6 +7,7 @@ import { Toaster } from '@/components/ui/sonner'
 import {
   defaultMetadata,
   personJsonLd,
+  serializeJsonLd,
   siteConfig,
 } from '@/lib/metadata-config'
 import { APPEARANCE_BOOT_SCRIPT, DEFAULT_PALETTE } from '@/lib/os/appearance'
@@ -65,10 +66,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         />
         <script
           type="application/ld+json"
-          // Escape `<` so no string in the data can close the script tag.
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(personJsonLd).replace(/</g, '\\u003c'),
-          }}
+          dangerouslySetInnerHTML={{ __html: serializeJsonLd(personJsonLd) }}
         />
       </head>
       <body

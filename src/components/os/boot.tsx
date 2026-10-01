@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-import { parseDeepLink } from '@/lib/os/deep-link'
+import { type DeepLinkTarget, initialDeepLinkTarget } from '@/lib/os/deep-link'
 
 import { useHotkeys } from '@/hooks/use-hotkeys'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
@@ -15,7 +15,7 @@ const STEPS = [
   { label: 'Waking windows', detail: '12ms' },
 ] as const
 
-const BOOT_STORAGE_KEY = 'shiroos:booted'
+export const BOOT_STORAGE_KEY = 'shiroos:booted'
 
 // Step advancement timings in ms; final entry auto-dismisses the splash.
 // Kept tight (~2.4s total) — the splash is a greeting, not a loading screen,
@@ -55,10 +55,10 @@ function writeBootFlag(): void {
  * instant dismiss. Auto-dismisses at ~2.4s for first-time visitors.
  *
  * A deep link skips it too: someone sent to a specific window should land on
- * that window, not on a greeting. `skip` covers a window handed in by a server
- * route; the `?open=` / `?project=` params are read here on mount.
+ * that window, not on a greeting. `initialWindow` is a window handed in by a
+ * server route; without one the `?open=` / `?project=` params are read on mount.
  */
-export function Boot({ skip = false }: { skip?: boolean }) {
+export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
   const reducedMotion = useReducedMotion()
   const [ready, setReady] = useState(false)
   const [gone, setGone] = useState(false)
@@ -74,13 +74,13 @@ export function Boot({ skip = false }: { skip?: boolean }) {
       return
     }
     const alreadyBooted = readBootFlag()
-    const deepLinked = skip || parseDeepLink(window.location.search) !== null
+    const deepLinked = initialDeepLinkTarget(initialWindow) !== null
     if (alreadyBooted || reducedMotion || deepLinked) {
       setGone(true)
       return
     }
     setReady(true)
-  }, [reducedMotion, skip])
+  }, [reducedMotion, initialWindow])
 
   // Mark the session as booted once we've committed to showing (or skipping)
   // the splash — so subsequent navigations don't replay it.
