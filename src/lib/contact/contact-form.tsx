@@ -1,11 +1,12 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
+
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2, Send } from 'lucide-react'
+import { CheckCircle2, Loader2, Send } from 'lucide-react'
 import { useAction } from 'next-safe-action/hooks'
 import { useForm } from 'react-hook-form'
-import Turnstile from 'react-turnstile'
-import { toast } from 'sonner'
+import Turnstile, { type BoundTurnstileObject } from 'react-turnstile'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -20,6 +21,7 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 
 import { env } from '@/env/client'
+import { EMPTY_DRAFT, useContactDraft } from '@/hooks/use-contact-draft'
 
 import { sendEmailAction } from './action'
 import {
@@ -39,6 +41,9 @@ const capturePosthogEvent = async (
   }
 }
 
+const CAPTCHA_MISSING = 'Please complete the captcha above before sending.'
+const SEND_FAILED = 'Something went wrong. Please try again.'
+
 export interface ContactFormProps {
   theme?: 'light' | 'dark'
   surface?: 'card' | 'plain'
@@ -48,50 +53,94 @@ export function ContactForm({
   theme = 'light',
   surface = 'plain',
 }: ContactFormProps = {}) {
+  const draft = useContactDraft()
+  const { save: saveDraft, clear: clearDraft } = draft
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(ContactFormSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      message: '',
-    },
+    defaultValues: draft.initial,
   })
+  const [sent, setSent] = useState(false)
+  const [serverError, setServerError] = useState<string | null>(null)
+  const turnstile = useRef<BoundTurnstileObject | null>(null)
+  const sentPanel = useRef<HTMLDivElement>(null)
+
+  // Closing the window unmounts the form, so the draft is kept outside it.
+  useEffect(() => {
+    const subscription = form.watch((values) => saveDraft(values))
+    return () => subscription.unsubscribe()
+  }, [form, saveDraft])
+
+  // The form is replaced by the confirmation, so focus has to follow it.
+  useEffect(() => {
+    if (sent) sentPanel.current?.focus()
+  }, [sent])
 
   const { executeAsync, isPending } = useAction(sendEmailAction, {
     onSuccess: () => {
-      form.reset()
-      toast.success('Email sent successfully')
+      clearDraft()
+      form.reset(EMPTY_DRAFT)
+      setSent(true)
       void capturePosthogEvent('contact_form_submitted')
     },
     onError: ({ error }) => {
-      toast.error(error.serverError ?? 'Something went wrong')
+      setServerError(error.serverError ?? SEND_FAILED)
+      // A token is single-use, so a retry needs a fresh one.
+      form.setValue('turnstileToken', '')
+      turnstile.current?.reset()
       void capturePosthogEvent('contact_form_error', {
         error_message: error.serverError,
       })
     },
   })
 
-  const handleSubmit = form.handleSubmit(async (data: ContactFormValues) => {
-    if (!data.turnstileToken) {
-      toast.error('Please complete the captcha')
-      return
-    }
-    await executeAsync(data)
-  })
+  const handleSubmit = form.handleSubmit(
+    async (data: ContactFormValues) => {
+      setServerError(null)
+      await executeAsync(data)
+    },
+    () => setServerError(null)
+  )
 
-  const formInner = (
+  // Outcomes are reported inline only (this alert, the confirmation panel):
+  // a toast on top would announce each of them a second time.
+  const alert =
+    serverError ??
+    (form.formState.errors.turnstileToken ? CAPTCHA_MISSING : null)
+
+  const formInner = sent ? (
+    <div
+      ref={sentPanel}
+      role="status"
+      tabIndex={-1}
+      className="flex flex-col items-start gap-3 outline-none"
+    >
+      <CheckCircle2 aria-hidden className="text-miku size-8" />
+      <p className="font-display text-ink text-lg font-bold">Message sent</p>
+      <p className="text-ink-2 text-sm">
+        Thanks for reaching out. I will reply within 24 hours.
+      </p>
+      <Button
+        type="button"
+        variant="outline"
+        onClick={() => setSent(false)}
+        className="border-rule-2 bg-surf-0 text-ink hover:bg-surf-1 hover:text-ink"
+      >
+        Send another message
+      </Button>
+    </div>
+  ) : (
     <Form {...form}>
-      <form onSubmit={handleSubmit} className="space-y-6">
+      {/* noValidate: the fields are marked required, and the inline messages
+          below report it instead of the browser's own bubbles. */}
+      <form onSubmit={handleSubmit} noValidate className="space-y-6">
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel htmlFor="name">Name</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input
-                  id="name"
-                  aria-label="Name"
                   type="text"
                   placeholder="Your Name"
                   required
@@ -107,11 +156,9 @@ export function ContactForm({
           name="email"
           render={({ field }) => (
             <FormItem className="w-full">
-              <FormLabel htmlFor="email">Email</FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
-                  id="email"
-                  aria-label="Email"
                   type="email"
                   placeholder="Your email address"
                   required
@@ -128,13 +175,12 @@ export function ContactForm({
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="message">Message</FormLabel>
+              <FormLabel>Message</FormLabel>
               <FormControl>
                 <Textarea
-                  id="message"
-                  aria-label="Message"
                   placeholder="Your Message"
                   rows={6}
+                  required
                   {...field}
                 />
               </FormControl>
@@ -146,15 +192,21 @@ export function ContactForm({
           aria-label="Captcha"
           theme={theme}
           sitekey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-          onVerify={(token: string) => form.setValue('turnstileToken', token)}
+          onVerify={(token, bound) => {
+            turnstile.current = bound
+            form.setValue('turnstileToken', token)
+            form.clearErrors('turnstileToken')
+          }}
+          onExpire={() => form.setValue('turnstileToken', '')}
         />
 
-        <input
-          type="hidden"
-          name="verify"
-          onChange={(e) => form.setValue('verify', e.target.value)}
-          aria-label="Verify"
-        />
+        <input type="hidden" name="verify" />
+
+        {alert && (
+          <p role="alert" className="text-danger-ink text-sm font-medium">
+            {alert}
+          </p>
+        )}
 
         <Button
           type="submit"
