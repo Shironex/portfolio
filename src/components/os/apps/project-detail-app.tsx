@@ -15,25 +15,32 @@ import {
 } from 'react'
 
 import {
+  BookOpen,
   Calendar,
   ChevronLeft,
   ChevronRight,
   Clock,
-  ExternalLink,
+  ExternalLink as ExternalLinkIcon,
+  Link as LinkIcon,
+  type LucideIcon,
   Maximize2,
+  Newspaper,
+  Package,
+  Tag,
   X,
 } from 'lucide-react'
 import { createPortal } from 'react-dom'
 
 import { GithubIcon } from '@/components/icons/github-icon'
 import { accentColor, accentFor, accentTint } from '@/components/os/accent-map'
+import { ExternalLink } from '@/components/os/external-link'
 
 import { cn, onBackdropDismiss } from '@/lib/utils'
 import { formatDate } from '@/lib/utils/format-date'
 
 import { useFocusTrap } from '@/hooks/use-focus-trap'
 import { useScrollLock } from '@/hooks/use-scroll-lock'
-import type { GalleryItem, Project } from '@/types'
+import type { GalleryItem, Project, ProjectLinkKind } from '@/types'
 
 interface ProjectDetailAppProps {
   project: Project
@@ -51,6 +58,18 @@ const SWIPE_THRESHOLD = 50
 
 /** Shared by the shown image and the preloaded neighbours so they resolve to the same URL. */
 const LIGHTBOX_SIZES = '(min-width: 1136px) 1024px, 90vw'
+
+/** Secondary hero link: the source button and every related link. */
+const SECONDARY_LINK_CLASS =
+  'focus-ring bg-surf-0 border-rule-2 text-ink hover:bg-surf-soft inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold transition'
+
+const LINK_ICON: Record<ProjectLinkKind, LucideIcon> = {
+  blog: Newspaper,
+  docs: BookOpen,
+  npm: Package,
+  release: Tag,
+  other: LinkIcon,
+}
 
 const NAV_BUTTON_CLASS =
   'focus-ring bg-surf-solid/85 text-ink hover:bg-surf-solid shadow-elev-2 absolute top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full backdrop-blur-sm transition-colors'
@@ -302,29 +321,38 @@ export default function ProjectDetailApp({ project }: ProjectDetailAppProps) {
             )}
           </div>
 
-          <div className="mt-6 flex gap-2">
+          <div className="mt-6 flex flex-wrap gap-2">
             {showDemo && (
-              <a
+              <ExternalLink
                 href={project.demoUrl}
-                target="_blank"
-                rel="noreferrer"
                 className="focus-ring bg-miku text-cloud inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition hover:brightness-110"
               >
-                <ExternalLink className="h-4 w-4" />
+                <ExternalLinkIcon aria-hidden className="h-4 w-4" />
                 demo
-              </a>
+              </ExternalLink>
             )}
             {project.githubUrl && (
-              <a
+              <ExternalLink
                 href={project.githubUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="focus-ring bg-surf-0 border-rule-2 text-ink hover:bg-surf-soft inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold transition"
+                className={SECONDARY_LINK_CLASS}
               >
                 <GithubIcon className="h-4 w-4" />
                 source
-              </a>
+              </ExternalLink>
             )}
+            {project.links?.map((link) => {
+              const Icon = LINK_ICON[link.kind]
+              return (
+                <ExternalLink
+                  key={link.url}
+                  href={link.url}
+                  className={SECONDARY_LINK_CLASS}
+                >
+                  <Icon aria-hidden className="h-4 w-4" />
+                  {link.label}
+                </ExternalLink>
+              )
+            })}
           </div>
         </div>
       </section>

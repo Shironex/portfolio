@@ -10,7 +10,7 @@ export const shiranami: Project = {
     'Shiranami is a desktop music player for people who keep their music as files. It scans your folders and adds the things streaming apps do well on top: synced lyrics, internet radio, YouTube and Spotify playlist import, crossfade, an equalizer, listening history and Discord Rich Presence.',
     'Version 2.0 (September 2026) is a rewrite underneath the same app. The core is now a Rust workspace split into focused crates (audio, library, metadata, database, downloader, integrations) behind a thin Tauri 2 shell, with the React UI carried over. Audio decoding runs on Symphonia, tags on Lofty, and the database on SQLite through sqlx.',
     'The numbers I measured: the Windows installer went from 110 MB to 12.5 MB, the macOS download from 134 MB to 17 MB, idle memory from roughly 688 MB to roughly 291 MB, and a cold boot takes about 189 ms. The Rust side has more than 1,500 tests. Existing 1.x libraries, playlists, history and settings are copied over on first launch, never moved, so nobody lost data in the upgrade.',
-    'I wrote up the whole migration, including what went wrong, on my blog: shirone.blog/blog/shiranami-v2-rust-rewrite.',
+    'I wrote up the whole migration, including what went wrong, on my blog.',
   ],
   image: '/projects/shiranami/thumbnail.webp',
   projectType: 'desktop',
@@ -93,5 +93,12 @@ export const shiranami: Project = {
   duration: 'Ongoing (maintained)',
   demoUrl: 'https://shiranami.app',
   githubUrl: 'https://github.com/Shironex/shiranami',
+  links: [
+    {
+      label: 'rewrite write-up',
+      url: 'https://shirone.blog/blog/shiranami-v2-rust-rewrite',
+      kind: 'blog',
+    },
+  ],
   featured: true,
 }

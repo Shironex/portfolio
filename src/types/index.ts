@@ -14,6 +14,15 @@ export interface TechDetails {
  */
 export type ProjectStatus = 'in-progress' | 'shipped' | 'archived'
 
+/** What a related link points at; picks the icon next to its label. */
+export type ProjectLinkKind = 'blog' | 'docs' | 'npm' | 'release' | 'other'
+
+export interface ProjectLink {
+  label: string
+  url: string
+  kind: ProjectLinkKind
+}
+
 export interface Project {
   id: string
   slug: string
@@ -32,6 +41,8 @@ export interface Project {
   duration: string
   demoUrl: string
   githubUrl?: string
+  /** Related reading and resources, shown beside the demo and source links. */
+  links?: ProjectLink[]
   featured: boolean
 }
 
