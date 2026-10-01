@@ -4,11 +4,7 @@ import { useCallback } from 'react'
 
 import type { AppId } from '@/components/os/types'
 
-import {
-  createAppWindow,
-  createProjectWindow,
-  projectWindowId,
-} from '@/lib/os/window-factory'
+import { createAppWindow, createProjectWindow } from '@/lib/os/window-factory'
 
 import type { Project } from '@/types'
 
@@ -27,28 +23,17 @@ export function useOsWindows() {
   const stack = useWindowStack()
   const { windows, pushWindow, focus, isOpen } = stack
 
+  // `pushWindow` raises a window that is already open, so neither opener
+  // reads the stack and both keep one identity for the life of the shell.
   const openApp = useCallback(
-    (appId: AppId) => {
-      if (isOpen(appId)) {
-        focus(appId)
-        return
-      }
-      pushWindow((z) => createAppWindow(appId, z))
-    },
-    [isOpen, focus, pushWindow]
+    (appId: AppId) => pushWindow((z) => createAppWindow(appId, z)),
+    [pushWindow]
   )
 
   const openProject = useCallback(
-    (project: Project) => {
-      const id = projectWindowId(project.slug)
-      if (isOpen(id)) {
-        focus(id)
-        return
-      }
-      const openCount = windows.length
-      pushWindow((z) => createProjectWindow(project, z, openCount))
-    },
-    [windows, isOpen, focus, pushWindow]
+    (project: Project) =>
+      pushWindow((z, openCount) => createProjectWindow(project, z, openCount)),
+    [pushWindow]
   )
 
   return {

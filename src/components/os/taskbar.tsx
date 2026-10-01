@@ -4,7 +4,7 @@ import { Search } from 'lucide-react'
 
 import { accentColor } from './accent-map'
 import { Clock } from './clock'
-import { APPS } from './constants'
+import { APPS, CMD_PALETTE_SHORTCUT } from './constants'
 import { Kbd } from './kbd'
 import type { AppId, WindowId } from './types'
 
@@ -21,6 +21,7 @@ interface TaskbarProps {
 
 /**
  * Bottom taskbar: Start button, search pill, app launcher icons, tray/clock.
+ * The page's `<nav>`: every stop in it opens or switches to something.
  */
 export function Taskbar({
   openIds,
@@ -32,15 +33,15 @@ export function Taskbar({
   onOpenCmd,
 }: TaskbarProps) {
   return (
-    <div
-      role="toolbar"
+    <nav
       aria-label="Taskbar"
-      className="border-rule-2 bg-surf-2 shadow-elev-2 font-body fixed bottom-2 left-1/2 z-[200] flex -translate-x-1/2 items-center gap-2 rounded-2xl border px-3 py-2 backdrop-blur-xl"
+      className="border-rule-2 bg-surf-2 shadow-elev-2 font-body z-chrome fixed bottom-[calc(0.5rem+env(safe-area-inset-bottom))] left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-2xl border px-3 py-2 backdrop-blur-xl"
     >
       <button
         type="button"
         onClick={onOpenStart}
         aria-label="Open Start menu"
+        aria-haspopup="dialog"
         className="focus-ring bg-miku hover:bg-miku-2 text-cloud rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors"
       >
         Start
@@ -51,6 +52,7 @@ export function Taskbar({
       <button
         type="button"
         onClick={onOpenCmd}
+        aria-keyshortcuts={CMD_PALETTE_SHORTCUT}
         className="focus-ring bg-surf-0 text-ink-3 hover:bg-surf-1 flex min-w-[160px] items-center gap-2 rounded-lg px-3 py-1.5 text-xs lg:min-w-[220px]"
       >
         <Search aria-hidden size={14} />
@@ -110,6 +112,6 @@ export function Taskbar({
       <div className="text-ink-3 flex items-center gap-2 px-1 font-mono text-[11px]">
         <Clock showDate={false} />
       </div>
-    </div>
+    </nav>
   )
 }

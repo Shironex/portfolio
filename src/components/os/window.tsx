@@ -6,11 +6,15 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { WindowControls } from '@/components/os/window-controls'
 
 import {
+  WINDOW_ID_ATTRIBUTE,
+  WINDOW_TITLE_BAR_ATTRIBUTE,
+  measureDesktopArea,
+} from '@/lib/os/dom'
+import {
   type Point,
   type Rect,
   type SnapZone,
   UNDOCK_DRAG_THRESHOLD,
-  desktopArea,
   dockZoneOf,
   rectOf,
   snapBounds,
@@ -80,6 +84,9 @@ function pointOf(event: globalThis.MouseEvent): Point {
  *   half, Ctrl+Alt+Up maximizes, Ctrl+Alt+Down restores, Ctrl+W closes,
  *   Ctrl+M minimizes, Ctrl+Shift+M toggles maximize.
  * - Renders `null` when minimized; the taskbar surfaces minimized windows.
+ * - Its z-index is its rank in the windows layer of `OsShell`, never a page
+ *   level value. `useWindowFocus` moves keyboard focus to the title bar when
+ *   the user opens the window.
  */
 export function Window({
   window: win,
@@ -149,7 +156,7 @@ export function Window({
     const current = rectOf(win)
     // Rect the window goes back to if this drag ends in a snap zone.
     const home = win.prevGeometry ?? current
-    const area = desktopArea()
+    const area = measureDesktopArea()
     let docked = dockZoneOf(win) !== null
     let zone: SnapZone | null = null
 
@@ -286,7 +293,7 @@ export function Window({
   const TitleIcon = windowIconFor(win.id)
 
   const preview = snapZone
-    ? snapBounds(snapZone, desktopArea(), win.minW)
+    ? snapBounds(snapZone, measureDesktopArea(), win.minW)
     : null
 
   return (
@@ -312,6 +319,7 @@ export function Window({
         role="dialog"
         aria-label={win.title}
         aria-modal={false}
+        {...{ [WINDOW_ID_ATTRIBUTE]: win.id }}
         onMouseDown={() => onFocus(win.id)}
         style={{
           left: win.x,
@@ -338,6 +346,7 @@ export function Window({
         <div
           role="toolbar"
           tabIndex={0}
+          {...{ [WINDOW_TITLE_BAR_ATTRIBUTE]: '' }}
           aria-label={`${win.title} window controls`}
           aria-describedby={shortcutHintId}
           onMouseDown={startDrag}
@@ -352,11 +361,11 @@ export function Window({
             >
               <TitleIcon size={14} strokeWidth={1.75} />
             </span>
-            <span
-              className={`font-mono text-xs ${isFocused ? 'text-ink-2' : 'text-ink-4'}`}
+            <h2
+              className={`font-mono text-xs font-normal tracking-normal ${isFocused ? 'text-ink-2' : 'text-ink-4'}`}
             >
               {win.title}
-            </span>
+            </h2>
           </div>
           <WindowControls
             onCopyLink={() => onCopyLink(win.id)}
