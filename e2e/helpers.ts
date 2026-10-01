@@ -7,6 +7,7 @@ import {
   SHELL_ROOT_ATTRIBUTE,
 } from '../src/components/os/noscript-fallback'
 import { MODE_STORAGE_KEY } from '../src/lib/os/appearance'
+import { WINDOW_ID_ATTRIBUTE } from '../src/lib/os/dom'
 
 /** API routes answered from the showcase fixtures, so no test waits on GitHub or the blog. */
 const FIXTURE_ROUTES = ['github-activity', 'github-contributions', 'blog-posts']
@@ -15,6 +16,22 @@ const FIXTURE_DIR = join(process.cwd(), 'showcase', 'fixtures')
 
 export const DESKTOP_VIEWPORT = { width: 1440, height: 900 }
 export const MOBILE_VIEWPORT = { width: 390, height: 844 }
+
+/** Default rect of the About window, from `APP_WINDOW_DEFAULTS`. */
+export const ABOUT_RECT = { x: 180, y: 120, width: 820, height: 580 }
+
+/** Class of every decorative loop the shell can hold still. */
+export const AMBIENT_LOOP_CLASS = 'ambient-loop'
+
+/** Usable desktop area for a viewport: the insets in `geometry.ts`. */
+export function areaFor(viewport: { width: number; height: number }) {
+  return {
+    x: 8,
+    y: 44,
+    width: viewport.width - 16,
+    height: viewport.height - 108,
+  }
+}
 
 /**
  * Room for the shell to hydrate after a reload that only waits for commit.
@@ -75,8 +92,82 @@ export function osWindows(page: Page) {
   return page.locator('[role="dialog"][aria-modal="false"]')
 }
 
+/** A desktop window by its id; matches nothing once it has left the DOM. */
+export function windowById(page: Page, id: string) {
+  return page.locator(`[${WINDOW_ID_ATTRIBUTE}="${id}"]`)
+}
+
 export function titleBar(win: Locator) {
   return win.getByRole('toolbar')
+}
+
+export async function rectOf(target: Locator) {
+  const box = await target.boundingBox()
+  if (!box) throw new Error('element is not visible')
+  return box
+}
+
+/**
+ * Wait out the animations running on an element. A window or a lightbox that
+ * just opened is still scaling in, and a box measured then is not where it
+ * ends up.
+ */
+export async function settled(target: Locator) {
+  await target.evaluate((el) =>
+    Promise.all(el.getAnimations().map((animation) => animation.finished))
+  )
+}
+
+/** The spot a gesture grabs a settled title bar by, clear of the controls. */
+export async function titleBarGrip(win: Locator) {
+  await settled(win)
+  const box = await rectOf(win)
+  return { x: box.x + 120, y: box.y + 18 }
+}
+
+/** Play state of every decorative loop on the page. */
+export function ambientPlayStates(page: Page) {
+  return page.evaluate(
+    (loopClass) =>
+      Array.from(document.getElementsByClassName(loopClass)).map(
+        (el) => getComputedStyle(el).animationPlayState
+      ),
+    AMBIENT_LOOP_CLASS
+  )
+}
+
+export interface StartedAnimation {
+  name: string
+  /** Its duration in ms, as computed when it started. */
+  ms: number
+}
+
+/**
+ * Record every CSS animation that starts from here on, on the elements
+ * matching `selector` or anywhere. Returns a read of what has started so far.
+ * One recorder per page load.
+ */
+export async function recordAnimations(page: Page, selector?: string) {
+  await page.evaluate((only) => {
+    const state = window as unknown as { __animations: StartedAnimation[] }
+    state.__animations = []
+    document.addEventListener('animationstart', (event) => {
+      const target = event.target as Element
+      if (only && !target.matches(only)) return
+      const seconds = Number.parseFloat(
+        getComputedStyle(target).animationDuration
+      )
+      state.__animations.push({
+        name: event.animationName,
+        ms: Math.round(seconds * 1000),
+      })
+    })
+  }, selector ?? null)
+  return () =>
+    page.evaluate(
+      () =>
+        (window as unknown as { __animations: StartedAnimation[] }).__animations
+    )
 }
 
 export function taskbar(page: Page) {

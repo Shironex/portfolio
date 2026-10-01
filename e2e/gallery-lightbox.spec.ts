@@ -6,6 +6,7 @@ import {
   mockFeeds,
   openDesktop,
   openMobile,
+  settled,
   skipBootSplash,
 } from './helpers'
 
@@ -134,9 +135,7 @@ test.describe('slow network', () => {
     const prev = box.getByRole('button', { name: 'Previous image' })
     await expect(box.getByText(`1 / ${count}`)).toBeVisible()
     // Let the scale-in open animation settle before measuring.
-    await box.evaluate((el) =>
-      Promise.all(el.getAnimations().map((animation) => animation.finished))
-    )
+    await settled(box)
 
     const before = {
       next: await next.boundingBox(),

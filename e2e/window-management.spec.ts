@@ -2,17 +2,21 @@ import { type Locator, type Page, expect, test } from '@playwright/test'
 
 import { SESSION_STORAGE_KEY } from '../src/lib/os/session'
 import {
+  ABOUT_RECT,
   DESKTOP_VIEWPORT,
   MOBILE_VIEWPORT,
+  areaFor,
   launch,
   mobileReady,
   mockFeeds,
   openDesktop,
   osWindow,
   osWindows,
+  rectOf,
   skipBootSplash,
   taskbar,
   titleBar,
+  titleBarGrip,
 } from './helpers'
 
 /**
@@ -22,23 +26,10 @@ import {
  */
 const VIEWPORT = DESKTOP_VIEWPORT
 
-/** Usable desktop area for a viewport: the insets in `geometry.ts`. */
-function areaFor(viewport: { width: number; height: number }) {
-  return {
-    x: 8,
-    y: 44,
-    width: viewport.width - 16,
-    height: viewport.height - 108,
-  }
-}
-
 const AREA = areaFor(VIEWPORT)
 const HALF = AREA.width / 2
 const LEFT_HALF = { ...AREA, width: HALF }
 const RIGHT_HALF = { ...AREA, x: AREA.x + HALF, width: HALF }
-
-/** Default rect of the About window, from `APP_WINDOW_DEFAULTS`. */
-const ABOUT_RECT = { x: 180, y: 120, width: 820, height: 580 }
 
 function snapPreview(page: Page) {
   return page.locator('[data-snap-preview]')
@@ -51,27 +42,14 @@ function announcer(page: Page) {
     .filter({ hasText: /snapped|maximized|restored/ })
 }
 
-async function rectOf(win: Locator) {
-  const box = await win.boundingBox()
-  if (!box) throw new Error('window is not visible')
-  return box
-}
-
 async function zIndexOf(win: Locator) {
   return win.evaluate((el) => Number(getComputedStyle(el).zIndex))
 }
 
-/**
- * Press the title bar clear of the controls and move the pointer to a point.
- * A window that just opened is still scaling in, and a box measured then is
- * not where the title bar ends up, so the open animation is waited out first.
- */
+/** Press the title bar clear of the controls and move the pointer to a point. */
 async function dragTitleBarTo(page: Page, win: Locator, x: number, y: number) {
-  await win.evaluate((el) =>
-    Promise.all(el.getAnimations().map((animation) => animation.finished))
-  )
-  const box = await rectOf(win)
-  await page.mouse.move(box.x + 120, box.y + 18)
+  const grip = await titleBarGrip(win)
+  await page.mouse.move(grip.x, grip.y)
   await page.mouse.down()
   await page.mouse.move(x, y, { steps: 12 })
 }
