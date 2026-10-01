@@ -1,3 +1,41 @@
+# [2.21.0](https://github.com/Shironex/portfolio/compare/v2.20.1...v2.21.0) (2026-10-01)
+
+
+### Bug Fixes
+
+* **os:** add landmarks and a single h1 per page ([91d6b7a](https://github.com/Shironex/portfolio/commit/91d6b7ad9df39415e289bc0098cffa32f10e97cc))
+* **theme:** bring accent text, icons and micro-copy to AA contrast ([61d3b5c](https://github.com/Shironex/portfolio/commit/61d3b5c45aa962e419d995b76167d4ab56cfae6f))
+* **seo:** fill metadata gaps and give the 404 its own title ([4be355a](https://github.com/Shironex/portfolio/commit/4be355a2d5c2645cf2e133cdfccf6cd29dc5c16a))
+* **os:** give escape a single owner ([0bb574f](https://github.com/Shironex/portfolio/commit/0bb574fc3960579baa8971559b2cfe6d519626fe))
+* **os:** harden the focus trap and add menubar keyboard navigation ([dd1b46f](https://github.com/Shironex/portfolio/commit/dd1b46fa398cbe068d4db9b6fe26392ba52ec07d))
+* **os:** make the mobile launcher a real modal sheet ([489f901](https://github.com/Shironex/portfolio/commit/489f90105c2f209b05dc12cfe7bc343d78da7757))
+* **forms:** make validation errors readable in both modes ([9da73bd](https://github.com/Shironex/portfolio/commit/9da73bd04c567e0513a05b1be2082727a2e5f716))
+* **os:** move focus into windows and back on close ([1f6e2f6](https://github.com/Shironex/portfolio/commit/1f6e2f695a9f702f20594fd63a144b9564f80e7e))
+* **os:** put windows and chrome on named z-index layers ([97c28ab](https://github.com/Shironex/portfolio/commit/97c28abb94572d75a6836712ccfec6f3793bbbcf))
+* **contact:** show feedback inline and keep the draft ([7edfebf](https://github.com/Shironex/portfolio/commit/7edfebf945204fdcec5586fd2dd71f6e1eaac6f0))
+* **os:** stop the desktop tree flashing on mobile first paint ([7a7b415](https://github.com/Shironex/portfolio/commit/7a7b415e61d6935e040078edcb78998ee91d448a))
+* **os:** take heatmap cells out of the tab order ([21b3947](https://github.com/Shironex/portfolio/commit/21b3947320e7aa78b2f090aa13861707f666cd8f))
+* **os:** use dynamic viewport units and tabular numbers ([f6c9924](https://github.com/Shironex/portfolio/commit/f6c9924391dc3ca5f6d27d2fff872fc28cf7bf79))
+
+
+### Features
+
+* **os:** add a writing app fed by my blog feed ([f5f89e1](https://github.com/Shironex/portfolio/commit/f5f89e149c688140cdc7202a3866cab8ae8906a9))
+* **os:** add deep links for app and project windows ([386d34a](https://github.com/Shironex/portfolio/commit/386d34aea7b60c6fb55d60dce8f76a0451c2a352))
+* **projects:** add per-project open graph images ([1c18bbe](https://github.com/Shironex/portfolio/commit/1c18bbeb4eaf61458ff14ab52d59eb0960f92915))
+* **projects:** add projects.json and llms.txt feeds ([f44703e](https://github.com/Shironex/portfolio/commit/f44703e7dff536eb275f3cfd501f98ab33ec4cb9))
+* **projects:** add related links to project details ([fbd8495](https://github.com/Shironex/portfolio/commit/fbd849585e9d143a3b915f09347bdcb0bbe3b9a5))
+* **projects:** add server-rendered project pages ([34ab42c](https://github.com/Shironex/portfolio/commit/34ab42c6a919f2de8b2ca11aba27bfe3e864296c))
+* **os:** add window snapping and session restore ([c08eb8f](https://github.com/Shironex/portfolio/commit/c08eb8f899cd50c0bc0f9e3a9c04fc391a0a8dd0))
+* **about:** show merged open source pull requests ([dba0204](https://github.com/Shironex/portfolio/commit/dba0204e8ac0b24973cb37d82bb4b7ff0c88bd1a))
+
+
+### Performance Improvements
+
+* **os:** drag windows with pointer events and transforms ([13f1df4](https://github.com/Shironex/portfolio/commit/13f1df4a355f1d7d53b7261624bf32dc9ed253ba))
+* **os:** pause ambient motion and drop live blur ([92924df](https://github.com/Shironex/portfolio/commit/92924df456a319049859c6c80a6f1bc4b8415eeb))
+* **os:** replace transition-all with explicit properties ([5da381a](https://github.com/Shironex/portfolio/commit/5da381a74cf9f8eb0d35713f1ccc2742cf0dab35))
+
 ## [2.20.1](https://github.com/Shironex/portfolio/compare/v2.20.0...v2.20.1) (2026-09-30)
 
 
