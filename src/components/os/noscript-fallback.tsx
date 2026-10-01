@@ -32,11 +32,13 @@ export function NoscriptFallback() {
             padding: '2rem',
             borderRadius: 16,
             background: 'var(--color-surf-solid)',
-            border: '1px solid rgba(26, 23, 20, 0.16)',
-            boxShadow: '0 10px 40px -5px rgba(26, 23, 20, 0.2)',
+            border: '1px solid var(--color-rule-2)',
+            boxShadow: 'var(--shiro-elev-3)',
           }}
         >
-          <h1
+          {/* Not an `h1`: with no JavaScript the static hero under this card
+              is still in the document, and it has the page's one. */}
+          <h2
             style={{
               margin: 0,
               fontSize: 24,
@@ -45,7 +47,7 @@ export function NoscriptFallback() {
             }}
           >
             ShiroOS needs JavaScript
-          </h1>
+          </h2>
           <p
             style={{
               marginTop: 12,
@@ -77,14 +79,14 @@ export function NoscriptFallback() {
               Email:{' '}
               <a
                 href={`mailto:${EMAIL_CONTACT}`}
-                style={{ color: 'var(--color-miku)' }}
+                style={{ color: 'var(--color-miku-ink)' }}
               >
                 {EMAIL_CONTACT}
               </a>
             </li>
             <li>
               GitHub:{' '}
-              <a href={GITHUB_URL} style={{ color: 'var(--color-miku)' }}>
+              <a href={GITHUB_URL} style={{ color: 'var(--color-miku-ink)' }}>
                 {GITHUB_URL}
               </a>
             </li>

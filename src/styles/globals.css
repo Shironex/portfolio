@@ -18,35 +18,12 @@
   }
 }
 
-@utility gradient-text-miku {
-  background: linear-gradient(90deg, var(--color-miku), var(--color-pink-2));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
 /* Hoisted outside @theme so Tailwind v4 doesn't tree-shake it when the
    animation is applied via inline style / arbitrary value. */
 @keyframes spinSlow {
   to {
     transform: rotate(360deg);
   }
-}
-
-@utility shadow-elev-1 {
-  box-shadow: var(--shiro-elev-1);
-}
-
-@utility shadow-elev-2 {
-  box-shadow: var(--shiro-elev-2);
-}
-
-@utility shadow-elev-3 {
-  box-shadow: var(--shiro-elev-3);
-}
-
-@utility shadow-elev-4 {
-  box-shadow: var(--shiro-elev-4);
 }
 
 /*
@@ -141,6 +118,47 @@
   --ease-sheet: cubic-bezier(0.2, 0.9, 0.3, 1);
 }
 
+/*
+ * Aliases of palette variables. `inline` so a utility carries the variable it
+ * aliases (`bg-primary` is `var(--color-miku)`) and resolves it on the element:
+ * an alias declared as a plain theme variable is computed once at `:root`, and
+ * inside a nested `[data-palette]` swatch it would paint in the palette of the
+ * document.
+ */
+@theme inline {
+  /*
+   * shadcn tokens, mapped onto the ShiroOS palette: a shadcn component as
+   * written (`bg-primary`, `text-muted-foreground`, `border-input`) follows
+   * the active palette and mode, with no neutral scale of its own to drift.
+   */
+  --color-background: var(--shiro-sky-1);
+  --color-foreground: var(--shiro-ink);
+  --color-primary: var(--color-miku);
+  --color-primary-foreground: var(--color-cloud);
+  --color-secondary: var(--shiro-surf-soft);
+  --color-secondary-foreground: var(--shiro-ink-2);
+  --color-muted: var(--shiro-surf-soft);
+  --color-muted-foreground: var(--shiro-ink-3);
+  --color-accent: var(--shiro-surf-soft);
+  --color-accent-foreground: var(--shiro-ink);
+  --color-destructive: var(--color-danger-ink);
+  --color-destructive-foreground: var(--color-cloud);
+  --color-border: var(--shiro-rule-2);
+  --color-input: var(--shiro-rule-2);
+  --color-ring: var(--color-miku);
+
+  /*
+   * Elevations, as shadow tokens: `shadow-elev-2` goes through Tailwind's
+   * shadow utility, so it stacks with a ring (`focus-visible:ring-2`) instead
+   * of being replaced by it. The values are whole shadows per palette and
+   * mode, so a shadow colour utility (`shadow-miku/20`) has nothing to tint.
+   */
+  --shadow-elev-1: var(--shiro-elev-1);
+  --shadow-elev-2: var(--shiro-elev-2);
+  --shadow-elev-3: var(--shiro-elev-3);
+  --shadow-elev-4: var(--shiro-elev-4);
+}
+
 @theme {
   /*
    * Typography: JetBrains Mono
@@ -152,74 +170,10 @@
    * Usage: Apply via Tailwind's `font-mono` class or directly via CSS var(--font-mono)
    */
   --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
-
-  --animate-accordion-down: accordion-down 0.2s ease-out;
-  --animate-accordion-up: accordion-up 0.2s ease-out;
-  --animate-gradient-x: gradient-x 15s ease infinite;
-
-  @keyframes accordion-down {
-    from {
-      height: 0;
-    }
-
-    to {
-      height: var(--radix-accordion-content-height);
-    }
-  }
-
-  @keyframes accordion-up {
-    from {
-      height: var(--radix-accordion-content-height);
-    }
-
-    to {
-      height: 0;
-    }
-  }
-
-  @keyframes gradient-x {
-
-    0%,
-    100% {
-      background-size: 200% 200%;
-      background-position: left center;
-    }
-
-    50% {
-      background-size: 200% 200%;
-      background-position: right center;
-    }
-  }
 
   /*
    * Palette. Real values live in ./palettes.css, one block per palette per
@@ -227,9 +181,9 @@
    * so Tailwind emits the utilities; every one is overridden at runtime by
    * the active [data-palette] block, which is unlayered and therefore wins.
    *
-   * pink/pink-2/mint/lav are legacy names kept so component code stays
-   * intact. They are pure aliases now, so a palette only has to define the
-   * accent trio.
+   * An accent is a fill. Its `-ink` (text, 4.5:1) and `-icon` (icons, 3:1)
+   * variants are derived by the generator and are what a foreground uses;
+   * the values here are placeholders that only name the utilities.
    */
   --color-miku: #0f7c74;
   --color-miku-2: #0a5954;
@@ -237,10 +191,16 @@
   --color-peach: #b87a1e;
   --color-peach-2: #cf8a33;
   --color-cloud: #fbf7ed;
-  --color-pink: var(--color-miku);
-  --color-pink-2: var(--color-miku-2);
-  --color-mint: var(--color-miku-3);
-  --color-lav: var(--shiro-ink-3);
+  --color-miku-ink: var(--color-miku-2);
+  --color-miku-icon: var(--color-miku);
+  --color-miku-2-ink: var(--color-miku-2);
+  --color-miku-2-icon: var(--color-miku-2);
+  --color-miku-3-ink: var(--color-miku-2);
+  --color-miku-3-icon: var(--color-miku);
+  --color-peach-ink: var(--color-peach);
+  --color-peach-icon: var(--color-peach);
+  --color-peach-2-ink: var(--color-peach);
+  --color-peach-2-icon: var(--color-peach);
   --color-sky-0: var(--shiro-sky-0);
   --color-sky-1: var(--shiro-sky-1);
   --color-sky-2: var(--shiro-sky-2);
@@ -280,11 +240,18 @@
   --font-display: var(--font-fraunces), 'Iowan Old Style', 'Palatino Linotype', Palatino, 'URW Palladio L', Georgia, serif;
   --font-body: var(--font-geist), -apple-system, 'Segoe UI', system-ui, sans-serif;
 
+  /*
+   * Letter spacing. `eyebrow` is the small uppercase mono label over a
+   * section, `label` the tighter one of a badge or a legend, `display` the
+   * pull-in of a serif heading.
+   */
+  --tracking-eyebrow: 0.2em;
+  --tracking-label: 0.1em;
+  --tracking-display: -0.02em;
+
   /* =================== ShiroOS animations =================== */
   --animate-drift: drift 16s linear infinite;
   --animate-floaty: floaty 8s ease-in-out infinite;
-  --animate-spin-slow: spinSlow 22s linear infinite;
-  --animate-sparkle: sparkle 4s ease-in-out infinite;
   --animate-blink: blink 1s steps(2) infinite;
   /*
    * Interaction feedback stays at or under 200ms and animates only transform
@@ -300,7 +267,6 @@
   --animate-bob-note: bobNote 1.4s ease-in-out infinite;
   --animate-logo-pop: logoPop 0.6s var(--ease-out-quart);
   --animate-boot-out: bootOut 0.5s ease 1.9s forwards;
-  --animate-boot-fill: bootFill 3s ease-out forwards;
   /*
    * `backwards`: a line with an `animation-delay` stays hidden until its
    * turn, and holds nothing once it is in (its keyframes end on its own
@@ -308,20 +274,12 @@
    */
   --animate-term-in: termIn 0.3s ease backwards;
   --animate-fade-in: fadeIn 0.15s ease;
-  --animate-ring-fast: spinSlow 1.8s linear infinite;
-  --animate-ring-slow: spinSlow 2.6s linear infinite reverse;
 
-  /* ShiroOS keyframes — ported from new-design/styles.css */
+  /* ShiroOS keyframes */
   @keyframes bootOut {
     to {
       opacity: 0;
       visibility: hidden;
-    }
-  }
-
-  @keyframes bootFill {
-    to {
-      width: 100%;
     }
   }
 
@@ -373,18 +331,6 @@
 
     50% {
       transform: translate(20px, -15px);
-    }
-  }
-
-  @keyframes sparkle {
-
-    0%,
-    100% {
-      opacity: 0.4;
-    }
-
-    50% {
-      opacity: 1;
     }
   }
 
@@ -492,43 +438,12 @@
 
 @layer base {
   :root {
-    /*
-     * shadcn neutrals only. Everything that varies with the palette — the
-     * accent family, the sky/surf/ink ramps, rules, shadows, scrollbar, and
-     * shadcn's --primary/--ring — is owned by ./palettes.css.
-     */
-    --background: 240 5% 4%;
-    --foreground: 0 0% 98%;
-
-    --card: 240 5% 6%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 240 5% 6%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary-foreground: 43 63% 96%;
-
-    --secondary: 240 5% 15%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 240 5% 15%;
-    --muted-foreground: 240 5% 65%;
-
-    --accent: 240 5% 15%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 240 5% 15%;
-    --input: 240 5% 15%;
-
     --radius: 0.5rem;
 
     --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   }
 
-  /* Custom scrollbar — webkit (Chrome, Safari, Edge) */
+  /* Custom scrollbar: webkit (Chrome, Safari, Edge) */
   *::-webkit-scrollbar {
     width: 10px;
     height: 10px;
@@ -570,10 +485,9 @@
   body {
     @apply font-mono antialiased;
     /*
-     * Ground is the washi-cream sky palette (deep-teal in dark mode), not the
-     * legacy near-black shadcn `--background` token. The OS shell overlays this
-     * with its own wallpaper, but the body still shows pre-hydration and in any
-     * uncovered area (notably the mobile feed), so it must never flash black.
+     * Ground is the page ground of the palette (`--shiro-sky-1`). The OS shell
+     * overlays this with its own wallpaper, but the body still shows
+     * pre-hydration and in any uncovered area (notably the mobile feed).
      */
     background-color: var(--color-sky-1);
     color: var(--color-ink);
@@ -620,7 +534,7 @@
   h4,
   h5,
   h6 {
-    @apply font-bold tracking-tight text-balance;
+    @apply font-bold tracking-display text-balance;
   }
 
   p {

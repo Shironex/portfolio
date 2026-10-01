@@ -1,7 +1,57 @@
 import type { MouseEvent } from 'react'
 
 import { type ClassValue, clsx } from 'clsx'
-import { twMerge } from 'tailwind-merge'
+import { extendTailwindMerge } from 'tailwind-merge'
+
+/**
+ * tailwind-merge only knows Tailwind's default scale. Every token added in
+ * `globals.css` is listed here under its group, or a conflict goes unresolved:
+ * `shadow-elev-1` would survive next to `shadow-none`, and count as a shadow
+ * colour that a caller's `shadow-miku/20` then deletes.
+ */
+const twMerge = extendTailwindMerge({
+  extend: {
+    theme: {
+      shadow: ['elev-1', 'elev-2', 'elev-3', 'elev-4'],
+      tracking: ['eyebrow', 'label', 'display'],
+      ease: ['out-quart', 'sheet'],
+      animate: [
+        'drift',
+        'floaty',
+        'blink',
+        'win-open',
+        'win-close',
+        'sheet-up',
+        'cp-in',
+        'menu-in',
+        'pulse-slow',
+        'bob-note',
+        'logo-pop',
+        'boot-out',
+        'term-in',
+        'fade-in',
+      ],
+    },
+    classGroups: {
+      z: [
+        {
+          z: [
+            'desktop',
+            'windows',
+            'chrome',
+            'menu',
+            'overlay',
+            'palette',
+            'boot',
+            'noscript',
+            'lightbox',
+            'toast',
+          ],
+        },
+      ],
+    },
+  },
+})
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
