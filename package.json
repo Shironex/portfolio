@@ -94,7 +94,7 @@
     "prettier-plugin-tailwindcss": "^0.8.1",
     "react-email": "6.9.5",
     "semantic-release": "^25.0.9",
-    "sharp": "^0.35.4",
+    "sharp": "^0.35.5",
     "standard-version": "^9.5.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3"
