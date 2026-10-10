@@ -179,6 +179,17 @@ const eslintConfig = [
       'n/no-process-env': 'off',
     },
   },
+  // The image renderer of the Open Graph cards takes a plain <img>, and the
+  // rule skips these files by itself, but only where the path separator is a
+  // slash: on Windows it rewrites the first backslash alone, misses the file
+  // name and reports them.
+  {
+    files: ['src/app/**/{opengraph,twitter}-image.tsx'],
+    rules: {
+      'next/no-img-element': 'off',
+      '@next/next/no-img-element': 'off',
+    },
+  },
   // Keep Prettier last to disable formatting-related ESLint rules
   eslintConfigPrettier,
 ]
