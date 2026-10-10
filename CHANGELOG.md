@@ -1,3 +1,15 @@
+# [2.22.0](https://github.com/Shironex/portfolio/compare/v2.21.1...v2.22.0) (2026-10-10)
+
+
+### Bug Fixes
+
+* **eslint:** allow the img of the open graph cards on windows too ([f872de5](https://github.com/Shironex/portfolio/commit/f872de544bdf632e2556005b8c6051d68b046a12))
+
+
+### Features
+
+* **projects:** add night maze ([30b7d7b](https://github.com/Shironex/portfolio/commit/30b7d7b1abb1fff12c1281c7bfb13a27bf028d04))
+
 ## [2.21.1](https://github.com/Shironex/portfolio/compare/v2.21.0...v2.21.1) (2026-10-01)
 
 
