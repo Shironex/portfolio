@@ -118,6 +118,7 @@ export const projectAccent: Record<string, AccentRole> = {
   'shirone-blog': 'bright',
   rumi: 'warm-2',
   'business-erp': 'warm',
+  'night-maze': 'warm-2',
 }
 
 export const DEFAULT_ACCENT: AccentRole = 'primary'

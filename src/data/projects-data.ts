@@ -10,6 +10,7 @@ import { gitchorus } from './projects/gitchorus'
 import { kireiManga } from './projects/kirei-manga'
 import { matmajka } from './projects/matmajka'
 import { moekoder } from './projects/moekoder'
+import { nightMaze } from './projects/night-maze'
 import { nysia } from './projects/nysia'
 import { omniscribe } from './projects/omniscribe'
 import { rumi } from './projects/rumi'
@@ -27,6 +28,7 @@ import { writeWiz } from './projects/write-wiz'
  */
 export const projectsData: Project[] = [
   shiranami,
+  nightMaze,
   automaker,
   eslintPlugins,
   omniscribe,
