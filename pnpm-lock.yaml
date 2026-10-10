@@ -120,20 +120,20 @@ importers:
         specifier: 16.3.8
         version: 16.3.8(eslint@10.12.0(jiti@2.7.0))
       '@noctcore/eslint-plugin-async-safety':
-        specifier: ^0.3.2
-        version: 0.3.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
+        specifier: ^0.4.2
+        version: 0.4.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
       '@noctcore/eslint-plugin-code-quality':
-        specifier: ^0.2.2
-        version: 0.2.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
+        specifier: ^0.4.2
+        version: 0.4.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
       '@noctcore/eslint-plugin-contracts':
-        specifier: ^0.6.1
-        version: 0.6.1(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
+        specifier: ^0.7.2
+        version: 0.7.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
       '@noctcore/eslint-plugin-react':
-        specifier: ^0.4.0
-        version: 0.4.0(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
+        specifier: ^0.4.2
+        version: 0.4.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
       '@noctcore/eslint-plugin-security':
-        specifier: ^0.3.0
-        version: 0.3.0(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
+        specifier: ^0.4.2
+        version: 0.4.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
       '@noctcore/showcase-kit':
         specifier: 0.2.0
         version: 0.2.0(@types/node@25.9.5)(playwright@1.63.0)
@@ -1035,38 +1035,38 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@noctcore/eslint-plugin-async-safety@0.3.2':
-    resolution: {integrity: sha512-WDvIjBPyVpawu4TZLWxEzct/5e8hoYaUoGBIY84o7/pt/IHYX0Dg8YPadzlz9klrYh/CDn9wzP/DM4PMqHp/oQ==}
+  '@noctcore/eslint-plugin-async-safety@0.4.2':
+    resolution: {integrity: sha512-wHnZnajlhKxug0r/hf8ro85fu0x8Rcb36Va40r48w1iBnPQicM0s/E2J2Ew7aVr2eNAbELautTL33H05j8VIlQ==}
     peerDependencies:
       eslint: '>=9.0.0'
       typescript: '>=5.0.0'
 
-  '@noctcore/eslint-plugin-code-quality@0.2.2':
-    resolution: {integrity: sha512-FHG33Li71gHpU7kegbpKZwfySFcwzg+kxfjEwCybT69xFtwT/rGVB38Akumkdphu0gexniP1YuXcSrd7bEWjWg==}
+  '@noctcore/eslint-plugin-code-quality@0.4.2':
+    resolution: {integrity: sha512-BTeVy8uBWchXpyH5NJmXXrGxIMqmiSoFN+qQRuDDHgH9m2mdU2RDnCa9/fJTvwAEVnhDQCzbvNftmaHvL8ndWw==}
     peerDependencies:
       eslint: '>=9.0.0'
       typescript: '>=5.0.0'
 
-  '@noctcore/eslint-plugin-contracts@0.6.1':
-    resolution: {integrity: sha512-91cnwX7eFAycjuM1tU/e9Sid28B8J8v8LmZWX+qHFcu1JVDcOlXQPpcFswAGRnSS7cL06kmoM84BppgAZwDDAQ==}
+  '@noctcore/eslint-plugin-contracts@0.7.2':
+    resolution: {integrity: sha512-T4gJeCYI434M4isDXFrSeCdUDgja/sxQP3IDt5mwRCKs+VOVZHo6hyzeWSFqfULds+zNq+Ui8VkjrR7BdHr6Tg==}
     peerDependencies:
       eslint: '>=9.0.0'
       typescript: '>=5.0.0'
 
-  '@noctcore/eslint-plugin-react@0.4.0':
-    resolution: {integrity: sha512-J/i9hHlimS2rdL9M9slMSOgNDUyTN4E+o/dlygAuR1/rImQYBZVN8b8yKIVQzRUp+wPAygmEuqEm+8Ii6zrysg==}
+  '@noctcore/eslint-plugin-react@0.4.2':
+    resolution: {integrity: sha512-8xoipmvQoLQECYF1aRtSEeEQmRmGeoa1CRA4CWislzUdT7oeGC+4d7ENXKe6IrZrKhD7i8JEOOKRYNHaoquhmQ==}
     peerDependencies:
       eslint: '>=9.0.0'
       typescript: '>=5.0.0'
 
-  '@noctcore/eslint-plugin-security@0.3.0':
-    resolution: {integrity: sha512-9sgZWHv4MaDIExUzehi9Jn3aY2jiHlcIJYm6Si06DMiP+FAcyywYFITP9X6JfCHkT2tQ4UXyfIuVsEwArjSvDA==}
+  '@noctcore/eslint-plugin-security@0.4.2':
+    resolution: {integrity: sha512-X7QimXSg9HofutaxciSIvhddXt3YLZkvVsQ699ZVQP30JIbAwvcSr/8f0aJjrWmBWhdd+yTwmcHdFfMMzPlIpw==}
     peerDependencies:
       eslint: '>=9.0.0'
       typescript: '>=5.0.0'
 
-  '@noctcore/eslint-utils@0.1.1':
-    resolution: {integrity: sha512-s46OLf4Gw/XmjiIV2HkzhuTXmNDLFrSnS+uoLMrk0PjkJO1Jfkv4BZ75gJEKHoBQDjHrky7/xhT22aH7+g9hOQ==}
+  '@noctcore/eslint-utils@0.1.2':
+    resolution: {integrity: sha512-5v9+Nds5n/bxBdieCXh7sfJF3a59s+p9RZLUSSv2hvZObgeOsV/bYGKulIIRxQOzhBZjNI6yWr16Fz5SPAnL9g==}
     peerDependencies:
       eslint: '>=9.0.0'
       typescript: '>=5.0.0'
@@ -5813,52 +5813,52 @@ snapshots:
   '@next/swc-win32-x64-msvc@16.3.8':
     optional: true
 
-  '@noctcore/eslint-plugin-async-safety@0.3.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)':
+  '@noctcore/eslint-plugin-async-safety@0.4.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)':
     dependencies:
-      '@noctcore/eslint-utils': 0.1.1(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
+      '@noctcore/eslint-utils': 0.1.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
       '@typescript-eslint/utils': 8.70.0(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
       eslint: 10.12.0(jiti@2.7.0)
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
 
-  '@noctcore/eslint-plugin-code-quality@0.2.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)':
+  '@noctcore/eslint-plugin-code-quality@0.4.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)':
     dependencies:
-      '@noctcore/eslint-utils': 0.1.1(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
+      '@noctcore/eslint-utils': 0.1.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
       '@typescript-eslint/utils': 8.70.0(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
       eslint: 10.12.0(jiti@2.7.0)
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
 
-  '@noctcore/eslint-plugin-contracts@0.6.1(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)':
+  '@noctcore/eslint-plugin-contracts@0.7.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)':
     dependencies:
-      '@noctcore/eslint-utils': 0.1.1(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
+      '@noctcore/eslint-utils': 0.1.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
       '@typescript-eslint/utils': 8.70.0(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
       eslint: 10.12.0(jiti@2.7.0)
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
 
-  '@noctcore/eslint-plugin-react@0.4.0(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)':
+  '@noctcore/eslint-plugin-react@0.4.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)':
     dependencies:
-      '@noctcore/eslint-utils': 0.1.1(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
+      '@noctcore/eslint-utils': 0.1.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
       '@typescript-eslint/utils': 8.70.0(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
       eslint: 10.12.0(jiti@2.7.0)
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
 
-  '@noctcore/eslint-plugin-security@0.3.0(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)':
+  '@noctcore/eslint-plugin-security@0.4.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)':
     dependencies:
-      '@noctcore/eslint-utils': 0.1.1(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
+      '@noctcore/eslint-utils': 0.1.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
       '@typescript-eslint/utils': 8.70.0(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
       eslint: 10.12.0(jiti@2.7.0)
       typescript: 6.0.3
     transitivePeerDependencies:
       - supports-color
 
-  '@noctcore/eslint-utils@0.1.1(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)':
+  '@noctcore/eslint-utils@0.1.2(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)':
     dependencies:
       '@typescript-eslint/utils': 8.70.0(eslint@10.12.0(jiti@2.7.0))(typescript@6.0.3)
       eslint: 10.12.0(jiti@2.7.0)
