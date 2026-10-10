@@ -1,3 +1,12 @@
+## [2.22.1](https://github.com/Shironex/portfolio/compare/v2.22.0...v2.22.1) (2026-10-10)
+
+
+### Bug Fixes
+
+* **deps:** bump next to 16.3.8 ([015ddec](https://github.com/Shironex/portfolio/commit/015ddec2ee47388ad7956fe9af57625c6af96512))
+* **deps:** bump sharp to 0.35.5 and source-map-js to 1.2.2 ([77d8d26](https://github.com/Shironex/portfolio/commit/77d8d26494d87f0a243943bb3f5a421ee7715846))
+* **deps:** stop forcing brace-expansion 5 onto minimatch 3 ([a54a137](https://github.com/Shironex/portfolio/commit/a54a13750b9d672fd36b21ab98997d360a5253ee))
+
 # [2.22.0](https://github.com/Shironex/portfolio/compare/v2.21.1...v2.22.0) (2026-10-10)
 
 
