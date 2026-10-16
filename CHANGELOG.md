@@ -1,3 +1,10 @@
+## [2.22.3](https://github.com/Shironex/portfolio/compare/v2.22.2...v2.22.3) (2026-10-16)
+
+
+### Bug Fixes
+
+* **projects:** refresh night maze pictures and text for 0.17.0 ([ce21079](https://github.com/Shironex/portfolio/commit/ce210799e01491d1043278eca3d78fde113fb07a))
+
 ## [2.22.2](https://github.com/Shironex/portfolio/compare/v2.22.1...v2.22.2) (2026-10-16)
 
 
