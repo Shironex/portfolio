@@ -1,3 +1,10 @@
+## [2.22.2](https://github.com/Shironex/portfolio/compare/v2.22.1...v2.22.2) (2026-10-16)
+
+
+### Bug Fixes
+
+* **deps:** raise handlebars override floor to 4.7.10 ([29a4cd1](https://github.com/Shironex/portfolio/commit/29a4cd1595a0b143c32eb398818d42864cf0cd72))
+
 ## [2.22.1](https://github.com/Shironex/portfolio/compare/v2.22.0...v2.22.1) (2026-10-10)
 
 
