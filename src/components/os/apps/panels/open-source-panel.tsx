@@ -2,7 +2,7 @@
 
 import { ArrowUpRight } from 'lucide-react'
 
-import { INLINE_LINK_CLASS, SKELETON_BAR } from '@/components/os/constants'
+import { SKELETON_BAR } from '@/components/os/constants'
 import { ExternalLink } from '@/components/os/external-link'
 
 import { GITHUB_URL } from '@/lib/constants'
@@ -23,7 +23,7 @@ function formatMerged(mergedAt: string) {
 
 function ProfileLink() {
   return (
-    <ExternalLink href={GITHUB_URL} className={INLINE_LINK_CLASS}>
+    <ExternalLink href={GITHUB_URL} inline>
       my GitHub profile
     </ExternalLink>
   )

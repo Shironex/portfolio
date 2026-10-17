@@ -98,28 +98,13 @@ export function ProjectHero({ project, titleLevel = 1 }: ProjectProps) {
   return (
     <section className="border-rule-2 bg-surf-soft relative mb-16 overflow-hidden rounded-2xl border p-12 md:p-16">
       <div className="relative">
-        {/* Each badge lays its tint over the opaque card colour, the ground
-            the token gate measured the tint on. */}
         <div className="mb-6 flex items-center gap-4">
           {project.projectType && (
-            <StatusChip
-              tone="neutral"
-              size="md"
-              opaque
-              accent={accent}
-              className="rounded-full"
-            >
+            <StatusChip tone="neutral" size="md" accent={accent}>
               {project.projectType}
             </StatusChip>
           )}
-          {project.featured && (
-            <StatusChip
-              tone="featured"
-              size="md"
-              opaque
-              className="rounded-full"
-            />
-          )}
+          {project.featured && <StatusChip tone="featured" size="md" />}
         </div>
 
         <Title className="font-display text-ink text-4xl font-bold">
@@ -141,7 +126,7 @@ export function ProjectHero({ project, titleLevel = 1 }: ProjectProps) {
             </span>
           )}
           {project.status !== 'shipped' && (
-            <StatusChip tone={project.status} size="md" opaque />
+            <StatusChip tone={project.status} size="md" />
           )}
         </div>
 

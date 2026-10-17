@@ -47,9 +47,9 @@ export const MOBILE_BAR_CLASS =
 export const MOBILE_GUTTER_CLASS =
   'pr-[max(1rem,env(safe-area-inset-right))] pl-[max(1rem,env(safe-area-inset-left))]'
 
-/** Text link inside running copy. */
+/** Text link inside running copy: a 1 art px underline, 2 art px down. */
 export const INLINE_LINK_CLASS =
-  'focus-ring text-miku-2-ink rounded-sm underline underline-offset-2'
+  'focus-ring text-miku-2-ink underline decoration-(length:--px) underline-offset-[calc(2*var(--px))]'
 
 /**
  * Small uppercase mono label over a section: the one eyebrow of the shell.

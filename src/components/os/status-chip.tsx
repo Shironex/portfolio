@@ -7,8 +7,7 @@ import {
   STATUS_SHORT_LABEL,
 } from '@/lib/utils/project-meta'
 
-import { type AccentRole, accentInk, accentTintLayer } from './accent-map'
-import { LABEL_CLASS } from './constants'
+import { type AccentRole, accentInk } from './accent-map'
 
 type ChipTone = 'featured' | 'in-progress' | 'archived' | 'neutral'
 type ChipSize = 'sm' | 'md'
@@ -18,12 +17,7 @@ interface StatusChipProps {
   tone: ChipTone
   /** `sm` in a list row, with the short label; `md` in a detail header. */
   size?: ChipSize
-  /**
-   * Lays the tint over the opaque card colour. For a chip a glow can reach
-   * under: a tint over a glow is not a ground its text was made for.
-   */
-  opaque?: boolean
-  /** Paints the chip in an accent role instead of the colours of its tone. */
+  /** Colours the text in an accent role instead of the ink of its tone. */
   accent?: AccentRole
   /** Replaces the label of the tone. */
   children?: ReactNode
@@ -31,19 +25,21 @@ interface StatusChipProps {
 }
 
 /**
- * The tint is a background image in every tone, so `opaque` only has to put a
- * colour under it. Text of an accent sits on at most `TINT.text` of it.
+ * Each tone is a notched tag 9-slice (`chip` and its recoloured variants in
+ * pixel-chrome.css) with its own ink. Night chrome in both Lamp modes, so
+ * the chip is an `os-night` subtree and every ink is a night value on it:
+ * link on the teal tag, lamp on the warm one, meta on the ground one.
  */
 const TONE_CLASS: Record<ChipTone, string> = {
-  featured: 'from-miku/15 to-miku/15 text-miku-ink',
-  'in-progress': 'from-peach/20 to-peach/20 text-peach-ink',
-  archived: 'from-surf-0 to-surf-0 text-ink-3',
-  neutral: 'from-surf-0 to-surf-0 text-ink-3',
+  featured: 'px-chip text-(--link)',
+  'in-progress': 'px-chip-warm text-(--lamp)',
+  archived: 'px-chip-ground text-(--meta)',
+  neutral: 'px-chip text-(--ink)',
 }
 
 const SIZE_CLASS: Record<ChipSize, string> = {
-  sm: 'px-3 py-1 font-mono text-[11px] uppercase',
-  md: cn(LABEL_CLASS, 'px-4 py-1'),
+  sm: 'px-2',
+  md: 'px-3',
 }
 
 const LABEL: Record<ChipSize, Record<ChipTone, string | undefined>> = {
@@ -61,17 +57,13 @@ const LABEL: Record<ChipSize, Record<ChipTone, string | undefined>> = {
   },
 }
 
-/** Tint a chip in an accent role lays behind its text, in percent. */
-const ACCENT_TINT = 13
-
 /**
  * The one small tag of the shell: featured, in progress, archived, and the
- * plain kind tag of a project.
+ * plain kind tag of a project. Departure Mono, uppercase.
  */
 export function StatusChip({
   tone,
   size = 'sm',
-  opaque,
   accent,
   children,
   className,
@@ -79,18 +71,12 @@ export function StatusChip({
   return (
     <span
       className={cn(
-        'shrink-0 rounded bg-linear-to-r',
+        'os-night text-label inline-block shrink-0 whitespace-nowrap uppercase',
         SIZE_CLASS[size],
         TONE_CLASS[tone],
-        opaque && 'bg-surf-soft',
         className
       )}
-      style={
-        accent && {
-          backgroundImage: accentTintLayer(accent, ACCENT_TINT),
-          color: accentInk(accent),
-        }
-      }
+      style={accent && { color: accentInk(accent) }}
     >
       {children ?? LABEL[size][tone]}
     </span>

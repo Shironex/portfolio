@@ -8,11 +8,7 @@
 
 import { ArrowUpRight } from 'lucide-react'
 
-import {
-  EYEBROW_CLASS,
-  INLINE_LINK_CLASS,
-  SKELETON_BAR,
-} from '@/components/os/constants'
+import { EYEBROW_CLASS, SKELETON_BAR } from '@/components/os/constants'
 import { ExternalLink } from '@/components/os/external-link'
 
 import {
@@ -39,7 +35,7 @@ function describeDate(date: string) {
 
 function BlogLink({ children }: { children: React.ReactNode }) {
   return (
-    <ExternalLink href={BLOG_URL} className={INLINE_LINK_CLASS}>
+    <ExternalLink href={BLOG_URL} inline>
       {children}
     </ExternalLink>
   )

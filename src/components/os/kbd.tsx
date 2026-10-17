@@ -1,40 +1,31 @@
 import type { ReactNode } from 'react'
 
-import { TINT } from '@/lib/os/tokens.generated'
 import { cn } from '@/lib/utils'
 
 interface KbdProps {
   children: ReactNode
   /**
-   * `default`: bordered chip for neutral surfaces (taskbar, palette, cards).
-   * `accent`: shaded chip for use on filled accent buttons.
+   * `default`: cream on the keycap, for chrome, palette and cards.
+   * `accent`: lamp on the keycap, for a hint on a filled accent button.
    */
   tone?: 'default' | 'accent'
   className?: string
 }
 
 /**
- * Single keyboard-hint chip used across all ShiroOS chrome. Every surface
- * previously hand-rolled a slightly different <kbd>; this is the one style.
+ * The one keyboard hint of the shell: a keycap (the `keycap` 9-slice, with
+ * its 3 art px bottom shadow) in Departure Mono. The keycap is night chrome
+ * in both Lamp modes, so it is an `os-night` subtree and its text resolves
+ * the night tokens.
  */
 export function Kbd({ children, tone = 'default', className }: KbdProps) {
   return (
     <kbd
       className={cn(
-        'rounded px-3 py-1 font-mono text-[11px]',
-        tone === 'default' && 'border-rule bg-surf-solid/70 text-ink-3 border',
-        // Ink over the fill moves it away from `cloud` in both modes, so the
-        // chip stays readable on the resting and on the pressed accent.
-        tone === 'accent' && 'text-cloud',
+        'os-night px-keycap text-label inline-block px-2 whitespace-nowrap',
+        tone === 'default' ? 'text-(--ink)' : 'text-(--lamp)',
         className
       )}
-      style={
-        tone === 'accent'
-          ? {
-              backgroundColor: `color-mix(in oklab, var(--color-ink) ${TINT.kbd}%, transparent)`,
-            }
-          : undefined
-      }
     >
       {children}
     </kbd>

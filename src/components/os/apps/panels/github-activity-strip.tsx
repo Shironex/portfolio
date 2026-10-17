@@ -188,7 +188,7 @@ export function GithubActivityStrip() {
             retry
           </button>
           <span aria-hidden>·</span>
-          <ExternalLink href={GITHUB_URL} className={INLINE_LINK_CLASS}>
+          <ExternalLink href={GITHUB_URL} inline>
             view my profile
           </ExternalLink>
         </div>
