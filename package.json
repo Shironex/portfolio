@@ -17,6 +17,7 @@
     "art:glyphs": "node scripts/pixel/gen-glyphs.mjs",
     "art:sprites": "node scripts/pixel/gen-sprites.mjs",
     "test:pixel": "node --test 'scripts/pixel/test/*.test.mjs'",
+    "fonts:subset": "uv run scripts/pixel/subset-fonts.py",
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
     "test:e2e:report": "playwright show-report",
