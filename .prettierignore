@@ -44,3 +44,6 @@ pnpm-lock.yaml
 
 # public assets
 public/ 
+# pixel art: exported by scripts/pixel/export-art.mjs, kept byte for byte
+src/assets/pixel/
+scripts/pixel/test/fixtures/

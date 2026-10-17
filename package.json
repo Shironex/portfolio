@@ -11,6 +11,7 @@
     "lint": "eslint && node scripts/gen-palettes.mjs --check",
     "palettes:check": "node scripts/gen-palettes.mjs --check",
     "palettes:verify": "node scripts/verify-palettes.mjs",
+    "art:export": "node scripts/pixel/export-art.mjs",
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
     "test:e2e:report": "playwright show-report",
