@@ -318,7 +318,7 @@ function WindowImpl({
             </span>
             <h2
               className={cn(
-                'font-mono text-xs font-normal tracking-normal',
+                'font-mono text-xs font-normal',
                 isFocused ? 'text-ink-2' : 'text-ink-4'
               )}
             >

@@ -42,7 +42,7 @@ function FeaturedPanelImpl({ onOpenProject }: FeaturedPanelProps) {
       <div className="border-rule bg-surf-soft flex items-center gap-6 border-b px-6 py-4">
         <h2
           id={headingId}
-          className="font-display text-ink flex-1 text-sm font-bold tracking-normal"
+          className="font-display text-ink flex-1 text-sm font-bold"
         >
           Featured work
         </h2>

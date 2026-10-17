@@ -88,9 +88,7 @@ export function MobileSheet({
               {icon}
             </span>
           )}
-          <h2 className="text-ink-2 font-mono text-xs font-normal tracking-normal">
-            {title}
-          </h2>
+          <h2 className="text-ink-2 font-mono text-xs font-normal">{title}</h2>
         </div>
         <div className="-mr-2 flex items-center">
           {onCopyLink && (

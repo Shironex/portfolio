@@ -55,14 +55,13 @@ export const INLINE_LINK_CLASS =
  * Small uppercase mono label over a section: the one eyebrow of the shell.
  * Callers add the colour and the spacing.
  */
-export const EYEBROW_CLASS =
-  'font-mono text-[11px] font-normal tracking-eyebrow uppercase'
+export const EYEBROW_CLASS = 'font-mono text-[11px] font-normal uppercase'
 
 /**
  * Small uppercase mono label of a badge or a legend, tighter than the eyebrow.
  * Callers add the colour.
  */
-export const LABEL_CLASS = 'font-mono text-[11px] tracking-label uppercase'
+export const LABEL_CLASS = 'font-mono text-[11px] uppercase'
 
 /** Pulsing placeholder fill; callers add the size and radius. */
 export const SKELETON_BAR =

@@ -13,7 +13,6 @@ const twMerge = extendTailwindMerge({
   extend: {
     theme: {
       shadow: ['elev-1', 'elev-2', 'elev-3', 'elev-4'],
-      tracking: ['eyebrow', 'label', 'display'],
       ease: ['out-quart', 'sheet'],
       animate: [
         'drift',

@@ -192,7 +192,7 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
         </div>
 
         <div className="text-center">
-          <div className="font-display text-ink tracking-display text-[22px] font-semibold">
+          <div className="font-display text-ink text-[22px] font-semibold">
             <b className="text-miku-2-ink font-bold">ShiroOS</b>
             <span className="mx-2">·</span>
             <span>booting with love</span>
@@ -231,7 +231,7 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
                   {state === 'done' ? '✓' : state === 'run' ? '●' : '○'}
                 </span>
                 <span>{s.label}</span>
-                <span className="text-ink-4 tracking-label font-mono text-[11px] tabular-nums">
+                <span className="text-ink-4 font-mono text-[11px] tabular-nums">
                   {state === 'wait' ? '-' : s.detail}
                 </span>
               </div>
@@ -244,7 +244,7 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
           type="button"
           onClick={dismiss}
           aria-keyshortcuts="Escape Enter Space"
-          className="focus-ring border-rule-2 bg-surf-0 text-ink-3 hover:bg-surf-1 hover:text-ink tracking-eyebrow rounded-full border px-8 py-3 font-mono text-[11px] uppercase transition-colors"
+          className="focus-ring border-rule-2 bg-surf-0 text-ink-3 hover:bg-surf-1 hover:text-ink rounded-full border px-8 py-3 font-mono text-[11px] uppercase transition-colors"
         >
           skip · esc
         </button>
