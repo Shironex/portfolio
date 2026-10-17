@@ -1,0 +1,126 @@
+{
+  "frames": [
+    {
+      "filename": "sheet-fixture 0.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
+      "sourceSize": {
+        "w": 4,
+        "h": 4
+      },
+      "duration": 100
+    },
+    {
+      "filename": "sheet-fixture 1.aseprite",
+      "frame": {
+        "x": 4,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
+      "sourceSize": {
+        "w": 4,
+        "h": 4
+      },
+      "duration": 250
+    },
+    {
+      "filename": "sheet-fixture 2.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 4,
+        "w": 4,
+        "h": 4
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
+      "sourceSize": {
+        "w": 4,
+        "h": 4
+      },
+      "duration": 150
+    },
+    {
+      "filename": "sheet-fixture 3.aseprite",
+      "frame": {
+        "x": 4,
+        "y": 4,
+        "w": 4,
+        "h": 4
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 4,
+        "h": 4
+      },
+      "sourceSize": {
+        "w": 4,
+        "h": 4
+      },
+      "duration": 300
+    }
+  ],
+  "meta": {
+    "app": "https://www.aseprite.org/",
+    "image": "sheet-fixture.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 8,
+      "h": 8
+    },
+    "scale": "1",
+    "frameTags": [
+      {
+        "name": "blink",
+        "from": 0,
+        "to": 2,
+        "direction": "forward",
+        "color": "#000000ff"
+      },
+      {
+        "name": "pulse",
+        "from": 2,
+        "to": 3,
+        "direction": "pingpong",
+        "color": "#000000ff"
+      }
+    ],
+    "layers": [
+      {
+        "name": "Layer 1",
+        "opacity": 255,
+        "blendMode": "normal"
+      }
+    ],
+    "slices": []
+  }
+}
