@@ -1,5 +1,13 @@
 @import 'tailwindcss';
 @import './tokens.css';
+/*
+ * The pixel chrome (9-slices, tiles), cursors and sprite loops, generated
+ * from the art (`pnpm art:chrome`, `pnpm art:cursors`, `pnpm art:sprites`).
+ * In the components layer, under the utilities.
+ */
+@import './pixel-chrome.css' layer(components);
+@import './pixel-cursors.css' layer(components);
+@import './pixel-sprites.css' layer(components);
 
 @source '../../*.{js,ts,jsx,tsx,mdx}';
 

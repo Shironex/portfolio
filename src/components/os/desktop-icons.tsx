@@ -2,9 +2,8 @@
 
 import { memo } from 'react'
 
-import { TINT } from '@/lib/os/tokens.generated'
+import { AppIcon } from '@/components/pixel/app-icon'
 
-import { accentIcon, accentTintLayer } from './accent-map'
 import { APPS } from './constants'
 import type { AppId } from './types'
 
@@ -24,32 +23,20 @@ interface DesktopIconsProps {
 function DesktopIconsImpl({ onLaunch }: DesktopIconsProps) {
   return (
     <div className="os-night z-desktop absolute top-32 left-8 flex flex-col gap-8">
-      {APPS.map((app) => {
-        const Icon = app.icon
-        return (
-          <button
-            key={app.id}
-            type="button"
-            aria-label={`Open ${app.name}`}
-            onClick={() => onLaunch(app.id)}
-            className="focus-ring hover:bg-surf-0/60 flex w-40 flex-col items-center gap-3 rounded-lg p-4 transition-colors"
-          >
-            <span
-              aria-hidden
-              className="bg-ground shadow-elev-1 flex size-24 items-center justify-center rounded-xl"
-              style={{
-                backgroundImage: accentTintLayer(app.accent, TINT.icon),
-                color: accentIcon(app.accent),
-              }}
-            >
-              <Icon size={22} strokeWidth={1.75} />
-            </span>
-            <span className="font-body text-ink bg-ground px-2 text-xs">
-              {app.name}
-            </span>
-          </button>
-        )
-      })}
+      {APPS.map((app) => (
+        <button
+          key={app.id}
+          type="button"
+          aria-label={`Open ${app.name}`}
+          onClick={() => onLaunch(app.id)}
+          className="group focus-ring hover:bg-surf-0/60 flex w-40 flex-col items-center gap-3 p-2 transition-colors"
+        >
+          <AppIcon id={app.id} size={32} />
+          <span className="font-body text-ink bg-ground px-2 text-xs">
+            {app.name}
+          </span>
+        </button>
+      ))}
     </div>
   )
 }

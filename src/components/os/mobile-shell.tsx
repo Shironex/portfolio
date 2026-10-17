@@ -6,6 +6,7 @@ import { useCallback, useState } from 'react'
 import { LayoutGrid, Menu, Moon, Search, Sun } from 'lucide-react'
 
 import { GithubIcon } from '@/components/icons/github-icon'
+import { AppIcon, WindowIcon } from '@/components/pixel/app-icon'
 
 import { GITHUB_URL } from '@/lib/constants'
 import type { SkyId } from '@/lib/os/appearance'
@@ -14,7 +15,6 @@ import { cn } from '@/lib/utils'
 import type { OsWindowsApi } from '@/hooks/use-os-windows'
 import { type Theme, lampLabel } from '@/hooks/use-theme'
 
-import { accentIcon, accentTileStyle } from './accent-map'
 import { AppBody } from './app-registry'
 import { FeaturedPanel } from './apps/panels/featured-panel'
 import { HeroPlate } from './apps/panels/hero-plate'
@@ -24,7 +24,6 @@ import {
   EYEBROW_CLASS,
   MOBILE_BAR_CLASS,
   MOBILE_GUTTER_CLASS,
-  windowIconFor,
 } from './constants'
 import { ExternalLink } from './external-link'
 import { MobileSheet } from './mobile-sheet'
@@ -216,7 +215,6 @@ export function MobileShell({
           <div className="flex flex-1 items-center justify-between min-[440px]:flex-none min-[440px]:justify-start min-[440px]:gap-2">
             {APPS.map((app) => {
               const isOpen = os.isOpen(app.id)
-              const Icon = app.icon
               return (
                 <button
                   key={app.id}
@@ -225,9 +223,7 @@ export function MobileShell({
                   aria-label={`Open ${app.name}`}
                   className="focus-ring hover:bg-surf-0 relative flex size-(--target) shrink-0 items-center justify-center rounded-lg transition-colors"
                 >
-                  <span aria-hidden style={{ color: accentIcon(app.accent) }}>
-                    <Icon size={18} strokeWidth={1.75} />
-                  </span>
+                  <AppIcon id={app.id} />
                   {isOpen && (
                     <span
                       aria-hidden
@@ -252,30 +248,21 @@ export function MobileShell({
           onClose={closeLauncher}
         >
           <ul className="grid grid-cols-3 gap-6">
-            {APPS.map((app) => {
-              const Icon = app.icon
-              return (
-                <li key={app.id} className="flex">
-                  <button
-                    type="button"
-                    onClick={() => openApp(app.id)}
-                    aria-label={`Open ${app.name}`}
-                    className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 flex flex-1 flex-col items-center gap-4 rounded-xl border px-4 py-8 transition-colors"
-                  >
-                    <span
-                      aria-hidden
-                      className="flex size-24 items-center justify-center rounded-xl"
-                      style={accentTileStyle(app.accent)}
-                    >
-                      <Icon size={22} strokeWidth={1.75} />
-                    </span>
-                    <span className="font-display text-ink text-sm">
-                      {app.name}
-                    </span>
-                  </button>
-                </li>
-              )
-            })}
+            {APPS.map((app) => (
+              <li key={app.id} className="flex">
+                <button
+                  type="button"
+                  onClick={() => openApp(app.id)}
+                  aria-label={`Open ${app.name}`}
+                  className="group focus-ring border-rule bg-surf-0 hover:bg-surf-1 flex flex-1 flex-col items-center gap-4 rounded-xl border px-4 py-8 transition-colors"
+                >
+                  <AppIcon id={app.id} size={32} />
+                  <span className="font-display text-ink text-sm">
+                    {app.name}
+                  </span>
+                </button>
+              </li>
+            ))}
           </ul>
 
           <div className="border-rule mt-12 border-t pt-10">
@@ -298,26 +285,22 @@ export function MobileShell({
       )}
 
       {/* Top mobile sheet only: the rest of the window stack waits behind it. */}
-      {topSheet &&
-        (() => {
-          const SheetIcon = windowIconFor(topSheet.id)
-          return (
-            <MobileSheet
-              key={topSheet.id}
-              title={topSheet.title}
-              icon={<SheetIcon size={16} strokeWidth={1.75} />}
-              onClose={closeTopSheet}
-              onCopyLink={() => onCopyLink(topSheet.id)}
-            >
-              <AppBody
-                id={topSheet.id}
-                project={topSheet.project}
-                onOpenProject={os.openProject}
-                projectTitleLevel={1}
-              />
-            </MobileSheet>
-          )
-        })()}
+      {topSheet && (
+        <MobileSheet
+          key={topSheet.id}
+          title={topSheet.title}
+          icon={<WindowIcon win={topSheet} />}
+          onClose={closeTopSheet}
+          onCopyLink={() => onCopyLink(topSheet.id)}
+        >
+          <AppBody
+            id={topSheet.id}
+            project={topSheet.project}
+            onOpenProject={os.openProject}
+            projectTitleLevel={1}
+          />
+        </MobileSheet>
+      )}
     </>
   )
 }

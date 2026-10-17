@@ -1,7 +1,11 @@
 import { Suspense } from 'react'
+import { preload } from 'react-dom'
 
 import { HeroText } from '@/components/os/hero-text'
 import OsShell from '@/components/os/os-shell'
+
+import appIcons16 from '@/assets/pixel/icons/app-icons-16.png'
+import appIcons32 from '@/assets/pixel/icons/app-icons-32.png'
 
 /**
  * Static server-rendered hero. OsShell is a client component that bails
@@ -33,6 +37,10 @@ function StaticHero() {
 }
 
 export default function HomePage() {
+  // The app icon sheets (the taskbar, the desktop, title bars) start with
+  // the page instead of after the shell mounts and its CSS asks for them.
+  preload(appIcons16.src, { as: 'image' })
+  preload(appIcons32.src, { as: 'image' })
   return (
     <>
       <StaticHero />
