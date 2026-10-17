@@ -1,3 +1,10 @@
+## [2.22.4](https://github.com/Shironex/portfolio/compare/v2.22.3...v2.22.4) (2026-10-17)
+
+
+### Bug Fixes
+
+* **fonts:** load the font variables on the html element ([78d0772](https://github.com/Shironex/portfolio/commit/78d07721807cf9f821e991214fa00972dbb49602))
+
 ## [2.22.3](https://github.com/Shironex/portfolio/compare/v2.22.2...v2.22.3) (2026-10-16)
 
 
