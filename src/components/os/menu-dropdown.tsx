@@ -9,9 +9,13 @@ import {
   useRef,
 } from 'react'
 
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
+
 import { cn } from '@/lib/utils'
 
 import { useEscapeLayer } from '@/hooks/use-escape-layer'
+
+import { Kbd } from './kbd'
 
 export interface MenuDropdownItem {
   label: string
@@ -101,6 +105,9 @@ function menuStops(menu: HTMLElement | null): HTMLElement[] {
  *   or focus leaving any other way closes it too.
  *
  * Rendered in place under the trigger; `z-menu` only has to clear the bar.
+ * The popover 9-slice, night chrome like the bar: the active row is the
+ * selection teal with a lamp `❯` in front, separators are dotted 1 art px
+ * rules and shortcuts are keycaps.
  */
 export function MenuDropdown<Id extends string>({
   id,
@@ -244,8 +251,8 @@ export function MenuDropdown<Id extends string>({
         aria-expanded={isOpen}
         aria-controls={isOpen ? menuId : undefined}
         className={cn(
-          'focus-ring font-body text-ink-2 hover:bg-surf-0 hover:text-ink rounded-md px-4 py-2 text-sm transition-colors',
-          isOpen && 'bg-surf-0 text-ink'
+          'focus-ring text-body flex h-16 items-center px-3 text-(--ink) hover:bg-(--select)',
+          isOpen && 'bg-(--select)'
         )}
       >
         {label}
@@ -258,15 +265,15 @@ export function MenuDropdown<Id extends string>({
           role="menu"
           aria-label={label}
           onKeyDown={handleMenuKey}
-          className="animate-menu-in border-rule-2 bg-surf-solid shadow-elev-3 z-menu absolute top-full left-0 mt-2 min-w-100 rounded-lg border py-2 motion-reduce:animate-none"
+          className="os-night px-popover animate-menu-in z-menu absolute top-full left-0 mt-2 min-w-100 py-1 motion-reduce:animate-none"
         >
           {sections.map((section, sectionIndex) => (
             <div key={sectionIndex} role="none">
               {section.divider && (
-                <div role="separator" className="bg-rule my-2 h-px" />
+                <div role="separator" className="rule-dotted mx-2 my-1" />
               )}
               {section.node && (
-                <div role="none" className="px-6 py-3">
+                <div role="none" className="px-3 py-2">
                   {section.node}
                 </div>
               )}
@@ -286,19 +293,19 @@ export function MenuDropdown<Id extends string>({
                       item.onClick()
                       close()
                     }}
-                    className="focus-ring text-ink hover:bg-surf-soft focus-visible:bg-surf-soft flex w-full items-center gap-6 px-6 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+                    className="group focus-ring text-body flex h-14 w-full items-center gap-2 pr-3 pl-1 whitespace-nowrap text-(--ink) hover:bg-(--select) focus-visible:bg-(--select) disabled:cursor-not-allowed disabled:text-(--meta)"
                   >
+                    <PixelIcon
+                      name="chevron-right"
+                      className="invisible text-(--heading) group-hover:visible group-focus-visible:visible group-disabled:invisible"
+                    />
                     {item.icon && (
-                      <span aria-hidden className="text-ink-3 size-8">
+                      <span aria-hidden className="flex text-(--meta)">
                         {item.icon}
                       </span>
                     )}
                     <span className="flex-1 text-left">{item.label}</span>
-                    {item.kbd && (
-                      <kbd className="text-ink-3 font-mono text-[11px]">
-                        {item.kbd}
-                      </kbd>
-                    )}
+                    {item.kbd && <Kbd className="ml-4">{item.kbd}</Kbd>}
                   </button>
                 ))}
             </div>

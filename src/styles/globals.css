@@ -90,6 +90,20 @@
   }
 }
 
+/*
+ * A dotted 1 art px rule (menu separators, popover footers): one art px of
+ * the dim frame teal, one of nothing, so the dots land on whole pixels where
+ * a `dotted` border would draw round, smoothed dots.
+ */
+@utility rule-dotted {
+  height: var(--px);
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--frame-dim) 0 var(--px),
+    transparent 0 calc(2 * var(--px))
+  );
+}
+
 /* Lamp lettering with its 1 art px shadow, the README header treatment. */
 @utility lamp-heading {
   color: var(--heading);

@@ -1,12 +1,13 @@
 'use client'
 
-import Image from 'next/image'
 import { memo, useCallback, useRef, useState } from 'react'
 
-import { Moon, Sun } from 'lucide-react'
+import { AppLogo } from '@/components/pixel/app-icon'
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
 import type { SkyId } from '@/lib/os/appearance'
+import { cn } from '@/lib/utils'
 import { copyToClipboard } from '@/lib/utils/copy-to-clipboard'
 
 import { type Theme, lampLabel } from '@/hooks/use-theme'
@@ -165,7 +166,7 @@ function MenuBarImpl({
       items: [
         {
           label: lampLabel(theme),
-          icon: theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />,
+          icon: <PixelIcon name={theme === 'dark' ? 'lamp-off' : 'lamp-on'} />,
           onClick: onToggleTheme,
         },
       ],
@@ -206,23 +207,19 @@ function MenuBarImpl({
   }
 
   return (
-    // Near opaque like the taskbar, in place of a thinner fill over a
-    // backdrop blur that resampled the wallpaper on every frame.
-    <header className="os-night border-rule bg-surf-2 z-chrome fixed inset-x-0 top-0 flex h-(--target) items-center gap-6 border-b px-6">
-      {/* Left: logo chip */}
-      <div className="flex items-center gap-4">
-        <Image
-          aria-hidden
-          src="/mascot.png"
-          alt=""
-          width={44}
-          height={44}
-          priority
-          className="border-rule bg-miku/10 size-10 rounded-full border object-cover object-top"
-        />
-        <span className="font-display text-ink text-sm font-semibold">
-          ShiroOS
-        </span>
+    // The 20 art px bar on the ground navy (22 under a coarse pointer).
+    // Night in both Lamp modes.
+    <header className="os-night z-chrome fixed inset-x-0 top-0 flex h-20 items-center gap-4 bg-(--ground) px-3 pointer-coarse:h-22">
+      {/* The 1 art px teal rule under the bar: a box, since a border width
+          is snapped to whole px and would not stay one art px. */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 h-1 bg-(--select)"
+      />
+      {/* Left: the 16x16 logo and the wordmark. */}
+      <div className="flex items-center gap-3">
+        <AppLogo />
+        <span className="text-title text-(--lamp)">ShiroOS</span>
       </div>
 
       {/* Center: menu items */}
@@ -230,7 +227,7 @@ function MenuBarImpl({
         ref={barRef}
         role="menubar"
         aria-label="ShiroOS"
-        className="flex items-center gap-1"
+        className="flex items-center"
       >
         {MENU_IDS.map((id) => (
           <MenuDropdown
@@ -249,21 +246,20 @@ function MenuBarImpl({
         ))}
       </div>
 
-      {/* Right: Lamp toggle + status + date + time */}
-      <div className="text-ink-3 ml-auto flex items-center gap-8 font-mono text-xs">
+      {/* Right: the Lamp toggle (the bulb as it is now) and the clock. */}
+      <div className="ml-auto flex items-center gap-4">
         <button
           type="button"
           onClick={onToggleTheme}
           aria-label={lampLabel(theme)}
-          className="focus-ring text-ink-3 hover:bg-surf-0 hover:text-miku-2-icon rounded p-2 transition-colors"
-        >
-          {theme === 'dark' ? (
-            <Sun aria-hidden size={14} />
-          ) : (
-            <Moon aria-hidden size={14} />
+          className={cn(
+            'focus-ring flex h-16 w-14 items-center justify-center hover:bg-(--select)',
+            theme === 'dark' ? 'text-(--meta)' : 'text-(--lamp)'
           )}
+        >
+          <PixelIcon name={theme === 'dark' ? 'lamp-off' : 'lamp-on'} />
         </button>
-        <Clock />
+        <Clock className="text-(--meta)" />
       </div>
     </header>
   )
