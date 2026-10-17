@@ -23,8 +23,8 @@ import {
  * both modes, and says so when the captcha is missing; what was typed
  * survives closing the window. The contribution heatmap is one image, not a
  * run of tab stops. The document head carries a canonical, `viewport-fit=cover`
- * and a theme colour that follows the site's own mode, and the 404 has a
- * title of its own.
+ * and a theme colour that is the ground navy whatever the Lamp says, and the
+ * 404 has a title of its own.
  *
  * Turnstile never runs here: its script is blocked, so the widget stays empty
  * and no token arrives. That is the "captcha not completed" state, without a
@@ -234,30 +234,31 @@ test('the desktop: the heatmap adds no tab stops, the head is complete', async (
     /viewport-fit=cover/
   )
 
-  await expect(page.locator('html')).not.toHaveClass(/\bdark\b/)
+  // Night bodies are the default.
+  await expect(page.locator('html')).toHaveClass(/\bdark\b/)
   await expect(page.locator('meta[name="theme-color"]')).toHaveCount(1)
   await expectThemeColorIsGround(page)
 })
 
-test('the theme colour follows the stored mode and the toggle', async ({
-  page,
-}) => {
-  // The other direction: the OS asks for light, the site is set to dark.
-  await page.emulateMedia({ colorScheme: 'light' })
-  await useMode(page, 'dark')
+test('the theme colour stays the ground with the lamp on', async ({ page }) => {
+  // The OS asks for dark; the site is set to paper bodies, whose ground is
+  // still night.
+  await page.emulateMedia({ colorScheme: 'dark' })
+  await useMode(page, 'light')
   await openDesktop(page)
 
-  await expect(page.locator('html')).toHaveClass(/\bdark\b/)
+  await expect(page.locator('html')).not.toHaveClass(/\bdark\b/)
   await expectThemeColorIsGround(page)
-  const dark = (await themeColors(page)).ground
+  const paper = (await themeColors(page)).ground
+  expect(paper).toBe('rgb(11, 20, 32)')
 
   await page
     .getByRole('banner')
-    .getByRole('button', { name: 'Switch to light theme' })
+    .getByRole('button', { name: 'Turn the lamp off' })
     .click()
-  await expect(page.locator('html')).not.toHaveClass(/\bdark\b/)
-  await expect.poll(async () => (await themeColors(page)).ground).not.toBe(dark)
+  await expect(page.locator('html')).toHaveClass(/\bdark\b/)
   await expectThemeColorIsGround(page)
+  expect((await themeColors(page)).ground).toBe(paper)
 })
 
 test('the 404 has its own title and is not indexed', async ({ page }) => {

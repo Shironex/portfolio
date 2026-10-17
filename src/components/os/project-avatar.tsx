@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-import { TINT } from '@/lib/os/palettes.generated'
+import { TINT } from '@/lib/os/tokens.generated'
 import { cn } from '@/lib/utils'
 
 import { type AccentRole, accentInk, accentTint } from './accent-map'

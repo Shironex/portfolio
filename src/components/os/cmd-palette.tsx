@@ -3,21 +3,12 @@
 import type { ReactNode } from 'react'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 
-import {
-  Copy,
-  Diamond,
-  Link,
-  Moon,
-  Palette,
-  Search,
-  SquareX,
-  Sun,
-} from 'lucide-react'
+import { Copy, Diamond, Link, Moon, Search, SquareX, Sun } from 'lucide-react'
 
 import { GithubIcon } from '@/components/icons/github-icon'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
-import { PALETTES, type PaletteId } from '@/lib/os/appearance'
+import { SKIES, type SkyId } from '@/lib/os/appearance'
 import { cn, onBackdropDismiss } from '@/lib/utils'
 import { copyToClipboard } from '@/lib/utils/copy-to-clipboard'
 import { pluralWord } from '@/lib/utils/plural'
@@ -25,7 +16,7 @@ import { pluralWord } from '@/lib/utils/plural'
 import { projectsData } from '@/data/projects-data'
 import { useEscapeLayer } from '@/hooks/use-escape-layer'
 import { useFocusTrap } from '@/hooks/use-focus-trap'
-import type { Theme } from '@/hooks/use-theme'
+import { type Theme, lampLabel } from '@/hooks/use-theme'
 import type { Project } from '@/types'
 
 import { type AccentRole, accentFor, accentTileStyle } from './accent-map'
@@ -42,8 +33,8 @@ interface CmdPaletteProps {
   onCloseAll: () => void
   /** Copies a link to the topmost window; absent when nothing is open. */
   onCopyLink?: () => void
-  palette: PaletteId
-  onSelectPalette: (id: PaletteId) => void
+  sky: SkyId
+  onSelectSky: (id: SkyId) => void
 }
 
 interface PaletteItem {
@@ -54,10 +45,10 @@ interface PaletteItem {
   onClick: () => void
   search: string
   /**
-   * Renders this row's swatch in the named palette instead of the active one.
-   * Only the palette rows set it, so ⌘K previews all six colours at once.
+   * A sky preview (`backgroundImage`) in place of the accent tile. Only the
+   * sky rows set it, so ⌘K previews every sky at once.
    */
-  swatchPalette?: PaletteId
+  swatch?: string
 }
 
 /**
@@ -76,8 +67,8 @@ export function CmdPalette({
   onToggleTheme,
   onCloseAll,
   onCopyLink,
-  palette,
-  onSelectPalette,
+  sky,
+  onSelectSky,
 }: CmdPaletteProps) {
   const [q, setQ] = useState('')
   const [sel, setSel] = useState(0)
@@ -113,14 +104,13 @@ export function CmdPalette({
             <Moon size={14} strokeWidth={1.75} />
           ),
         accent: 'warm',
-        label:
-          theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme',
+        label: lampLabel(theme),
         hint: 'action',
         onClick: () => {
           onToggleTheme()
           onClose()
         },
-        search: 'theme dark light mode toggle switch',
+        search: 'lamp theme night paper dark light mode toggle switch',
       },
       {
         ic: <Copy size={14} strokeWidth={1.75} />,
@@ -172,17 +162,17 @@ export function CmdPalette({
       },
     ]
 
-    const paletteItems: PaletteItem[] = PALETTES.map((p) => ({
-      ic: <Palette size={14} strokeWidth={1.75} />,
+    const skyItems: PaletteItem[] = SKIES.map((s) => ({
+      ic: null,
       accent: 'primary',
-      swatchPalette: p.id,
-      label: `Palette: ${p.name}`,
-      hint: p.id === palette ? 'active' : 'theme',
+      swatch: s.swatch,
+      label: `Sky: ${s.name}`,
+      hint: s.id === sky ? 'active' : 'sky',
       onClick: () => {
-        onSelectPalette(p.id)
+        onSelectSky(s.id)
         onClose()
       },
-      search: `${p.name} palette theme colour color`.toLowerCase(),
+      search: `${s.name} sky wallpaper theme`.toLowerCase(),
     }))
 
     const projectItems: PaletteItem[] = projectsData.map((project) => ({
@@ -204,7 +194,7 @@ export function CmdPalette({
         .toLowerCase(),
     }))
 
-    const all = [...appItems, ...actionItems, ...paletteItems, ...projectItems]
+    const all = [...appItems, ...actionItems, ...skyItems, ...projectItems]
     if (!q) return all
     const needle = q.toLowerCase()
     return all.filter((item) => item.search.includes(needle))
@@ -217,8 +207,8 @@ export function CmdPalette({
     onToggleTheme,
     onCloseAll,
     onCopyLink,
-    palette,
-    onSelectPalette,
+    sky,
+    onSelectSky,
   ])
 
   useEffect(() => {
@@ -324,9 +314,12 @@ export function CmdPalette({
             >
               <span
                 aria-hidden
-                data-palette={item.swatchPalette}
                 className="flex size-6 items-center justify-center rounded"
-                style={accentTileStyle(item.accent)}
+                style={
+                  item.swatch
+                    ? { backgroundImage: item.swatch }
+                    : accentTileStyle(item.accent)
+                }
               >
                 {item.ic}
               </span>

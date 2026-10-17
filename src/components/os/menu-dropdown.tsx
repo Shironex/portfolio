@@ -29,7 +29,7 @@ export interface MenuDropdownSection {
   divider?: boolean
   /**
    * Arbitrary content rendered instead of `items`. Anything in it that should
-   * be a stop for Up/Down needs a menu item role (see `PalettePicker`).
+   * be a stop for Up/Down needs a menu item role (see `SkyPicker`).
    */
   node?: ReactNode
 }

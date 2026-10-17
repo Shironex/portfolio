@@ -3,12 +3,9 @@
 import Image from 'next/image'
 import { memo } from 'react'
 
-import { glowStyle } from '@/components/os/accent-map'
 import { HeroText } from '@/components/os/hero-text'
 import { Kbd } from '@/components/os/kbd'
 import type { HeadingLevel } from '@/components/os/types'
-
-import { GLOW } from '@/lib/os/palettes.generated'
 
 import { GithubActivityStrip } from './github-activity-strip'
 
@@ -33,13 +30,6 @@ function HeroPlateImpl({
 }: HeroPlateProps) {
   return (
     <div className="border-rule-2 bg-surf-solid shadow-elev-3 relative flex size-full flex-col overflow-hidden rounded-3xl border px-5 py-6 md:px-8 md:py-7">
-      {/* A pre-blurred glow (`orb`), paused with the rest of the wallpaper. */}
-      <span
-        aria-hidden
-        className="orb animate-floaty ambient-loop pointer-events-none absolute -top-[172px] -right-[148px] size-[440px] motion-reduce:animate-none"
-        style={glowStyle('bright', GLOW.hero)}
-      />
-
       <HeroText headingLevel={headingLevel} />
 
       <div className="relative mt-4 flex flex-wrap gap-2">

@@ -358,7 +358,7 @@ test.describe('menubar', () => {
     await expect(editMenu).toBeHidden()
     await expect(viewMenu.getByRole('menuitem').first()).toBeFocused()
 
-    // The palette row is one stop; Left/Right stay inside it.
+    // The sky row is one stop; Left/Right stay inside it.
     await page.keyboard.press('ArrowDown')
     const swatches = viewMenu.getByRole('menuitemradio')
     await expect(viewMenu.locator('[aria-checked="true"]')).toBeFocused()

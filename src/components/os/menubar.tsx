@@ -6,10 +6,10 @@ import { memo, useCallback, useRef, useState } from 'react'
 import { Moon, Sun } from 'lucide-react'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
-import type { PaletteId } from '@/lib/os/appearance'
+import type { SkyId } from '@/lib/os/appearance'
 import { copyToClipboard } from '@/lib/utils/copy-to-clipboard'
 
-import type { Theme } from '@/hooks/use-theme'
+import { type Theme, lampLabel } from '@/hooks/use-theme'
 
 import { Clock } from './clock'
 import { CMD_PALETTE_SHORTCUT } from './constants'
@@ -20,7 +20,7 @@ import {
   type MenuFocusEdge,
   type MenuStep,
 } from './menu-dropdown'
-import { PalettePicker } from './palette-picker'
+import { SkyPicker } from './sky-picker'
 import type { AppId } from './types'
 
 const MENU_IDS = ['file', 'edit', 'view', 'go', 'help'] as const
@@ -41,13 +41,13 @@ interface MenuBarProps {
   onCloseAll: () => void
   theme: Theme
   onToggleTheme: () => void
-  palette: PaletteId
-  onSelectPalette: (id: PaletteId) => void
+  sky: SkyId
+  onSelectSky: (id: SkyId) => void
 }
 
 /**
  * Fixed top menu bar, the page's `<header>`. Three sections: logo (left),
- * menu items (center), theme toggle + clock (right). File/Edit/View/Go/Help
+ * menu items (center), Lamp toggle + clock (right). File/Edit/View/Go/Help
  * all expand into dropdowns.
  *
  * The menu items are a `role="menubar"` with a roving tabindex: one tab stop,
@@ -63,8 +63,8 @@ function MenuBarImpl({
   onCloseAll,
   theme,
   onToggleTheme,
-  palette,
-  onSelectPalette,
+  sky,
+  onSelectSky,
 }: MenuBarProps) {
   const [open, setOpen] = useState<{
     id: DropdownId
@@ -164,8 +164,7 @@ function MenuBarImpl({
     {
       items: [
         {
-          label:
-            theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme',
+          label: lampLabel(theme),
           icon: theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />,
           onClick: onToggleTheme,
         },
@@ -173,7 +172,7 @@ function MenuBarImpl({
     },
     {
       divider: true,
-      node: <PalettePicker value={palette} onSelect={onSelectPalette} inMenu />,
+      node: <SkyPicker value={sky} onSelect={onSelectSky} inMenu />,
     },
     {
       divider: true,
@@ -209,7 +208,7 @@ function MenuBarImpl({
   return (
     // Near opaque like the taskbar, in place of a thinner fill over a
     // backdrop blur that resampled the wallpaper on every frame.
-    <header className="border-rule bg-surf-2 z-chrome fixed inset-x-0 top-0 flex h-11 items-center gap-3 border-b px-3">
+    <header className="os-night border-rule bg-surf-2 z-chrome fixed inset-x-0 top-0 flex h-11 items-center gap-3 border-b px-3">
       {/* Left: logo chip */}
       <div className="flex items-center gap-2">
         <Image
@@ -250,14 +249,12 @@ function MenuBarImpl({
         ))}
       </div>
 
-      {/* Right: theme toggle + status + date + time */}
+      {/* Right: Lamp toggle + status + date + time */}
       <div className="text-ink-3 ml-auto flex items-center gap-4 font-mono text-xs">
         <button
           type="button"
           onClick={onToggleTheme}
-          aria-label={
-            theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
-          }
+          aria-label={lampLabel(theme)}
           className="focus-ring text-ink-3 hover:bg-surf-0 hover:text-miku-2-icon rounded p-1 transition-colors"
         >
           {theme === 'dark' ? (

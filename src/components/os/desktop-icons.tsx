@@ -2,7 +2,9 @@
 
 import { memo } from 'react'
 
-import { accentTileStyle } from './accent-map'
+import { TINT } from '@/lib/os/tokens.generated'
+
+import { accentIcon, accentTintLayer } from './accent-map'
 import { APPS } from './constants'
 import type { AppId } from './types'
 
@@ -14,10 +16,14 @@ interface DesktopIconsProps {
  * Desktop icons. A single click (or Enter/Space) launches the app: web
  * visitors don't expect the double-click ritual, and a click that only
  * "selects" reads as broken.
+ *
+ * They sit on the sky, so they are night in both Lamp modes (`os-night`),
+ * and the tile and the label each sit on a ground plate: no sky is a ground
+ * text or an icon was measured on.
  */
 function DesktopIconsImpl({ onLaunch }: DesktopIconsProps) {
   return (
-    <div className="z-desktop absolute top-16 left-4 flex flex-col gap-4">
+    <div className="os-night z-desktop absolute top-16 left-4 flex flex-col gap-4">
       {APPS.map((app) => {
         const Icon = app.icon
         return (
@@ -30,12 +36,17 @@ function DesktopIconsImpl({ onLaunch }: DesktopIconsProps) {
           >
             <span
               aria-hidden
-              className="shadow-elev-1 flex size-12 items-center justify-center rounded-xl"
-              style={accentTileStyle(app.accent)}
+              className="bg-ground shadow-elev-1 flex size-12 items-center justify-center rounded-xl"
+              style={{
+                backgroundImage: accentTintLayer(app.accent, TINT.icon),
+                color: accentIcon(app.accent),
+              }}
             >
               <Icon size={22} strokeWidth={1.75} />
             </span>
-            <span className="font-body text-ink text-xs">{app.name}</span>
+            <span className="font-body text-ink bg-ground px-1 text-xs">
+              {app.name}
+            </span>
           </button>
         )
       })}

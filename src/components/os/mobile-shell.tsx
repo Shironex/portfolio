@@ -8,14 +8,13 @@ import { LayoutGrid, Menu, Moon, Search, Sun } from 'lucide-react'
 import { GithubIcon } from '@/components/icons/github-icon'
 
 import { GITHUB_URL } from '@/lib/constants'
-import type { PaletteId } from '@/lib/os/appearance'
-import { GLOW } from '@/lib/os/palettes.generated'
+import type { SkyId } from '@/lib/os/appearance'
 import { cn } from '@/lib/utils'
 
 import type { OsWindowsApi } from '@/hooks/use-os-windows'
-import type { Theme } from '@/hooks/use-theme'
+import { type Theme, lampLabel } from '@/hooks/use-theme'
 
-import { accentIcon, accentTileStyle, glowStyle } from './accent-map'
+import { accentIcon, accentTileStyle } from './accent-map'
 import { AppBody } from './app-registry'
 import { FeaturedPanel } from './apps/panels/featured-panel'
 import { HeroPlate } from './apps/panels/hero-plate'
@@ -29,7 +28,7 @@ import {
 } from './constants'
 import { ExternalLink } from './external-link'
 import { MobileSheet } from './mobile-sheet'
-import { PalettePicker } from './palette-picker'
+import { SkyPicker } from './sky-picker'
 import { ShellMain } from './static-layer'
 import type { AppId, HeadingLevel, WindowId } from './types'
 
@@ -41,8 +40,8 @@ interface MobileShellProps {
   onCopyLink: (id: WindowId) => void
   theme: Theme
   onToggleTheme: () => void
-  palette: PaletteId
-  onSelectPalette: (id: PaletteId) => void
+  sky: SkyId
+  onSelectSky: (id: SkyId) => void
   /** Level of the hero headline; see `HeroText`. */
   heroHeadingLevel?: HeadingLevel
   /** Passed to {@link ShellMain}. */
@@ -71,8 +70,8 @@ export function MobileShell({
   onCopyLink,
   theme,
   onToggleTheme,
-  palette,
-  onSelectPalette,
+  sky,
+  onSelectSky,
   heroHeadingLevel,
   overStaticLayer,
 }: MobileShellProps) {
@@ -105,7 +104,7 @@ export function MobileShell({
           frame; the dock below is the same. */}
       <header
         className={cn(
-          'border-rule bg-surf-solid z-chrome fixed inset-x-0 top-0 flex items-center justify-between gap-3 border-b',
+          'os-night border-rule bg-surf-solid z-chrome fixed inset-x-0 top-0 flex items-center justify-between gap-3 border-b',
           MOBILE_BAR_CLASS,
           MOBILE_GUTTER_CLASS
         )}
@@ -128,11 +127,7 @@ export function MobileShell({
           <button
             type="button"
             onClick={onToggleTheme}
-            aria-label={
-              theme === 'dark'
-                ? 'Switch to light theme'
-                : 'Switch to dark theme'
-            }
+            aria-label={lampLabel(theme)}
             className="focus-ring text-ink-2 hover:bg-surf-0 hover:text-miku-2-icon flex size-11 items-center justify-center rounded-md"
           >
             {theme === 'dark' ? (
@@ -168,11 +163,6 @@ export function MobileShell({
           <FeaturedPanel onOpenProject={os.openProject} />
 
           <div className="border-rule-2 bg-surf-solid shadow-elev-2 relative overflow-hidden rounded-2xl border p-5">
-            <span
-              aria-hidden
-              className="orb pointer-events-none absolute -top-[156px] -right-[140px] size-[376px]"
-              style={glowStyle('primary', GLOW.card)}
-            />
             <div className="relative">
               <h2 className="font-display text-ink text-lg font-bold">
                 Hiring, a contract, or an MVP to build
@@ -192,7 +182,10 @@ export function MobileShell({
           </div>
 
           <div
-            className={cn(EYEBROW_CLASS, 'text-ink-4 pt-2 pb-4 text-center')}
+            className={cn(
+              EYEBROW_CLASS,
+              'os-night text-ink-4 pt-2 pb-4 text-center'
+            )}
           >
             ShiroOS · シロOS
           </div>
@@ -202,7 +195,7 @@ export function MobileShell({
       {/* Bottom dock */}
       <nav
         aria-label="Dock"
-        className="border-rule bg-surf-solid z-chrome fixed inset-x-0 bottom-0 border-t pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]"
+        className="os-night border-rule bg-surf-solid z-chrome fixed inset-x-0 bottom-0 border-t pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]"
       >
         {/* Seven 44px targets fill a 320px screen edge to edge, so below
             440px search is an icon and the apps spread across what is left;
@@ -298,8 +291,8 @@ export function MobileShell({
           </div>
 
           <div className="border-rule mt-6 border-t pt-5">
-            <h3 className={LAUNCHER_HEADING_CLASS}>Palette</h3>
-            <PalettePicker value={palette} onSelect={onSelectPalette} />
+            <h3 className={LAUNCHER_HEADING_CLASS}>Sky</h3>
+            <SkyPicker value={sky} onSelect={onSelectSky} />
           </div>
         </MobileSheet>
       )}

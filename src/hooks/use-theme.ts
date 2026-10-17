@@ -6,17 +6,28 @@ import {
   type Appearance,
   DEFAULT_APPEARANCE,
   type Mode,
-  type PaletteId,
+  type SkyId,
   applyAppearance,
   readStoredAppearance,
   writeStoredAppearance,
 } from '@/lib/os/appearance'
 
 export type Theme = Mode
-export type { PaletteId }
+export type { SkyId }
 
 /**
- * Flip the appearance inside a View Transition so the palette cross-fades
+ * Name of the Lamp toggle in every place it appears (menu bar, View menu,
+ * mobile top bar, ⌘K): what pressing it does.
+ */
+export function lampLabel(theme: Theme): string {
+  return theme === 'dark' ? 'Turn the lamp on' : 'Turn the lamp off'
+}
+
+/** How often a Live sky looks at the clock again, in ms. */
+const LIVE_SKY_TICK_MS = 60_000
+
+/**
+ * Flip the appearance inside a View Transition so the swap cross-fades
  * instead of hard-swapping. Falls back to an instant swap when the API is
  * missing or the user prefers reduced motion. Only used for user-initiated
  * changes: the boot script has already applied the stored appearance before
@@ -38,12 +49,14 @@ function applyAnimated(next: Appearance) {
 }
 
 /**
- * Owns both appearance axes: light/dark mode and the colour palette.
+ * Owns both appearance axes: the Lamp (night or paper bodies) and the sky.
  *
  * The boot script has normally applied the stored appearance before paint, so
  * mount is just a sync. It re-applies anyway rather than trusting that: the
  * apply is idempotent, and it is the difference between a dropped boot script
  * degrading into a stale-looking page and it converging on the next tick.
+ * While the sky is Live it is re-resolved every minute, without a
+ * transition, so the wallpaper follows the time of day in Warsaw.
  */
 export function useTheme() {
   const [appearance, setAppearance] = useState<Appearance>(DEFAULT_APPEARANCE)
@@ -53,6 +66,15 @@ export function useTheme() {
     setAppearance(stored)
     applyAppearance(stored)
   }, [])
+
+  useEffect(() => {
+    if (appearance.sky !== 'live') return
+    const id = window.setInterval(
+      () => applyAppearance(appearance),
+      LIVE_SKY_TICK_MS
+    )
+    return () => window.clearInterval(id)
+  }, [appearance])
 
   const commit = useCallback((next: Appearance) => {
     setAppearance(next)
@@ -79,16 +101,16 @@ export function useTheme() {
     [appearance, commit]
   )
 
-  const setPalette = useCallback(
-    (palette: PaletteId) => commit({ ...appearance, palette }),
+  const setSky = useCallback(
+    (sky: SkyId) => commit({ ...appearance, sky }),
     [appearance, commit]
   )
 
   return {
     theme: appearance.mode,
-    palette: appearance.palette,
+    sky: appearance.sky,
     setTheme,
     toggleTheme,
-    setPalette,
+    setSky,
   }
 }

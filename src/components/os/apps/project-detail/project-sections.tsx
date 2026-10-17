@@ -19,18 +19,12 @@ import {
 } from 'lucide-react'
 
 import { GithubIcon } from '@/components/icons/github-icon'
-import {
-  accentFor,
-  accentInk,
-  accentTint,
-  glowStyle,
-} from '@/components/os/accent-map'
+import { accentFor, accentInk, accentTint } from '@/components/os/accent-map'
 import { EYEBROW_CLASS } from '@/components/os/constants'
 import { ExternalLink } from '@/components/os/external-link'
 import { StatusChip } from '@/components/os/status-chip'
 import type { HeadingLevel } from '@/components/os/types'
 
-import { GLOW } from '@/lib/os/palettes.generated'
 import { cn } from '@/lib/utils'
 import { parseMonthYear } from '@/lib/utils/format-date'
 import { hasUsableDemo, projectStack } from '@/lib/utils/project-meta'
@@ -103,16 +97,9 @@ export function ProjectHero({ project, titleLevel = 1 }: ProjectProps) {
 
   return (
     <section className="border-rule-2 bg-surf-soft relative mb-8 overflow-hidden rounded-2xl border p-6 md:p-8">
-      {/* A gradient glow (`orb`) in the project's accent, not a blurred disc. */}
-      <div
-        aria-hidden
-        className="orb pointer-events-none absolute -top-[172px] -right-[172px] size-[408px]"
-        style={glowStyle(accent, GLOW.detail)}
-      />
       <div className="relative">
-        {/* Each badge lays its tint over the opaque card colour: on a narrow
-            screen the glow reaches under them, and a tint over a glow is not
-            a ground the text was made for. */}
+        {/* Each badge lays its tint over the opaque card colour, the ground
+            the token gate measured the tint on. */}
         <div className="mb-3 flex items-center gap-2">
           {project.projectType && (
             <StatusChip

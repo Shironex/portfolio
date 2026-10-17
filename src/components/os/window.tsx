@@ -289,11 +289,11 @@ function WindowImpl({
         // makes Chrome hit-test and scroll it on the main thread, so the title
         // bar rounds its own corners and the scroller stops short of the bottom
         // radius instead.
-        // The focused window carries the deeper shadow and the others recede,
-        // so the stack reads at a glance (`window-shadow` in globals.css).
+        // Marks the focused window, which carries the deeper shadow so the
+        // stack reads at a glance (the pixel window shadow of Phase 2).
         data-focused={isFocused ? '' : undefined}
         className={cn(
-          'border-rule-2 bg-surf-solid window-shadow absolute flex flex-col rounded-xl border motion-reduce:animate-none',
+          'border-rule-2 bg-surf-solid absolute flex flex-col rounded-xl border motion-reduce:animate-none',
           leaving ? 'animate-win-close' : 'animate-win-open'
         )}
       >

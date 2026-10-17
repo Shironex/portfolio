@@ -1,6 +1,6 @@
 import { type Locator, type Page, expect, test } from '@playwright/test'
 
-import type { Mode, PaletteId } from '../src/lib/os/appearance'
+import type { Mode, SkyId } from '../src/lib/os/appearance'
 import {
   AA_TEXT,
   type ContrastWalk,
@@ -25,20 +25,24 @@ import {
   startMenu,
   taskbar,
   useMode,
-  usePalette,
+  useSky,
 } from './helpers'
 
 /**
  * Colour contrast of what is actually on screen.
  *
- * Every main screen is walked in both modes, in the default palette and in
- * one other: each visible run of text has to reach WCAG AA (4.5:1, or 3:1
- * for large text) against its composited background, and each icon 3:1. The
- * generator's own gate (`scripts/gen-palettes.mjs`) checks the token pairings
- * for all six palettes; this checks that the components use them.
+ * Every main screen is walked with the Lamp off and on (night and paper
+ * bodies), under the darkest sky and the lightest: each visible run of text
+ * has to reach WCAG AA (4.5:1, or 3:1 for large text) against its composited
+ * background, and each icon 3:1. The generator's own gate
+ * (`scripts/gen-tokens.mjs`) checks the token pairings; this checks that the
+ * components use them, and that nothing reads straight off a sky.
  */
-const PALETTES: PaletteId[] = ['teal', 'sumi']
-const MODES: Mode[] = ['light', 'dark']
+const SKIES: SkyId[] = ['night', 'day']
+const MODES: Mode[] = ['dark', 'light']
+
+/** A test title for a Lamp mode. */
+const LAMP: Record<Mode, string> = { dark: 'lamp off', light: 'lamp on' }
 
 /** Dock name, window title, and a line that is there once the app has loaded. */
 const APPS = [
@@ -80,11 +84,8 @@ const BOOT_WATERMARK =
 /**
  * What the walk leaves out, and what it does not reach at all.
  *
- * `exempt`: the notes that drift over the wallpaper, the glows and the
- * watermark of the boot splash are pure decoration, which AA does not cover. `ignored`: the film grain is a `url()`
- * picture over the whole desktop, white noise at 5% opacity at most, which
- * the probe would otherwise have to treat as a picture of unknown colour.
- * `overImage`: a gallery caption sits on a screenshot, under a scrim that
+ * `exempt`: the notes that drift over the wallpaper and the watermark of the
+ * boot splash are pure decoration, which AA does not cover. `overImage`: a gallery caption sits on a screenshot, under a scrim that
  * fades to nothing above the text; the probe measures every stop of a
  * gradient, the clear one included, so the caption cannot pass on its own.
  * It is held to one line, where the scrim is 60% black or more (see
@@ -95,12 +96,11 @@ const BOOT_WATERMARK =
  * the one exception below), placeholders, disabled controls, the text
  * selection colour, the mobile sheets of Monitor, Contact, Writing and
  * Readme, and the page without JavaScript in anything but the default
- * appearance, which is the only one it can have. The four palettes that are
- * not listed in `PALETTES` are covered by the generator's gate alone.
+ * appearance, which is the only one it can have. Dusk and Dawn sit between
+ * the two skies walked here.
  */
 const WALK: ContrastWalk = {
-  exempt: ['.ambient-loop', '.grain-layer', BOOT_WATERMARK],
-  ignored: ['.grain-layer'],
+  exempt: ['.ambient-loop', BOOT_WATERMARK],
   overImage: [
     'button[aria-label^="View full size"] > span[title]',
     'figure > span[title]',
@@ -173,13 +173,13 @@ test.beforeEach(async ({ page }) => {
   await mockFeeds(page)
 })
 
-for (const palette of PALETTES) {
+for (const sky of SKIES) {
   for (const mode of MODES) {
-    test.describe(`${palette} ${mode}`, () => {
+    test.describe(`${sky} sky, ${LAMP[mode]}`, () => {
       test.beforeEach(async ({ page }) => {
         await skipBootSplash(page)
         await useMode(page, mode)
-        await usePalette(page, palette)
+        await useSky(page, sky)
       })
 
       test('desktop text and icons meet AA', async ({ page }) => {
@@ -187,10 +187,7 @@ for (const palette of PALETTES) {
         await blockTurnstile(page)
         await page.setViewportSize(DESKTOP_VIEWPORT)
         await openDesktop(page)
-        await expect(page.locator('html')).toHaveAttribute(
-          'data-palette',
-          palette
-        )
+        await expect(page.locator('html')).toHaveAttribute('data-sky', sky)
         await feedsLoaded(page)
 
         const failures: string[] = []
@@ -339,10 +336,7 @@ for (const palette of PALETTES) {
         await page.goto('/no-such-page')
         const missing = page.getByRole('dialog', { name: '404' })
         await expect(missing).toBeVisible()
-        await expect(page.locator('html')).toHaveAttribute(
-          'data-palette',
-          palette
-        )
+        await expect(page.locator('html')).toHaveAttribute('data-sky', sky)
         await settled(missing)
         await walk('404', page.locator('body'), 'No such path')
 
@@ -376,7 +370,7 @@ for (const palette of PALETTES) {
       })
     })
 
-    test.describe(`${palette} ${mode}, first visit`, () => {
+    test.describe(`${sky} sky, ${LAMP[mode]}, first visit`, () => {
       // Reduced motion skips the splash, so this one runs with motion on and
       // holds the page still itself: a frozen clock keeps the splash up, and
       // no animation is left to fade it out or to blink a dot away.
@@ -384,7 +378,7 @@ for (const palette of PALETTES) {
 
       test('the boot splash meets AA', async ({ page }) => {
         await useMode(page, mode)
-        await usePalette(page, palette)
+        await useSky(page, sky)
         await page.addInitScript(() => {
           document.addEventListener('DOMContentLoaded', () => {
             const still = document.createElement('style')

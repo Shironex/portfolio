@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@import './palettes.css';
+@import './tokens.css';
 
 @source '../../*.{js,ts,jsx,tsx,mdx}';
 
@@ -27,84 +27,13 @@
 }
 
 /*
- * A window's shadow lives on two pseudo-elements, the resting one and the
- * deeper focused one (`data-focused`), and a focus change cross-fades their
- * opacity. Animating `box-shadow` itself repaints a 60px blur on the main
- * thread for every frame; these are painted once.
+ * The wallpaper of the chosen sky: hard bands from the bottom edge up, in art
+ * px (`--sky-bands` in tokens.css, per `data-sky` on <html>). Phase 3 draws
+ * the whole scene on a canvas over it; this stays as its static frame.
  */
-@utility window-shadow {
-
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    /* The border box: `inset: 0` would stop at the padding edge. */
-    inset: -1px;
-    z-index: -1;
-    border-radius: inherit;
-    pointer-events: none;
-    transition: opacity 0.2s var(--default-transition-timing-function);
-  }
-
-  &::before {
-    box-shadow: var(--shiro-elev-2);
-  }
-
-  &::after {
-    box-shadow: var(--shiro-elev-3);
-    opacity: 0;
-  }
-
-  &[data-focused]::before {
-    opacity: 0;
-  }
-
-  &[data-focused]::after {
-    opacity: 1;
-  }
-}
-
-/*
- * Film grain over the desktop: white noise at a low alpha. The tile has a
- * fixed size (the noise is stitched, so it repeats without seams); left to
- * size itself it is fitted to the viewport, and the turbulence filter is run
- * again at that size on first paint and on every resize. Plain alpha, no
- * blend mode: a blended full-viewport layer makes the compositor read back
- * everything that moves under it. The two opacities match what
- * `mix-blend-mode: overlay` at 0.06 gave on the light and the dark ground.
- */
-@utility grain-layer {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 100;
-  opacity: 0.05;
-  background-size: 200px 200px;
-  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
-
-  &:is(.dark *) {
-    opacity: 0.0075;
-  }
-}
-
-/*
- * A soft glow: the falloff of a disc under a wide gaussian blur, painted as a
- * gradient, so nothing is filtered when it moves. `--orb-color` is the colour
- * at the centre; the glow fades out at the edge of the element.
- */
-@utility orb {
-  background-image: radial-gradient(closest-side,
-      var(--orb-color) 0%,
-      color-mix(in oklab, var(--orb-color) 97%, transparent) 10%,
-      color-mix(in oklab, var(--orb-color) 87%, transparent) 20%,
-      color-mix(in oklab, var(--orb-color) 73%, transparent) 30%,
-      color-mix(in oklab, var(--orb-color) 54%, transparent) 40%,
-      color-mix(in oklab, var(--orb-color) 36%, transparent) 50%,
-      color-mix(in oklab, var(--orb-color) 21%, transparent) 60%,
-      color-mix(in oklab, var(--orb-color) 10%, transparent) 70%,
-      color-mix(in oklab, var(--orb-color) 4%, transparent) 80%,
-      color-mix(in oklab, var(--orb-color) 1.5%, transparent) 90%,
-      transparent 100%);
+@utility sky-bands {
+  background-color: var(--ground);
+  background-image: var(--sky-bands);
 }
 
 /*
@@ -119,39 +48,63 @@
 }
 
 /*
- * Aliases of palette variables. `inline` so a utility carries the variable it
- * aliases (`bg-primary` is `var(--color-miku)`) and resolves it on the element:
- * an alias declared as a plain theme variable is computed once at `:root`, and
- * inside a nested `[data-palette]` swatch it would paint in the palette of the
- * document.
+ * Aliases of token variables. `inline` so a utility carries the variable it
+ * aliases (`bg-ground` is `var(--ground)`) and resolves it on the element:
+ * an alias declared as a plain theme variable is computed once at `:root`,
+ * and inside an `.os-night` subtree in paper mode it would paint the paper
+ * value of the document.
  */
 @theme inline {
+  /* The tokens of SPEC 2.2 (src/styles/tokens.css). */
+  --color-ground: var(--ground);
+  --color-surf: var(--surf);
+  --color-surf-raised: var(--surf-raised);
+  --color-select: var(--select);
+  --color-frame: var(--frame);
+  --color-frame-dim: var(--frame-dim);
+  --color-ink-hi: var(--ink-hi);
+  --color-meta: var(--meta);
+  --color-lamp: var(--lamp);
+  --color-lamp-hi: var(--lamp-hi);
+  --color-lamp-shadow: var(--lamp-shadow);
+  --color-heading: var(--heading);
+  --color-link: var(--link);
+  --color-fill-primary: var(--fill-primary);
+  --color-fill-primary-ink: var(--fill-primary-ink);
+  --color-fill-warm: var(--fill-warm);
+  --color-fill-warm-ink: var(--fill-warm-ink);
+  --color-danger-fill: var(--danger-fill);
+  --color-danger-fill-ink: var(--danger-fill-ink);
+  --color-error: var(--error);
+  --color-outline: var(--outline);
+
   /*
-   * shadcn tokens, mapped onto the ShiroOS palette: a shadcn component as
+   * shadcn tokens, mapped onto the ShiroOS tokens: a shadcn component as
    * written (`bg-primary`, `text-muted-foreground`, `border-input`) follows
-   * the active palette and mode, with no neutral scale of its own to drift.
+   * the Lamp, with no neutral scale of its own to drift.
    */
-  --color-background: var(--shiro-sky-1);
-  --color-foreground: var(--shiro-ink);
+  --color-background: var(--color-sky-1);
+  --color-foreground: var(--color-ink);
   --color-primary: var(--color-miku);
   --color-primary-foreground: var(--color-cloud);
-  --color-secondary: var(--shiro-surf-soft);
-  --color-secondary-foreground: var(--shiro-ink-2);
-  --color-muted: var(--shiro-surf-soft);
-  --color-muted-foreground: var(--shiro-ink-3);
-  --color-accent: var(--shiro-surf-soft);
-  --color-accent-foreground: var(--shiro-ink);
-  --color-destructive: var(--color-danger-ink);
-  --color-destructive-foreground: var(--color-cloud);
-  --color-border: var(--shiro-rule-2);
-  --color-input: var(--shiro-rule-2);
+  --color-secondary: var(--color-surf-soft);
+  --color-secondary-foreground: var(--color-ink-2);
+  --color-muted: var(--color-surf-soft);
+  --color-muted-foreground: var(--color-ink-3);
+  --color-accent: var(--color-surf-soft);
+  --color-accent-foreground: var(--color-ink);
+  --color-destructive: var(--danger-fill);
+  --color-destructive-foreground: var(--danger-fill-ink);
+  --color-border: var(--color-rule-2);
+  --color-input: var(--color-rule-2);
   --color-ring: var(--color-miku);
 
   /*
    * Elevations, as shadow tokens: `shadow-elev-2` goes through Tailwind's
    * shadow utility, so it stacks with a ring (`focus-visible:ring-2`) instead
-   * of being replaced by it. The values are whole shadows per palette and
-   * mode, so a shadow colour utility (`shadow-miku/20`) has nothing to tint.
+   * of being replaced by it. The values are hard offset shadows in art px on
+   * the ground navy, so a shadow colour utility (`shadow-miku/20`) has
+   * nothing to tint.
    */
   --shadow-elev-1: var(--shiro-elev-1);
   --shadow-elev-2: var(--shiro-elev-2);
@@ -176,54 +129,51 @@
   --radius-sm: calc(var(--radius) - 4px);
 
   /*
-   * Palette. Real values live in ./palettes.css, one block per palette per
-   * mode, generated by scripts/gen-palettes.mjs. The declarations here exist
-   * so Tailwind emits the utilities; every one is overridden at runtime by
-   * the active [data-palette] block, which is unlayered and therefore wins.
-   *
-   * An accent is a fill. Its `-ink` (text, 4.5:1) and `-icon` (icons, 3:1)
-   * variants are derived by the generator and are what a foreground uses;
-   * the values here are placeholders that only name the utilities.
+   * The old palette names (`miku`, `peach`, `cloud`, `sky`, `surf`,
+   * `ink-2` to `ink-4`, `rule`), kept so every component works until
+   * Phases 2 to 4 move it onto the tokens above. The declarations here only
+   * make Tailwind emit the utilities: tokens.css sets each one, unlayered,
+   * on `:root` and on every `.os-night` subtree, mapped onto the README
+   * palette and gated like the rest. The values here are placeholders.
    */
-  --color-miku: #0f7c74;
-  --color-miku-2: #0a5954;
-  --color-miku-3: #1ca59b;
-  --color-peach: #b87a1e;
-  --color-peach-2: #cf8a33;
-  --color-cloud: #fbf7ed;
-  --color-miku-ink: var(--color-miku-2);
-  --color-miku-icon: var(--color-miku);
-  --color-miku-2-ink: var(--color-miku-2);
-  --color-miku-2-icon: var(--color-miku-2);
-  --color-miku-3-ink: var(--color-miku-2);
-  --color-miku-3-icon: var(--color-miku);
-  --color-peach-ink: var(--color-peach);
-  --color-peach-icon: var(--color-peach);
-  --color-peach-2-ink: var(--color-peach);
-  --color-peach-2-icon: var(--color-peach);
-  --color-sky-0: var(--shiro-sky-0);
-  --color-sky-1: var(--shiro-sky-1);
-  --color-sky-2: var(--shiro-sky-2);
-  --color-sky-3: var(--shiro-sky-3);
-  --color-surf-0: var(--shiro-surf-0);
-  --color-surf-1: var(--shiro-surf-1);
-  --color-surf-2: var(--shiro-surf-2);
-  --color-surf-solid: var(--shiro-surf-solid);
-  --color-surf-soft: var(--shiro-surf-soft);
-  --color-ink: var(--shiro-ink);
-  --color-ink-2: var(--shiro-ink-2);
-  --color-ink-3: var(--shiro-ink-3);
-  --color-ink-4: var(--shiro-ink-4);
-  --color-rule: var(--shiro-rule);
-  --color-rule-2: var(--shiro-rule-2);
-  --color-danger: #ff5b6a;
-  --color-danger-ink: #b8243a;
+  --color-miku: #4fa3a0;
+  --color-miku-2: #2e6e6e;
+  --color-miku-3: #8fe0cf;
+  --color-peach: #f0c070;
+  --color-peach-2: #c98a4a;
+  --color-cloud: #0b1420;
+  --color-miku-ink: #8fe0cf;
+  --color-miku-icon: #4fa3a0;
+  --color-miku-2-ink: #8fe0cf;
+  --color-miku-2-icon: #4fa3a0;
+  --color-miku-3-ink: #8fe0cf;
+  --color-miku-3-icon: #8fe0cf;
+  --color-peach-ink: #f0c070;
+  --color-peach-icon: #f0c070;
+  --color-peach-2-ink: #f0c070;
+  --color-peach-2-icon: #c98a4a;
+  --color-sky-0: #0b1420;
+  --color-sky-1: #0b1420;
+  --color-sky-2: #0b1420;
+  --color-sky-3: #0b1420;
+  --color-surf-0: #173a45;
+  --color-surf-1: #173a45;
+  --color-surf-2: #13253a;
+  --color-surf-solid: #13253a;
+  --color-surf-soft: #173a45;
+  --color-ink: #e8e4dc;
+  --color-ink-2: #e8e4dc;
+  --color-ink-3: #9aa4a8;
+  --color-ink-4: #9aa4a8;
+  --color-rule: #1f5058;
+  --color-rule-2: #2e6e6e;
+  --color-danger: #c23a3a;
+  --color-danger-ink: #f0a068;
 
   /*
    * Layers, bottom to top. Windows stack inside their own `isolate` container
-   * (1..n), so their z never competes with these. The grain overlay sits at
-   * 100, between the desktop and the windows. Lightbox and toast are mounted
-   * on <body>, above everything inside the shell.
+   * (1..n), so their z never competes with these. Lightbox and toast are
+   * mounted on <body>, above everything inside the shell.
    */
   --z-index-desktop: 10;
   --z-index-windows: 110;
@@ -450,19 +400,19 @@
   }
 
   *::-webkit-scrollbar-track {
-    background: var(--shiro-scrollbar-track);
+    background: var(--ground);
     border-radius: 10px;
   }
 
   *::-webkit-scrollbar-thumb {
-    background: var(--shiro-scrollbar-thumb);
+    background: var(--frame-dim);
     border-radius: 10px;
     border: 2px solid transparent;
     background-clip: content-box;
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    background: var(--shiro-scrollbar-thumb-hover);
+    background: var(--frame);
     background-clip: content-box;
   }
 
@@ -473,7 +423,7 @@
   /* Firefox */
   * {
     scrollbar-width: thin;
-    scrollbar-color: var(--shiro-scrollbar-thumb) var(--shiro-scrollbar-track);
+    scrollbar-color: var(--frame-dim) var(--ground);
   }
 }
 
@@ -482,14 +432,23 @@
     @apply border-border;
   }
 
+  /*
+   * Night in both Lamp modes (menu bar, taskbar, boot, desktop labels):
+   * tokens.css gives the subtree the night values, and this its body ink,
+   * which would otherwise inherit already resolved from a paper <body>.
+   */
+  .os-night {
+    color: var(--color-ink);
+  }
+
   body {
     @apply font-mono antialiased;
     /*
-     * Ground is the page ground of the palette (`--shiro-sky-1`). The OS shell
-     * overlays this with its own wallpaper, but the body still shows
-     * pre-hydration and in any uncovered area (notably the mobile feed).
+     * The ground navy, night in both Lamp modes. The OS shell overlays it
+     * with its wallpaper, but the body still shows pre-hydration and in any
+     * uncovered area (notably the mobile feed).
      */
-    background-color: var(--color-sky-1);
+    background-color: var(--ground);
     color: var(--color-ink);
   }
 

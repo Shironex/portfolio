@@ -73,8 +73,12 @@ export function WindowControls({
         aria-keyshortcuts="Control+W"
         onPointerDown={stopPointerDown}
         onClick={onClose}
-        // The deep danger, not the fill: `cloud` only reads on the former.
-        className={cn(CONTROL_CLASS, 'hover:bg-danger-ink hover:text-cloud')}
+        // The danger button fill and its cream glyph (8.09:1 in both Lamp
+        // modes); Phase 2 draws the pixel control.
+        className={cn(
+          CONTROL_CLASS,
+          'hover:bg-danger-fill hover:text-danger-fill-ink'
+        )}
       >
         <span aria-hidden>✕</span>
       </button>

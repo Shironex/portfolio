@@ -6,10 +6,7 @@ import { useMemo } from 'react'
 
 import { AlertTriangle, ArrowLeft, Home } from 'lucide-react'
 
-import { glowStyle } from '@/components/os/accent-map'
 import { Kbd } from '@/components/os/kbd'
-
-import { GLOW } from '@/lib/os/palettes.generated'
 
 import { useHotkeys } from '@/hooks/use-hotkeys'
 
@@ -22,23 +19,6 @@ export function NotFoundScreen() {
 
   return (
     <main className="from-sky-0 via-sky-1 to-sky-2 font-body relative min-h-dvh overflow-hidden bg-linear-to-br">
-      <span aria-hidden className="grain-layer" />
-      {/* Gradient glows (`orb`), as on the desktop: nothing is blurred live.
-          The offsets keep each centre where its 256px and 288px disc sat. */}
-      <span
-        aria-hidden
-        className="orb motion-safe:animate-floaty ambient-loop pointer-events-none absolute top-[calc(18%-10rem)] right-[calc(12%-10rem)] size-[36rem]"
-        style={glowStyle('primary', GLOW.wallpaper[0])}
-      />
-      <span
-        aria-hidden
-        className="orb motion-safe:animate-floaty ambient-loop pointer-events-none absolute bottom-[calc(15%-10rem)] left-[calc(10%-10rem)] size-[38rem]"
-        style={{
-          ...glowStyle('deep', GLOW.wallpaper[1]),
-          animationDelay: '-3s',
-        }}
-      />
-
       <div className="relative flex min-h-dvh items-center justify-center px-4 py-12">
         <div
           role="dialog"
@@ -60,7 +40,7 @@ export function NotFoundScreen() {
             <Link
               href="/"
               aria-label="Close and return to desktop"
-              className="focus-ring text-ink-2 hover:bg-danger-ink hover:text-cloud flex h-8 w-10 items-center justify-center text-xs transition-colors pointer-coarse:h-11 pointer-coarse:w-12"
+              className="focus-ring text-ink-2 hover:bg-danger-fill hover:text-danger-fill-ink flex h-8 w-10 items-center justify-center text-xs transition-colors pointer-coarse:h-11 pointer-coarse:w-12"
             >
               <span aria-hidden>✕</span>
             </Link>

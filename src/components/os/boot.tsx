@@ -137,7 +137,7 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
       role="dialog"
       aria-modal="true"
       aria-label="ShiroOS boot sequence"
-      className="bg-sky-1 animate-boot-out z-boot fixed inset-0 overflow-hidden motion-reduce:animate-none"
+      className="os-night bg-sky-1 animate-boot-out z-boot fixed inset-0 overflow-hidden motion-reduce:animate-none"
     >
       <span
         aria-hidden
@@ -185,7 +185,7 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
           </div>
           <span
             aria-hidden
-            className="text-miku-2 animate-bob-note pointer-events-none absolute -top-5 -right-5 text-[28px] [text-shadow:0_2px_6px_color-mix(in_oklab,var(--color-surf-solid)_80%,transparent)] motion-reduce:animate-none"
+            className="text-miku-2-ink animate-bob-note pointer-events-none absolute -top-5 -right-5 text-[28px] [text-shadow:0_2px_6px_color-mix(in_oklab,var(--color-surf-solid)_80%,transparent)] motion-reduce:animate-none"
           >
             ♪
           </span>
@@ -198,7 +198,7 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
             <span>booting with love</span>
             <span
               aria-hidden
-              className="animate-bob-note text-miku-2 ml-1 inline-block motion-reduce:animate-none"
+              className="animate-bob-note text-miku-2-ink ml-1 inline-block motion-reduce:animate-none"
             >
               ♪
             </span>
@@ -225,7 +225,7 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
                       ? 'border-miku-3 bg-miku-3/30 text-ink border'
                       : state === 'run'
                         ? 'border-miku bg-miku/20 text-miku-ink animate-blink border motion-reduce:animate-none'
-                        : 'border-rule bg-ink/5 text-ink-3 border'
+                        : 'border-rule text-ink-3 border'
                   )}
                 >
                   {state === 'done' ? '✓' : state === 'run' ? '●' : '○'}

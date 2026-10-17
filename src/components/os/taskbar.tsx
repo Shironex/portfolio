@@ -45,7 +45,7 @@ function TaskbarImpl({
   return (
     <nav
       aria-label="Taskbar"
-      className="border-rule-2 bg-surf-2 shadow-elev-2 font-body z-chrome fixed bottom-[calc(0.5rem+env(safe-area-inset-bottom))] left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-2xl border px-3 py-2"
+      className="os-night border-rule-2 bg-surf-2 shadow-elev-2 font-body z-chrome fixed bottom-[calc(0.5rem+env(safe-area-inset-bottom))] left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-2xl border px-3 py-2"
     >
       <button
         type="button"

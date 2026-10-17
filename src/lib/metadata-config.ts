@@ -6,8 +6,7 @@ import {
   BLOG_URL,
   GITHUB_URL,
 } from '@/lib/constants'
-import { DEFAULT_APPEARANCE, groundColor } from '@/lib/os/appearance'
-import { DEFAULT_THEME_COLOR } from '@/lib/os/palettes.generated'
+import { GROUND } from '@/lib/os/appearance'
 import {
   completedDateIso,
   hasUsableDemo,
@@ -44,13 +43,13 @@ export const siteConfig = {
     'Poland',
   ],
   author: AUTHOR_FULL_NAME,
-  themeColor: DEFAULT_THEME_COLOR,
+  /** The ground navy: night in both Lamp modes (SPEC 2.2). */
+  themeColor: GROUND,
   /**
-   * Page ground of the default appearance (light mode, default palette), for
-   * the places CSS variables cannot reach: the `theme-color` meta as served
-   * and the manifest.
+   * Page ground, the same navy, for the places CSS variables cannot reach:
+   * the `theme-color` meta as served and the manifest.
    */
-  ground: groundColor(DEFAULT_APPEARANCE),
+  ground: GROUND,
 }
 
 /** Absolute URL of a root-relative path on this site. */

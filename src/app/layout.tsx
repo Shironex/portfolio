@@ -10,7 +10,7 @@ import {
   serializeJsonLd,
   siteConfig,
 } from '@/lib/metadata-config'
-import { APPEARANCE_BOOT_SCRIPT, DEFAULT_PALETTE } from '@/lib/os/appearance'
+import { APPEARANCE_BOOT_SCRIPT, DEFAULT_SKY } from '@/lib/os/appearance'
 import { cn } from '@/lib/utils'
 
 import '@/styles/globals.css'
@@ -55,9 +55,8 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   // The mobile shell pads with env(safe-area-inset-*), which needs `cover`.
   viewportFit: 'cover',
-  // The default appearance. The mode is the site's own setting, not the OS
-  // colour scheme, so the boot script below and `applyAppearance` keep this
-  // tag on the ground that is actually shown.
+  // The ground navy, which stays night whether the Lamp is on or off, so
+  // the tag never changes after the server sends it.
   themeColor: siteConfig.ground,
 }
 
@@ -69,18 +68,25 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html
       lang="en"
-      data-palette={DEFAULT_PALETTE}
+      data-sky={DEFAULT_SKY}
       // The font variables sit on <html>, not <body>: the `--font-*` theme
       // tokens in globals.css are declared on `:root` and reference them with
       // `var()`, so they resolve there or not at all.
-      className={cn(fraunces.variable, geist.variable, jetbrainsMono.variable)}
+      // `dark` is night window bodies, the default and the page without
+      // JavaScript; the boot script removes it when the Lamp is on.
+      className={cn(
+        'dark',
+        fraunces.variable,
+        geist.variable,
+        jetbrainsMono.variable
+      )}
       suppressHydrationWarning
     >
       <head>
         <script
-          // Applies the stored mode and palette (and the matching theme
-          // colour) before first paint. Inline and blocking on purpose; a
-          // deferred script paints the default first.
+          // Sets the art pixel and applies the stored Lamp, sky, text and
+          // motion choices before first paint. Inline and blocking on
+          // purpose; a deferred script paints the default first.
           dangerouslySetInnerHTML={{ __html: APPEARANCE_BOOT_SCRIPT }}
         />
         <script

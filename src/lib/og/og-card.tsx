@@ -8,8 +8,9 @@ import { extname, join } from 'node:path'
 import { siteConfig } from '@/lib/metadata-config'
 
 /*
- * Shared frame for the generated Open Graph cards. Colours mirror the default
- * ShiroOS palette (see palettes.css). Fonts are static TTFs committed under
+ * Shared frame for the generated Open Graph cards. Colours are the teal
+ * palette ShiroOS had before the pixel redesign; the cards are redrawn with
+ * the README palette (src/styles/tokens.css) in Phase 7. Fonts are static TTFs committed under
  * `src/app/_fonts` because the renderer can't read woff2 and fetching them at
  * build time would make builds need network.
  */

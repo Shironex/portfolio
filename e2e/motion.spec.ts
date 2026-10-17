@@ -34,10 +34,9 @@ const TERMINAL_LINES = [
 const FEEDBACK_BUDGET_MS = 200
 
 /**
- * Four drifting notes, two wallpaper orbs, the orb on the hero plate and the
- * terminal cursor.
+ * Four drifting notes and the terminal cursor.
  */
-const LOOP_COUNT = 8
+const LOOP_COUNT = 5
 const ALL_RUNNING = Array.from({ length: LOOP_COUNT }, () => 'running')
 const ALL_PAUSED = Array.from({ length: LOOP_COUNT }, () => 'paused')
 
@@ -226,7 +225,7 @@ test.describe('theme switch', () => {
     // transition that is over in 200ms.
     const transition = await page.evaluate(async (loopClass) => {
       const button = document.querySelector<HTMLButtonElement>(
-        'button[aria-label="Switch to dark theme"]'
+        'button[aria-label="Turn the lamp on"]'
       )
       button?.click()
       const pseudoAnimations = () =>
@@ -302,8 +301,10 @@ test.describe('theme switch', () => {
         height: `${DESKTOP_VIEWPORT.height}px`,
       })
     }
-    expect(transition.dark).toBe(true)
-    expect(transition.themeColor).toBe('#041816')
+    // The Lamp went on (paper bodies); the theme colour is the ground navy,
+    // which no mode changes.
+    expect(transition.dark).toBe(false)
+    expect(transition.themeColor).toBe('#0b1420')
     expect(transition.loops).toEqual(ALL_PAUSED)
 
     await expect.poll(() => ambientPlayStates(page)).toEqual(ALL_RUNNING)
@@ -316,7 +317,7 @@ test.describe('theme switch', () => {
     const transitions = await page.evaluate(() => {
       document
         .querySelector<HTMLButtonElement>(
-          'button[aria-label="Switch to dark theme"]'
+          'button[aria-label="Turn the lamp on"]'
         )
         ?.click()
       return {
@@ -330,6 +331,6 @@ test.describe('theme switch', () => {
           ).length,
       }
     })
-    expect(transitions).toEqual({ dark: true, pseudo: 0 })
+    expect(transitions).toEqual({ dark: false, pseudo: 0 })
   })
 })

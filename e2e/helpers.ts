@@ -8,8 +8,8 @@ import {
 } from '../src/components/os/noscript-fallback'
 import {
   MODE_STORAGE_KEY,
-  PALETTE_STORAGE_KEY,
-  type PaletteId,
+  SKY_STORAGE_KEY,
+  type SkyId,
 } from '../src/lib/os/appearance'
 import { WINDOW_ID_ATTRIBUTE } from '../src/lib/os/dom'
 
@@ -75,7 +75,7 @@ export async function blockTurnstile(page: Page) {
   await page.route('**/challenges.cloudflare.com/**', (route) => route.abort())
 }
 
-/** Store the site's mode, as the theme toggle would. Call before the first `goto`. */
+/** Store the Lamp (`dark` night bodies, `light` paper), as its toggle would. Call before the first `goto`. */
 export async function useMode(page: Page, mode: 'light' | 'dark') {
   await page.addInitScript(
     ([key, value]) => window.localStorage.setItem(key, value),
@@ -83,11 +83,11 @@ export async function useMode(page: Page, mode: 'light' | 'dark') {
   )
 }
 
-/** Store the site's palette, as the picker would. Call before the first `goto`. */
-export async function usePalette(page: Page, palette: PaletteId) {
+/** Store the sky, as the picker would. Call before the first `goto`. */
+export async function useSky(page: Page, sky: SkyId) {
   await page.addInitScript(
     ([key, value]) => window.localStorage.setItem(key, value),
-    [PALETTE_STORAGE_KEY, palette]
+    [SKY_STORAGE_KEY, sky]
   )
 }
 
@@ -378,7 +378,7 @@ function probeContrast(
   const layersBehind = (el: Element, x: number, y: number) => {
     const chain = chainOf(el)
     const hits = document.elementsFromPoint(x, y)
-    // Whatever is above the element (another window, the grain) is not behind
+    // Whatever is above the element (another window, an overlay) is not behind
     // it. Off screen or clipped, nothing is hit and the ancestors are all.
     const at = hits.findIndex((hit) => hit === el || el.contains(hit))
     const under =
@@ -614,7 +614,7 @@ function probeContrast(
 export interface ContrastWalk {
   /** Subtrees of pure decoration, which AA does not cover. */
   exempt?: string[]
-  /** Layers too faint to count as a background (the film grain). */
+  /** Layers too faint to count as a background (a full-screen texture). */
   ignored?: string[]
   /** Text known to sit on a picture, whose reading is not a failure. */
   overImage?: string[]

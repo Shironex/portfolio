@@ -58,7 +58,7 @@ interface OsShellProps {
 /**
  * Root ShiroOS shell.
  *
- * Owns window state (`useOsWindows`), theme, and palette/start-menu toggles.
+ * Owns window state (`useOsWindows`), the appearance, and palette/start-menu toggles.
  * On desktop the open windows are kept in `sessionStorage`, so a reload in
  * the same tab restores them (`useSessionRestore`).
  * Branches on viewport:
@@ -109,7 +109,7 @@ export default function OsShell({ initialWindow }: OsShellProps) {
   const [cmdOpen, setCmdOpen] = useState(false)
   const [startOpen, setStartOpen] = useState(false)
   const os = useOsWindows()
-  const { theme, palette, toggleTheme, setPalette } = useTheme()
+  const { theme, sky, toggleTheme, setSky } = useTheme()
   const isMobile = useIsMobile()
   const hydrated = useHydrated()
   const rootRef = useRef<HTMLDivElement | null>(null)
@@ -209,8 +209,8 @@ export default function OsShell({ initialWindow }: OsShellProps) {
             onCopyLink={copyLink}
             theme={theme}
             onToggleTheme={toggleTheme}
-            palette={palette}
-            onSelectPalette={setPalette}
+            sky={sky}
+            onSelectSky={setSky}
             heroHeadingLevel={heroHeadingLevel}
             overStaticLayer={onProjectRoute}
           />
@@ -224,8 +224,8 @@ export default function OsShell({ initialWindow }: OsShellProps) {
             onCloseAll={os.closeAll}
             theme={theme}
             onToggleTheme={toggleTheme}
-            palette={palette}
-            onSelectPalette={setPalette}
+            sky={sky}
+            onSelectSky={setSky}
           />
 
           <DesktopCanvas>
@@ -302,8 +302,8 @@ export default function OsShell({ initialWindow }: OsShellProps) {
           onToggleTheme={toggleTheme}
           onCloseAll={os.closeAll}
           onCopyLink={copyTopmostLink}
-          palette={palette}
-          onSelectPalette={setPalette}
+          sky={sky}
+          onSelectSky={setSky}
         />
       )}
     </div>
