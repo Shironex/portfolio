@@ -1,32 +1,20 @@
-import {
-  Activity,
-  BookOpen,
-  Diamond,
-  FolderKanban,
-  Mail,
-  PenLine,
-  UserRound,
-} from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
-
 import { countProjects } from '@/lib/utils/projects'
 
 import { projectsData } from '@/data/projects-data'
 
-import type { AppDescriptor, AppId, WindowId, WindowState } from './types'
+import type { AppDescriptor, AppId, WindowState } from './types'
 
 /*
- * Each app names an accent role rather than a colour, so the active palette
- * decides what it paints. Icons are from lucide-react (instead of single
- * Unicode glyphs) so they read as intentional instead of placeholder-y.
+ * Each app names an accent role rather than a colour, so the Lamp decides
+ * what it paints. Its icon is drawn by `AppIcon` (src/components/pixel).
  */
 export const APPS: AppDescriptor[] = [
-  { id: 'projects', name: 'Projects', icon: FolderKanban, accent: 'primary' },
-  { id: 'about', name: 'About', icon: UserRound, accent: 'bright' },
-  { id: 'skills', name: 'Monitor', icon: Activity, accent: 'deep' },
-  { id: 'contact', name: 'Contact', icon: Mail, accent: 'warm' },
-  { id: 'writing', name: 'Writing', icon: PenLine, accent: 'warm-2' },
-  { id: 'readme', name: 'Readme', icon: BookOpen, accent: 'bright' },
+  { id: 'projects', name: 'Projects', accent: 'primary' },
+  { id: 'about', name: 'About', accent: 'bright' },
+  { id: 'skills', name: 'Monitor', accent: 'deep' },
+  { id: 'contact', name: 'Contact', accent: 'warm' },
+  { id: 'writing', name: 'Writing', accent: 'warm-2' },
+  { id: 'readme', name: 'Readme', accent: 'bright' },
 ]
 
 export function isAppId(value: string): value is AppId {
@@ -66,15 +54,6 @@ export const LABEL_CLASS = 'font-mono text-[11px] uppercase'
 /** Pulsing placeholder fill; callers add the size and radius. */
 export const SKELETON_BAR =
   'bg-rule animate-pulse-slow motion-reduce:animate-none'
-
-/**
- * Lucide icon for a window's title bar: the app's own icon, or Diamond for
- * project windows. Keeps title bars in the same icon system as the taskbar,
- * start menu, and desktop instead of the old Unicode glyphs.
- */
-export function windowIconFor(id: WindowId): LucideIcon {
-  return APPS.find((app) => app.id === id)?.icon ?? Diamond
-}
 
 /** What a window is called out loud: the app name or the project title. */
 export function windowNameFor(win: WindowState): string {

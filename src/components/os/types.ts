@@ -1,5 +1,3 @@
-import type { LucideIcon } from 'lucide-react'
-
 import type { Rect, SnapSide } from '@/lib/os/geometry'
 
 import type { Project } from '@/types'
@@ -39,6 +37,5 @@ export type HeadingLevel = 1 | 2
 export interface AppDescriptor {
   id: AppId
   name: string
-  icon: LucideIcon
   accent: AccentRole
 }
