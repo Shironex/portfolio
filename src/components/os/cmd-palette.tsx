@@ -3,9 +3,11 @@
 import type { ReactNode } from 'react'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 
-import { Copy, Diamond, Link, Moon, Search, SquareX, Sun } from 'lucide-react'
-
-import { GithubIcon } from '@/components/icons/github-icon'
+import { AppIcon, ProjectGlyph } from '@/components/pixel/app-icon'
+import {
+  PixelIcon,
+  type PixelIconName,
+} from '@/components/pixel/pixel-icon.generated'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
 import { SKIES, type SkyId } from '@/lib/os/appearance'
@@ -19,9 +21,10 @@ import { useFocusTrap } from '@/hooks/use-focus-trap'
 import { type Theme, lampLabel } from '@/hooks/use-theme'
 import type { Project } from '@/types'
 
-import { type AccentRole, accentFor, accentTileStyle } from './accent-map'
-import { APPS, COPY_LINK_LABEL, EYEBROW_CLASS } from './constants'
+import { type AccentRole, accentIcon } from './accent-map'
+import { APPS, COPY_LINK_LABEL } from './constants'
 import { Kbd } from './kbd'
+import { SkySwatch } from './sky-picker'
 import type { AppId } from './types'
 
 interface CmdPaletteProps {
@@ -38,17 +41,36 @@ interface CmdPaletteProps {
 }
 
 interface PaletteItem {
+  /** What fills the 16x16 icon slot of the row. */
   ic: ReactNode
-  accent: AccentRole
   label: string
   hint: string
   onClick: () => void
   search: string
-  /**
-   * A sky preview (`backgroundImage`) in place of the accent tile. Only the
-   * sky rows set it, so ⌘K previews every sky at once.
-   */
-  swatch?: string
+}
+
+/** An action's glyph in the 16x16 slot, in its accent's icon colour. */
+function actionIcon(name: PixelIconName, accent: AccentRole): ReactNode {
+  return (
+    <span
+      className="flex size-16 items-center justify-center"
+      style={{ color: accentIcon(accent) }}
+    >
+      <PixelIcon name={name} />
+    </span>
+  )
+}
+
+/**
+ * A sky's 12x8 art px thumbnail in the 16x16 slot, so ⌘K previews every sky
+ * at once. A 1 art px navy outline keeps the day sky off a paper row.
+ */
+function skyIcon(swatch: string): ReactNode {
+  return (
+    <span className="flex size-16 items-center justify-center">
+      <SkySwatch swatch={swatch} />
+    </span>
+  )
 }
 
 /**
@@ -80,30 +102,20 @@ export function CmdPalette({
   useEscapeLayer('palette', onClose)
 
   const items = useMemo<PaletteItem[]>(() => {
-    const appItems: PaletteItem[] = APPS.map((app) => {
-      const Icon = app.icon
-      return {
-        ic: <Icon size={14} strokeWidth={1.75} />,
-        accent: app.accent,
-        label: `Open ${app.name}`,
-        hint: 'app',
-        onClick: () => {
-          onLaunch(app.id)
-          onClose()
-        },
-        search: `${app.name} app`.toLowerCase(),
-      }
-    })
+    const appItems: PaletteItem[] = APPS.map((app) => ({
+      ic: <AppIcon id={app.id} />,
+      label: `Open ${app.name}`,
+      hint: 'app',
+      onClick: () => {
+        onLaunch(app.id)
+        onClose()
+      },
+      search: `${app.name} app`.toLowerCase(),
+    }))
 
     const actionItems: PaletteItem[] = [
       {
-        ic:
-          theme === 'dark' ? (
-            <Sun size={14} strokeWidth={1.75} />
-          ) : (
-            <Moon size={14} strokeWidth={1.75} />
-          ),
-        accent: 'warm',
+        ic: actionIcon(theme === 'dark' ? 'lamp-off' : 'lamp-on', 'warm'),
         label: lampLabel(theme),
         hint: 'action',
         onClick: () => {
@@ -113,8 +125,7 @@ export function CmdPalette({
         search: 'lamp theme night paper dark light mode toggle switch',
       },
       {
-        ic: <Copy size={14} strokeWidth={1.75} />,
-        accent: 'primary',
+        ic: actionIcon('copy', 'primary'),
         label: 'Copy email address',
         hint: 'action',
         onClick: async () => {
@@ -126,8 +137,7 @@ export function CmdPalette({
       ...(onCopyLink
         ? [
             {
-              ic: <Link size={14} strokeWidth={1.75} />,
-              accent: 'primary',
+              ic: actionIcon('link', 'primary'),
               label: COPY_LINK_LABEL,
               hint: 'action',
               onClick: () => {
@@ -139,8 +149,7 @@ export function CmdPalette({
           ]
         : []),
       {
-        ic: <GithubIcon className="size-7" />,
-        accent: 'deep',
+        ic: actionIcon('github', 'deep'),
         label: 'Open GitHub profile',
         hint: 'action',
         onClick: () => {
@@ -150,8 +159,7 @@ export function CmdPalette({
         search: 'github profile source code repositories',
       },
       {
-        ic: <SquareX size={14} strokeWidth={1.75} />,
-        accent: 'neutral',
+        ic: actionIcon('close', 'neutral'),
         label: 'Close all windows',
         hint: 'action',
         onClick: () => {
@@ -163,9 +171,7 @@ export function CmdPalette({
     ]
 
     const skyItems: PaletteItem[] = SKIES.map((s) => ({
-      ic: null,
-      accent: 'primary',
-      swatch: s.swatch,
+      ic: skyIcon(s.swatch),
       label: `Sky: ${s.name}`,
       hint: s.id === sky ? 'active' : 'sky',
       onClick: () => {
@@ -176,8 +182,7 @@ export function CmdPalette({
     }))
 
     const projectItems: PaletteItem[] = projectsData.map((project) => ({
-      ic: <Diamond size={14} strokeWidth={1.75} />,
-      accent: accentFor(project.slug),
+      ic: <ProjectGlyph slug={project.slug} />,
       label: project.title,
       hint: project.projectType ?? 'project',
       onClick: () => {
@@ -248,112 +253,131 @@ export function CmdPalette({
   }
 
   return (
+    // The 50% navy dither scrim; the panel centred in a row that is a whole
+    // even number of art px wide, so it lands on an art pixel.
     <div
-      className="bg-ink/30 z-palette fixed inset-0 flex items-start justify-center pt-[12dvh] backdrop-blur-sm"
+      className="px-tile-shadow z-palette fixed inset-0"
       onMouseDown={onBackdropDismiss(onClose)}
     >
-      <div
-        ref={panelRef}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Command palette"
-        className="border-rule-2 bg-surf-solid shadow-elev-4 font-body animate-cp-in w-[min(620px,92vw)] overflow-hidden rounded-2xl border motion-reduce:animate-none"
-      >
-        <div className="border-rule flex items-center gap-6 border-b px-8 py-6">
-          <Search aria-hidden className="text-ink-3 size-8" />
-          <input
-            ref={inputRef}
-            value={q}
-            onChange={(e) => search(e.target.value)}
-            onKeyDown={handleKey}
-            placeholder="type a command or project name…"
-            aria-label="Search apps and projects"
-            aria-autocomplete="list"
-            aria-controls={listId}
-            aria-activedescendant={
-              items[sel] ? `${listId}-item-${sel}` : undefined
-            }
-            role="combobox"
-            aria-expanded="true"
-            // No `outline-none` here: as a utility it would beat `.focus-ring`,
-            // which already clears the default outline.
-            className="focus-ring text-ink placeholder:text-ink-4 flex-1 rounded bg-transparent text-sm"
-          />
-          <Kbd className="pointer-coarse:hidden">esc</Kbd>
-        </div>
-
-        {/* A sibling of the listbox, not a child: a listbox owns only options. */}
+      {/* Click-through, so a press beside the panel lands on the scrim. */}
+      <div className="pointer-events-none flex w-[round(down,100%,calc(2*var(--px)))] justify-center pt-[round(12dvh,var(--px))]">
         <div
-          role="status"
-          className={cn(EYEBROW_CLASS, 'text-ink-4 px-8 pt-7 pb-3')}
+          ref={panelRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Command palette"
+          className="px-window-focused font-body animate-cp-in pointer-events-auto flex w-[min(calc(310*var(--px)),round(down,92vw,calc(2*var(--px))))] flex-col motion-reduce:animate-none"
         >
-          {q
-            ? `${items.length} ${pluralWord(items.length, 'result', 'results')}`
-            : 'quick actions'}
-        </div>
-        <div
-          id={listId}
-          role="listbox"
-          aria-label="Results"
-          className="max-h-[50dvh] overflow-auto pb-4"
-        >
-          {items.map((item, i) => (
-            <button
-              key={`${item.label}-${i}`}
-              id={`${listId}-item-${i}`}
-              type="button"
-              role="option"
-              tabIndex={-1}
-              aria-selected={i === sel}
-              onClick={item.onClick}
-              onMouseEnter={() => setSel(i)}
-              className={cn(
-                'focus-ring flex w-full items-center gap-6 px-8 py-4 text-left text-sm',
-                i === sel ? 'bg-miku/10' : 'hover:bg-surf-soft'
-              )}
-            >
-              <span
-                aria-hidden
-                className="flex size-12 items-center justify-center rounded"
-                style={
-                  item.swatch
-                    ? { backgroundImage: item.swatch }
-                    : accentTileStyle(item.accent)
+          {/* The input is a well, night in both Lamp modes, with a lamp
+              block caret. */}
+          <div className="p-3">
+            <div className="os-night px-well flex h-18 items-center gap-2 px-2">
+              <PixelIcon name="search" className="text-(--meta)" />
+              <input
+                ref={inputRef}
+                value={q}
+                onChange={(e) => search(e.target.value)}
+                onKeyDown={handleKey}
+                placeholder="type a command or project name…"
+                aria-label="Search apps and projects"
+                aria-autocomplete="list"
+                aria-controls={listId}
+                aria-activedescendant={
+                  items[sel] ? `${listId}-item-${sel}` : undefined
                 }
-              >
-                {item.ic}
-              </span>
-              <span className="text-ink flex-1">{item.label}</span>
-              <span className="text-ink-4 font-mono text-xs">{item.hint}</span>
-            </button>
-          ))}
-        </div>
-        {items.length === 0 && (
-          <div className="text-ink-3 flex flex-col items-center gap-6 px-12 pt-8 pb-16 text-center font-mono text-xs">
-            <p>
-              No matches for &ldquo;{q}&rdquo;. Try &ldquo;about&rdquo;,
-              &ldquo;automaker&rdquo;, or any tech name.
-            </p>
-            <button
-              type="button"
-              onClick={clearSearch}
-              className="focus-ring border-rule-2 bg-surf-0 text-ink hover:bg-surf-soft rounded-lg border px-6 py-3"
-            >
-              Clear search
-            </button>
+                role="combobox"
+                aria-expanded="true"
+                // No `outline-none` here: as a utility it would beat
+                // `.focus-ring`, which already clears the default outline.
+                className="focus-ring text-body min-w-0 flex-1 bg-transparent text-(--ink) caret-(--lamp) [caret-shape:block] placeholder:text-(--meta)"
+              />
+              <Kbd className="pointer-coarse:hidden">esc</Kbd>
+            </div>
           </div>
-        )}
 
-        <div className="border-rule bg-surf-soft text-ink-4 flex items-center gap-8 border-t px-8 py-4 font-mono text-[11px] pointer-coarse:hidden">
-          <span>
-            <Kbd>↑↓</Kbd> navigate
-          </span>
-          <span>
-            <Kbd>⏎</Kbd> select
-          </span>
-          <span>
-            <Kbd>esc</Kbd> close
-          </span>
+          {/* A sibling of the listbox, not a child: a listbox owns only
+              options. */}
+          <div
+            role="status"
+            className="text-label px-4 pb-1 text-(--meta) uppercase"
+          >
+            {q
+              ? `${items.length} ${pluralWord(items.length, 'result', 'results')}`
+              : 'quick actions'}
+          </div>
+          <div
+            id={listId}
+            role="listbox"
+            aria-label="Results"
+            className="max-h-[50dvh] overflow-auto px-1 pb-2"
+          >
+            {items.map((item, i) => (
+              <button
+                key={`${item.label}-${i}`}
+                id={`${listId}-item-${i}`}
+                type="button"
+                role="option"
+                tabIndex={-1}
+                aria-selected={i === sel}
+                onClick={item.onClick}
+                onMouseEnter={() => setSel(i)}
+                className={cn(
+                  'focus-ring text-body flex h-18 w-full items-center gap-2 px-1 text-left text-(--ink)',
+                  i === sel && 'bg-(--select)'
+                )}
+              >
+                {/* The lamp marker of the selected row. */}
+                <PixelIcon
+                  name="chevron-right"
+                  className={cn(
+                    'text-(--heading)',
+                    i === sel ? 'visible' : 'invisible'
+                  )}
+                />
+                <span aria-hidden className="flex">
+                  {item.ic}
+                </span>
+                <span className="min-w-0 flex-1 truncate">{item.label}</span>
+                {/* Meta is under 4.5:1 on the night selection teal. */}
+                <span
+                  className={cn(
+                    'text-label',
+                    i === sel ? 'text-(--ink)' : 'text-(--meta)'
+                  )}
+                >
+                  {item.hint}
+                </span>
+              </button>
+            ))}
+          </div>
+          {items.length === 0 && (
+            <div className="text-label flex flex-col items-center gap-4 px-6 pt-2 pb-8 text-center text-(--meta)">
+              <p>
+                No matches for &ldquo;{q}&rdquo;. Try &ldquo;about&rdquo;,
+                &ldquo;automaker&rdquo;, or any tech name.
+              </p>
+              <button
+                type="button"
+                onClick={clearSearch}
+                className="os-night focus-ring px-button-secondary text-body px-4 text-(--ink)"
+              >
+                Clear search
+              </button>
+            </div>
+          )}
+
+          <div aria-hidden className="rule-dotted mx-3 pointer-coarse:hidden" />
+          <div className="text-label flex items-center gap-6 px-4 py-2 text-(--meta) pointer-coarse:hidden">
+            <span>
+              <Kbd>↑↓</Kbd> navigate
+            </span>
+            <span>
+              <Kbd>⏎</Kbd> select
+            </span>
+            <span>
+              <Kbd>esc</Kbd> close
+            </span>
+          </div>
         </div>
       </div>
     </div>
