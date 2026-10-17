@@ -54,7 +54,7 @@ const SWIPE_THRESHOLD = 50
 const LIGHTBOX_SIZES = '(min-width: 1136px) 1024px, 90vw'
 
 const NAV_BUTTON_CLASS =
-  'focus-ring bg-surf-solid/85 text-ink hover:bg-surf-solid shadow-elev-2 absolute top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full backdrop-blur-sm transition-colors'
+  'focus-ring bg-surf-solid/85 text-ink hover:bg-surf-solid shadow-elev-2 absolute top-1/2 flex size-20 -translate-y-1/2 items-center justify-center rounded-full backdrop-blur-sm transition-colors'
 
 /**
  * Full-screen viewer for the gallery screenshots. Portals to <body> so it
@@ -132,7 +132,7 @@ function GalleryLightbox({
 
   return createPortal(
     <div
-      className="z-lightbox fixed inset-0 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm md:p-10"
+      className="z-lightbox fixed inset-0 flex items-center justify-center bg-black/75 p-8 backdrop-blur-sm md:p-20"
       onMouseDown={onBackdropDismiss(onClose)}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
@@ -149,7 +149,7 @@ function GalleryLightbox({
           type="button"
           onClick={onClose}
           aria-label="Close image view"
-          className="focus-ring bg-surf-solid text-ink hover:bg-surf-soft shadow-elev-2 absolute -top-3 -right-3 z-10 flex size-9 items-center justify-center rounded-full transition-colors"
+          className="focus-ring bg-surf-solid text-ink hover:bg-surf-soft shadow-elev-2 absolute -top-6 -right-6 z-10 flex size-18 items-center justify-center rounded-full transition-colors"
         >
           <X aria-hidden size={16} />
         </button>
@@ -188,7 +188,7 @@ function GalleryLightbox({
                 type="button"
                 onClick={showPrev}
                 aria-label="Previous image"
-                className={cn(NAV_BUTTON_CLASS, 'left-2 md:left-3')}
+                className={cn(NAV_BUTTON_CLASS, 'left-4 md:left-6')}
               >
                 <ChevronLeft aria-hidden size={20} />
               </button>
@@ -196,7 +196,7 @@ function GalleryLightbox({
                 type="button"
                 onClick={showNext}
                 aria-label="Next image"
-                className={cn(NAV_BUTTON_CLASS, 'right-2 md:right-3')}
+                className={cn(NAV_BUTTON_CLASS, 'right-4 md:right-6')}
               >
                 <ChevronRight aria-hidden size={20} />
               </button>
@@ -206,9 +206,9 @@ function GalleryLightbox({
         {(item.caption || hasMany) && (
           // Fixed white, like the scrim is fixed black: `cloud` follows the
           // mode and would be dark on dark here.
-          <p className="font-body mt-3 min-h-10 max-w-2xl text-center text-sm text-white">
+          <p className="font-body mt-6 min-h-20 max-w-2xl text-center text-sm text-white">
             {hasMany && (
-              <span className="mr-2 font-mono text-xs text-white/70 tabular-nums">
+              <span className="mr-4 font-mono text-xs text-white/70 tabular-nums">
                 {index + 1} / {items.length}
               </span>
             )}
@@ -243,7 +243,7 @@ export default function ProjectDetailApp({
               <GalleryThumb item={item} />
               <span
                 aria-hidden
-                className="absolute top-2 right-2 flex size-7 items-center justify-center rounded-md bg-black/50 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                className="absolute top-4 right-4 flex size-14 items-center justify-center rounded-md bg-black/50 text-white opacity-0 transition-opacity group-hover:opacity-100"
               >
                 <Maximize2 size={14} />
               </span>

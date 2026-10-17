@@ -18,7 +18,7 @@ import {
 } from './constants'
 
 const HEADER_BUTTON_CLASS =
-  'focus-ring text-ink-3 hover:bg-surf-0 hover:text-ink flex size-11 items-center justify-center rounded-md transition-colors'
+  'focus-ring text-ink-3 hover:bg-surf-0 hover:text-ink flex size-(--target) items-center justify-center rounded-md transition-colors'
 
 interface MobileSheetProps {
   title: string
@@ -77,12 +77,12 @@ export function MobileSheet({
     >
       <div
         className={cn(
-          'border-rule bg-surf-1 flex shrink-0 items-center justify-between gap-3 border-b',
+          'border-rule bg-surf-1 flex shrink-0 items-center justify-between gap-6 border-b',
           MOBILE_BAR_CLASS,
           MOBILE_GUTTER_CLASS
         )}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           {icon && (
             <span aria-hidden className="text-miku-2-icon">
               {icon}
@@ -92,7 +92,7 @@ export function MobileSheet({
             {title}
           </h2>
         </div>
-        <div className="-mr-1 flex items-center">
+        <div className="-mr-2 flex items-center">
           {onCopyLink && (
             <button
               type="button"
@@ -115,7 +115,7 @@ export function MobileSheet({
       </div>
       <div
         className={cn(
-          'font-body text-ink flex-1 overflow-y-auto pt-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]',
+          'font-body text-ink flex-1 overflow-y-auto pt-10 pb-[calc(1.25rem+env(safe-area-inset-bottom))]',
           MOBILE_GUTTER_CLASS
         )}
       >

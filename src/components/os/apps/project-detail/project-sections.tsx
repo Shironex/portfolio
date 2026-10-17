@@ -60,7 +60,7 @@ interface GalleryThumbProps {
 
 /** Secondary hero link: the source button and every related link. */
 const SECONDARY_LINK_CLASS =
-  'focus-ring bg-surf-0 border-rule-2 text-ink hover:bg-surf-soft inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold transition'
+  'focus-ring bg-surf-0 border-rule-2 text-ink hover:bg-surf-soft inline-flex items-center gap-4 rounded-lg border px-8 py-4 text-sm font-semibold transition'
 
 const LINK_ICON: Record<ProjectLinkKind, LucideIcon> = {
   blog: Newspaper,
@@ -79,7 +79,7 @@ export function ProjectSection({
   return (
     <section>
       <Heading
-        className={cn(EYEBROW_CLASS, 'text-miku-ink mt-8 mb-3 font-bold')}
+        className={cn(EYEBROW_CLASS, 'text-miku-ink mt-16 mb-6 font-bold')}
       >
         {title}
       </Heading>
@@ -96,11 +96,11 @@ export function ProjectHero({ project, titleLevel = 1 }: ProjectProps) {
     parseMonthYear(project.completedDate)?.label ?? project.completedDate
 
   return (
-    <section className="border-rule-2 bg-surf-soft relative mb-8 overflow-hidden rounded-2xl border p-6 md:p-8">
+    <section className="border-rule-2 bg-surf-soft relative mb-16 overflow-hidden rounded-2xl border p-12 md:p-16">
       <div className="relative">
         {/* Each badge lays its tint over the opaque card colour, the ground
             the token gate measured the tint on. */}
-        <div className="mb-3 flex items-center gap-2">
+        <div className="mb-6 flex items-center gap-4">
           {project.projectType && (
             <StatusChip
               tone="neutral"
@@ -125,18 +125,18 @@ export function ProjectHero({ project, titleLevel = 1 }: ProjectProps) {
         <Title className="font-display text-ink text-4xl font-bold">
           {project.title}
         </Title>
-        <p className="font-body text-ink-2 mt-3 max-w-2xl text-lg">
+        <p className="font-body text-ink-2 mt-6 max-w-2xl text-lg">
           {project.summary}
         </p>
 
-        <div className="text-ink-3 mt-4 flex flex-wrap gap-4 font-mono text-xs">
-          <span className="inline-flex items-center gap-1.5">
-            <Clock aria-hidden className="size-3.5" strokeWidth={1.75} />
+        <div className="text-ink-3 mt-8 flex flex-wrap gap-8 font-mono text-xs">
+          <span className="inline-flex items-center gap-3">
+            <Clock aria-hidden className="size-7" strokeWidth={1.75} />
             {project.duration}
           </span>
           {completed && (
-            <span className="inline-flex items-center gap-1.5">
-              <Calendar aria-hidden className="size-3.5" strokeWidth={1.75} />
+            <span className="inline-flex items-center gap-3">
+              <Calendar aria-hidden className="size-7" strokeWidth={1.75} />
               {completed}
             </span>
           )}
@@ -145,13 +145,13 @@ export function ProjectHero({ project, titleLevel = 1 }: ProjectProps) {
           )}
         </div>
 
-        <div className="mt-6 flex flex-wrap gap-2">
+        <div className="mt-12 flex flex-wrap gap-4">
           {hasUsableDemo(project.demoUrl) && (
             <ExternalLink
               href={project.demoUrl}
-              className="focus-ring bg-miku text-cloud hover:bg-miku-2 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
+              className="focus-ring bg-miku text-cloud hover:bg-miku-2 inline-flex items-center gap-4 rounded-lg px-8 py-4 text-sm font-semibold transition-colors"
             >
-              <ExternalLinkIcon aria-hidden className="size-4" />
+              <ExternalLinkIcon aria-hidden className="size-8" />
               demo
             </ExternalLink>
           )}
@@ -160,7 +160,7 @@ export function ProjectHero({ project, titleLevel = 1 }: ProjectProps) {
               href={project.githubUrl}
               className={SECONDARY_LINK_CLASS}
             >
-              <GithubIcon className="size-4" />
+              <GithubIcon className="size-8" />
               source
             </ExternalLink>
           )}
@@ -172,7 +172,7 @@ export function ProjectHero({ project, titleLevel = 1 }: ProjectProps) {
                 href={link.url}
                 className={SECONDARY_LINK_CLASS}
               >
-                <Icon aria-hidden className="size-4" />
+                <Icon aria-hidden className="size-8" />
                 {link.label}
               </ExternalLink>
             )
@@ -190,7 +190,7 @@ export function ProjectOverview({ project, titleLevel }: ProjectProps) {
       {project.description.map((paragraph, i) => (
         <p
           key={i}
-          className="font-body text-ink-2 mb-3 max-w-2xl leading-relaxed"
+          className="font-body text-ink-2 mb-6 max-w-2xl leading-relaxed"
         >
           {paragraph}
         </p>
@@ -203,13 +203,13 @@ export function ProjectFeatures({ project, titleLevel }: ProjectProps) {
   if (project.features.length === 0) return null
   return (
     <ProjectSection title="features" titleLevel={titleLevel}>
-      <ul className="flex flex-col gap-2">
+      <ul className="flex flex-col gap-4">
         {project.features.map((feature) => (
           <li
             key={feature}
-            className="font-body text-ink-2 flex items-start gap-2"
+            className="font-body text-ink-2 flex items-start gap-4"
           >
-            <span aria-hidden className="text-miku-ink mt-0.5">
+            <span aria-hidden className="text-miku-ink mt-1">
               ✓
             </span>
             <span>{feature}</span>
@@ -226,11 +226,11 @@ export function ProjectTechStack({ project, titleLevel }: ProjectProps) {
   if (stack.length === 0) return null
   return (
     <ProjectSection title="tech stack" titleLevel={titleLevel}>
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex flex-wrap gap-3">
         {stack.map((tech) => (
           <span
             key={tech}
-            className="rounded-full border px-2.5 py-1 font-mono text-xs"
+            className="rounded-full border px-5 py-2 font-mono text-xs"
             style={{
               borderColor: accentTint(accent, 25),
               color: accentInk(accent),
@@ -255,7 +255,7 @@ export function ProjectGallery({
 }) {
   return (
     <ProjectSection title="gallery" titleLevel={titleLevel}>
-      <div className="mt-3 grid grid-cols-2 gap-2">{children}</div>
+      <div className="mt-6 grid grid-cols-2 gap-4">{children}</div>
     </ProjectSection>
   )
 }
@@ -282,7 +282,7 @@ export function GalleryThumb({ item }: GalleryThumbProps) {
       {item.caption && (
         <span
           title={item.caption}
-          className="pointer-events-none absolute inset-x-0 bottom-0 truncate bg-linear-to-t from-black/80 via-black/60 to-transparent px-2.5 pt-6 pb-2 text-left text-[11px] font-medium text-white"
+          className="pointer-events-none absolute inset-x-0 bottom-0 truncate bg-linear-to-t from-black/80 via-black/60 to-transparent px-5 pt-12 pb-4 text-left text-[11px] font-medium text-white"
         >
           {item.caption}
         </span>

@@ -26,7 +26,7 @@ function ClockImpl({ className, showDate = true }: ClockProps) {
     return (
       <time className={cn('tabular-nums', className)}>
         <span className="invisible">00:00</span>
-        {showDate && <span className="invisible ml-2">Mon, Jan 00</span>}
+        {showDate && <span className="invisible ml-4">Mon, Jan 00</span>}
       </time>
     )
   }
@@ -54,7 +54,7 @@ function ClockImpl({ className, showDate = true }: ClockProps) {
       {date && (
         <>
           <span className="sr-only">, </span>
-          <span className="ml-2">{date}</span>
+          <span className="ml-4">{date}</span>
         </>
       )}
     </time>

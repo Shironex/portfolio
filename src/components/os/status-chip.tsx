@@ -42,8 +42,8 @@ const TONE_CLASS: Record<ChipTone, string> = {
 }
 
 const SIZE_CLASS: Record<ChipSize, string> = {
-  sm: 'px-1.5 py-0.5 font-mono text-[11px] uppercase',
-  md: cn(LABEL_CLASS, 'px-2 py-0.5'),
+  sm: 'px-3 py-1 font-mono text-[11px] uppercase',
+  md: cn(LABEL_CLASS, 'px-4 py-1'),
 }
 
 const LABEL: Record<ChipSize, Record<ChipTone, string | undefined>> = {

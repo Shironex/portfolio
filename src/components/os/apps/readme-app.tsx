@@ -15,20 +15,20 @@ const projectCount = countProjects(projectsData).total
  */
 export default function ReadmeApp() {
   return (
-    <div className="font-body text-ink-2 max-w-[720px] text-[14px] leading-relaxed">
-      <div className="mb-4 flex items-center gap-4">
+    <div className="font-body text-ink-2 max-w-360 text-[14px] leading-relaxed">
+      <div className="mb-8 flex items-center gap-8">
         <Image
           src="/mascot.png"
           alt=""
           width={80}
           height={80}
-          className="border-rule-2 bg-miku/10 shadow-elev-1 size-16 shrink-0 rounded-full border object-cover object-top"
+          className="border-rule-2 bg-miku/10 shadow-elev-1 size-32 shrink-0 rounded-full border object-cover object-top"
         />
         <div>
           <h2 className="font-display text-ink text-3xl font-semibold">
             Welcome to ShiroOS
           </h2>
-          <p className="text-ink-4 mt-0.5 font-mono text-[11px]">
+          <p className="text-ink-4 mt-1 font-mono text-[11px]">
             シロOS · portfolio build
           </p>
         </div>
@@ -39,10 +39,10 @@ export default function ReadmeApp() {
         the side to open apps, or press <Kbd>⌘K</Kbd> for the command palette.
       </p>
 
-      <h3 className="font-display text-ink mt-7 mb-2 text-lg font-semibold">
+      <h3 className="font-display text-ink mt-14 mb-4 text-lg font-semibold">
         What&apos;s inside
       </h3>
-      <ul className="list-disc space-y-1 pl-5">
+      <ul className="list-disc space-y-2 pl-10">
         <li>
           <span className="text-ink font-semibold">Projects</span>:{' '}
           {projectCount} things I made, filterable by status.
@@ -65,10 +65,10 @@ export default function ReadmeApp() {
         </li>
       </ul>
 
-      <h3 className="font-display text-ink mt-7 mb-2 text-lg font-semibold">
+      <h3 className="font-display text-ink mt-14 mb-4 text-lg font-semibold">
         Shortcuts
       </h3>
-      <ul className="list-disc space-y-1 pl-5">
+      <ul className="list-disc space-y-2 pl-10">
         <li>
           <Kbd>⌘K</Kbd>: command palette
         </li>
@@ -87,7 +87,7 @@ export default function ReadmeApp() {
         <li>Double-click a title bar: maximize or restore the window.</li>
       </ul>
 
-      <p className="text-ink-3 mt-8 text-sm">
+      <p className="text-ink-3 mt-16 text-sm">
         Built with Next.js 16 and Tailwind v4. Source is on{' '}
         <a
           href={GITHUB_URL}

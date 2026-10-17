@@ -114,6 +114,14 @@
 
 @theme {
   /*
+   * Spacing counts in art pixels: `p-4` is 4 art px, 8px at DPR 1 and 2,
+   * always a whole number of device pixels. Every numeric spacing class was
+   * doubled once when this replaced the 0.25rem step, so the layout at
+   * `--px: 2px` is the one it was.
+   */
+  --spacing: var(--px);
+
+  /*
    * Typography: JetBrains Mono
    *
    * The --font-mono variable integrates the JetBrains Mono font (loaded in layout.tsx)
@@ -401,6 +409,12 @@
     --px: 2px;
     --hpx: 1px;
     --dpr: 1;
+
+    /*
+     * The side of a hit target (`size-(--target)`, `h-(--target)`): 22 art
+     * px, never under 44px, which it would be at DPR 2.625 (1.905px each).
+     */
+    --target: max(2.75rem, calc(22 * var(--px)));
   }
 
   /* Custom scrollbar: webkit (Chrome, Safari, Edge) */
@@ -512,7 +526,7 @@
 
   /* Inline code styling - only apply to code not inside pre blocks */
   :not(pre)>code {
-    @apply rounded bg-muted px-1.5 py-0.5 text-sm;
+    @apply rounded bg-muted px-3 py-1 text-sm;
   }
 }
 

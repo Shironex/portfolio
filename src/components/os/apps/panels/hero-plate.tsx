@@ -29,14 +29,14 @@ function HeroPlateImpl({
   headingLevel,
 }: HeroPlateProps) {
   return (
-    <div className="border-rule-2 bg-surf-solid shadow-elev-3 relative flex size-full flex-col overflow-hidden rounded-3xl border px-5 py-6 md:px-8 md:py-7">
+    <div className="border-rule-2 bg-surf-solid shadow-elev-3 relative flex size-full flex-col overflow-hidden rounded-3xl border px-10 py-12 md:px-16 md:py-14">
       <HeroText headingLevel={headingLevel} />
 
-      <div className="relative mt-4 flex flex-wrap gap-2">
+      <div className="relative mt-8 flex flex-wrap gap-4">
         <button
           type="button"
           onClick={onOpenContact}
-          className="focus-ring bg-miku text-cloud hover:bg-miku-2 flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
+          className="focus-ring bg-miku text-cloud hover:bg-miku-2 flex items-center gap-4 rounded-lg px-8 py-4 text-sm font-semibold transition-colors"
         >
           Get in touch
           <Kbd tone="accent" className="pointer-coarse:hidden">
@@ -46,7 +46,7 @@ function HeroPlateImpl({
         <button
           type="button"
           onClick={onOpenCmd}
-          className="focus-ring bg-surf-0 border-rule-2 text-ink hover:bg-surf-soft flex items-center gap-2 rounded-lg border px-4 py-2 text-sm transition-colors"
+          className="focus-ring bg-surf-0 border-rule-2 text-ink hover:bg-surf-soft flex items-center gap-4 rounded-lg border px-8 py-4 text-sm transition-colors"
         >
           {/* Keyboard hints are noise on touch: relabel to what it does there. */}
           <span className="pointer-coarse:hidden">Command palette</span>
@@ -55,8 +55,8 @@ function HeroPlateImpl({
         </button>
       </div>
 
-      <div className="border-rule relative mt-4 flex items-center gap-3 border-t pt-4">
-        <div className="border-rule-2 bg-miku/15 relative size-9 shrink-0 overflow-hidden rounded-full border">
+      <div className="border-rule relative mt-8 flex items-center gap-6 border-t pt-8">
+        <div className="border-rule-2 bg-miku/15 relative size-18 shrink-0 overflow-hidden rounded-full border">
           <Image
             src="/mascot.png"
             alt=""

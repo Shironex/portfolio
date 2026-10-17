@@ -154,9 +154,9 @@ export function GithubActivityStrip() {
   return (
     <div
       ref={containerRef}
-      className="border-rule bg-surf-0 relative mt-4 rounded-2xl border p-3"
+      className="border-rule bg-surf-0 relative mt-8 rounded-2xl border p-6"
     >
-      <div className="mb-2 flex items-center justify-between gap-3">
+      <div className="mb-4 flex items-center justify-between gap-6">
         <div className="min-w-0">
           <div className={cn(EYEBROW_CLASS, 'text-miku-ink')}>Activity</div>
           <div className="font-display text-ink text-sm font-bold tabular-nums">
@@ -171,13 +171,13 @@ export function GithubActivityStrip() {
       {state.kind === 'unconfigured' ? (
         <div className="text-ink-3 font-mono text-[11px]">
           github widget · set{' '}
-          <code className="bg-surf-1 text-ink-2 rounded px-1 py-0.5">
+          <code className="bg-surf-1 text-ink-2 rounded px-2 py-1">
             GITHUB_TOKEN
           </code>{' '}
           to enable
         </div>
       ) : state.kind === 'error' ? (
-        <div className="text-ink-3 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[11px]">
+        <div className="text-ink-3 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[11px]">
           <span>couldn&apos;t reach github</span>
           <span aria-hidden>·</span>
           <button
@@ -213,7 +213,7 @@ export function GithubActivityStrip() {
       {hover && (
         <div
           aria-hidden
-          className="border-rule-2 bg-surf-solid text-ink shadow-elev-2 animate-fade-in pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full rounded-md border px-2 py-1 font-mono text-xs motion-reduce:animate-none"
+          className="border-rule-2 bg-surf-solid text-ink shadow-elev-2 animate-fade-in pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full rounded-md border px-4 py-2 font-mono text-xs motion-reduce:animate-none"
           style={{ left: hover.x, top: hover.y - 6 }}
         >
           {describeDay(hover.day)}
@@ -222,17 +222,14 @@ export function GithubActivityStrip() {
 
       {state.kind === 'ready' && (
         <div
-          className={cn(
-            LABEL_CLASS,
-            'text-ink-4 mt-2 flex items-center gap-1.5'
-          )}
+          className={cn(LABEL_CLASS, 'text-ink-4 mt-4 flex items-center gap-3')}
         >
           <span>less</span>
-          <span aria-hidden className="bg-rule size-2 rounded-[2px]" />
-          <span aria-hidden className="bg-miku/25 size-2 rounded-[2px]" />
-          <span aria-hidden className="bg-miku/50 size-2 rounded-[2px]" />
-          <span aria-hidden className="bg-miku/75 size-2 rounded-[2px]" />
-          <span aria-hidden className="bg-miku size-2 rounded-[2px]" />
+          <span aria-hidden className="bg-rule size-4 rounded-[2px]" />
+          <span aria-hidden className="bg-miku/25 size-4 rounded-[2px]" />
+          <span aria-hidden className="bg-miku/50 size-4 rounded-[2px]" />
+          <span aria-hidden className="bg-miku/75 size-4 rounded-[2px]" />
+          <span aria-hidden className="bg-miku size-4 rounded-[2px]" />
           <span>more</span>
         </div>
       )}

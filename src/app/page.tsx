@@ -21,9 +21,9 @@ function StaticHero() {
       className="text-ink fixed inset-0 overflow-hidden"
       data-ssr-hero
     >
-      <div className="relative flex min-h-dvh flex-col px-6 pt-14 pb-24 md:pr-8 md:pl-32 lg:pr-16 lg:pl-36 xl:pr-24 xl:pl-40">
-        <div className="grid flex-1 gap-6 md:grid-cols-[minmax(0,1.3fr)_minmax(340px,1fr)]">
-          <div className="border-rule-2 bg-surf-solid shadow-elev-3 relative flex size-full flex-col overflow-hidden rounded-3xl border px-5 py-6 md:px-8 md:py-7">
+      <div className="relative flex min-h-dvh flex-col px-12 pt-28 pb-48 md:pr-16 md:pl-64 lg:pr-32 lg:pl-72 xl:pr-48 xl:pl-80">
+        <div className="grid flex-1 gap-12 md:grid-cols-[minmax(0,1.3fr)_minmax(340px,1fr)]">
+          <div className="border-rule-2 bg-surf-solid shadow-elev-3 relative flex size-full flex-col overflow-hidden rounded-3xl border px-10 py-12 md:px-16 md:py-14">
             <HeroText />
           </div>
         </div>

@@ -21,7 +21,7 @@ export function Kbd({ children, tone = 'default', className }: KbdProps) {
   return (
     <kbd
       className={cn(
-        'rounded px-1.5 py-0.5 font-mono text-[11px]',
+        'rounded px-3 py-1 font-mono text-[11px]',
         tone === 'default' && 'border-rule bg-surf-solid/70 text-ink-3 border',
         // Ink over the fill moves it away from `cloud` in both modes, so the
         // chip stays readable on the resting and on the pressed accent.

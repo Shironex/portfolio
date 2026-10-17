@@ -74,8 +74,8 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
 
   return (
     <div className="font-body">
-      <div className="mb-6">
-        <h2 className="font-display text-ink mb-1 text-3xl font-bold tabular-nums">
+      <div className="mb-12">
+        <h2 className="font-display text-ink mb-2 text-3xl font-bold tabular-nums">
           {projectsData.length} projects
         </h2>
         <p className="text-ink-3 text-sm">
@@ -83,7 +83,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
         </p>
       </div>
 
-      <div className="mb-2 flex flex-wrap items-center gap-2">
+      <div className="mb-4 flex flex-wrap items-center gap-4">
         {FILTERS.map((f) => {
           const isActive = filter === f.id
           return (
@@ -93,7 +93,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
               onClick={() => setFilter(f.id)}
               aria-pressed={isActive}
               className={cn(
-                'focus-ring rounded-full px-3 py-1 font-mono text-xs',
+                'focus-ring rounded-full px-6 py-2 font-mono text-xs',
                 isActive
                   ? 'bg-miku text-cloud'
                   : 'bg-surf-0 text-ink-2 hover:bg-surf-1'
@@ -113,7 +113,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="search projects…"
-          className="focus-ring border-rule-2 bg-surf-0 placeholder:text-ink-4 focus:border-miku ml-auto min-w-[200px] rounded-lg border px-3 py-1.5 text-sm"
+          className="focus-ring border-rule-2 bg-surf-0 placeholder:text-ink-4 focus:border-miku ml-auto min-w-100 rounded-lg border px-6 py-3 text-sm"
           aria-label="Search projects"
         />
       </div>
@@ -124,9 +124,9 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
         {pluralWord(projectsData.length, 'project', 'projects')} shown
       </p>
 
-      <div className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-2">
+      <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-2">
         {shown.length === 0 ? (
-          <div className="text-ink-3 col-span-full flex flex-col items-center gap-3 py-12 text-center font-mono text-sm">
+          <div className="text-ink-3 col-span-full flex flex-col items-center gap-6 py-24 text-center font-mono text-sm">
             <p>
               {q && filter !== 'all'
                 ? `No ${filter} projects match “${q}”.`
@@ -134,12 +134,12 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                   ? `No projects match “${q}”.`
                   : `No ${filter} projects yet.`}
             </p>
-            <div className="flex gap-2">
+            <div className="flex gap-4">
               {q && (
                 <button
                   type="button"
                   onClick={() => setQ('')}
-                  className="focus-ring bg-surf-0 text-ink-2 hover:bg-surf-1 rounded-full px-3 py-1 text-xs"
+                  className="focus-ring bg-surf-0 text-ink-2 hover:bg-surf-1 rounded-full px-6 py-2 text-xs"
                 >
                   clear search
                 </button>
@@ -148,7 +148,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                 <button
                   type="button"
                   onClick={() => setFilter('all')}
-                  className="focus-ring bg-surf-0 text-ink-2 hover:bg-surf-1 rounded-full px-3 py-1 text-xs"
+                  className="focus-ring bg-surf-0 text-ink-2 hover:bg-surf-1 rounded-full px-6 py-2 text-xs"
                 >
                   show all projects
                 </button>
@@ -164,22 +164,22 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                 type="button"
                 onClick={() => onOpenProject(p)}
                 aria-label={`Open ${p.title}`}
-                className="focus-ring group border-rule-2 bg-surf-solid hover:border-miku/40 hover:shadow-elev-2 relative rounded-xl border p-4 text-left transition-[translate,border-color,box-shadow] duration-150 hover:-translate-y-0.5"
+                className="focus-ring group border-rule-2 bg-surf-solid hover:border-miku/40 hover:shadow-elev-2 relative rounded-xl border p-8 text-left transition-[translate,border-color,box-shadow] duration-150 hover:-translate-y-1"
               >
-                <div className="flex items-start gap-3">
+                <div className="flex items-start gap-6">
                   <ProjectAvatar accent={accent} className="shrink-0">
                     {p.title[0]}
                   </ProjectAvatar>
                   <div className="min-w-0 flex-1">
-                    <div className="font-display text-ink flex items-center gap-1.5 text-sm">
+                    <div className="font-display text-ink flex items-center gap-3 text-sm">
                       <span className="truncate">{p.title}</span>
                       {p.featured && <StatusChip tone="featured" />}
                       {p.status !== 'shipped' && <StatusChip tone={p.status} />}
                     </div>
-                    <div className="font-body text-ink-3 mt-0.5 line-clamp-2 text-xs">
+                    <div className="font-body text-ink-3 mt-1 line-clamp-2 text-xs">
                       {p.summary}
                     </div>
-                    <div className="mt-2 flex flex-wrap items-center gap-1">
+                    <div className="mt-4 flex flex-wrap items-center gap-2">
                       {p.technologies.slice(0, 4).map((tech, i) => (
                         <Fragment key={tech}>
                           {i > 0 && <span className="text-ink-4">·</span>}
@@ -190,7 +190,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                       ))}
                     </div>
                   </div>
-                  <span className="text-ink-4 group-hover:text-miku-ink transition-[translate,color] duration-150 group-hover:translate-x-0.5">
+                  <span className="text-ink-4 group-hover:text-miku-ink transition-[translate,color] duration-150 group-hover:translate-x-1">
                     →
                   </span>
                 </div>

@@ -39,7 +39,7 @@ interface StartMenuProps {
  * restores focus on close, dismisses on Esc or backdrop.
  */
 
-const SECTION_HEADING_CLASS = cn(EYEBROW_CLASS, 'text-ink-4 px-5 pb-1')
+const SECTION_HEADING_CLASS = cn(EYEBROW_CLASS, 'text-ink-4 px-10 pb-2')
 
 export function StartMenu({
   onClose,
@@ -80,7 +80,7 @@ export function StartMenu({
         role="dialog"
         aria-modal="true"
         aria-label="Start menu"
-        className="border-rule-2 bg-surf-solid/95 shadow-elev-4 animate-cp-in font-body absolute bottom-20 left-4 w-[min(640px,calc(100vw-2rem))] overflow-hidden rounded-2xl border motion-reduce:animate-none md:left-8"
+        className="border-rule-2 bg-surf-solid/95 shadow-elev-4 animate-cp-in font-body absolute bottom-40 left-8 w-[min(640px,calc(100vw-2rem))] overflow-hidden rounded-2xl border motion-reduce:animate-none md:left-16"
       >
         <button
           ref={searchRef}
@@ -90,19 +90,19 @@ export function StartMenu({
             onClose()
           }}
           aria-keyshortcuts={CMD_PALETTE_SHORTCUT}
-          className="focus-ring border-rule bg-surf-soft text-ink-3 hover:bg-surf-1 flex w-full items-center gap-3 border-b px-5 py-3 text-left text-sm transition-colors"
+          className="focus-ring border-rule bg-surf-soft text-ink-3 hover:bg-surf-1 flex w-full items-center gap-6 border-b px-10 py-6 text-left text-sm transition-colors"
         >
           <Search aria-hidden size={16} />
           <span className="flex-1">Type to search apps &amp; projects…</span>
           <Kbd>⌘K</Kbd>
         </button>
 
-        <h2 id={pinnedId} className={cn(SECTION_HEADING_CLASS, 'pt-4')}>
+        <h2 id={pinnedId} className={cn(SECTION_HEADING_CLASS, 'pt-8')}>
           Pinned
         </h2>
         <ul
           aria-labelledby={pinnedId}
-          className="grid grid-cols-3 gap-2 p-5 pt-2"
+          className="grid grid-cols-3 gap-4 p-10 pt-4"
         >
           {APPS.map((app) => {
             const Icon = app.icon
@@ -115,11 +115,11 @@ export function StartMenu({
                     onLaunch(app.id)
                     onClose()
                   }}
-                  className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 hover:border-miku/40 flex flex-1 flex-col items-center justify-center gap-2 rounded-xl border px-3 py-4 text-center transition-colors"
+                  className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 hover:border-miku/40 flex flex-1 flex-col items-center justify-center gap-4 rounded-xl border px-6 py-8 text-center transition-colors"
                 >
                   <span
                     aria-hidden
-                    className="flex size-11 items-center justify-center rounded-xl"
+                    className="flex size-(--target) items-center justify-center rounded-xl"
                     style={accentTileStyle(app.accent)}
                   >
                     <Icon size={20} strokeWidth={1.75} />
@@ -133,10 +133,10 @@ export function StartMenu({
           })}
         </ul>
 
-        <h2 id={recentId} className={cn(SECTION_HEADING_CLASS, 'pt-2')}>
+        <h2 id={recentId} className={cn(SECTION_HEADING_CLASS, 'pt-4')}>
           Recent
         </h2>
-        <ul aria-labelledby={recentId} className="pb-3">
+        <ul aria-labelledby={recentId} className="pb-6">
           {recentProjects.map((p) => (
             <li key={p.id}>
               <button
@@ -145,7 +145,7 @@ export function StartMenu({
                   onOpenProject(p)
                   onClose()
                 }}
-                className="focus-ring hover:bg-surf-soft flex w-full items-center gap-3 px-5 py-2 text-left transition-colors"
+                className="focus-ring hover:bg-surf-soft flex w-full items-center gap-6 px-10 py-4 text-left transition-colors"
               >
                 <ProjectAvatar accent={accentFor(p.slug)} size={8} hidden>
                   {p.title[0]}
@@ -164,8 +164,8 @@ export function StartMenu({
           ))}
         </ul>
 
-        <div className="border-rule bg-surf-soft flex items-center gap-3 border-t px-5 py-3">
-          <div className="border-rule-2 bg-miku/15 relative size-10 shrink-0 overflow-hidden rounded-full border">
+        <div className="border-rule bg-surf-soft flex items-center gap-6 border-t px-10 py-6">
+          <div className="border-rule-2 bg-miku/15 relative size-20 shrink-0 overflow-hidden rounded-full border">
             <Image
               src="/mascot.png"
               alt=""
@@ -189,15 +189,15 @@ export function StartMenu({
             href={GITHUB_URL}
             aria-label="Open GitHub profile"
             onClick={onClose}
-            className="focus-ring text-ink-3 hover:bg-rule hover:text-ink rounded p-1"
+            className="focus-ring text-ink-3 hover:bg-rule hover:text-ink rounded p-2"
           >
-            <GithubIcon className="size-3.5" />
+            <GithubIcon className="size-7" />
           </ExternalLink>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close start menu"
-            className="focus-ring text-ink-3 hover:bg-rule hover:text-ink rounded p-1"
+            className="focus-ring text-ink-3 hover:bg-rule hover:text-ink rounded p-2"
           >
             <X aria-hidden size={14} />
           </button>

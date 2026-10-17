@@ -139,7 +139,7 @@ export function CmdPalette({
           ]
         : []),
       {
-        ic: <GithubIcon className="size-3.5" />,
+        ic: <GithubIcon className="size-7" />,
         accent: 'deep',
         label: 'Open GitHub profile',
         hint: 'action',
@@ -259,8 +259,8 @@ export function CmdPalette({
         aria-label="Command palette"
         className="border-rule-2 bg-surf-solid shadow-elev-4 font-body animate-cp-in w-[min(620px,92vw)] overflow-hidden rounded-2xl border motion-reduce:animate-none"
       >
-        <div className="border-rule flex items-center gap-3 border-b px-4 py-3">
-          <Search aria-hidden className="text-ink-3 size-4" />
+        <div className="border-rule flex items-center gap-6 border-b px-8 py-6">
+          <Search aria-hidden className="text-ink-3 size-8" />
           <input
             ref={inputRef}
             value={q}
@@ -285,7 +285,7 @@ export function CmdPalette({
         {/* A sibling of the listbox, not a child: a listbox owns only options. */}
         <div
           role="status"
-          className={cn(EYEBROW_CLASS, 'text-ink-4 px-4 pt-3.5 pb-1.5')}
+          className={cn(EYEBROW_CLASS, 'text-ink-4 px-8 pt-7 pb-3')}
         >
           {q
             ? `${items.length} ${pluralWord(items.length, 'result', 'results')}`
@@ -295,7 +295,7 @@ export function CmdPalette({
           id={listId}
           role="listbox"
           aria-label="Results"
-          className="max-h-[50dvh] overflow-auto pb-2"
+          className="max-h-[50dvh] overflow-auto pb-4"
         >
           {items.map((item, i) => (
             <button
@@ -308,13 +308,13 @@ export function CmdPalette({
               onClick={item.onClick}
               onMouseEnter={() => setSel(i)}
               className={cn(
-                'focus-ring flex w-full items-center gap-3 px-4 py-2 text-left text-sm',
+                'focus-ring flex w-full items-center gap-6 px-8 py-4 text-left text-sm',
                 i === sel ? 'bg-miku/10' : 'hover:bg-surf-soft'
               )}
             >
               <span
                 aria-hidden
-                className="flex size-6 items-center justify-center rounded"
+                className="flex size-12 items-center justify-center rounded"
                 style={
                   item.swatch
                     ? { backgroundImage: item.swatch }
@@ -329,7 +329,7 @@ export function CmdPalette({
           ))}
         </div>
         {items.length === 0 && (
-          <div className="text-ink-3 flex flex-col items-center gap-3 px-6 pt-4 pb-8 text-center font-mono text-xs">
+          <div className="text-ink-3 flex flex-col items-center gap-6 px-12 pt-8 pb-16 text-center font-mono text-xs">
             <p>
               No matches for &ldquo;{q}&rdquo;. Try &ldquo;about&rdquo;,
               &ldquo;automaker&rdquo;, or any tech name.
@@ -337,14 +337,14 @@ export function CmdPalette({
             <button
               type="button"
               onClick={clearSearch}
-              className="focus-ring border-rule-2 bg-surf-0 text-ink hover:bg-surf-soft rounded-lg border px-3 py-1.5"
+              className="focus-ring border-rule-2 bg-surf-0 text-ink hover:bg-surf-soft rounded-lg border px-6 py-3"
             >
               Clear search
             </button>
           </div>
         )}
 
-        <div className="border-rule bg-surf-soft text-ink-4 flex items-center gap-4 border-t px-4 py-2 font-mono text-[11px] pointer-coarse:hidden">
+        <div className="border-rule bg-surf-soft text-ink-4 flex items-center gap-8 border-t px-8 py-4 font-mono text-[11px] pointer-coarse:hidden">
           <span>
             <Kbd>↑↓</Kbd> navigate
           </span>

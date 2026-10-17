@@ -23,7 +23,7 @@ interface DesktopIconsProps {
  */
 function DesktopIconsImpl({ onLaunch }: DesktopIconsProps) {
   return (
-    <div className="os-night z-desktop absolute top-16 left-4 flex flex-col gap-4">
+    <div className="os-night z-desktop absolute top-32 left-8 flex flex-col gap-8">
       {APPS.map((app) => {
         const Icon = app.icon
         return (
@@ -32,11 +32,11 @@ function DesktopIconsImpl({ onLaunch }: DesktopIconsProps) {
             type="button"
             aria-label={`Open ${app.name}`}
             onClick={() => onLaunch(app.id)}
-            className="focus-ring hover:bg-surf-0/60 flex w-20 flex-col items-center gap-1.5 rounded-lg p-2 transition-colors"
+            className="focus-ring hover:bg-surf-0/60 flex w-40 flex-col items-center gap-3 rounded-lg p-4 transition-colors"
           >
             <span
               aria-hidden
-              className="bg-ground shadow-elev-1 flex size-12 items-center justify-center rounded-xl"
+              className="bg-ground shadow-elev-1 flex size-24 items-center justify-center rounded-xl"
               style={{
                 backgroundImage: accentTintLayer(app.accent, TINT.icon),
                 color: accentIcon(app.accent),
@@ -44,7 +44,7 @@ function DesktopIconsImpl({ onLaunch }: DesktopIconsProps) {
             >
               <Icon size={22} strokeWidth={1.75} />
             </span>
-            <span className="font-body text-ink bg-ground px-1 text-xs">
+            <span className="font-body text-ink bg-ground px-2 text-xs">
               {app.name}
             </span>
           </button>

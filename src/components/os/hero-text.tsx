@@ -30,7 +30,7 @@ export function HeroText({ headingLevel = 1 }: HeroTextProps) {
   return (
     <>
       {/* `ink-2`: on a phone this line runs through the centre of the glow. */}
-      <div className="text-ink-2 relative mb-3 font-mono text-[11px]">
+      <div className="text-ink-2 relative mb-6 font-mono text-[11px]">
         {HERO_COPY.eyebrow}
       </div>
 
@@ -43,13 +43,13 @@ export function HeroText({ headingLevel = 1 }: HeroTextProps) {
         desktop apps.
       </Heading>
 
-      <p className="font-body text-ink-2 relative mt-3 max-w-xl text-[15px] leading-relaxed">
+      <p className="font-body text-ink-2 relative mt-6 max-w-xl text-[15px] leading-relaxed">
         {HERO_COPY.availability}
       </p>
 
-      <ul className="font-body text-ink-3 relative mt-3 flex max-w-xl flex-col gap-1 text-[13px] leading-snug">
+      <ul className="font-body text-ink-3 relative mt-6 flex max-w-xl flex-col gap-2 text-[13px] leading-snug">
         {HERO_COPY.proof.map((line) => (
-          <li key={line} className="flex gap-2">
+          <li key={line} className="flex gap-4">
             <span aria-hidden className="text-miku-ink">
               ›
             </span>

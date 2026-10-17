@@ -7,12 +7,12 @@ import { skillsData } from '@/data/skills-data'
  */
 export default function SkillsApp() {
   return (
-    <div className="font-body space-y-6">
+    <div className="font-body space-y-12">
       <header>
         <h2 className="font-display text-ink text-3xl font-semibold">
           Skills &amp; tools
         </h2>
-        <p className="font-body text-ink-3 mt-1 max-w-prose text-sm">
+        <p className="font-body text-ink-3 mt-2 max-w-prose text-sm">
           What I reach for daily, grouped by layer of the stack. The first item
           in each group is what I live in; the rest are tools I&apos;m
           comfortable with. Dashed chips are tools I used before but don&apos;t
@@ -20,20 +20,20 @@ export default function SkillsApp() {
         </p>
       </header>
 
-      <div className="space-y-5">
+      <div className="space-y-10">
         {skillsData.map((col) => (
           <section key={col.group}>
-            <h3 className="font-display text-ink mb-3 text-lg font-semibold">
+            <h3 className="font-display text-ink mb-6 text-lg font-semibold">
               {col.group}
             </h3>
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-3">
               {/* First chip is the daily driver: the intro copy promises
                   this hierarchy, so the visuals have to deliver it. */}
               {col.items.map((item, i) => (
                 <span
                   key={item.n}
                   className={cn(
-                    'rounded-full border px-2.5 py-1 font-mono text-xs',
+                    'rounded-full border px-5 py-2 font-mono text-xs',
                     i === 0
                       ? 'border-miku/40 bg-miku/10 text-miku-ink font-semibold'
                       : item.previously

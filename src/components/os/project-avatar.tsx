@@ -10,7 +10,7 @@ type AvatarSize = 10 | 8
 interface ProjectAvatarProps {
   /** Accent role (e.g. from `accentFor(slug)`). */
   accent: AccentRole
-  /** Tile dimension: maps to Tailwind `size-10` / `size-8`. */
+  /** Tile dimension: maps to Tailwind `size-20` / `size-16`. */
   size?: AvatarSize
   /** Opacity of the accent behind the glyph, as a percentage. */
   tint?: number
@@ -23,8 +23,8 @@ interface ProjectAvatarProps {
 }
 
 const SIZE_CLASS: Record<AvatarSize, string> = {
-  10: 'size-10 text-lg',
-  8: 'size-8 text-sm',
+  10: 'size-20 text-lg',
+  8: 'size-16 text-sm',
 }
 
 /**

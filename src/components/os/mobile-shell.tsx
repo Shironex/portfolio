@@ -32,7 +32,7 @@ import { SkyPicker } from './sky-picker'
 import { ShellMain } from './static-layer'
 import type { AppId, HeadingLevel, WindowId } from './types'
 
-const LAUNCHER_HEADING_CLASS = cn(EYEBROW_CLASS, 'text-ink-4 mb-3')
+const LAUNCHER_HEADING_CLASS = cn(EYEBROW_CLASS, 'text-ink-4 mb-6')
 
 interface MobileShellProps {
   os: OsWindowsApi
@@ -55,7 +55,7 @@ interface MobileShellProps {
  *   - 48px top bar (`<header>`) with logo + launcher menu
  *   - the feed (`<main>`): hero plate, github activity, featured projects
  *   - closing "signal" card that opens the contact sheet
- *   - 56px bottom dock (`<nav>`) with app icons + ⌘K search pill
+ *   - 28 art px (56px at DPR 1 and 2) bottom dock (`<nav>`) with app icons + ⌘K search pill
  *
  * The top window of `os.windows` renders as a full-screen slide-up sheet, and
  * so does the app launcher: the same `useOsWindows` state drives both desktop
@@ -104,12 +104,12 @@ export function MobileShell({
           frame; the dock below is the same. */}
       <header
         className={cn(
-          'os-night border-rule bg-surf-solid z-chrome fixed inset-x-0 top-0 flex items-center justify-between gap-3 border-b',
+          'os-night border-rule bg-surf-solid z-chrome fixed inset-x-0 top-0 flex items-center justify-between gap-6 border-b',
           MOBILE_BAR_CLASS,
           MOBILE_GUTTER_CLASS
         )}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <Image
             aria-hidden
             src="/mascot.png"
@@ -117,18 +117,18 @@ export function MobileShell({
             width={44}
             height={44}
             priority
-            className="border-rule bg-miku/10 size-5 rounded-full border object-cover object-top"
+            className="border-rule bg-miku/10 size-10 rounded-full border object-cover object-top"
           />
           <span className="font-display text-ink text-sm font-semibold">
             ShiroOS
           </span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           <button
             type="button"
             onClick={onToggleTheme}
             aria-label={lampLabel(theme)}
-            className="focus-ring text-ink-2 hover:bg-surf-0 hover:text-miku-2-icon flex size-11 items-center justify-center rounded-md"
+            className="focus-ring text-ink-2 hover:bg-surf-0 hover:text-miku-2-icon flex size-(--target) items-center justify-center rounded-md"
           >
             {theme === 'dark' ? (
               <Sun aria-hidden size={18} />
@@ -142,7 +142,7 @@ export function MobileShell({
             aria-label="Open app launcher"
             aria-haspopup="dialog"
             aria-expanded={launcherOpen}
-            className="focus-ring text-ink-2 hover:bg-surf-0 hover:text-ink flex size-11 items-center justify-center rounded-md"
+            className="focus-ring text-ink-2 hover:bg-surf-0 hover:text-ink flex size-(--target) items-center justify-center rounded-md"
           >
             <Menu aria-hidden size={18} />
           </button>
@@ -152,9 +152,9 @@ export function MobileShell({
       {/* Feed */}
       <ShellMain
         overStaticLayer={overStaticLayer}
-        className="fixed inset-0 overflow-y-auto pt-[calc(3rem+env(safe-area-inset-top))] pb-[calc(56px+env(safe-area-inset-bottom)+16px)]"
+        className="fixed inset-0 overflow-y-auto pt-[calc(3rem+env(safe-area-inset-top))] pb-[calc(var(--spacing)*36+env(safe-area-inset-bottom))]"
       >
-        <div className={cn('flex flex-col gap-4 pt-4', MOBILE_GUTTER_CLASS)}>
+        <div className={cn('flex flex-col gap-8 pt-8', MOBILE_GUTTER_CLASS)}>
           <HeroPlate
             onOpenCmd={onOpenCmd}
             onOpenContact={openContact}
@@ -162,19 +162,19 @@ export function MobileShell({
           />
           <FeaturedPanel onOpenProject={os.openProject} />
 
-          <div className="border-rule-2 bg-surf-solid shadow-elev-2 relative overflow-hidden rounded-2xl border p-5">
+          <div className="border-rule-2 bg-surf-solid shadow-elev-2 relative overflow-hidden rounded-2xl border p-10">
             <div className="relative">
               <h2 className="font-display text-ink text-lg font-bold">
                 Hiring, a contract, or an MVP to build
               </h2>
-              <p className="font-body text-ink-2 mt-2 text-sm">
+              <p className="font-body text-ink-2 mt-4 text-sm">
                 Open to full-time remote roles and to contracts or MVPs. Remote,
                 CET (UTC+1). I reply within 24 hours.
               </p>
               <button
                 type="button"
                 onClick={openContact}
-                className="focus-ring bg-miku text-cloud hover:bg-miku-2 mt-4 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
+                className="focus-ring bg-miku text-cloud hover:bg-miku-2 mt-8 inline-flex items-center gap-4 rounded-lg px-8 py-4 text-sm font-semibold transition-colors"
               >
                 Get in touch
               </button>
@@ -184,7 +184,7 @@ export function MobileShell({
           <div
             className={cn(
               EYEBROW_CLASS,
-              'os-night text-ink-4 pt-2 pb-4 text-center'
+              'os-night text-ink-4 pt-4 pb-8 text-center'
             )}
           >
             ShiroOS · シロOS
@@ -200,20 +200,20 @@ export function MobileShell({
         {/* Seven 44px targets fill a 320px screen edge to edge, so below
             440px search is an icon and the apps spread across what is left;
             from there up it grows back into the labelled pill. */}
-        <div className="flex h-14 items-center px-1.5 min-[360px]:gap-2 min-[360px]:px-3">
+        <div className="flex h-28 items-center px-3 min-[360px]:gap-4 min-[360px]:px-6">
           <button
             type="button"
             onClick={onOpenCmd}
             aria-label="Search apps and projects"
             aria-keyshortcuts={CMD_PALETTE_SHORTCUT}
-            className="focus-ring bg-surf-0 text-ink-3 flex size-11 shrink-0 items-center justify-center gap-2 rounded-lg text-xs min-[440px]:w-auto min-[440px]:min-w-0 min-[440px]:flex-1 min-[440px]:shrink min-[440px]:justify-start min-[440px]:px-3"
+            className="focus-ring bg-surf-0 text-ink-3 flex size-(--target) shrink-0 items-center justify-center gap-4 rounded-lg text-xs min-[440px]:w-auto min-[440px]:min-w-0 min-[440px]:flex-1 min-[440px]:shrink min-[440px]:justify-start min-[440px]:px-6"
           >
             <Search aria-hidden size={14} className="shrink-0" />
             <span aria-hidden className="hidden truncate min-[440px]:inline">
               search apps &amp; projects…
             </span>
           </button>
-          <div className="flex flex-1 items-center justify-between min-[440px]:flex-none min-[440px]:justify-start min-[440px]:gap-1">
+          <div className="flex flex-1 items-center justify-between min-[440px]:flex-none min-[440px]:justify-start min-[440px]:gap-2">
             {APPS.map((app) => {
               const isOpen = os.isOpen(app.id)
               const Icon = app.icon
@@ -223,7 +223,7 @@ export function MobileShell({
                   type="button"
                   onClick={() => openApp(app.id)}
                   aria-label={`Open ${app.name}`}
-                  className="focus-ring hover:bg-surf-0 relative flex size-11 shrink-0 items-center justify-center rounded-lg transition-colors"
+                  className="focus-ring hover:bg-surf-0 relative flex size-(--target) shrink-0 items-center justify-center rounded-lg transition-colors"
                 >
                   <span aria-hidden style={{ color: accentIcon(app.accent) }}>
                     <Icon size={18} strokeWidth={1.75} />
@@ -231,7 +231,7 @@ export function MobileShell({
                   {isOpen && (
                     <span
                       aria-hidden
-                      className="bg-miku absolute -bottom-0.5 left-1/2 size-1 -translate-x-1/2 rounded-full"
+                      className="bg-miku absolute -bottom-1 left-1/2 size-2 -translate-x-1/2 rounded-full"
                     />
                   )}
                 </button>
@@ -251,7 +251,7 @@ export function MobileShell({
           icon={<LayoutGrid size={16} strokeWidth={1.75} />}
           onClose={closeLauncher}
         >
-          <ul className="grid grid-cols-3 gap-3">
+          <ul className="grid grid-cols-3 gap-6">
             {APPS.map((app) => {
               const Icon = app.icon
               return (
@@ -260,11 +260,11 @@ export function MobileShell({
                     type="button"
                     onClick={() => openApp(app.id)}
                     aria-label={`Open ${app.name}`}
-                    className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 flex flex-1 flex-col items-center gap-2 rounded-xl border px-2 py-4 transition-colors"
+                    className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 flex flex-1 flex-col items-center gap-4 rounded-xl border px-4 py-8 transition-colors"
                   >
                     <span
                       aria-hidden
-                      className="flex size-12 items-center justify-center rounded-xl"
+                      className="flex size-24 items-center justify-center rounded-xl"
                       style={accentTileStyle(app.accent)}
                     >
                       <Icon size={22} strokeWidth={1.75} />
@@ -278,19 +278,19 @@ export function MobileShell({
             })}
           </ul>
 
-          <div className="border-rule mt-6 border-t pt-5">
+          <div className="border-rule mt-12 border-t pt-10">
             <h3 className={LAUNCHER_HEADING_CLASS}>Elsewhere</h3>
             <ExternalLink
               href={GITHUB_URL}
               onClick={closeLauncher}
-              className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 text-ink flex h-11 items-center gap-3 rounded-xl border px-3 text-sm transition-colors"
+              className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 text-ink flex h-(--target) items-center gap-6 rounded-xl border px-6 text-sm transition-colors"
             >
-              <GithubIcon className="text-miku-icon size-[18px]" />
+              <GithubIcon className="text-miku-icon size-9" />
               GitHub profile
             </ExternalLink>
           </div>
 
-          <div className="border-rule mt-6 border-t pt-5">
+          <div className="border-rule mt-12 border-t pt-10">
             <h3 className={LAUNCHER_HEADING_CLASS}>Sky</h3>
             <SkyPicker value={sky} onSelect={onSelectSky} />
           </div>

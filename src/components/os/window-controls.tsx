@@ -17,7 +17,7 @@ interface WindowControlsProps {
 
 /** Box of a control button; each adds its own hover colours. */
 const CONTROL_CLASS =
-  'focus-ring text-ink-2 flex h-8 w-10 items-center justify-center text-xs transition-colors pointer-coarse:h-11 pointer-coarse:w-12'
+  'focus-ring text-ink-2 flex h-16 w-20 items-center justify-center text-xs transition-colors pointer-coarse:h-(--target) pointer-coarse:w-24'
 
 /**
  * Windows 11 style title-bar controls (copy link, minimize, maximize, close).

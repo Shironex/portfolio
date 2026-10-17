@@ -244,7 +244,7 @@ export function MenuDropdown<Id extends string>({
         aria-expanded={isOpen}
         aria-controls={isOpen ? menuId : undefined}
         className={cn(
-          'focus-ring font-body text-ink-2 hover:bg-surf-0 hover:text-ink rounded-md px-2 py-1 text-sm transition-colors',
+          'focus-ring font-body text-ink-2 hover:bg-surf-0 hover:text-ink rounded-md px-4 py-2 text-sm transition-colors',
           isOpen && 'bg-surf-0 text-ink'
         )}
       >
@@ -258,15 +258,15 @@ export function MenuDropdown<Id extends string>({
           role="menu"
           aria-label={label}
           onKeyDown={handleMenuKey}
-          className="animate-menu-in border-rule-2 bg-surf-solid shadow-elev-3 z-menu absolute top-full left-0 mt-1 min-w-[200px] rounded-lg border py-1 motion-reduce:animate-none"
+          className="animate-menu-in border-rule-2 bg-surf-solid shadow-elev-3 z-menu absolute top-full left-0 mt-2 min-w-100 rounded-lg border py-2 motion-reduce:animate-none"
         >
           {sections.map((section, sectionIndex) => (
             <div key={sectionIndex} role="none">
               {section.divider && (
-                <div role="separator" className="bg-rule my-1 h-px" />
+                <div role="separator" className="bg-rule my-2 h-px" />
               )}
               {section.node && (
-                <div role="none" className="px-3 py-1.5">
+                <div role="none" className="px-6 py-3">
                   {section.node}
                 </div>
               )}
@@ -286,10 +286,10 @@ export function MenuDropdown<Id extends string>({
                       item.onClick()
                       close()
                     }}
-                    className="focus-ring text-ink hover:bg-surf-soft focus-visible:bg-surf-soft flex w-full items-center gap-3 px-3 py-1.5 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+                    className="focus-ring text-ink hover:bg-surf-soft focus-visible:bg-surf-soft flex w-full items-center gap-6 px-6 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {item.icon && (
-                      <span aria-hidden className="text-ink-3 size-4">
+                      <span aria-hidden className="text-ink-3 size-8">
                         {item.icon}
                       </span>
                     )}

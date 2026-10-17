@@ -51,8 +51,8 @@ const hobbyTint: Record<Hobby['tint'], string> = {
 export default function AboutApp() {
   return (
     <div className="font-body max-w-3xl">
-      <div className="mb-8 flex items-start gap-5">
-        <div className="border-rule-2 bg-miku/15 shadow-elev-2 relative size-20 shrink-0 overflow-hidden rounded-3xl border">
+      <div className="mb-16 flex items-start gap-10">
+        <div className="border-rule-2 bg-miku/15 shadow-elev-2 relative size-40 shrink-0 overflow-hidden rounded-3xl border">
           <Image
             src="/mascot.png"
             alt=""
@@ -62,7 +62,7 @@ export default function AboutApp() {
           />
         </div>
         <div>
-          <h2 className="font-display text-ink mb-2 text-3xl font-semibold">
+          <h2 className="font-display text-ink mb-4 text-3xl font-semibold">
             I&apos;m <em className="text-ink font-bold not-italic">Kacper</em>,
             a full-stack developer from Poland
           </h2>
@@ -76,8 +76,8 @@ export default function AboutApp() {
         </div>
       </div>
 
-      <section className="mb-8">
-        <h3 className="font-display text-ink mb-2 text-lg font-semibold">
+      <section className="mb-16">
+        <h3 className="font-display text-ink mb-4 text-lg font-semibold">
           What I work on
         </h3>
         <p className="text-ink-2 text-sm leading-relaxed">
@@ -89,7 +89,7 @@ export default function AboutApp() {
           </em>
           . The second click matters.
         </p>
-        <p className="text-ink-2 mt-3 text-sm leading-relaxed">
+        <p className="text-ink-2 mt-6 text-sm leading-relaxed">
           For more than two years I have self-hosted everything I run: Coolify
           on Hetzner and OVH, Cloudflare Tunnels, Tailscale, S3-compatible
           storage, and my own DNS and mail. Before that I used AWS with
@@ -97,11 +97,11 @@ export default function AboutApp() {
         </p>
       </section>
 
-      <section className="mb-8">
-        <h3 className="font-display text-ink mb-2 text-lg font-semibold">
+      <section className="mb-16">
+        <h3 className="font-display text-ink mb-4 text-lg font-semibold">
           Recent work
         </h3>
-        <ul className="text-ink-2 list-disc space-y-1 pl-5 text-sm leading-relaxed">
+        <ul className="text-ink-2 list-disc space-y-2 pl-10 text-sm leading-relaxed">
           <li>
             <span className="text-ink font-semibold">Shiranami 2.0</span>: moved
             my music player from Electron to a Rust core in Tauri. The Windows
@@ -123,15 +123,15 @@ export default function AboutApp() {
         </ul>
       </section>
 
-      <section className="mb-8">
-        <h3 className="font-display text-ink mb-2 text-lg font-semibold">
+      <section className="mb-16">
+        <h3 className="font-display text-ink mb-4 text-lg font-semibold">
           Open source
         </h3>
         <OpenSourcePanel />
       </section>
 
-      <section className="mb-8">
-        <h3 className="font-display text-ink mb-2 text-lg font-semibold">
+      <section className="mb-16">
+        <h3 className="font-display text-ink mb-4 text-lg font-semibold">
           Working with me
         </h3>
         <p className="text-ink-2 text-sm leading-relaxed">
@@ -141,24 +141,24 @@ export default function AboutApp() {
       </section>
 
       <section>
-        <h3 className="font-display text-ink mb-3 text-lg font-semibold">
+        <h3 className="font-display text-ink mb-6 text-lg font-semibold">
           Outside the editor
         </h3>
-        <div className="grid grid-cols-1 gap-2.5 min-[420px]:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 min-[420px]:grid-cols-2">
           {hobbies.map((h) => {
             const Icon = h.icon
             return (
               <div
                 key={h.title}
-                className="border-rule bg-surf-0 shadow-elev-1 rounded-2xl border p-4"
+                className="border-rule bg-surf-0 shadow-elev-1 rounded-2xl border p-8"
               >
-                <div className={cn('mb-2', hobbyTint[h.tint])}>
+                <div className={cn('mb-4', hobbyTint[h.tint])}>
                   <Icon aria-hidden size={20} strokeWidth={1.75} />
                 </div>
                 <div className="font-display text-ink text-sm font-bold">
                   {h.title}
                 </div>
-                <div className="text-ink-3 mt-0.5 text-xs font-medium">
+                <div className="text-ink-3 mt-1 text-xs font-medium">
                   {h.desc}
                 </div>
               </div>

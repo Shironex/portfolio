@@ -39,7 +39,7 @@ function FeaturedPanelImpl({ onOpenProject }: FeaturedPanelProps) {
       aria-labelledby={headingId}
       className="border-rule-2 bg-surf-solid overflow-hidden rounded-2xl border"
     >
-      <div className="border-rule bg-surf-soft flex items-center gap-3 border-b px-3 py-2">
+      <div className="border-rule bg-surf-soft flex items-center gap-6 border-b px-6 py-4">
         <h2
           id={headingId}
           className="font-display text-ink flex-1 text-sm font-bold tracking-normal"
@@ -60,25 +60,25 @@ function FeaturedPanelImpl({ onOpenProject }: FeaturedPanelProps) {
                 type="button"
                 onClick={() => onOpenProject(p)}
                 aria-label={`Open ${p.title}`}
-                className="focus-ring group hover:bg-surf-0 relative flex w-full items-start gap-3 px-4 py-3 text-left transition-colors"
+                className="focus-ring group hover:bg-surf-0 relative flex w-full items-start gap-6 px-8 py-6 text-left transition-colors"
               >
                 <ProjectAvatar accent={accent} className="shrink-0">
                   {p.title[0]}
                 </ProjectAvatar>
                 <div className="min-w-0 flex-1">
-                  <div className="font-display text-ink flex items-center gap-1.5 text-sm">
+                  <div className="font-display text-ink flex items-center gap-3 text-sm">
                     <span className="truncate">{p.title}</span>
                     <StatusChip tone="neutral">
                       {p.projectType ?? 'project'}
                     </StatusChip>
                   </div>
-                  <div className="font-body text-ink-3 mt-0.5 line-clamp-2 text-xs">
+                  <div className="font-body text-ink-3 mt-1 line-clamp-2 text-xs">
                     {p.summary}
                   </div>
                 </div>
                 <span
                   aria-hidden
-                  className="text-ink-4 group-hover:text-miku-ink transition-[translate,color] duration-150 group-hover:translate-x-0.5"
+                  className="text-ink-4 group-hover:text-miku-ink transition-[translate,color] duration-150 group-hover:translate-x-1"
                 >
                   →
                 </span>

@@ -208,9 +208,9 @@ function MenuBarImpl({
   return (
     // Near opaque like the taskbar, in place of a thinner fill over a
     // backdrop blur that resampled the wallpaper on every frame.
-    <header className="os-night border-rule bg-surf-2 z-chrome fixed inset-x-0 top-0 flex h-11 items-center gap-3 border-b px-3">
+    <header className="os-night border-rule bg-surf-2 z-chrome fixed inset-x-0 top-0 flex h-(--target) items-center gap-6 border-b px-6">
       {/* Left: logo chip */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-4">
         <Image
           aria-hidden
           src="/mascot.png"
@@ -218,7 +218,7 @@ function MenuBarImpl({
           width={44}
           height={44}
           priority
-          className="border-rule bg-miku/10 size-5 rounded-full border object-cover object-top"
+          className="border-rule bg-miku/10 size-10 rounded-full border object-cover object-top"
         />
         <span className="font-display text-ink text-sm font-semibold">
           ShiroOS
@@ -230,7 +230,7 @@ function MenuBarImpl({
         ref={barRef}
         role="menubar"
         aria-label="ShiroOS"
-        className="flex items-center gap-0.5"
+        className="flex items-center gap-1"
       >
         {MENU_IDS.map((id) => (
           <MenuDropdown
@@ -250,12 +250,12 @@ function MenuBarImpl({
       </div>
 
       {/* Right: Lamp toggle + status + date + time */}
-      <div className="text-ink-3 ml-auto flex items-center gap-4 font-mono text-xs">
+      <div className="text-ink-3 ml-auto flex items-center gap-8 font-mono text-xs">
         <button
           type="button"
           onClick={onToggleTheme}
           aria-label={lampLabel(theme)}
-          className="focus-ring text-ink-3 hover:bg-surf-0 hover:text-miku-2-icon rounded p-1 transition-colors"
+          className="focus-ring text-ink-3 hover:bg-surf-0 hover:text-miku-2-icon rounded p-2 transition-colors"
         >
           {theme === 'dark' ? (
             <Sun aria-hidden size={14} />

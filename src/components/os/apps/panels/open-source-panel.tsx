@@ -37,22 +37,22 @@ function Skeleton() {
       </p>
       <div
         aria-hidden
-        className={cn('h-4 w-3/4 rounded-[2px]', SKELETON_BAR)}
+        className={cn('h-8 w-3/4 rounded-[2px]', SKELETON_BAR)}
       />
-      <div className="border-rule bg-surf-0 divide-rule mt-3 divide-y overflow-hidden rounded-2xl border">
+      <div className="border-rule bg-surf-0 divide-rule mt-6 divide-y overflow-hidden rounded-2xl border">
         {Array.from({ length: PULLS_SHOWN }).map((_, i) => (
           <div
             key={i}
             aria-hidden
-            className="flex items-center justify-between gap-4 px-4 py-2.5"
+            className="flex items-center justify-between gap-8 px-8 py-5"
           >
             <div className="min-w-0 flex-1">
-              <div className={cn('h-3.5 w-2/3 rounded-[2px]', SKELETON_BAR)} />
+              <div className={cn('h-7 w-2/3 rounded-[2px]', SKELETON_BAR)} />
               <div
-                className={cn('mt-2 h-2.5 w-1/3 rounded-[2px]', SKELETON_BAR)}
+                className={cn('mt-4 h-5 w-1/3 rounded-[2px]', SKELETON_BAR)}
               />
             </div>
-            <div className={cn('h-2.5 w-16 rounded-[2px]', SKELETON_BAR)} />
+            <div className={cn('h-5 w-32 rounded-[2px]', SKELETON_BAR)} />
           </div>
         ))}
       </div>
@@ -76,13 +76,13 @@ function Contributions({ data }: { data: GithubContributions }) {
         These are the latest.
       </p>
 
-      <ul className="mt-3 flex flex-wrap items-center gap-1.5">
+      <ul className="mt-6 flex flex-wrap items-center gap-3">
         {data.repos.map((repo) => (
           <li key={repo.name}>
             <ExternalLink
               href={repo.url}
               aria-label={`${repo.name}, ${plural(repo.count, 'merged pull request', 'merged pull requests')}`}
-              className="focus-ring border-rule bg-surf-0 text-ink-2 hover:bg-surf-soft inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-mono text-[11px] transition"
+              className="focus-ring border-rule bg-surf-0 text-ink-2 hover:bg-surf-soft inline-flex items-center gap-3 rounded-full border px-5 py-2 font-mono text-[11px] transition"
             >
               {repo.name}
               <span className="text-miku-ink font-bold tabular-nums">
@@ -99,22 +99,22 @@ function Contributions({ data }: { data: GithubContributions }) {
         )}
       </ul>
 
-      <ul className="border-rule bg-surf-0 divide-rule mt-3 divide-y overflow-hidden rounded-2xl border">
+      <ul className="border-rule bg-surf-0 divide-rule mt-6 divide-y overflow-hidden rounded-2xl border">
         {data.pulls.map((pull) => (
           <li key={pull.url}>
             <ExternalLink
               href={pull.url}
-              className="focus-ring group hover:bg-surf-soft flex items-center justify-between gap-4 px-4 py-2.5 transition"
+              className="focus-ring group hover:bg-surf-soft flex items-center justify-between gap-8 px-8 py-5 transition"
             >
               <span className="min-w-0">
-                <span className="text-ink flex items-center gap-1 text-sm font-semibold">
+                <span className="text-ink flex items-center gap-2 text-sm font-semibold">
                   <span className="truncate">{pull.title}</span>
                   <ArrowUpRight
                     aria-hidden
-                    className="text-ink-3 size-3.5 shrink-0 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+                    className="text-ink-3 size-7 shrink-0 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
                   />
                 </span>
-                <span className="text-ink-3 mt-0.5 block truncate font-mono text-[11px]">
+                <span className="text-ink-3 mt-1 block truncate font-mono text-[11px]">
                   {pull.repo}
                 </span>
               </span>

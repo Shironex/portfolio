@@ -64,42 +64,42 @@ const RESIZE_HANDLES: ReadonlyArray<{ dir: ResizeDir; className: string }> = [
   {
     dir: 'n',
     className:
-      'top-0 right-2 left-2 h-1 cursor-n-resize pointer-coarse:inset-x-0 pointer-coarse:-top-[17px] pointer-coarse:h-4',
+      'top-0 right-4 left-4 h-2 cursor-n-resize pointer-coarse:inset-x-0 pointer-coarse:-top-[17px] pointer-coarse:h-8',
   },
   {
     dir: 's',
     className:
-      'right-2 bottom-0 left-2 h-1 cursor-s-resize pointer-coarse:inset-x-0 pointer-coarse:-bottom-[17px] pointer-coarse:h-4',
+      'right-4 bottom-0 left-4 h-2 cursor-s-resize pointer-coarse:inset-x-0 pointer-coarse:-bottom-[17px] pointer-coarse:h-8',
   },
   {
     dir: 'e',
     className:
-      'top-2 right-0 bottom-2 w-1 cursor-e-resize pointer-coarse:inset-y-0 pointer-coarse:-right-[17px] pointer-coarse:w-4',
+      'top-4 right-0 bottom-4 w-2 cursor-e-resize pointer-coarse:inset-y-0 pointer-coarse:-right-[17px] pointer-coarse:w-8',
   },
   {
     dir: 'w',
     className:
-      'top-2 bottom-2 left-0 w-1 cursor-w-resize pointer-coarse:inset-y-0 pointer-coarse:-left-[17px] pointer-coarse:w-4',
+      'top-4 bottom-4 left-0 w-2 cursor-w-resize pointer-coarse:inset-y-0 pointer-coarse:-left-[17px] pointer-coarse:w-8',
   },
   {
     dir: 'ne',
     className:
-      'top-0 right-0 size-3 cursor-ne-resize rounded-tr-xl pointer-coarse:-top-[25px] pointer-coarse:-right-[25px] pointer-coarse:size-6',
+      'top-0 right-0 size-6 cursor-ne-resize rounded-tr-xl pointer-coarse:-top-[25px] pointer-coarse:-right-[25px] pointer-coarse:size-12',
   },
   {
     dir: 'nw',
     className:
-      'top-0 left-0 size-3 cursor-nw-resize rounded-tl-xl pointer-coarse:-top-[25px] pointer-coarse:-left-[25px] pointer-coarse:size-6',
+      'top-0 left-0 size-6 cursor-nw-resize rounded-tl-xl pointer-coarse:-top-[25px] pointer-coarse:-left-[25px] pointer-coarse:size-12',
   },
   {
     dir: 'se',
     className:
-      'right-0 bottom-0 size-3 cursor-se-resize rounded-br-xl pointer-coarse:-right-[25px] pointer-coarse:-bottom-[25px] pointer-coarse:size-6',
+      'right-0 bottom-0 size-6 cursor-se-resize rounded-br-xl pointer-coarse:-right-[25px] pointer-coarse:-bottom-[25px] pointer-coarse:size-12',
   },
   {
     dir: 'sw',
     className:
-      'bottom-0 left-0 size-3 cursor-sw-resize rounded-bl-xl pointer-coarse:-bottom-[25px] pointer-coarse:-left-[25px] pointer-coarse:size-6',
+      'bottom-0 left-0 size-6 cursor-sw-resize rounded-bl-xl pointer-coarse:-bottom-[25px] pointer-coarse:-left-[25px] pointer-coarse:size-12',
   },
 ]
 
@@ -307,9 +307,9 @@ function WindowImpl({
           onKeyDown={handleTitleKey}
           // `touch-none`: a finger on the title bar drags the window, it does
           // not scroll or zoom the page.
-          className="focus-ring border-rule bg-surf-1 flex h-9 cursor-grab touch-none items-center justify-between gap-3 rounded-t-xl border-b px-3 select-none active:cursor-grabbing pointer-coarse:h-11"
+          className="focus-ring border-rule bg-surf-1 flex h-18 cursor-grab touch-none items-center justify-between gap-6 rounded-t-xl border-b px-6 select-none active:cursor-grabbing pointer-coarse:h-(--target)"
         >
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-4">
             <span
               aria-hidden
               className={isFocused ? 'text-miku-2-icon' : 'text-ink-4'}
@@ -338,11 +338,11 @@ function WindowImpl({
           </span>
         </div>
         {/* Opaque and square so Chrome composites it (threaded scrolling keeps
-          LCD text only on an opaque scroller at DPR 1); `mb-3` keeps its
+          LCD text only on an opaque scroller at DPR 1); `mb-6` keeps its
           corners inside the window's rounded bottom edge. Contained: layout
           and paint inside an app never reach past the scroller, which clips
           at the same box anyway (the lightbox and toasts are portals). */}
-        <div className="font-body text-ink bg-surf-solid mb-3 flex-1 overflow-auto px-6 pt-6 pb-3 contain-layout contain-paint contain-style">
+        <div className="font-body text-ink bg-surf-solid mb-6 flex-1 overflow-auto px-12 pt-12 pb-6 contain-layout contain-paint contain-style">
           <AppBody
             id={win.id}
             project={win.project}

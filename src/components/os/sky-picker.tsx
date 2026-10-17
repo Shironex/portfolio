@@ -64,7 +64,7 @@ export function SkyPicker({ value, onSelect, inMenu }: SkyPickerProps) {
       role={inMenu ? MENU_RADIO_GROUP_ROLE : 'radiogroup'}
       aria-label="Sky"
       onKeyDown={handleKey}
-      className="flex items-center gap-1.5"
+      className="flex items-center gap-3"
     >
       {SKIES.map((sky) => (
         <button
@@ -80,7 +80,7 @@ export function SkyPicker({ value, onSelect, inMenu }: SkyPickerProps) {
           onClick={() => onSelect(sky.id)}
           style={{ backgroundImage: sky.swatch }}
           className={cn(
-            'focus-ring size-6 rounded-full border transition-transform pointer-coarse:size-9',
+            'focus-ring size-12 rounded-full border transition-transform pointer-coarse:size-18',
             value === sky.id
               ? 'border-ink ring-ink/40 scale-110 ring-2'
               : 'border-rule-2 hover:scale-110'

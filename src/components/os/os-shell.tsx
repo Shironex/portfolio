@@ -232,14 +232,14 @@ export default function OsShell({ initialWindow }: OsShellProps) {
             <ShellMain overStaticLayer={onProjectRoute}>
               <DesktopIcons onLaunch={launchApp} />
 
-              <div className="relative flex min-h-dvh flex-col px-6 pt-14 pb-24 md:pr-8 md:pl-32 lg:pr-16 lg:pl-36 xl:pr-24 xl:pl-40">
-                <div className="grid flex-1 gap-6 md:grid-cols-[minmax(0,1.3fr)_minmax(340px,1fr)]">
+              <div className="relative flex min-h-dvh flex-col px-12 pt-28 pb-48 md:pr-16 md:pl-64 lg:pr-32 lg:pl-72 xl:pr-48 xl:pl-80">
+                <div className="grid flex-1 gap-12 md:grid-cols-[minmax(0,1.3fr)_minmax(340px,1fr)]">
                   <HeroPlate
                     onOpenCmd={openCmd}
                     onOpenContact={openContact}
                     headingLevel={heroHeadingLevel}
                   />
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-6">
                     <TerminalPanel />
                     <FeaturedPanel onOpenProject={launchProject} />
                   </div>

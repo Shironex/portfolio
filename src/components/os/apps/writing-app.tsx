@@ -47,11 +47,11 @@ function BlogLink({ children }: { children: React.ReactNode }) {
 
 function PostSkeleton() {
   return (
-    <li aria-hidden className="border-rule bg-surf-0 rounded-2xl border p-4">
-      <div className={cn(SKELETON_BAR, 'h-2.5 w-20 rounded')} />
-      <div className={cn(SKELETON_BAR, 'mt-3 h-4 w-3/4 rounded')} />
-      <div className={cn(SKELETON_BAR, 'mt-3 h-3 w-full rounded')} />
-      <div className={cn(SKELETON_BAR, 'mt-2 h-3 w-2/3 rounded')} />
+    <li aria-hidden className="border-rule bg-surf-0 rounded-2xl border p-8">
+      <div className={cn(SKELETON_BAR, 'h-5 w-40 rounded')} />
+      <div className={cn(SKELETON_BAR, 'mt-6 h-8 w-3/4 rounded')} />
+      <div className={cn(SKELETON_BAR, 'mt-6 h-6 w-full rounded')} />
+      <div className={cn(SKELETON_BAR, 'mt-4 h-6 w-2/3 rounded')} />
     </li>
   )
 }
@@ -62,7 +62,7 @@ function PostRow({ post }: { post: BlogPost }) {
     <li>
       <ExternalLink
         href={post.url}
-        className="focus-ring group border-rule bg-surf-0 hover:bg-surf-1 hover:border-miku/40 block rounded-2xl border p-4 transition-colors"
+        className="focus-ring group border-rule bg-surf-0 hover:bg-surf-1 hover:border-miku/40 block rounded-2xl border p-8 transition-colors"
       >
         {date && (
           <time
@@ -72,18 +72,18 @@ function PostRow({ post }: { post: BlogPost }) {
             {date}
           </time>
         )}
-        <span className="mt-1 flex items-start justify-between gap-3">
+        <span className="mt-2 flex items-start justify-between gap-6">
           <span className="font-display text-ink text-base font-semibold">
             {post.title}
           </span>
           <ArrowUpRight
             aria-hidden
             size={16}
-            className="text-ink-3 group-hover:text-miku-2-icon mt-1 shrink-0 transition-colors"
+            className="text-ink-3 group-hover:text-miku-2-icon mt-2 shrink-0 transition-colors"
           />
         </span>
         {post.excerpt && (
-          <span className="text-ink-2 mt-1.5 line-clamp-3 block text-sm">
+          <span className="text-ink-2 mt-3 line-clamp-3 block text-sm">
             {post.excerpt}
           </span>
         )}
@@ -99,7 +99,7 @@ function PostList({ state }: { state: ApiFeedState<BlogPosts> }) {
         <p role="status" className="sr-only">
           Loading posts
         </p>
-        <ul className="space-y-3">
+        <ul className="space-y-6">
           {Array.from({ length: SKELETON_ROWS }, (_, i) => (
             <PostSkeleton key={i} />
           ))}
@@ -124,7 +124,7 @@ function PostList({ state }: { state: ApiFeedState<BlogPosts> }) {
   }
 
   return (
-    <ul className="space-y-3">
+    <ul className="space-y-6">
       {state.data.posts.map((post) => (
         <PostRow key={post.url} post={post} />
       ))}
@@ -136,17 +136,17 @@ export default function WritingApp() {
   const state = useApiFeed('/api/blog-posts', BlogPostsSchema)
 
   return (
-    <div className="font-body text-ink-2 max-w-[720px] text-[14px] leading-relaxed">
+    <div className="font-body text-ink-2 max-w-360 text-[14px] leading-relaxed">
       <div className={cn(EYEBROW_CLASS, 'text-miku-ink')}>Writing</div>
       <h2 className="font-display text-ink text-3xl font-semibold">
         Latest posts
       </h2>
-      <p className="mt-1">
+      <p className="mt-2">
         Field notes on things I build, from my blog at{' '}
         <BlogLink>{BLOG_HOST}</BlogLink>.
       </p>
 
-      <div className="mt-5" aria-busy={state.kind === 'loading'}>
+      <div className="mt-10" aria-busy={state.kind === 'loading'}>
         <PostList state={state} />
       </div>
     </div>

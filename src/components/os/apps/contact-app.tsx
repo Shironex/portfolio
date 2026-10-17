@@ -26,7 +26,7 @@ const ContactForm = dynamic(
     loading: () => (
       <div
         aria-hidden
-        className="border-rule-2 bg-surf-solid h-[420px] animate-pulse rounded-2xl border"
+        className="border-rule-2 bg-surf-solid h-210 animate-pulse rounded-2xl border"
       />
     ),
   }
@@ -43,25 +43,25 @@ type ReachRow = {
 
 const rows: ReachRow[] = [
   {
-    icon: <Mail className="size-4" />,
+    icon: <Mail className="size-8" />,
     label: 'Email',
     value: EMAIL_CONTACT,
     href: `mailto:${EMAIL_CONTACT}`,
     copyValue: EMAIL_CONTACT,
   },
   {
-    icon: <GithubIcon className="size-4" />,
+    icon: <GithubIcon className="size-8" />,
     label: 'GitHub',
     value: GITHUB_URL.replace(/^https?:\/\//, ''),
     href: GITHUB_URL,
   },
   {
-    icon: <MapPin className="size-4" />,
+    icon: <MapPin className="size-8" />,
     label: 'Location',
     value: 'Poland · remote',
   },
   {
-    icon: <Clock className="size-4" />,
+    icon: <Clock className="size-8" />,
     label: 'Timezone',
     value: 'UTC+1 · CET',
   },
@@ -72,25 +72,25 @@ export default function ContactApp() {
 
   return (
     <div className="font-body max-w-4xl">
-      <h2 className="font-display text-ink mb-2 text-3xl font-bold">
+      <h2 className="font-display text-ink mb-4 text-3xl font-bold">
         Get in touch
       </h2>
-      <p className="font-body text-ink-2 mb-6">
+      <p className="font-body text-ink-2 mb-12">
         Full-time roles, contracts, MVPs, or just to talk. I reply within 24
         hours.
       </p>
 
-      <div className="grid gap-6 md:grid-cols-[1fr_320px]">
+      <div className="grid gap-12 md:grid-cols-[1fr_320px]">
         <ContactForm theme={theme} surface="card" />
 
-        <aside className="border-rule-2 bg-surf-solid flex h-fit flex-col gap-3 rounded-2xl border p-5">
-          <div className="font-display text-ink mb-1 text-sm font-bold">
+        <aside className="border-rule-2 bg-surf-solid flex h-fit flex-col gap-6 rounded-2xl border p-10">
+          <div className="font-display text-ink mb-2 text-sm font-bold">
             Reach me
           </div>
           {rows.map((row) => {
             const inner = (
               <>
-                <span className="bg-miku/15 text-miku-ink flex size-9 shrink-0 items-center justify-center rounded-lg">
+                <span className="bg-miku/15 text-miku-ink flex size-18 shrink-0 items-center justify-center rounded-lg">
                   {row.icon}
                 </span>
                 <div className="flex min-w-0 flex-col">
@@ -113,8 +113,8 @@ export default function ContactApp() {
                     rel={row.href.startsWith('http') ? 'noreferrer' : undefined}
                     aria-label={`${row.label}: ${row.value}`}
                     className={cn(
-                      'focus-ring border-rule bg-surf-0 hover:border-miku/40 hover:bg-surf-soft flex items-center gap-3 rounded-xl border p-3 transition-colors',
-                      row.copyValue && 'pr-11'
+                      'focus-ring border-rule bg-surf-0 hover:border-miku/40 hover:bg-surf-soft flex items-center gap-6 rounded-xl border p-6 transition-colors',
+                      row.copyValue && 'pr-22'
                     )}
                   >
                     {inner}
@@ -129,9 +129,9 @@ export default function ContactApp() {
                           `${row.label} copied`
                         )
                       }
-                      className="focus-ring text-ink-4 hover:bg-surf-soft hover:text-miku-2-icon absolute top-1/2 right-2 -translate-y-1/2 rounded-md p-2 transition-colors"
+                      className="focus-ring text-ink-4 hover:bg-surf-soft hover:text-miku-2-icon absolute top-1/2 right-4 -translate-y-1/2 rounded-md p-4 transition-colors"
                     >
-                      <Copy aria-hidden className="size-3.5" />
+                      <Copy aria-hidden className="size-7" />
                     </button>
                   )}
                 </div>
@@ -141,7 +141,7 @@ export default function ContactApp() {
             return (
               <div
                 key={row.label}
-                className="border-rule bg-surf-0 flex items-center gap-3 rounded-xl border p-3"
+                className="border-rule bg-surf-0 flex items-center gap-6 rounded-xl border p-6"
               >
                 {inner}
               </div>

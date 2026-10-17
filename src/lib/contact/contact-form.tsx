@@ -112,9 +112,9 @@ export function ContactForm({
       ref={sentPanel}
       role="status"
       tabIndex={-1}
-      className="flex flex-col items-start gap-3 outline-none"
+      className="flex flex-col items-start gap-6 outline-none"
     >
-      <CheckCircle2 aria-hidden className="text-miku-icon size-8" />
+      <CheckCircle2 aria-hidden className="text-miku-icon size-16" />
       <p className="font-display text-ink text-lg font-bold">Message sent</p>
       <p className="text-ink-2 text-sm">
         Thanks for reaching out. I will reply within 24 hours.
@@ -132,7 +132,7 @@ export function ContactForm({
     <Form {...form}>
       {/* noValidate: the fields are marked required, and the inline messages
           below report it instead of the browser's own bubbles. */}
-      <form onSubmit={handleSubmit} noValidate className="space-y-6">
+      <form onSubmit={handleSubmit} noValidate className="space-y-12">
         <FormField
           control={form.control}
           name="name"
@@ -211,13 +211,13 @@ export function ContactForm({
         <Button
           type="submit"
           disabled={isPending}
-          className="bg-miku text-cloud hover:bg-miku-2 w-full gap-2 font-semibold disabled:opacity-70"
+          className="bg-miku text-cloud hover:bg-miku-2 w-full gap-4 font-semibold disabled:opacity-70"
         >
           {isPending ? 'Sending…' : 'Send message'}
           {isPending ? (
-            <Loader2 aria-hidden className="size-4 motion-safe:animate-spin" />
+            <Loader2 aria-hidden className="size-8 motion-safe:animate-spin" />
           ) : (
-            <Send aria-hidden className="size-4" />
+            <Send aria-hidden className="size-8" />
           )}
         </Button>
       </form>
@@ -226,7 +226,7 @@ export function ContactForm({
 
   if (surface === 'card') {
     return (
-      <div className="border-rule-2 bg-surf-2 rounded-2xl border p-6 backdrop-blur-xl md:p-8">
+      <div className="border-rule-2 bg-surf-2 rounded-2xl border p-12 backdrop-blur-xl md:p-16">
         {formInner}
       </div>
     )

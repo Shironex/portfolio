@@ -146,7 +146,7 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
         白
       </span>
 
-      <div className="relative z-10 flex min-h-dvh flex-col items-center justify-center gap-6 px-6">
+      <div className="relative z-10 flex min-h-dvh flex-col items-center justify-center gap-12 px-12">
         <div className="relative">
           <span
             aria-hidden
@@ -172,7 +172,7 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
               animation: 'spinSlow 2.6s linear infinite reverse',
             }}
           />
-          <div className="animate-logo-pop relative flex size-[110px] items-center justify-center motion-reduce:animate-none">
+          <div className="animate-logo-pop relative flex size-55 items-center justify-center motion-reduce:animate-none">
             <Image
               src="/mascot.png"
               alt="ShiroOS mascot"
@@ -185,7 +185,7 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
           </div>
           <span
             aria-hidden
-            className="text-miku-2-ink animate-bob-note pointer-events-none absolute -top-5 -right-5 text-[28px] [text-shadow:0_2px_6px_color-mix(in_oklab,var(--color-surf-solid)_80%,transparent)] motion-reduce:animate-none"
+            className="text-miku-2-ink animate-bob-note pointer-events-none absolute -top-10 -right-10 text-[28px] [text-shadow:0_2px_6px_color-mix(in_oklab,var(--color-surf-solid)_80%,transparent)] motion-reduce:animate-none"
           >
             ♪
           </span>
@@ -194,33 +194,33 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
         <div className="text-center">
           <div className="font-display text-ink tracking-display text-[22px] font-semibold">
             <b className="text-miku-2-ink font-bold">ShiroOS</b>
-            <span className="mx-1">·</span>
+            <span className="mx-2">·</span>
             <span>booting with love</span>
             <span
               aria-hidden
-              className="animate-bob-note text-miku-2-ink ml-1 inline-block motion-reduce:animate-none"
+              className="animate-bob-note text-miku-2-ink ml-2 inline-block motion-reduce:animate-none"
             >
               ♪
             </span>
           </div>
-          <div className={cn(EYEBROW_CLASS, 'text-ink-4 mt-1.5')}>
+          <div className={cn(EYEBROW_CLASS, 'text-ink-4 mt-3')}>
             シロOS · portfolio build
           </div>
         </div>
 
-        <div className="grid w-[300px] gap-1" role="status" aria-live="polite">
+        <div className="grid w-150 gap-2" role="status" aria-live="polite">
           {STEPS.map((s, i) => {
             const state: 'done' | 'run' | 'wait' =
               i < step ? 'done' : i === step ? 'run' : 'wait'
             return (
               <div
                 key={s.label}
-                className="border-rule bg-surf-0 font-body text-ink-2 grid grid-cols-[16px_1fr_auto] items-center gap-2 rounded-md border px-2.5 py-1.5 text-[11px]"
+                className="border-rule bg-surf-0 font-body text-ink-2 grid grid-cols-[16px_1fr_auto] items-center gap-4 rounded-md border px-5 py-3 text-[11px]"
               >
                 <span
                   aria-hidden
                   className={cn(
-                    'flex size-4 items-center justify-center rounded-full text-[11px] leading-none font-bold',
+                    'flex size-8 items-center justify-center rounded-full text-[11px] leading-none font-bold',
                     state === 'done'
                       ? 'border-miku-3 bg-miku-3/30 text-ink border'
                       : state === 'run'
@@ -244,7 +244,7 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
           type="button"
           onClick={dismiss}
           aria-keyshortcuts="Escape Enter Space"
-          className="focus-ring border-rule-2 bg-surf-0 text-ink-3 hover:bg-surf-1 hover:text-ink tracking-eyebrow rounded-full border px-4 py-1.5 font-mono text-[11px] uppercase transition-colors"
+          className="focus-ring border-rule-2 bg-surf-0 text-ink-3 hover:bg-surf-1 hover:text-ink tracking-eyebrow rounded-full border px-8 py-3 font-mono text-[11px] uppercase transition-colors"
         >
           skip · esc
         </button>

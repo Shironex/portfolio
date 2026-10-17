@@ -26,18 +26,18 @@ function TerminalPanelImpl() {
 
   return (
     <div className="border-rule-2 bg-surf-solid overflow-hidden rounded-2xl border">
-      <div className="border-rule bg-surf-soft flex items-center gap-3 border-b px-3 py-2">
-        <span aria-hidden className="flex items-center gap-1.5">
-          <span className="bg-danger/50 size-2 rounded-full" />
-          <span className="bg-peach/50 size-2 rounded-full" />
-          <span className="bg-miku-3/60 size-2 rounded-full" />
+      <div className="border-rule bg-surf-soft flex items-center gap-6 border-b px-6 py-4">
+        <span aria-hidden className="flex items-center gap-3">
+          <span className="bg-danger/50 size-4 rounded-full" />
+          <span className="bg-peach/50 size-4 rounded-full" />
+          <span className="bg-miku-3/60 size-4 rounded-full" />
         </span>
         <span className="text-ink flex-1 font-mono text-xs font-bold">
           ~/kacper · zsh
         </span>
       </div>
 
-      <div className="text-ink-2 min-h-[200px] p-4 font-mono text-xs">
+      <div className="text-ink-2 min-h-100 p-8 font-mono text-xs">
         {TERMINAL_BLOCKS.map((block, blockIdx) => {
           const promptIdx = cursor++
           const outputIndices = block.output.map(() => cursor++)
@@ -45,14 +45,14 @@ function TerminalPanelImpl() {
           return (
             <div
               key={block.prompt}
-              className={blockIdx > 0 ? 'mt-3' : undefined}
+              className={blockIdx > 0 ? 'mt-6' : undefined}
             >
               <div
                 className="motion-safe:animate-term-in"
                 style={staggerAt(promptIdx)}
               >
                 <span className="text-miku-2-ink font-bold">~/kacper</span>
-                <span aria-hidden className="text-miku-ink mx-1.5 font-bold">
+                <span aria-hidden className="text-miku-ink mx-3 font-bold">
                   ❯
                 </span>
                 <span className="text-ink">{block.prompt}</span>
@@ -68,16 +68,16 @@ function TerminalPanelImpl() {
               ))}
               {isLast && (
                 <div
-                  className="motion-safe:animate-term-in mt-3"
+                  className="motion-safe:animate-term-in mt-6"
                   style={staggerAt(cursor)}
                 >
                   <span className="text-miku-2-ink font-bold">~/kacper</span>
-                  <span aria-hidden className="text-miku-ink mx-1.5 font-bold">
+                  <span aria-hidden className="text-miku-ink mx-3 font-bold">
                     ❯
                   </span>
                   <span
                     aria-hidden
-                    className="animate-blink ambient-loop text-miku-ink ml-0.5 motion-reduce:animate-none"
+                    className="animate-blink ambient-loop text-miku-ink ml-1 motion-reduce:animate-none"
                   >
                     ▌
                   </span>
