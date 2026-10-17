@@ -630,10 +630,19 @@ describe('gen-chrome', () => {
     )
     assert.match(out, /\.px-window \{\n {2}border-style: solid;/)
     assert.match(out, /border-image-slice: 2 2 2 2 fill;/)
+    // Drawn at a length, since a border width is snapped to whole px; the
+    // widths are variables on :root, in their shortest form.
+    assert.match(
+      out,
+      /border-width: var\(--px2\);\n {2}border-image-width: var\(--px2\);/
+    )
+    assert.match(
+      out,
+      /:root \{\n {2}--px1: var\(--px\);\n {2}--px2: calc\(2 \* var\(--px\)\);/
+    )
     assert.match(out, /border-image-repeat: round;/) // the button's slice data
     assert.match(out, /shape-rendering='crispEdges'/)
-    // Stretch and a width of one border are the defaults; not written.
-    assert.ok(!out.includes('border-image-width'))
+    // Stretch is the default; not written.
     assert.ok(!out.includes('border-image-repeat: stretch'))
   })
 
@@ -701,6 +710,10 @@ describe('gen-chrome', () => {
       )[1]
       .split('}')[0]
     assert.match(down, /border-image-slice: 2 1 1 1 fill;/) // moved down a row
+    assert.match(
+      down,
+      /border-image-width: var\(--px2\) var\(--px1\) var\(--px1\);/
+    )
     assert.match(
       out,
       /\.px-button-plain:is\(:disabled, \[aria-disabled='true'\]\) \{/

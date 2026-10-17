@@ -9,7 +9,7 @@
  *   - one slice per piece, named in kebab case; the class is `.px-<name>`
  *   - a slice with a 9-slice centre (set in Aseprite) becomes a border-image:
  *     the border widths are the distances from the centre to the edges, in
- *     art px, and the centre fills the box (`fill`). When the centre is one
+ *     art px (`--px<n>` on `:root`), and the centre fills the box (`fill`). When the centre is one
  *     colour the box also gets it as its `background-color`, clipped to the
  *     padding box (the notched corners stay clear): what a contrast probe or
  *     forced colours mode reads, since neither sees a border image
@@ -195,18 +195,36 @@ function slicePiece(sheet, slice, paperNames) {
   }
 }
 
-/** The declarations that draw a 9-slice grid; `base` is what they replace. */
+/** `n` art px as a border width: one of the `--px<n>` variables. */
+const borderPx = (n) => (n === 0 ? '0' : `var(--px${n})`)
+
+/** Four widths (top, right, bottom, left) in their shortest CSS form. */
+function boxShorthand([t, r, b, l]) {
+  if (r !== l) return `${t} ${r} ${b} ${l}`
+  if (t !== b) return `${t} ${r} ${b}`
+  return t === r ? t : `${t} ${r}`
+}
+
+/**
+ * The declarations that draw a 9-slice grid; `base` is what they replace.
+ *
+ * The slices are drawn at `border-image-width`, a length, and not at the
+ * border width: a border width is snapped, and Chromium floors it to a whole
+ * px (`4.8px` at DPR 1.25 computes to `4px`), which would squeeze the frame
+ * by a device pixel. The border width still insets the content.
+ */
 function nineSlice(grid, center, repeat, base) {
   const insets = sliceInsets({
     bounds: { w: grid[0].length, h: grid.length },
     center,
   })
-  const widths = insets.map(artPx).join(' ')
+  const widths = boxShorthand(insets.map(borderPx))
   const fill = centreColour(grid, center)
   const out = []
   if (!base) out.push('border-style: solid;')
   if (!base || !same(base.insets, insets)) {
     out.push(`border-width: ${widths};`)
+    out.push(`border-image-width: ${widths};`)
   }
   out.push(`border-image-source: ${url(grid)};`)
   if (!base || !same(base.insets, insets)) {
@@ -418,19 +436,18 @@ export function chromeCss(
     ' */',
     '',
   ]
-  const variables = tiles.length
-    ? [
-        rule(
-          ':root',
-          tiles.map((t) => `--px-${t.name}: ${url(t.frames[0].grid)};`)
-        ),
-        '',
-      ]
-    : []
+  const body = blocks.map((b) => b.css).join('\n\n')
+  // The border widths the rules use, once each, and the tiles.
+  const widths = [...new Set(body.match(/(?<=var\(--px)\d+(?=\))/g))]
+    .map(Number)
+    .sort((a, b) => a - b)
+    .map((n) => `--px${n}: ${n === 1 ? 'var(--px)' : artPx(n)};`)
+  const tileVars = tiles.map((t) => `--px-${t.name}: ${url(t.frames[0].grid)};`)
+  const variables = [...widths, ...tileVars]
   return [
     ...header,
-    ...variables,
-    blocks.map((b) => b.css).join('\n\n'),
+    ...(variables.length ? [rule(':root', variables), ''] : []),
+    body,
     '',
   ].join('\n')
 }
