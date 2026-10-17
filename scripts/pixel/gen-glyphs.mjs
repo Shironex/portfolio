@@ -1,0 +1,239 @@
+/**
+ * UI glyphs as inline SVG (SPEC 2.4, Icons): every 8x8 cell of the 1-bit glyph
+ * atlas becomes one path of merged pixel runs, drawn in `currentColor`, so a
+ * glyph takes its colour from the text around it and the contrast gate
+ * covers it like text.
+ *
+ *   pnpm art:glyphs            write src/components/pixel/pixel-icon.generated.tsx
+ *   pnpm art:glyphs --check    fail if that file is stale
+ *   node scripts/pixel/gen-glyphs.mjs --in <sheet.json> --out <file.tsx>
+ *
+ * Atlas contract (os-glyphs-8.aseprite, exported by `pnpm art:export`):
+ *   - one slice per glyph, named in kebab case (`close`, `arrow-left`)
+ *   - any opaque pixel is "on"; a glyph uses one colour only (1-bit)
+ *   - an animated glyph either has a tag of the same name (its frames, its
+ *     durations) or is split into slices `<name>-0`, `<name>-1`, ... (frames
+ *     in that order, 100ms each unless the slice data says `ms=<n>`)
+ *
+ * The component draws one frame (`frame`, default 0). Stepping an animated
+ * glyph is the consumer's job (the shared ticker, SPEC 3.9), so a spinner
+ * honours pause and reduced motion like every other loop.
+ */
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { join, relative } from 'node:path'
+
+import { formatSource, isMain } from './cli.mjs'
+import { ROOT } from './export-art.mjs'
+import {
+  loadSheet,
+  readRegion,
+  sliceKey,
+  sliceOptions,
+  tagFrames,
+} from './sheet.mjs'
+import { mergeRuns, rectsToPath } from './svg.mjs'
+
+const DEFAULT_IN = join(
+  ROOT,
+  'src',
+  'assets',
+  'pixel',
+  'glyphs',
+  'os-glyphs-8.json'
+)
+const DEFAULT_OUT = join(
+  ROOT,
+  'src',
+  'components',
+  'pixel',
+  'pixel-icon.generated.tsx'
+)
+const DEFAULT_FRAME_MS = 100
+const NAME = /^[a-z][a-z0-9]*(-[a-z0-9]+)*$/
+
+/** One frame of a glyph as path data; throws if it is not 1-bit. */
+function framePath(sheet, slice, frameIndex) {
+  const { bounds } = sliceKey(slice, frameIndex)
+  const grid = readRegion(sheet, frameIndex, bounds)
+  const colours = new Set(grid.flat().filter(Boolean))
+  if (colours.size > 1) {
+    throw new Error(
+      `glyph "${slice.name}" frame ${frameIndex} uses ${colours.size} colours ` +
+        `(${[...colours].join(', ')}); glyphs are 1-bit`
+    )
+  }
+  const on = grid.map((row) => row.map((cell) => cell !== null))
+  return { d: rectsToPath(mergeRuns(on).true ?? []), w: bounds.w, h: bounds.h }
+}
+
+/** `{ name: { w, h, frames: [d], ms: [n] } }` from a loaded glyph sheet. */
+export function readGlyphs(sheet) {
+  const { slices, frameTags } = sheet.data.meta
+  if (slices.length === 0) {
+    throw new Error(`${sheet.json}: no slices; every glyph needs a named slice`)
+  }
+  const glyphs = {}
+  const numbered = new Map() // base name -> [{ index, slice }]
+
+  for (const slice of slices) {
+    const match = /^(.*)-(\d+)$/.exec(slice.name)
+    if (match && !frameTags.some((t) => t.name === slice.name)) {
+      const list = numbered.get(match[1]) ?? []
+      list.push({ index: Number(match[2]), slice })
+      numbered.set(match[1], list)
+      continue
+    }
+    const tag = frameTags.find((t) => t.name === slice.name)
+    const order = tag ? tagFrames(tag) : [0]
+    const frames = order.map((i) => framePath(sheet, slice, i))
+    glyphs[slice.name] = {
+      w: frames[0].w,
+      h: frames[0].h,
+      frames: frames.map((f) => f.d),
+      ms: order.map((i) => sheet.data.frames[i].duration),
+    }
+  }
+
+  for (const [name, list] of numbered) {
+    // A lone `<name>-<n>` is a plain glyph whose name ends in a number.
+    if (list.length === 1 && !glyphs[name]) {
+      const { slice } = list[0]
+      const frame = framePath(sheet, slice, 0)
+      glyphs[slice.name] = {
+        w: frame.w,
+        h: frame.h,
+        frames: [frame.d],
+        ms: [0],
+      }
+      continue
+    }
+    list.sort((a, b) => a.index - b.index)
+    const frames = list.map(({ slice }) => framePath(sheet, slice, 0))
+    glyphs[name] = {
+      w: frames[0].w,
+      h: frames[0].h,
+      frames: frames.map((f) => f.d),
+      ms: list.map(({ slice }) =>
+        Number(sliceOptions(slice).ms ?? DEFAULT_FRAME_MS)
+      ),
+    }
+  }
+
+  for (const [name, glyph] of Object.entries(glyphs)) {
+    if (!NAME.test(name))
+      throw new Error(`glyph name "${name}" is not kebab case`)
+    if (glyph.frames.length === 1) glyph.ms = [0]
+  }
+  return Object.fromEntries(
+    Object.entries(glyphs).sort(([a], [b]) => a.localeCompare(b))
+  )
+}
+
+/** The generated module's source. */
+export function glyphModuleSource(
+  glyphs,
+  source = 'src/assets/pixel/glyphs/os-glyphs-8.json'
+) {
+  const rows = Object.entries(glyphs).map(([name, g]) => {
+    const frames = g.frames.map((d) => `'${d}'`).join(', ')
+    const ms = g.frames.length > 1 ? `, ms: [${g.ms.join(', ')}]` : ''
+    return `  '${name}': { w: ${g.w}, h: ${g.h}, frames: [${frames}]${ms} },`
+  })
+  return `/**
+ * GENERATED by scripts/pixel/gen-glyphs.mjs from ${source}.
+ * Do not edit by hand: re-export the glyph atlas and run \`pnpm art:glyphs\`.
+ */
+import type { CSSProperties, SVGProps } from 'react'
+
+interface PixelGlyph {
+  /** Size in art px. */
+  readonly w: number
+  readonly h: number
+  /** Path data per frame, in art px. */
+  readonly frames: readonly string[]
+  /** Frame durations in ms, for animated glyphs. */
+  readonly ms?: readonly number[]
+}
+
+export const PIXEL_GLYPHS = {
+${rows.join('\n')}
+} as const satisfies Record<string, PixelGlyph>
+
+export type PixelIconName = keyof typeof PIXEL_GLYPHS
+
+export interface PixelIconProps
+  extends Omit<SVGProps<SVGSVGElement>, 'name' | 'children'> {
+  name: PixelIconName
+  /** Frame of an animated glyph; wraps around. */
+  frame?: number
+}
+
+/**
+ * A pixel glyph at one art pixel per \`--px\`, in \`currentColor\`. Decorative
+ * by default (\`aria-hidden\`): the control it sits in carries the name.
+ */
+export function PixelIcon({ name, frame = 0, style, ...rest }: PixelIconProps) {
+  const glyph: PixelGlyph = PIXEL_GLYPHS[name]
+  const size: CSSProperties = {
+    width: \`calc(\${glyph.w} * var(--px))\`,
+    height: \`calc(\${glyph.h} * var(--px))\`,
+    flex: 'none',
+  }
+  return (
+    <svg
+      viewBox={\`0 0 \${glyph.w} \${glyph.h}\`}
+      fill="currentColor"
+      shapeRendering="crispEdges"
+      aria-hidden
+      focusable="false"
+      data-pixel-icon={name}
+      style={{ ...size, ...style }}
+      {...rest}
+    >
+      <path d={glyph.frames[frame % glyph.frames.length]} />
+    </svg>
+  )
+}
+`
+}
+
+/** The generated module, formatted as the repo formats `out`. */
+export function glyphModule(glyphs, out = DEFAULT_OUT, source) {
+  return formatSource(glyphModuleSource(glyphs, source), out)
+}
+
+async function main(argv) {
+  const at = (flag, fallback) => {
+    const i = argv.indexOf(flag)
+    return i > -1 ? argv[i + 1] : fallback
+  }
+  const input = at('--in', DEFAULT_IN)
+  const out = at('--out', DEFAULT_OUT)
+  if (!existsSync(input)) {
+    console.error(
+      `${relative(ROOT, input)} does not exist yet. Run: pnpm art:export --only glyphs`
+    )
+    process.exit(1)
+  }
+  const glyphs = readGlyphs(await loadSheet(input))
+  const source = relative(ROOT, input).split('\\').join('/')
+  const tsx = await glyphModule(glyphs, out, source)
+  const count = Object.keys(glyphs).length
+  if (argv.includes('--check')) {
+    if (!existsSync(out) || readFileSync(out, 'utf8') !== tsx) {
+      console.error(`${relative(ROOT, out)} is stale. Run: pnpm art:glyphs`)
+      process.exit(1)
+    }
+    console.log(`glyphs up to date: ${count}`)
+    return
+  }
+  writeFileSync(out, tsx)
+  console.log(`wrote ${relative(ROOT, out)}: ${count} glyph(s)`)
+}
+
+if (isMain(import.meta.url)) {
+  main(process.argv.slice(2)).catch((error) => {
+    console.error(error.message)
+    process.exit(1)
+  })
+}
