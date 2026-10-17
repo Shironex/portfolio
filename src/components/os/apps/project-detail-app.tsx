@@ -205,8 +205,9 @@ function GalleryLightbox({
         </div>
         {(item.caption || hasMany) && (
           // Fixed white, like the scrim is fixed black: `cloud` follows the
-          // mode and would be dark on dark here.
-          <p className="font-body mt-6 min-h-20 max-w-2xl text-center text-sm text-white">
+          // mode and would be dark on dark here. Two lines are kept free so a
+          // caption that wraps does not move the frame and its buttons.
+          <p className="font-body mt-6 min-h-[2lh] max-w-2xl text-center text-sm text-white">
             {hasMany && (
               <span className="mr-4 font-mono text-xs text-white/70 tabular-nums">
                 {index + 1} / {items.length}
