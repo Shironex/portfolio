@@ -14,8 +14,11 @@ import {
   dockFlags,
   dockZoneOf,
   rectOf,
+  sameRect,
   snapBounds,
+  snapRect,
 } from '@/lib/os/geometry'
+import { onArtPixelChange } from '@/lib/os/pixel'
 import { rafThrottle } from '@/lib/utils/raf-throttle'
 
 /**
@@ -120,22 +123,33 @@ function undock(ws: WindowState[], id: WindowId, rect?: Rect): WindowState[] {
 export function useWindowStack() {
   const [windows, setWindows] = useState<WindowState[]>([])
 
-  // Docked windows follow the desktop area when the viewport changes size.
+  // Docked windows follow the desktop area when the viewport changes size,
+  // and every window is put back on whole art px when the art pixel changes
+  // (browser zoom, a move to another screen).
   useEffect(() => {
-    const redock = rafThrottle(() => {
+    const refit = rafThrottle(() => {
       setWindows((ws) => {
-        if (!ws.some((w) => dockZoneOf(w) !== null)) return ws
         const area = measureDesktopArea()
-        return ws.map((w) => {
+        let changed = false
+        const next = ws.map((w) => {
           const zone = dockZoneOf(w)
-          return zone ? { ...w, ...snapBounds(zone, area, w.minW) } : w
+          const rect = zone ? snapBounds(zone, area, w.minW) : snapRect(w)
+          const prev = w.prevGeometry && snapRect(w.prevGeometry)
+          const samePrev =
+            !prev || !w.prevGeometry || sameRect(prev, w.prevGeometry)
+          if (sameRect(rect, w) && samePrev) return w
+          changed = true
+          return { ...w, ...rect, prevGeometry: prev }
         })
+        return changed ? next : ws
       })
     })
-    window.addEventListener('resize', redock.schedule)
+    window.addEventListener('resize', refit.schedule)
+    const stopPx = onArtPixelChange(refit.schedule)
     return () => {
-      window.removeEventListener('resize', redock.schedule)
-      redock.cancel()
+      window.removeEventListener('resize', refit.schedule)
+      stopPx()
+      refit.cancel()
     }
   }, [])
 

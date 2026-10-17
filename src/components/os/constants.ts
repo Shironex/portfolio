@@ -85,16 +85,17 @@ export function windowNameFor(win: WindowState): string {
   )
 }
 
+/** Where each app window opens and how big, in art px (SPEC 2.4). */
 export const APP_WINDOW_DEFAULTS: Record<
   AppId,
   { title: string; icon: string; x: number; y: number; w: number; h: number }
 > = {
-  projects: { title: 'projects.app', icon: '▦', x: 120, y: 90, w: 900, h: 620 },
-  about: { title: 'about.me', icon: '◌', x: 180, y: 120, w: 820, h: 580 },
-  skills: { title: 'monitor.sys', icon: '▤', x: 220, y: 130, w: 780, h: 560 },
-  contact: { title: 'contact.app', icon: '✉', x: 260, y: 110, w: 820, h: 580 },
-  writing: { title: 'writing.rss', icon: '✎', x: 340, y: 100, w: 720, h: 600 },
-  readme: { title: 'readme.md', icon: '¶', x: 300, y: 150, w: 640, h: 500 },
+  projects: { title: 'projects.app', icon: '▦', x: 60, y: 45, w: 450, h: 310 },
+  about: { title: 'about.me', icon: '◌', x: 90, y: 60, w: 410, h: 290 },
+  skills: { title: 'monitor.sys', icon: '▤', x: 110, y: 65, w: 390, h: 280 },
+  contact: { title: 'contact.app', icon: '✉', x: 130, y: 55, w: 410, h: 290 },
+  writing: { title: 'writing.rss', icon: '✎', x: 170, y: 50, w: 360, h: 300 },
+  readme: { title: 'readme.md', icon: '¶', x: 150, y: 75, w: 320, h: 250 },
 }
 
 /*

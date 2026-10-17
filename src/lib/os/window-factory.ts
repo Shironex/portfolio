@@ -2,10 +2,14 @@ import { APP_WINDOW_DEFAULTS } from '@/components/os/constants'
 import type { AppId, WindowId, WindowState } from '@/components/os/types'
 
 import { cascadeOrigin } from '@/lib/os/geometry'
+import { artPx } from '@/lib/os/pixel'
 
 import type { Project } from '@/types'
 
 const PROJECT_WINDOW_PREFIX = 'project-'
+
+/** Size of a new project window, in art px. */
+const PROJECT_WINDOW_SIZE = { w: 410, h: 300 } as const
 
 /** Id of the window that shows the project with this slug. */
 export function projectWindowId(slug: string): WindowId {
@@ -23,8 +27,8 @@ export function projectSlugForWindow(id: WindowId): string {
 }
 
 /**
- * Build a fresh app `WindowState` from its registry defaults at z-index `z`.
- * Collapses the construction half of the old `openApp`.
+ * Build a fresh app `WindowState` from its registry defaults (art px) at
+ * z-index `z`. Collapses the construction half of the old `openApp`.
  */
 export function createAppWindow(appId: AppId, z: number): WindowState {
   const cfg = APP_WINDOW_DEFAULTS[appId]
@@ -32,10 +36,10 @@ export function createAppWindow(appId: AppId, z: number): WindowState {
     id: appId,
     title: cfg.title,
     icon: cfg.icon,
-    x: cfg.x,
-    y: cfg.y,
-    w: cfg.w,
-    h: cfg.h,
+    x: artPx(cfg.x),
+    y: artPx(cfg.y),
+    w: artPx(cfg.w),
+    h: artPx(cfg.h),
     z,
     minimized: false,
     maximized: false,
@@ -58,8 +62,8 @@ export function createProjectWindow(
     icon: '◆',
     x: origin.x,
     y: origin.y,
-    w: 820,
-    h: 600,
+    w: artPx(PROJECT_WINDOW_SIZE.w),
+    h: artPx(PROJECT_WINDOW_SIZE.h),
     z,
     minimized: false,
     maximized: false,

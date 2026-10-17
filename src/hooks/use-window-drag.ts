@@ -23,6 +23,7 @@ import {
   undockRect,
   viewportSize,
 } from '@/lib/os/geometry'
+import { snapToArt } from '@/lib/os/pixel'
 
 import { isPrimaryPress, pointOf, usePointerDrag } from './use-pointer-drag'
 
@@ -75,6 +76,9 @@ function writeRect(el: HTMLElement, rect: Rect, shown?: Rect) {
  * the preview); dragging a snapped or maximized window away gives it its old
  * size back under the pointer. Two taps on the title bar toggle maximize,
  * whatever the pointer: `dblclick` is not dependable on touch.
+ *
+ * A gesture moves the window in whole art px (the geometry helpers snap), so
+ * the chrome stays crisp while it moves, not only where it lands.
  *
  * While a gesture moves the window the document is marked (`markGesture`),
  * which holds the decorative loops still.
@@ -209,8 +213,9 @@ export function useWindowDrag({
     startPointer(e, e.currentTarget, {
       onFrame: (point) => {
         if (!patch) markGesture(true)
-        const dx = point.x - start.x
-        const dy = point.y - start.y
+        // Whole art px, so the edge the handle does not move stays put.
+        const dx = snapToArt(point.x - start.x)
+        const dy = snapToArt(point.y - start.y)
         patch = {}
         if (dir.includes('e')) patch.w = current.w + dx
         if (dir.includes('s')) patch.h = current.h + dy

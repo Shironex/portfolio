@@ -44,12 +44,25 @@ export function onArtPixelChange(listener: (px: number) => void): () => void {
   return () => window.removeEventListener(ART_PIXEL_EVENT, handler)
 }
 
+/**
+ * A CSS length rid of float noise (`41 * 2.4` is `98.39999999999999`), so a
+ * snapped length is written as `98.4px` and compares equal to itself.
+ */
+function tidy(value: number): number {
+  return Math.round(value * 1e4) / 1e4
+}
+
 /** `n` art pixels in CSS pixels. */
 export function artPx(n: number, px = artPixel()): number {
-  return n * px
+  return tidy(n * px)
 }
 
 /** A CSS length snapped to the nearest whole number of art pixels. */
 export function snapToArt(value: number, px = artPixel()): number {
-  return Math.round(value / px) * px
+  return tidy(Math.round(value / px) * px)
+}
+
+/** A CSS length snapped down to a whole number of art pixels. */
+export function floorToArt(value: number, px = artPixel()): number {
+  return tidy(Math.floor(value / px + 1e-6) * px)
 }

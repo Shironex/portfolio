@@ -8,54 +8,61 @@
  *   {@link MOVE_VIEWPORT_MARGIN} / {@link MAXIMIZED_INSET} / {@link CASCADE_OFFSET}.
  * - `Window` (pointer-resize clamp) uses {@link RESIZE_VIEWPORT_MARGIN}.
  *
+ * The constants are in art px (SPEC 2.1); rects are in CSS px, and every rect
+ * these functions return is snapped to whole art px, so window chrome lands
+ * on device pixels wherever it is dragged or docked. The art pixel is read at
+ * call time (`artPixel`), like the viewport.
+ *
  * Functions are SSR-safe: they read `window` only at call time and fall back
  * to sensible defaults when it is unavailable.
  */
+import { artPixel, artPx, floorToArt, snapToArt } from './pixel'
 
-/** Margins used when clamping a moved window into the viewport (use-os-windows). */
+/** Margins used when clamping a moved window into the viewport, in art px. */
 export const MOVE_VIEWPORT_MARGIN = {
   /** Smallest allowed left edge. */
-  minX: 4,
+  minX: 2,
   /** Smallest allowed top edge. */
-  minY: 32,
+  minY: 16,
   /** Right edge keeps this much of the window reachable past `innerWidth`. */
-  right: 200,
+  right: 100,
   /** Bottom edge keeps this much of the window reachable past `innerHeight`. */
-  bottom: 100,
+  bottom: 50,
 } as const
 
-/** Inset of the usable desktop area from the viewport edges. */
-export const MAXIMIZED_INSET = { top: 44, bottom: 64, side: 8 } as const
+/** Inset of the usable desktop area from the viewport edges, in art px. */
+export const MAXIMIZED_INSET = { top: 22, bottom: 32, side: 4 } as const
 
-/** Cascade origin + per-window step for newly opened project windows. */
+/** Cascade origin + per-window step for new project windows, in art px. */
 export const CASCADE_OFFSET = {
-  baseX: 200,
-  baseY: 110,
-  stepX: 20,
-  stepY: 18,
+  baseX: 100,
+  baseY: 55,
+  stepX: 10,
+  stepY: 9,
 } as const
 
-/** Margins used when clamping a resized window (window.tsx pointer resize). */
+/** Margins used when clamping a resized window, in art px. */
 export const RESIZE_VIEWPORT_MARGIN = {
   /** Reserved width past `innerWidth` (matches the desktop chrome gutter). */
-  right: 16,
+  right: 8,
   /** Reserved height past `innerHeight` (taskbar + menubar). */
-  bottom: 80,
+  bottom: 40,
   /** Smallest allowed left edge. */
   minX: 0,
   /** Smallest allowed top edge. */
-  minY: 32,
-  /** Fallback dimension when there is no viewport (SSR). */
+  minY: 16,
+  /** Fallback dimension when there is no viewport (SSR), in CSS px. */
   ssrFallback: 4096,
 } as const
 
-/** Smallest size a window can be resized to unless it sets its own. */
-export const DEFAULT_MIN_SIZE = { w: 320, h: 240 } as const
+/** Smallest size a window can be resized to unless it sets its own, in art px. */
+export const DEFAULT_MIN_SIZE = { w: 160, h: 120 } as const
 
 /**
- * Pointer travel under which a press and release is a tap, not a drag. Below
- * it a window does not move, snap or come loose from where it is docked, so
- * a shaky click or the first tap of a double tap changes nothing.
+ * Pointer travel under which a press and release is a tap, not a drag, in
+ * CSS px (it is about the hand, not the art). Below it a window does not
+ * move, snap or come loose from where it is docked, so a shaky click or the
+ * first tap of a double tap changes nothing.
  */
 export const DRAG_SLOP = 6
 
@@ -109,6 +116,16 @@ export function distance(a: Point, b: Point): number {
   return Math.hypot(a.x - b.x, a.y - b.y)
 }
 
+/** A rect with every edge on a whole art pixel. */
+export function snapRect({ x, y, w, h }: Rect, px = artPixel()): Rect {
+  return {
+    x: snapToArt(x, px),
+    y: snapToArt(y, px),
+    w: snapToArt(w, px),
+    h: snapToArt(h, px),
+  }
+}
+
 export function sameRect(a: Rect, b: Rect): boolean {
   return a.x === b.x && a.y === b.y && a.w === b.w && a.h === b.h
 }
@@ -145,14 +162,16 @@ export function clampWindowToViewport(
   y: number,
   viewport: Size | null = viewportSize()
 ): { x: number; y: number } {
-  if (!viewport) return { x, y }
+  const px = artPixel()
+  if (!viewport) return { x: snapToArt(x, px), y: snapToArt(y, px) }
+  const m = MOVE_VIEWPORT_MARGIN
   const nx = Math.max(
-    MOVE_VIEWPORT_MARGIN.minX,
-    Math.min(viewport.w - MOVE_VIEWPORT_MARGIN.right, x)
+    artPx(m.minX, px),
+    Math.min(floorToArt(viewport.w - artPx(m.right, px), px), snapToArt(x, px))
   )
   const ny = Math.max(
-    MOVE_VIEWPORT_MARGIN.minY,
-    Math.min(viewport.h - MOVE_VIEWPORT_MARGIN.bottom, y)
+    artPx(m.minY, px),
+    Math.min(floorToArt(viewport.h - artPx(m.bottom, px), px), snapToArt(y, px))
   )
   return { x: nx, y: ny }
 }
@@ -164,18 +183,18 @@ export function clampWindowToViewport(
  * it in (see `measureDesktopArea`) so a docked window stays clear of it.
  */
 export function desktopArea(safeBottom = 0): Rect {
-  if (typeof window === 'undefined') {
-    return { x: MAXIMIZED_INSET.side, y: MAXIMIZED_INSET.top, w: 1200, h: 600 }
-  }
+  const px = artPixel()
+  const x = artPx(MAXIMIZED_INSET.side, px)
+  const y = artPx(MAXIMIZED_INSET.top, px)
+  if (typeof window === 'undefined') return { x, y, w: 1200, h: 600 }
   return {
-    x: MAXIMIZED_INSET.side,
-    y: MAXIMIZED_INSET.top,
-    w: window.innerWidth - MAXIMIZED_INSET.side * 2,
-    h:
-      window.innerHeight -
-      MAXIMIZED_INSET.top -
-      MAXIMIZED_INSET.bottom -
-      safeBottom,
+    x,
+    y,
+    w: floorToArt(window.innerWidth - 2 * x, px),
+    h: floorToArt(
+      window.innerHeight - y - artPx(MAXIMIZED_INSET.bottom, px) - safeBottom,
+      px
+    ),
   }
 }
 
@@ -185,15 +204,15 @@ export function desktopArea(safeBottom = 0): Rect {
  */
 export function cascadeOrigin(openCount: number): { x: number; y: number } {
   return {
-    x: CASCADE_OFFSET.baseX + openCount * CASCADE_OFFSET.stepX,
-    y: CASCADE_OFFSET.baseY + openCount * CASCADE_OFFSET.stepY,
+    x: artPx(CASCADE_OFFSET.baseX + openCount * CASCADE_OFFSET.stepX),
+    y: artPx(CASCADE_OFFSET.baseY + openCount * CASCADE_OFFSET.stepY),
   }
 }
 
 /**
- * Clamp a resize patch against the viewport and per-window min size.
- * Matches the original clamp inside `resize` in `use-os-windows.ts`
- * (mins 0/32, margins 16/80, 4096 SSR fallback).
+ * Clamp a resize patch against the viewport and the minimum size (CSS px),
+ * snapped to art px. Matches the original clamp inside `resize` in
+ * `use-os-windows.ts` (mins 0/16, margins 8/40 art px, 4096 SSR fallback).
  */
 export function clampResize(
   current: Rect,
@@ -202,22 +221,25 @@ export function clampResize(
   minH: number,
   viewport: Size | null = viewportSize()
 ): Rect {
-  const nextW = Math.max(minW, patch.w ?? current.w)
-  const nextH = Math.max(minH, patch.h ?? current.h)
+  const px = artPixel()
+  const m = RESIZE_VIEWPORT_MARGIN
+  const snap = (value: number) => snapToArt(value, px)
+  const nextW = Math.max(snap(minW), snap(patch.w ?? current.w))
+  const nextH = Math.max(snap(minH), snap(patch.h ?? current.h))
   const maxWidth = viewport
-    ? viewport.w - RESIZE_VIEWPORT_MARGIN.right
-    : RESIZE_VIEWPORT_MARGIN.ssrFallback
+    ? floorToArt(viewport.w - artPx(m.right, px), px)
+    : m.ssrFallback
   const maxHeight = viewport
-    ? viewport.h - RESIZE_VIEWPORT_MARGIN.bottom
-    : RESIZE_VIEWPORT_MARGIN.ssrFallback
+    ? floorToArt(viewport.h - artPx(m.bottom, px), px)
+    : m.ssrFallback
   return {
     x: Math.max(
-      RESIZE_VIEWPORT_MARGIN.minX,
-      Math.min(maxWidth - minW, patch.x ?? current.x)
+      artPx(m.minX, px),
+      Math.min(maxWidth - snap(minW), snap(patch.x ?? current.x))
     ),
     y: Math.max(
-      RESIZE_VIEWPORT_MARGIN.minY,
-      Math.min(maxHeight - minH, patch.y ?? current.y)
+      artPx(m.minY, px),
+      Math.min(maxHeight - snap(minH), snap(patch.y ?? current.y))
     ),
     w: Math.min(maxWidth, nextW),
     h: Math.min(maxHeight, nextH),
@@ -234,8 +256,8 @@ export function clampWindowRect(
   return clampResize(
     rect,
     patch,
-    win.minW ?? DEFAULT_MIN_SIZE.w,
-    win.minH ?? DEFAULT_MIN_SIZE.h,
+    win.minW ?? artPx(DEFAULT_MIN_SIZE.w),
+    win.minH ?? artPx(DEFAULT_MIN_SIZE.h),
     viewport
   )
 }
@@ -250,21 +272,24 @@ export function clampWindowRect(
 export function snapZoneAt(point: Point, area: Rect): SnapZone | null {
   if (point.x <= area.x) return 'left'
   if (point.x >= area.x + area.w) return 'right'
-  if (point.y <= MOVE_VIEWPORT_MARGIN.minY) return 'top'
+  if (point.y <= artPx(MOVE_VIEWPORT_MARGIN.minY)) return 'top'
   return null
 }
 
 /**
- * Rect a window takes when dropped on `zone`: a half, or the whole area. A
- * half is never narrower than `minW`, up to the full width of the area.
+ * Rect a window takes when dropped on `zone`: a half, or the whole area (as
+ * `desktopArea` measures it, in whole art px). A half is never narrower than
+ * `minW`, up to the full width of the area, and is whole art px too.
  */
 export function snapBounds(
   zone: SnapZone,
   area: Rect,
-  minW: number = DEFAULT_MIN_SIZE.w
+  minW: number = artPx(DEFAULT_MIN_SIZE.w)
 ): Rect {
   if (zone === 'top') return area
-  const w = Math.min(area.w, Math.max(minW, Math.floor(area.w / 2)))
+  const px = artPixel()
+  const half = floorToArt(area.w / 2, px)
+  const w = Math.min(area.w, Math.max(snapToArt(minW, px), half))
   return {
     x: zone === 'left' ? area.x : area.x + area.w - w,
     y: area.y,
@@ -285,7 +310,7 @@ export function undockRect(
 ): Rect {
   const fraction = docked.w > 0 ? (point.x - docked.x) / docked.w : 0.5
   return {
-    x: Math.round(point.x - size.w * Math.min(1, Math.max(0, fraction))),
+    x: snapToArt(point.x - size.w * Math.min(1, Math.max(0, fraction))),
     y: docked.y,
     w: size.w,
     h: size.h,

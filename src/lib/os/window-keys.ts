@@ -7,9 +7,11 @@ import {
   rectOf,
   undockRect,
 } from '@/lib/os/geometry'
+import { artPx } from '@/lib/os/pixel'
 
-const KEYBOARD_MOVE_STEP = 20
-const KEYBOARD_RESIZE_STEP = 24
+/** How far an arrow key moves a window, and Shift+Arrow resizes it, in art px. */
+const KEYBOARD_MOVE_STEP = 10
+const KEYBOARD_RESIZE_STEP = 12
 
 const ARROW_SNAP_ZONES: Partial<Record<string, SnapZone>> = {
   ArrowLeft: 'left',
@@ -74,14 +76,14 @@ export function windowKeyAction(
   }
 
   if (chord.shiftKey) {
-    const step = KEYBOARD_RESIZE_STEP
+    const step = artPx(KEYBOARD_RESIZE_STEP)
     const patch: Partial<Rect> = {}
     if (delta.x !== 0) patch.w = Math.max(1, win.w + delta.x * step)
     if (delta.y !== 0) patch.h = Math.max(1, win.h + delta.y * step)
     return { type: 'resize', patch }
   }
 
-  const step = KEYBOARD_MOVE_STEP
+  const step = artPx(KEYBOARD_MOVE_STEP)
   const current = rectOf(win)
   return {
     type: 'move',
