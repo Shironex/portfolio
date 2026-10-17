@@ -23,7 +23,7 @@ import { normalizeSheetJson, resolvePaths, sheetArgs } from '../export-art.mjs'
 import { chromeCss, growGrid, sliceInsets } from '../gen-chrome.mjs'
 import { cursorsCss } from '../gen-cursors.mjs'
 import { glyphModuleSource, readGlyphs } from '../gen-glyphs.mjs'
-import { buildSpritesCss, spriteCss } from '../gen-sprites.mjs'
+import { buildSpritesCss, hasNamedFrames, spriteCss } from '../gen-sprites.mjs'
 import { PALETTE_HEX, PAPER_RECOLOUR, normalizeHex } from '../palette.mjs'
 import { optimizePng, samePixels } from '../png.mjs'
 import {
@@ -488,29 +488,29 @@ describe('gen-sprites', () => {
     )
     assert.match(
       css,
-      /\.px-sheet-fixture \{\n {2}width: calc\(4 \* var\(--px\)\);/
+      /\.px-sheet-fixture \{\n {2}width: calc\(4\*var\(--px\)\);/
     )
     // blink: frames 0, 1, 2 at 100, 250, 150 ms
     assert.match(
       css,
-      /animation: px-sheet-fixture-blink 500ms step-end infinite;/
+      /--px-loop: px-sheet-fixture-blink 500ms step-end infinite;/
     )
     assert.match(
       css,
-      / {2}20% \{ background-position: calc\(-4 \* var\(--px\)\) 0; \}/
+      / {2}20% \{ background-position: calc\(-4\*var\(--px\)\) 0; \}/
     )
     assert.match(
       css,
-      / {2}70% \{ background-position: 0 calc\(-4 \* var\(--px\)\); \}/
+      / {2}70% \{ background-position: 0 calc\(-4\*var\(--px\)\); \}/
     )
     // pulse: pingpong over frames 2 and 3 at 150 and 300 ms
     assert.match(
       css,
-      /animation: px-sheet-fixture-pulse 450ms step-end infinite;/
+      /--px-loop: px-sheet-fixture-pulse 450ms step-end infinite;/
     )
     assert.match(
       css,
-      / {2}33.3333% \{ background-position: calc\(-4 \* var\(--px\)\) calc\(-4 \* var\(--px\)\); \}/
+      / {2}33.3333% \{ background-position: calc\(-4\*var\(--px\)\) calc\(-4\*var\(--px\)\); \}/
     )
   })
 
@@ -521,8 +521,31 @@ describe('gen-sprites', () => {
     )
     assert.match(
       css,
-      /\.px-sheet-fixture-pulse \{\n {2}background-position: 0 calc\(-4 \* var\(--px\)\);/
+      /\.px-sheet-fixture-pulse \{\n {2}background-position: 0 calc\(-4\*var\(--px\)\);/
     )
+  })
+
+  it('leaves the ends of a loop to the resting frame', () => {
+    const css = spriteCss(
+      'sheet-fixture',
+      readSheetJson(fixture('sheet-fixture'))
+    )
+    assert.doesNotMatch(css, / {2}(0|100)% \{/)
+  })
+
+  it('gives an untagged sheet of named frames a class per frame', () => {
+    const data = readSheetJson(fixture('sheet-fixture'))
+    data.meta.frameTags = []
+    data.frames.forEach((f, i) => (f.filename = ['a', 'b', 'c', 'd'][i]))
+    assert.equal(hasNamedFrames(data), true)
+    const css = spriteCss('icons', data)
+    assert.match(
+      css,
+      /\.px-icons-b \{ background-position: calc\(-4\*var\(--px\)\) 0; \}/
+    )
+    assert.doesNotMatch(css, /@keyframes/)
+    data.frames[0].filename = 'sheet 0.aseprite'
+    assert.equal(hasNamedFrames(data), false)
   })
 
   it('refuses trimmed sheets', () => {
