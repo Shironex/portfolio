@@ -391,6 +391,16 @@
     --radius: 0.5rem;
 
     --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+
+    /*
+     * The art pixel and the half pixel of the small labels (SPEC 2.1). The
+     * boot script in src/lib/os/appearance.ts sets the real values inline on
+     * <html> (whole device pixels at any DPR); these cover the server render,
+     * the instant before the script and a visit without JavaScript.
+     */
+    --px: 2px;
+    --hpx: 1px;
+    --dpr: 1;
   }
 
   /* Custom scrollbar: webkit (Chrome, Safari, Edge) */
