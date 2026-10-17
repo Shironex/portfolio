@@ -5,8 +5,8 @@
  *   node scripts/pixel/check-art.mjs --dir <dir> [--allow-empty]
  *
  * For every PNG under the folder:
- *   - it belongs to a source in `art-manifest.mjs` (`<name>.png` or `<name>@<n>x.png`)
- *     and sits in that source's group folder
+ *   - it belongs to a source or a derived sheet in `art-manifest.mjs`
+ *     (`<name>.png` or `<name>@<n>x.png`) and sits in its group folder
  *   - its JSON is next to it and agrees with it: `meta.size` is the PNG size,
  *     every frame rectangle is inside the sheet, every frame has the same
  *     canvas, tags and slices stay inside the frames and the canvas
@@ -25,7 +25,12 @@ import { existsSync, readdirSync, statSync } from 'node:fs'
 import { basename, dirname, join, relative, sep } from 'node:path'
 import sharp from 'sharp'
 
-import { ART_SOURCES, GENERATED_BUDGETS, PNG_BUDGETS } from './art-manifest.mjs'
+import {
+  ART_SOURCES,
+  DERIVED_SHEETS,
+  GENERATED_BUDGETS,
+  PNG_BUDGETS,
+} from './art-manifest.mjs'
 import { flag, isMain } from './cli.mjs'
 import { ROOT } from './export-art.mjs'
 import { PALETTE_HEX, toHex } from './palette.mjs'
@@ -149,7 +154,7 @@ export async function pixelProblems(
  */
 export async function checkArt({
   dir,
-  sources = ART_SOURCES,
+  sources = [...ART_SOURCES, ...DERIVED_SHEETS],
   pngBudgets = PNG_BUDGETS,
   generatedBudgets = GENERATED_BUDGETS,
   root = ROOT,

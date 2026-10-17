@@ -55,8 +55,17 @@ export const ART_SOURCES = [
   },
 ]
 
+/**
+ * Sheets a generator cuts from an export (`gen-app-icons.mjs`), checked like
+ * exports: `from` names the source they are cut from.
+ */
+export const DERIVED_SHEETS = [
+  { name: 'app-icons-32', group: 'icons', from: 'os-app-icons' },
+  { name: 'app-icons-16', group: 'icons', from: 'os-app-icons' },
+]
+
 /** Groups whose PNGs are only inputs to a generator and never ship. */
-export const GENERATOR_INPUT_GROUPS = ['chrome', 'glyphs']
+export const GENERATOR_INPUT_GROUPS = ['chrome', 'glyphs', 'app-icons']
 
 const KB = 1024
 
@@ -67,7 +76,7 @@ const KB = 1024
 export const PNG_BUDGETS = [
   {
     label: 'app icons, logo, avatar, cursors',
-    groups: ['app-icons', 'avatar', 'cursors'],
+    groups: ['icons', 'avatar', 'cursors'],
     bytes: 12 * KB,
   },
   { label: 'wallpaper layers', groups: ['wallpaper'], bytes: 30 * KB },
