@@ -30,8 +30,8 @@ const TERMINAL_LINES = [
   'Open to full-time remote roles and contracts or MVPs.',
 ]
 
-/** Longest an interaction may animate for, in ms. */
-const FEEDBACK_BUDGET_MS = 200
+/** Longest an interaction may animate for, in ms (SPEC 2.8). */
+const FEEDBACK_BUDGET_MS = 160
 
 /**
  * Four drifting notes and the terminal cursor.
@@ -222,7 +222,7 @@ test.describe('theme switch', () => {
     await openDesktop(page)
 
     // Click and watch from inside the page, so no round trip can miss a
-    // transition that is over in 200ms.
+    // transition that is over in 160ms.
     const transition = await page.evaluate(async (loopClass) => {
       const button = document.querySelector<HTMLButtonElement>(
         'button[aria-label="Turn the lamp on"]'

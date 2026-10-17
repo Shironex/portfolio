@@ -253,30 +253,34 @@
   --z-index-toast: 900;
 
   /* =================== ShiroOS animations =================== */
-  --animate-drift: drift 16s linear infinite;
-  --animate-floaty: floaty 8s ease-in-out infinite;
-  --animate-blink: blink 1s steps(2) infinite;
   /*
-   * Interaction feedback stays at or under 200ms and animates only transform
-   * and opacity. Easings are the tokens above; intentionally no bounce or
-   * overshoot curves, they read as dated.
+   * Frame animation, not tweening (SPEC 2.8). Every animation steps through
+   * a few held frames: `steps(n)` over a move of n art px lands each frame
+   * on the grid, and `steps(1)` holds each keyframe of a loop until the
+   * next, so a loop keeps its uneven timing. Nothing scales or rotates.
+   * Interaction feedback takes at most 160ms. The names are the ones the
+   * smooth versions had, so every consumer works unchanged.
    */
-  --animate-win-open: winOpen 0.2s var(--ease-out-quart);
-  --animate-win-close: winClose 0.14s var(--ease-out-quart) forwards;
-  --animate-sheet-up: sheetUp 0.2s var(--ease-sheet);
-  --animate-cp-in: cpIn 0.18s var(--ease-out-quart);
-  --animate-menu-in: menuIn 0.15s var(--ease-out-quart);
-  --animate-pulse-slow: pulse 1.8s ease-in-out infinite;
-  --animate-bob-note: bobNote 1.4s ease-in-out infinite;
-  --animate-logo-pop: logoPop 0.6s var(--ease-out-quart);
-  --animate-boot-out: bootOut 0.5s ease 1.9s forwards;
+  --animate-drift: drift 16s steps(12) infinite;
+  --animate-floaty: floaty 8s steps(8) infinite;
+  --animate-blink: blink 1s steps(2) infinite;
+  --animate-win-open: winOpen 0.16s steps(4);
+  --animate-win-close: winClose 0.12s steps(3) forwards;
+  --animate-sheet-up: sheetUp 0.16s steps(4);
+  --animate-cp-in: cpIn 0.12s steps(4);
+  --animate-menu-in: menuIn 0.08s steps(2);
+  --animate-pulse: pulse 1.6s steps(1, end) infinite;
+  --animate-pulse-slow: pulse 1.6s steps(1, end) infinite;
+  --animate-bob-note: bobNote 1.4s steps(1, end) infinite;
+  --animate-logo-pop: logoPop 0.4s steps(4);
+  --animate-boot-out: bootOut 0.32s steps(4) 1.9s forwards;
   /*
    * `backwards`: a line with an `animation-delay` stays hidden until its
    * turn, and holds nothing once it is in (its keyframes end on its own
    * style), so no finished animation keeps a `transform` on it.
    */
-  --animate-term-in: termIn 0.3s ease backwards;
-  --animate-fade-in: fadeIn 0.15s ease;
+  --animate-term-in: termIn 0.16s steps(2) backwards;
+  --animate-fade-in: fadeIn 0.12s steps(3);
 
   /* ShiroOS keyframes */
   @keyframes bootOut {
@@ -288,52 +292,58 @@
 
   @keyframes logoPop {
     from {
-      transform: scale(0.3) rotate(-20deg);
       opacity: 0;
+      transform: translateY(calc(4 * var(--px)));
     }
   }
 
+  /* Four held frames of uneven length: rest, lift, top, settle. */
   @keyframes bobNote {
-
     0%,
     100% {
-      transform: rotate(-10deg) translateY(0);
+      transform: translateY(0);
+    }
+
+    30% {
+      transform: translateY(calc(-1 * var(--px)));
     }
 
     50% {
-      transform: rotate(10deg) translateY(-6px);
+      transform: translateY(calc(-3 * var(--px)));
+    }
+
+    80% {
+      transform: translateY(calc(-1 * var(--px)));
     }
   }
 
   @keyframes drift {
-
     0%,
     100% {
-      transform: translate(0, 0) rotate(-10deg);
+      transform: translate(0, 0);
     }
 
     25% {
-      transform: translate(20px, -18px) rotate(8deg);
+      transform: translate(calc(10 * var(--px)), calc(-9 * var(--px)));
     }
 
     50% {
-      transform: translate(-10px, -32px) rotate(-6deg);
+      transform: translate(calc(-5 * var(--px)), calc(-16 * var(--px)));
     }
 
     75% {
-      transform: translate(-24px, -12px) rotate(12deg);
+      transform: translate(calc(-12 * var(--px)), calc(-6 * var(--px)));
     }
   }
 
   @keyframes floaty {
-
     0%,
     100% {
       transform: translate(0, 0);
     }
 
     50% {
-      transform: translate(20px, -15px);
+      transform: translate(calc(8 * var(--px)), calc(-8 * var(--px)));
     }
   }
 
@@ -346,7 +356,7 @@
   @keyframes termIn {
     from {
       opacity: 0;
-      transform: translateY(-4px);
+      transform: translateY(calc(-2 * var(--px)));
     }
 
     to {
@@ -358,14 +368,14 @@
   @keyframes winOpen {
     from {
       opacity: 0;
-      transform: scale(0.92) translateY(10px);
+      transform: translateY(calc(4 * var(--px)));
     }
   }
 
   @keyframes winClose {
     to {
       opacity: 0;
-      transform: scale(0.96) translateY(6px);
+      transform: translateY(calc(3 * var(--px)));
     }
   }
 
@@ -378,28 +388,33 @@
 
   @keyframes cpIn {
     from {
-      transform: translateY(-20px) scale(0.96);
       opacity: 0;
+      transform: translateY(calc(-4 * var(--px)));
     }
   }
 
-  /* A dropdown is small and opens next to its trigger: a short drop, no scale. */
+  /* A dropdown is small and opens next to its trigger: a short drop. */
   @keyframes menuIn {
     from {
-      transform: translateY(-4px);
       opacity: 0;
+      transform: translateY(calc(-2 * var(--px)));
     }
   }
 
+  /* Loading: four held frames, dimming and back. */
   @keyframes pulse {
-
     0%,
     100% {
       opacity: 1;
     }
 
+    25%,
+    75% {
+      opacity: 0.8;
+    }
+
     50% {
-      opacity: 0.5;
+      opacity: 0.6;
     }
   }
 
@@ -496,37 +511,35 @@
     }
   }
 
-  /* Custom scrollbar: webkit (Chrome, Safari, Edge) */
+  /*
+   * Scrollbars (SPEC 2.4): a 6 art px ground track, a frame-dim thumb that
+   * gains a 1 art px frame edge on hover, square ends. Chromium 121 and
+   * later ignore the pseudo-elements once a standard scrollbar property is
+   * set, so the standard pair only goes to browsers without them (Firefox).
+   */
   *::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: calc(6 * var(--px));
+    height: calc(6 * var(--px));
   }
 
-  *::-webkit-scrollbar-track {
+  *::-webkit-scrollbar-track,
+  *::-webkit-scrollbar-corner {
     background: var(--ground);
-    border-radius: 10px;
   }
 
   *::-webkit-scrollbar-thumb {
     background: var(--frame-dim);
-    border-radius: 10px;
-    border: 2px solid transparent;
-    background-clip: content-box;
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    background: var(--frame);
-    background-clip: content-box;
+    box-shadow: inset 0 0 0 var(--px) var(--frame);
   }
 
-  *::-webkit-scrollbar-corner {
-    background: transparent;
-  }
-
-  /* Firefox */
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: var(--frame-dim) var(--ground);
+  @supports not selector(::-webkit-scrollbar) {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--frame-dim) var(--ground);
+    }
   }
 }
 
@@ -588,22 +601,28 @@
     }
   }
 
-  /* Consistent keyboard focus ring across ShiroOS chrome. Apply via the
-     `focus-ring` utility class rather than repeating the ring each site. */
+  /*
+   * The two-tone focus ring (SPEC 2.4) on every `focus-ring` element: a 1 art
+   * px lamp outline, outside a 1 art px navy ring in the offset gap, so it
+   * reads on night surfaces (lamp, 7.2:1 and up) and on paper (navy, 14.6:1).
+   * The navy ring is also handed to Tailwind's shadow stack, so an element
+   * with a `shadow-*` utility keeps it.
+   */
   .focus-ring {
     outline: none;
   }
 
   .focus-ring:focus-visible {
-    outline: 2px solid var(--color-miku);
-    outline-offset: 2px;
-    border-radius: inherit;
+    outline: var(--px) solid var(--lamp);
+    outline-offset: var(--px);
+    --tw-ring-shadow: 0 0 0 var(--px) var(--ground);
+    box-shadow: 0 0 0 var(--px) var(--ground);
   }
 
-  /* Text selection matches the teal accent instead of the browser default. */
+  /* Selected text: navy on the lamp, 10.99:1. */
   ::selection {
-    background: color-mix(in oklab, var(--color-miku) 25%, transparent);
-    color: var(--color-ink);
+    background: var(--lamp);
+    color: var(--ground);
   }
 
   h1,
@@ -629,12 +648,15 @@
  * Decorative loops (the wallpaper notes and glows, the terminal cursor) stand
  * still while they cannot be seen or are not the point: `AmbientPause` marks
  * the shell paused under a maximized window or an open overlay, a window
- * gesture marks the document while it drags or resizes, and a theme
- * cross-fade holds them for its 200ms. Unlayered, so the play state wins over
- * the `animation` shorthand of the utility that starts the loop.
+ * gesture marks the document while it drags or resizes, the Pause motion
+ * setting (`data-motion`, applied by the boot script) holds them for good,
+ * and a theme cross-fade holds them for its 160ms. Unlayered, so the play
+ * state wins over the `animation` shorthand of the utility that starts the
+ * loop.
  */
 [data-ambient='paused'] .ambient-loop,
-[data-gesture] .ambient-loop {
+[data-gesture] .ambient-loop,
+[data-motion='paused'] .ambient-loop {
   animation-play-state: paused;
 }
 
@@ -645,10 +667,11 @@
 /*
  * Theme switch (`useTheme`): the default root transition, a plain opacity
  * cross-fade of two snapshots with no geometry in it, shortened from the
- * browser's 250ms.
+ * browser's 250ms and stepped in four frames.
  */
 ::view-transition-group(root),
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 0.2s;
+  animation-duration: 0.16s;
+  animation-timing-function: steps(4);
 }
