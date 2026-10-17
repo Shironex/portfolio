@@ -37,6 +37,58 @@
 }
 
 /*
+ * Type (SPEC 2.3). Five named styles; each sets face, size, line height and
+ * weight, so it is the only text class an element needs. Sizes come from the
+ * `--type-*` tokens below: whole design pixels of the face, each a whole
+ * number of device pixels, never under the rem floor of the spec table.
+ */
+@utility text-label {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  line-height: max(1rem, calc(8 * var(--px)));
+  font-weight: 400;
+}
+
+@utility text-body {
+  font-family: var(--font-text);
+  font-size: var(--type-body);
+  line-height: calc(14 * var(--type-dp));
+  font-weight: 400;
+}
+
+@utility text-title {
+  font-family: var(--font-body);
+  font-size: var(--type-body);
+  line-height: calc(12 * var(--type-dp));
+  font-weight: 700;
+}
+
+@utility text-heading {
+  font-family: var(--font-mono);
+  font-size: var(--type-heading);
+  line-height: calc(16 * var(--type-dp));
+  font-weight: 400;
+}
+
+@utility text-display {
+  font-family: var(--font-display);
+  font-size: var(--type-display-sm);
+  line-height: calc(12 * var(--type-dp-display-sm));
+  font-weight: 700;
+
+  @variant md {
+    font-size: var(--type-display);
+    line-height: calc(24 * var(--type-dp));
+  }
+}
+
+/* Lamp lettering with its 1 art px shadow, the README header treatment. */
+@utility lamp-heading {
+  color: var(--heading);
+  text-shadow: calc(-1 * var(--px)) var(--px) 0 var(--heading-shadow);
+}
+
+/*
  * Easings. `static` so the variables are emitted even though only the
  * animation tokens below read them.
  */
@@ -55,7 +107,11 @@
  * value of the document.
  */
 @theme inline {
-  /* The tokens of SPEC 2.2 (src/styles/tokens.css). */
+  /*
+   * The tokens of SPEC 2.2 (src/styles/tokens.css). `--heading` has no
+   * colour utility: `text-heading` is the type style of SPEC 2.3, so a
+   * heading takes its colour from `lamp-heading` or `text-(--heading)`.
+   */
   --color-ground: var(--ground);
   --color-surf: var(--surf);
   --color-surf-raised: var(--surf-raised);
@@ -67,7 +123,6 @@
   --color-lamp: var(--lamp);
   --color-lamp-hi: var(--lamp-hi);
   --color-lamp-shadow: var(--lamp-shadow);
-  --color-heading: var(--heading);
   --color-link: var(--link);
   --color-fill-primary: var(--fill-primary);
   --color-fill-primary-ink: var(--fill-primary-ink);
@@ -405,6 +460,40 @@
      * px, never under 44px, which it would be at DPR 2.625 (1.905px each).
      */
     --target: max(2.75rem, calc(22 * var(--px)));
+
+    /*
+     * Type sizes (SPEC 2.3). `--type-dp` is one design pixel of the 9 px/em
+     * Pixeloid and of the 11 px/em Departure Mono at heading size: an art px,
+     * floored at 0.125rem so a larger browser font size wins. The mobile
+     * display size draws each design pixel one and a half art px wide
+     * (`--type-dp-display-sm`). Where `round()` exists (below) both snap up
+     * to whole device pixels, which the floor alone does not give (at DPR
+     * 2.625 it is 5.25 device px). Labels follow the half pixel and are left
+     * unsnapped: snapping 11px at DPR 1.25 would take them to 17.6px.
+     */
+    --device-px: calc(1px / var(--dpr));
+    --type-dp: max(0.125rem, var(--px));
+    --type-dp-display-sm: max(0.1875rem, calc(1.5 * var(--px)));
+    --type-label: max(0.6875rem, calc(11 * var(--hpx)));
+    --type-body: calc(9 * var(--type-dp));
+    --type-heading: calc(11 * var(--type-dp));
+    --type-display: calc(18 * var(--type-dp));
+    --type-display-sm: calc(9 * var(--type-dp-display-sm));
+  }
+
+  /*
+   * The snap. `- 0.01px` keeps a value that is already whole device pixels
+   * (2.4px at DPR 1.25 is 3) from rounding up a step on a float error.
+   */
+  @supports (width: round(up, 1px, 1px)) {
+    :root {
+      --type-dp: round(up, max(0.125rem, var(--px)) - 0.01px, var(--device-px));
+      --type-dp-display-sm: round(
+        up,
+        max(0.1875rem, 1.5 * var(--px)) - 0.01px,
+        var(--device-px)
+      );
+    }
   }
 
   /* Custom scrollbar: webkit (Chrome, Safari, Edge) */

@@ -28,6 +28,7 @@
   --lamp-hi: #fff2c8;
   --lamp-shadow: #6e4030;
   --heading: #f0c070;
+  --heading-shadow: #6e4030;
   --link: #8fe0cf;
   --fill-primary: #4fa3a0;
   --fill-primary-ink: #0b1420;
@@ -106,6 +107,7 @@
   --ink-hi: #0b1420;
   --meta: #4a2b25;
   --heading: #6e4030;
+  --heading-shadow: transparent;
   --link: #1f5058;
   --error: #7a1e2a;
   --accent-primary-ink: #1f5058;

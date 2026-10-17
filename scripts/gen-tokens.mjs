@@ -45,7 +45,10 @@ const TS_OUT = join(ROOT, 'src', 'lib', 'os', 'tokens.generated.ts')
 /* tokens                                                              */
 /* ------------------------------------------------------------------ */
 
-/** Night mode, SPEC 2.2. `heading` is the lamp; paper gives it its own value. */
+/**
+ * Night mode, SPEC 2.2. `heading` is the lamp; paper gives it its own value.
+ * `heading-shadow` is the 1 art px shadow under lamp lettering (SPEC 2.3).
+ */
 export const NIGHT = {
   ground: '#0b1420',
   surf: '#13253a',
@@ -61,6 +64,7 @@ export const NIGHT = {
   'lamp-hi': '#fff2c8',
   'lamp-shadow': '#6e4030',
   heading: '#f0c070',
+  'heading-shadow': '#6e4030',
   link: '#8fe0cf',
   'fill-primary': '#4fa3a0',
   'fill-primary-ink': '#0b1420',
@@ -77,7 +81,8 @@ export const NIGHT = {
  * Paper mode, SPEC 2.2: only what changes. `select`, `rule` and `ink-hi`
  * are not in the spec table; on paper they take the lamp fill (a highlighter
  * under navy ink), the neutral grey (a decorative rule) and the ground navy
- * (emphasis darker than body ink).
+ * (emphasis darker than body ink). Paper headings are already the shadow
+ * brown, so they drop the shadow.
  */
 export const PAPER = {
   surf: '#e8e4dc',
@@ -87,6 +92,7 @@ export const PAPER = {
   ink: '#13253a',
   'ink-hi': '#0b1420',
   heading: '#6e4030',
+  'heading-shadow': 'transparent',
   link: '#1f5058',
   meta: '#4a2b25',
   error: '#7a1e2a',
