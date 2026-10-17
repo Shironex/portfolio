@@ -189,14 +189,16 @@ export default function OsShell({ initialWindow }: OsShellProps) {
     // paints its richer wallpaper over this, so it's invisible there; on
     // mobile `MobileShell` renders a transparent feed, so this layer is what
     // the user actually sees behind the cards: without it the `body` ground
-    // and the SSR `StaticHero` bleed through the gaps.
+    // and the SSR `StaticHero` bleed through the gaps. `overflow-clip`, not
+    // `hidden`: a desktop taller than the viewport must never scroll under
+    // the windows when focus or `scrollIntoView` reaches its lower part.
     <div
       ref={rootRef}
       {...{
         [SHELL_ROOT_ATTRIBUTE]: '',
         [SHELL_READY_ATTRIBUTE]: hydrated ? '' : undefined,
       }}
-      className="text-ink from-sky-0 via-sky-1 to-sky-2 fixed inset-0 overflow-hidden bg-linear-to-br"
+      className="text-ink from-sky-0 via-sky-1 to-sky-2 fixed inset-0 overflow-clip bg-linear-to-br"
     >
       <AmbientPause rootRef={rootRef} covered={desktopCovered} />
       {onProjectRoute ? <NoscriptStaticPage /> : <NoscriptFallback />}
