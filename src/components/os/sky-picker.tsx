@@ -18,13 +18,43 @@ interface SkyPickerProps {
   inMenu?: boolean
 }
 
+/**
+ * A sky's 12x8 art px thumbnail in a 1 art px navy frame (14x10 in all),
+ * with an outer 1 art px ring from `--swatch-ring` when one is set. The
+ * frame and the ring are box shadows, not borders or outlines: those widths
+ * are snapped to whole px and would not stay one art px.
+ */
+export function SkySwatch({
+  swatch,
+  className,
+}: {
+  swatch: string
+  className?: string
+}) {
+  return (
+    <span
+      aria-hidden
+      className={cn('block h-10 w-14 flex-none p-1', className)}
+      style={{
+        backgroundImage: swatch,
+        backgroundOrigin: 'content-box',
+        backgroundClip: 'content-box',
+        boxShadow:
+          'inset 0 0 0 var(--px) var(--ground), var(--swatch-ring, 0 0 #0000)',
+      }}
+    />
+  )
+}
+
 const NEXT_KEYS = ['ArrowRight', 'ArrowDown']
 const PREV_KEYS = ['ArrowLeft', 'ArrowUp']
 
 /**
  * Row of sky swatches: Night, Dusk, Dawn, Day and Live. A sky only changes
- * the wallpaper. Each swatch previews its sky's bands (`swatch` in
- * `tokens.generated.ts`); Live previews the four parts of the day.
+ * the wallpaper. Each swatch is a 12x8 art px thumbnail of its sky's bands
+ * (`swatch` in `tokens.generated.ts`) in a 1 art px navy frame; Live
+ * previews the four parts of the day. The checked one is framed in lamp
+ * with a lamp pip under it, so it is not told by colour alone.
  *
  * On its own it is a radiogroup: one tab stop (the checked swatch), arrow
  * keys move and select, wrapping at both ends, Home and End jump.
@@ -64,7 +94,7 @@ export function SkyPicker({ value, onSelect, inMenu }: SkyPickerProps) {
       role={inMenu ? MENU_RADIO_GROUP_ROLE : 'radiogroup'}
       aria-label="Sky"
       onKeyDown={handleKey}
-      className="flex items-center gap-3"
+      className="flex items-center gap-2"
     >
       {SKIES.map((sky) => (
         <button
@@ -78,14 +108,24 @@ export function SkyPicker({ value, onSelect, inMenu }: SkyPickerProps) {
           // is tabbable and the menu moves focus itself.
           tabIndex={!inMenu && value === sky.id ? 0 : -1}
           onClick={() => onSelect(sky.id)}
-          style={{ backgroundImage: sky.swatch }}
-          className={cn(
-            'focus-ring size-12 rounded-full border transition-transform pointer-coarse:size-18',
-            value === sky.id
-              ? 'border-ink ring-ink/40 scale-110 ring-2'
-              : 'border-rule-2 hover:scale-110'
+          className="focus-ring group relative flex h-14 w-18 items-center justify-center pointer-coarse:size-(--target)"
+        >
+          {/* The checked sky is ringed in lamp, a hovered one in teal. */}
+          <SkySwatch
+            swatch={sky.swatch}
+            className={
+              value === sky.id
+                ? '[--swatch-ring:0_0_0_var(--px)_var(--lamp)]'
+                : 'group-hover:[--swatch-ring:0_0_0_var(--px)_var(--frame)]'
+            }
+          />
+          {value === sky.id && (
+            <span
+              aria-hidden
+              className="absolute bottom-0 left-8 h-1 w-2 bg-(--lamp)"
+            />
           )}
-        />
+        </button>
       ))}
     </div>
   )

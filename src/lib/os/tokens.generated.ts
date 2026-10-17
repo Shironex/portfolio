@@ -7,38 +7,39 @@
 
 /**
  * The skies of the Sky picker, in its order. `live` follows the time of day
- * in Warsaw and resolves to one of the others; `swatch` is a preview
- * gradient for the picker.
+ * in Warsaw and resolves to one of the others; `swatch` is a 12x8 art px
+ * preview for the picker and the palette rows.
  */
 export const SKIES = [
   {
     id: 'night',
     name: 'Night',
     swatch:
-      'linear-gradient(#0b1420 0 25%, #13253a 0 50%, #173a45 0 75%, #1f5058 0)',
+      'linear-gradient(#0b1420 0 calc(2 * var(--px)), #13253a 0 calc(4 * var(--px)), #173a45 0 calc(6 * var(--px)), #1f5058 0)',
   },
   {
     id: 'dusk',
     name: 'Dusk',
     swatch:
-      'linear-gradient(#201e3e 0 14.29%, #62305c 0 28.57%, #94584a 0 42.86%, #b27868 0 57.14%, #d89070 0 71.43%, #f0a068 0 85.71%, #f0c070 0)',
+      'linear-gradient(#201e3e 0 calc(1 * var(--px)), #62305c 0 calc(2 * var(--px)), #94584a 0 calc(3 * var(--px)), #b27868 0 calc(4 * var(--px)), #d89070 0 calc(5 * var(--px)), #f0a068 0 calc(6 * var(--px)), #f0c070 0)',
   },
   {
     id: 'dawn',
     name: 'Dawn',
     swatch:
-      'linear-gradient(#13253a 0 16.67%, #5a5e8c 0 33.33%, #9a88b4 0 50%, #e2a684 0 66.67%, #f0b890 0 83.33%, #fff2c8 0)',
+      'linear-gradient(#13253a 0 calc(1 * var(--px)), #5a5e8c 0 calc(2 * var(--px)), #9a88b4 0 calc(3 * var(--px)), #e2a684 0 calc(4 * var(--px)), #f0b890 0 calc(6 * var(--px)), #fff2c8 0)',
   },
   {
     id: 'day',
     name: 'Day',
-    swatch: 'linear-gradient(#5f8fce 0 33.33%, #8fb9de 0 66.67%, #e8e4dc 0)',
+    swatch:
+      'linear-gradient(#5f8fce 0 calc(2 * var(--px)), #8fb9de 0 calc(5 * var(--px)), #e8e4dc 0)',
   },
   {
     id: 'live',
     name: 'Live',
     swatch:
-      'linear-gradient(to right, #173a45 0 25%, #f0b890 0 50%, #8fb9de 0 75%, #f0a068 0)',
+      'linear-gradient(to right, #173a45 0 calc(3 * var(--px)), #f0b890 0 calc(6 * var(--px)), #8fb9de 0 calc(9 * var(--px)), #f0a068 0)',
   },
 ] as const
 

@@ -511,28 +511,43 @@ function skyGradient(bands) {
   return `linear-gradient(to top, ${stops.join(', ')})`
 }
 
-/** A small preview of a sky for a swatch: its distinct bands, evenly. */
+/** A sky thumbnail (swatches, palette rows), in art px (SPEC 2.4). */
+const SWATCH = { w: 12, h: 8 }
+
+/** `n` art px as a gradient stop. */
+const artStop = (n) => `calc(${n} * var(--px))`
+
+/**
+ * A small preview of a sky for a 12x8 swatch: its distinct bands as whole
+ * art px rows, top to bottom. Rows that do not divide evenly go to the bands
+ * nearest the horizon.
+ */
 function skySwatch(bands) {
   const colours = bandsFromHorizon(bands)
     .map((b) => b.color)
     .reverse()
-  const share = 100 / colours.length
+  const n = colours.length
+  if (n > SWATCH.h) throw new Error(`a sky of ${n} bands has no swatch`)
+  const base = Math.floor(SWATCH.h / n)
+  const extra = SWATCH.h - base * n
+  let row = 0
   const stops = colours.map((c, i) => {
-    const end =
-      i === colours.length - 1 ? '' : ` ${+(share * (i + 1)).toFixed(2)}%`
-    return `${c} 0${end}`
+    row += base + (i >= n - extra ? 1 : 0)
+    return i === n - 1 ? `${c} 0` : `${c} 0 ${artStop(row)}`
   })
   return `linear-gradient(${stops.join(', ')})`
 }
 
-/** Live previews every sky: one column each, in the order of a day. */
+/** Live previews every sky: one 3 art px column each, in the order of a day. */
 function liveSwatch() {
   const order = ['night', 'dawn', 'day', 'dusk']
+  const column = SWATCH.w / order.length
   const stops = order.map((sky, i) => {
     const bands = bandsFromHorizon(SKY_BANDS[sky])
     const colour = bands[Math.min(1, bands.length - 1)].color
-    const end = i === order.length - 1 ? '' : ` ${25 * (i + 1)}%`
-    return `${colour} 0${end}`
+    return i === order.length - 1
+      ? `${colour} 0`
+      : `${colour} 0 ${artStop(column * (i + 1))}`
   })
   return `linear-gradient(to right, ${stops.join(', ')})`
 }
@@ -593,8 +608,8 @@ function buildTs() {
 
 /**
  * The skies of the Sky picker, in its order. \`live\` follows the time of day
- * in Warsaw and resolves to one of the others; \`swatch\` is a preview
- * gradient for the picker.
+ * in Warsaw and resolves to one of the others; \`swatch\` is a 12x8 art px
+ * preview for the picker and the palette rows.
  */
 export const SKIES = ${JSON.stringify(skies, null, 2)} as const
 
