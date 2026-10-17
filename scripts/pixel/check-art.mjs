@@ -12,7 +12,8 @@
  *     canvas, tags and slices stay inside the frames and the canvas
  *   - alpha is 0 or 255 only (pixel art has no soft edges)
  *   - every opaque pixel is a README palette colour, unless the source keeps
- *     its own palette (`ownPalette`)
+ *     its own palette (`ownPalette`) or is 1-bit (`oneBit`: one colour,
+ *     whichever it is, since code recolours it)
  * and per budget set, the PNG bytes stay under SPEC 4.6; generated outputs
  * (chrome CSS, glyph component, sprite CSS) are held to their budgets when
  * they exist.
@@ -93,14 +94,21 @@ export function sheetProblems(data, width, height) {
   return out
 }
 
-/** Pixel problems: partial alpha and (unless exempt) off-palette colours. */
-export async function pixelProblems(file, { ownPalette = false } = {}) {
+/**
+ * Pixel problems: partial alpha, and off-palette colours (unless exempt), or
+ * a second colour in 1-bit art.
+ */
+export async function pixelProblems(
+  file,
+  { ownPalette = false, oneBit = false } = {}
+) {
   const { data, info } = await sharp(file)
     .ensureAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true })
   const partial = { count: 0, first: [] }
   const offPalette = new Map()
+  const colours = new Map()
   for (let i = 0; i < data.length; i += 4) {
     const a = data[i + 3]
     if (a === 0) continue
@@ -111,8 +119,12 @@ export async function pixelProblems(file, { ownPalette = false } = {}) {
       if (partial.first.length < 3) partial.first.push(`${x},${y} (alpha ${a})`)
       continue
     }
-    if (ownPalette) continue
     const hex = toHex(data[i], data[i + 1], data[i + 2])
+    if (oneBit) {
+      if (!colours.has(hex)) colours.set(hex, `${x},${y}`)
+      continue
+    }
+    if (ownPalette) continue
     if (!PALETTE.has(hex) && !offPalette.has(hex))
       offPalette.set(hex, `${x},${y}`)
   }
@@ -124,6 +136,10 @@ export async function pixelProblems(file, { ownPalette = false } = {}) {
   }
   for (const [hex, at] of offPalette)
     out.push(`off-palette colour ${hex}, first at ${at}`)
+  if (colours.size > 1) {
+    const [, [hex, at]] = colours
+    out.push(`1-bit art in ${colours.size} colours: ${hex} first at ${at}`)
+  }
   return { problems: out, width: info.width, height: info.height }
 }
 

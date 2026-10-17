@@ -9,19 +9,42 @@
  *   - one slice per piece, named in kebab case; the class is `.px-<name>`
  *   - a slice with a 9-slice centre (set in Aseprite) becomes a border-image:
  *     the border widths are the distances from the centre to the edges, in
- *     art px, and the centre fills the box (`fill`)
+ *     art px, and the centre fills the box (`fill`). When the centre is one
+ *     colour the box also gets it as its `background-color`, clipped to the
+ *     padding box (the notched corners stay clear): what a contrast probe or
+ *     forced colours mode reads, since neither sees a border image
  *   - a slice without a centre is a tile (`background-image`, repeated at
- *     its size); if its pixels change across frames it steps through them
- *     with the frame durations (add `ambient-loop` where it is used)
+ *     its size, also published as `--px-<name>` for pseudo-elements); if its
+ *     pixels change across frames it steps through them with the frame
+ *     durations (add `ambient-loop` where it is used)
+ *   - slices `<base>-rest`, `<base>-hover` and `<base>-pressed` are one
+ *     control, `.px-<base>`: rest, hover under a hovering pointer, pressed
+ *     while active or `aria-pressed`, and `<kind>-disabled` (the base minus
+ *     its last word, so `button-disabled` for `button-primary`) when
+ *     disabled. A pressed slice that draws its bevel lower moves the content
+ *     down with it (its border widths change)
  *   - slice user data, space separated:
  *       repeat=round|space|repeat   edge repeat (default stretch); patterned
  *                                   edges such as a grip or dotted rule use round
- *       night                       chrome that stays night in paper mode
+ *       paper                       a body: recoloured for paper mode
+ *       night                       chrome: stays night (the default)
  *
- * Each slice becomes an SVG of merged pixel runs with `crispEdges`, inlined as
+ * Paper mode (Lamp on: `<html>` without `.dark`) recolours bodies only,
+ * through `PAPER_RECOLOUR` (SPEC 2.2: window, sheet and card bodies turn to
+ * paper, the chrome stays night). A body inside an `.os-night` subtree stays
+ * night too, like the tokens there. The bodies of `os-chrome.aseprite` carry
+ * no slice data, so they are listed in `CHROME_OPTIONS.paper`.
+ *
+ * Code adds two kinds of piece the atlas does not draw (`CHROME_OPTIONS`):
+ *   - variants: a slice recoloured, as its own class (chip tones)
+ *   - grown slices: a slice redrawn taller by repeating its first and last
+ *     centre row, swapped in under a media query. The title bar keeps its
+ *     grip in the left cap, so it only maps 1:1 at its drawn height; the
+ *     coarse pointer bar is 22 art px, with flat rows above and below.
+ *
+ * Each piece becomes an SVG of merged pixel runs with `crispEdges`, inlined as
  * a data URI (CSP allows `data:` images), so there is no request and no
- * resampling blur. Paper mode (Lamp on: `<html>` without `.dark`) gets a copy
- * recoloured through `PAPER_RECOLOUR`, unless the slice is `night`.
+ * resampling blur.
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, relative } from 'node:path'
@@ -43,9 +66,41 @@ const DEFAULT_IN = join(
 )
 const DEFAULT_OUT = join(ROOT, 'src', 'styles', 'pixel-chrome.css')
 const REPEATS = new Set(['stretch', 'round', 'space', 'repeat'])
+const STATES = ['rest', 'hover', 'pressed']
 
 /** Paper mode: the Lamp is on when `<html>` is not `.dark`. */
 export const PAPER_SCOPE = ':root:not(.dark)'
+
+/** Outside every `.os-night` subtree, which keeps night in paper mode. */
+export const OUTSIDE_NIGHT = ':not(.os-night, .os-night *)'
+
+/** Disabled, natively or by ARIA. */
+const DISABLED = ":is(:disabled, [aria-disabled='true'])"
+const ENABLED = ":not(:disabled, [aria-disabled='true'])"
+
+/**
+ * What code adds to `os-chrome.aseprite` (see the header): its bodies, the
+ * chip tones and the coarse pointer title bars.
+ */
+export const CHROME_OPTIONS = {
+  paper: [
+    'window-focused',
+    'window-unfocused',
+    'panel',
+    'card',
+    'tile-skeleton',
+  ],
+  variants: [
+    // In progress: lamp text on the warm brown, 7.50:1.
+    { name: 'chip-warm', from: 'chip', recolour: { '#1f5058': '#4a2b25' } },
+    // Archived: meta grey on the ground, 7.27:1.
+    { name: 'chip-ground', from: 'chip', recolour: { '#1f5058': '#0b1420' } },
+  ],
+  grow: [
+    { slice: 'titlebar-focused', height: 22, media: '(pointer: coarse)' },
+    { slice: 'titlebar-unfocused', height: 22, media: '(pointer: coarse)' },
+  ],
+}
 
 function url(grid) {
   return `url("${svgDataUri(gridToSvg(grid))}")`
@@ -62,19 +117,48 @@ export function sliceInsets(key) {
   ]
 }
 
-/** Every frame's pixels of a slice, as grids. */
-function frameGrids(sheet, slice) {
-  return sheet.data.frames.map((_, i) =>
-    readRegion(sheet, i, sliceKey(slice, i).bounds)
-  )
-}
-
 function same(a, b) {
   return JSON.stringify(a) === JSON.stringify(b)
 }
 
-/** CSS rules for one slice. */
-export function sliceCss(sheet, slice) {
+/** The one colour of a grid's centre region, or `null` when it has more. */
+function centreColour(grid, center) {
+  const colours = new Set()
+  for (let y = center.y; y < center.y + center.h; y++) {
+    for (let x = center.x; x < center.x + center.w; x++) {
+      colours.add(grid[y][x])
+    }
+  }
+  const [only] = colours
+  return colours.size === 1 && only ? only : null
+}
+
+/**
+ * A slice redrawn `height` rows tall: rows above and below the centre are
+ * kept, and the centre's first and last rows repeat to make up the height
+ * (half above, the rest below), so whatever is drawn between them keeps its
+ * size and lands in the middle.
+ */
+export function growGrid(grid, center, height) {
+  const extra = height - grid.length
+  if (extra < 0) throw new Error(`cannot grow ${grid.length} rows to ${height}`)
+  const above = Math.floor(extra / 2)
+  const first = grid[center.y]
+  const last = grid[center.y + center.h - 1]
+  return {
+    grid: [
+      ...grid.slice(0, center.y),
+      ...Array.from({ length: above }, () => [...first]),
+      ...grid.slice(center.y, center.y + center.h),
+      ...Array.from({ length: extra - above }, () => [...last]),
+      ...grid.slice(center.y + center.h),
+    ],
+    center: { ...center, h: center.h + extra },
+  }
+}
+
+/** A slice as a piece: its frames (runs of equal frames merged) and options. */
+function slicePiece(sheet, slice, paperNames) {
   const name = cssName(slice.name)
   if (name !== slice.name) {
     throw new Error(
@@ -85,115 +169,268 @@ export function sliceCss(sheet, slice) {
   const repeat = options.repeat ?? 'stretch'
   if (!REPEATS.has(repeat))
     throw new Error(`slice "${slice.name}": unknown repeat=${repeat}`)
-  const night = 'night' in options
   const key = sliceKey(slice, 0)
-  const grids = frameGrids(sheet, slice)
-  // Frames that repeat the one before add nothing; keep the first of a run.
   const frames = []
-  grids.forEach((grid, i) => {
+  sheet.data.frames.forEach((frame, i) => {
+    const grid = readRegion(sheet, i, sliceKey(slice, i).bounds)
     const last = frames.at(-1)
-    if (last && same(last.grid, grid)) last.ms += sheet.data.frames[i].duration
-    else frames.push({ grid, ms: sheet.data.frames[i].duration })
+    if (last && same(last.grid, grid)) last.ms += frame.duration
+    else frames.push({ grid, ms: frame.duration })
   })
-  const paper = (grid) => recolourGrid(grid, PAPER_RECOLOUR)
-  const rules = []
-
-  if (key.center) {
-    if (frames.length > 1) {
-      throw new Error(
-        `9-slice "${slice.name}" changes across frames; draw states as separate slices`
-      )
-    }
-    const insets = sliceInsets(key)
-    const widths = insets.map(artPx).join(' ')
-    rules.push(
-      [
-        `.px-${name} {`,
-        '  border-style: solid;',
-        `  border-width: ${widths};`,
-        `  border-image-source: ${url(frames[0].grid)};`,
-        `  border-image-slice: ${insets.join(' ')} fill;`,
-        `  border-image-width: ${widths};`,
-        `  border-image-repeat: ${repeat};`,
-        '}',
-      ].join('\n')
+  if (key.center && frames.length > 1) {
+    throw new Error(
+      `9-slice "${slice.name}" changes across frames; draw states as separate slices`
     )
-    const paperGrid = paper(frames[0].grid)
-    if (!night && !same(paperGrid, frames[0].grid)) {
-      rules.push(
-        `${PAPER_SCOPE} .px-${name} {\n  border-image-source: ${url(paperGrid)};\n}`
-      )
-    }
-    return rules.join('\n')
   }
+  const paper =
+    !('night' in options) && ('paper' in options || paperNames.has(name))
+  return {
+    name,
+    center: key.center,
+    w: key.bounds.w,
+    h: key.bounds.h,
+    frames,
+    repeat,
+    paper,
+  }
+}
 
-  const { w, h } = key.bounds
-  const total = frames.reduce((sum, f) => sum + f.ms, 0)
-  const lines = [
-    `.px-${name} {`,
-    `  background-image: ${url(frames[0].grid)};`,
-    `  background-size: ${artPx(w)} ${artPx(h)};`,
-    '  background-repeat: repeat;',
-  ]
-  if (frames.length > 1)
-    lines.push(`  animation: px-${name} ${total}ms step-end infinite;`)
-  lines.push('}')
-  rules.push(lines.join('\n'))
-  if (frames.length > 1) {
-    const keyframes = (scope, map) => {
-      let elapsed = 0
-      const steps = frames.map((f) => {
-        const at = Number(((elapsed / total) * 100).toFixed(4))
-        elapsed += f.ms
-        return `  ${at}% { background-image: ${url(map(f.grid))}; }`
-      })
-      steps.push(
-        `  100% { background-image: ${url(map(frames.at(-1).grid))}; }`
+/** The declarations that draw a 9-slice grid; `base` is what they replace. */
+function nineSlice(grid, center, repeat, base) {
+  const insets = sliceInsets({
+    bounds: { w: grid[0].length, h: grid.length },
+    center,
+  })
+  const widths = insets.map(artPx).join(' ')
+  const fill = centreColour(grid, center)
+  const out = []
+  if (!base) out.push('border-style: solid;')
+  if (!base || !same(base.insets, insets)) {
+    out.push(`border-width: ${widths};`)
+  }
+  out.push(`border-image-source: ${url(grid)};`)
+  if (!base || !same(base.insets, insets)) {
+    out.push(`border-image-slice: ${insets.join(' ')} fill;`)
+  }
+  if (!base && repeat !== 'stretch') {
+    out.push(`border-image-repeat: ${repeat};`)
+  }
+  if (fill && fill !== base?.fill) out.push(`background-color: ${fill};`)
+  if (!base && fill) out.push('background-clip: padding-box;')
+  return { lines: out, insets, fill }
+}
+
+function rule(selector, lines) {
+  return `${selector} {\n${lines.map((l) => `  ${l}`).join('\n')}\n}`
+}
+
+function media(query, rules) {
+  return `@media ${query} {\n${rules.join('\n').replace(/^(?=.)/gm, '  ')}\n}`
+}
+
+const paperGrid = (grid) => recolourGrid(grid, PAPER_RECOLOUR)
+
+/** CSS for one 9-slice piece, its paper copy and its grown copies. */
+function nineSliceCss(piece, selector, grows) {
+  const { grid } = piece.frames[0]
+  const night = nineSlice(grid, piece.center, piece.repeat)
+  const rules = [rule(selector, night.lines)]
+  const paperSelector = `${PAPER_SCOPE} ${selector}${OUTSIDE_NIGHT}`
+  const recoloured = paperGrid(grid)
+  const hasPaper = piece.paper && !same(recoloured, grid)
+  if (hasPaper) {
+    const paper = nineSlice(recoloured, piece.center, piece.repeat, night)
+    rules.push(rule(paperSelector, paper.lines))
+  }
+  for (const grow of grows) {
+    const tall = growGrid(grid, piece.center, grow.height)
+    const blocks = [rule(selector, [`border-image-source: ${url(tall.grid)};`])]
+    if (hasPaper) {
+      blocks.push(
+        rule(paperSelector, [
+          `border-image-source: ${url(paperGrid(tall.grid))};`,
+        ])
       )
-      return `@keyframes ${scope}px-${name} {\n${steps.join('\n')}\n}`
     }
-    rules.push(keyframes('', (g) => g))
-    if (!night && frames.some((f) => !same(paper(f.grid), f.grid))) {
-      rules.push(
-        `${PAPER_SCOPE} .px-${name} {\n  background-image: ${url(paper(frames[0].grid))};\n` +
-          `  animation-name: paper-px-${name};\n}`
-      )
-      rules.push(keyframes('paper-', paper))
-    }
-  } else {
-    const paperGrid = paper(frames[0].grid)
-    if (!night && !same(paperGrid, frames[0].grid)) {
-      rules.push(
-        `${PAPER_SCOPE} .px-${name} {\n  background-image: ${url(paperGrid)};\n}`
-      )
-    }
+    rules.push(media(grow.media, blocks))
   }
   return rules.join('\n')
+}
+
+/** CSS for one tile piece: a repeated background, stepped if animated. */
+function tileCss(piece) {
+  const { name, frames, w, h } = piece
+  const total = frames.reduce((sum, f) => sum + f.ms, 0)
+  const lines = [
+    `background-image: var(--px-${name});`,
+    `background-size: ${artPx(w)} ${artPx(h)};`,
+    'background-repeat: repeat;',
+  ]
+  if (frames.length > 1)
+    lines.push(`animation: px-${name} ${total}ms step-end infinite;`)
+  const rules = [rule(`.px-${name}`, lines)]
+  const keyframes = (prefix, map) => {
+    let elapsed = 0
+    const steps = frames.map((f) => {
+      const at = Number(((elapsed / total) * 100).toFixed(4))
+      elapsed += f.ms
+      return `  ${at}% { background-image: ${url(map(f.grid))}; }`
+    })
+    steps.push(`  100% { background-image: ${url(map(frames.at(-1).grid))}; }`)
+    return `@keyframes ${prefix}px-${name} {\n${steps.join('\n')}\n}`
+  }
+  if (frames.length > 1) rules.push(keyframes('', (g) => g))
+  const hasPaper =
+    piece.paper && frames.some((f) => !same(paperGrid(f.grid), f.grid))
+  if (hasPaper) {
+    const paperLines = [`background-image: ${url(paperGrid(frames[0].grid))};`]
+    if (frames.length > 1) paperLines.push(`animation-name: paper-px-${name};`)
+    rules.push(rule(`${PAPER_SCOPE} .px-${name}${OUTSIDE_NIGHT}`, paperLines))
+    if (frames.length > 1) rules.push(keyframes('paper-', paperGrid))
+  }
+  return rules.join('\n')
+}
+
+/**
+ * CSS for a control drawn as `<base>-rest|hover|pressed` slices, plus the
+ * disabled slice of its kind when there is one.
+ */
+function familyCss(base, states, disabled) {
+  const selector = `.px-${base}`
+  const rest = states.rest
+  const night = nineSlice(rest.frames[0].grid, rest.center, rest.repeat)
+  const rules = [rule(selector, night.lines)]
+  const variant = (piece) =>
+    nineSlice(piece.frames[0].grid, piece.center, piece.repeat, night).lines
+  if (states.hover) {
+    rules.push(
+      media('(hover: hover)', [
+        rule(`${selector}:hover${ENABLED}`, variant(states.hover)),
+      ])
+    )
+  }
+  if (states.pressed) {
+    rules.push(
+      rule(
+        `:is(${selector}:active, ${selector}[aria-pressed='true'])${ENABLED}`,
+        variant(states.pressed)
+      )
+    )
+  }
+  if (disabled) rules.push(rule(`${selector}${DISABLED}`, variant(disabled)))
+  return rules.join('\n')
+}
+
+/**
+ * Recolour every frame of a piece into a new, named piece. A variant is a
+ * body only when it is listed as one itself: the paper recolour is drawn
+ * for the slice's own colours, not for the variant's.
+ */
+function variantPiece(piece, variant, paperNames) {
+  return {
+    ...piece,
+    name: variant.name,
+    paper: paperNames.has(variant.name),
+    frames: piece.frames.map((f) => ({
+      ...f,
+      grid: recolourGrid(f.grid, variant.recolour),
+    })),
+  }
 }
 
 /** The whole stylesheet for a loaded chrome sheet. */
 export function chromeCss(
   sheet,
-  source = 'src/assets/pixel/chrome/os-chrome.json'
+  source = 'src/assets/pixel/chrome/os-chrome.json',
+  options = CHROME_OPTIONS
 ) {
   const { slices } = sheet.data.meta
   if (slices.length === 0) throw new Error(`${sheet.json}: no slices`)
-  const names = new Set()
-  for (const s of slices) {
-    if (names.has(s.name))
-      throw new Error(`chrome slice "${s.name}" appears twice`)
-    names.add(s.name)
+  const paperNames = new Set(options.paper ?? [])
+  const pieces = new Map()
+  for (const slice of slices) {
+    const piece = slicePiece(sheet, slice, paperNames)
+    if (pieces.has(piece.name))
+      throw new Error(`chrome slice "${piece.name}" appears twice`)
+    pieces.set(piece.name, piece)
   }
-  const blocks = [...slices]
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .map((slice) => sliceCss(sheet, slice))
-  return [
+  for (const variant of options.variants ?? []) {
+    const from = pieces.get(variant.from)
+    if (!from)
+      throw new Error(`variant "${variant.name}": no slice "${variant.from}"`)
+    if (pieces.has(variant.name))
+      throw new Error(`variant "${variant.name}" is also a slice`)
+    pieces.set(variant.name, variantPiece(from, variant, paperNames))
+  }
+  const grows = new Map()
+  for (const grow of options.grow ?? []) {
+    const piece = pieces.get(grow.slice)
+    if (!piece?.center)
+      throw new Error(`grow "${grow.slice}": no 9-slice of that name`)
+    grows.set(grow.slice, [...(grows.get(grow.slice) ?? []), grow])
+  }
+
+  // Controls: every `<base>-rest` with its other states.
+  const families = new Map()
+  for (const name of pieces.keys()) {
+    const match = /^(.+)-(rest|hover|pressed)$/.exec(name)
+    if (!match) continue
+    const states = families.get(match[1]) ?? {}
+    states[match[2]] = pieces.get(name)
+    families.set(match[1], states)
+  }
+  const inFamily = new Set()
+  const blocks = []
+  for (const [base, states] of families) {
+    if (!states.rest) continue
+    for (const state of STATES)
+      if (states[state]) inFamily.add(`${base}-${state}`)
+    const disabledName = `${base.replace(/-[^-]+$/, '')}-disabled`
+    const disabled = pieces.get(disabledName)
+    if (disabled?.center) inFamily.add(disabledName)
+    blocks.push({ name: base, css: familyCss(base, states, disabled) })
+  }
+
+  const tiles = []
+  for (const piece of pieces.values()) {
+    if (inFamily.has(piece.name)) continue
+    if (piece.center) {
+      blocks.push({
+        name: piece.name,
+        css: nineSliceCss(
+          piece,
+          `.px-${piece.name}`,
+          grows.get(piece.name) ?? []
+        ),
+      })
+    } else {
+      tiles.push(piece)
+      blocks.push({ name: piece.name, css: tileCss(piece) })
+    }
+  }
+  blocks.sort((a, b) => a.name.localeCompare(b.name))
+  tiles.sort((a, b) => a.name.localeCompare(b.name))
+
+  const header = [
     '/*',
     ` * GENERATED by scripts/pixel/gen-chrome.mjs from ${source}.`,
     ' * Do not edit by hand: re-export the chrome atlas and run `pnpm art:chrome`.',
     ' */',
     '',
-    blocks.join('\n\n'),
+  ]
+  const variables = tiles.length
+    ? [
+        rule(
+          ':root',
+          tiles.map((t) => `--px-${t.name}: ${url(t.frames[0].grid)};`)
+        ),
+        '',
+      ]
+    : []
+  return [
+    ...header,
+    ...variables,
+    blocks.map((b) => b.css).join('\n\n'),
     '',
   ].join('\n')
 }

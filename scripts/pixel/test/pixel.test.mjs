@@ -20,7 +20,8 @@ import sharp from 'sharp'
 
 import { checkArt, sheetProblems } from '../check-art.mjs'
 import { normalizeSheetJson, resolvePaths, sheetArgs } from '../export-art.mjs'
-import { chromeCss, sliceInsets } from '../gen-chrome.mjs'
+import { chromeCss, growGrid, sliceInsets } from '../gen-chrome.mjs'
+import { cursorsCss } from '../gen-cursors.mjs'
 import { glyphModuleSource, readGlyphs } from '../gen-glyphs.mjs'
 import { buildSpritesCss, spriteCss } from '../gen-sprites.mjs'
 import { PALETTE_HEX, PAPER_RECOLOUR, normalizeHex } from '../palette.mjs'
@@ -33,7 +34,7 @@ import {
   sliceKey,
   tagFrames,
 } from '../sheet.mjs'
-import { mergeRuns, rectsToPath, svgDataUri } from '../svg.mjs'
+import { gridToPaths, mergeRuns, rectsToPath, svgDataUri } from '../svg.mjs'
 import { FIXTURE_NAMES, makeFixtures } from './fixtures/make-fixtures.mjs'
 
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), 'fixtures')
@@ -129,12 +130,21 @@ describe('svg', () => {
   })
 
   it('writes rect paths and a CSS-safe data URI', () => {
-    assert.equal(rectsToPath([{ x: 1, y: 2, w: 3, h: 4 }]), 'M1 2h3v4h-3z')
+    assert.equal(rectsToPath([{ x: 1, y: 2, w: 3, h: 4 }]), 'M1 2h3v4H1z')
     const uri = svgDataUri('<svg fill="#0b1420" d="100%"/>')
-    assert.equal(
-      uri,
-      "data:image/svg+xml,%3Csvg fill='%230b1420' d='100%25'/%3E"
-    )
+    assert.equal(uri, "data:image/svg+xml,<svg fill='%230b1420' d='100%25'/>")
+  })
+
+  it('paints the largest colour under the whole opaque area', () => {
+    const grid = [
+      [null, 'a', 'a', null],
+      ['a', 'b', 'a', 'a'],
+      [null, 'a', 'a', null],
+    ]
+    assert.deepEqual(gridToPaths(grid), [
+      { fill: 'a', d: 'M1 0h2v1H1zM0 1h4v1H0zM1 2h2v1H1z' },
+      { fill: 'b', d: 'M1 1h1v1H1z' },
+    ])
   })
 })
 
@@ -415,6 +425,30 @@ describe('check-art', () => {
     }
   })
 
+  it('holds a 1-bit atlas to one colour, of any value', async () => {
+    const dir = await fixtureDir()
+    try {
+      const oneBit = sources.map((source) =>
+        source.name === 'glyphs-fixture' ? { ...source, oneBit: true } : source
+      )
+      await writePng(join(dir, 'fx', 'glyphs-fixture.png'), [
+        ['#ffffff', null, '#ffffff', ...Array(45).fill(null)],
+        ...Array.from({ length: 15 }, () => Array(48).fill(null)),
+      ])
+      assert.deepEqual((await run(dir, { sources: oneBit })).failures, [])
+      await writePng(join(dir, 'fx', 'glyphs-fixture.png'), [
+        ['#ffffff', null, '#0b1420', ...Array(45).fill(null)],
+        ...Array.from({ length: 15 }, () => Array(48).fill(null)),
+      ])
+      assert.match(
+        (await run(dir, { sources: oneBit })).failures.join('\n'),
+        /glyphs-fixture\.png: 1-bit art in 2 colours: #0b1420 first at 2,0/
+      )
+    } finally {
+      rmSync(dir, { recursive: true })
+    }
+  })
+
   it('fails a JSON that disagrees with its PNG', () => {
     const data = sheetJson('x', 4, 4, {
       frameTags: [{ name: 'loop', from: 0, to: 2, direction: 'forward' }],
@@ -512,11 +546,11 @@ describe('gen-glyphs', () => {
     const glyphs = readGlyphs(await loadSheet(fixture('glyphs-fixture')))
     assert.deepEqual(Object.keys(glyphs), ['check', 'close', 'spinner'])
     assert.equal(glyphs.close.frames.length, 1)
-    assert.match(glyphs.close.frames[0], /^M0 0h1v1h-1z/)
-    assert.match(glyphs.close.frames[0], /M3 3h2v2h-2z/) // the merged 2x2 crossing
+    assert.match(glyphs.close.frames[0], /^M0 0h1v1H0z/)
+    assert.match(glyphs.close.frames[0], /M3 3h2v2H3z/) // the merged 2x2 crossing
     assert.equal(glyphs.spinner.frames.length, 4)
     assert.deepEqual(glyphs.spinner.ms, [100, 100, 100, 100])
-    assert.equal(glyphs.spinner.frames[2], 'M7 5h1v2h-1zM5 7h3v1h-3z')
+    assert.equal(glyphs.spinner.frames[2], 'M7 5h1v2H7zM5 7h3v1H5z')
   })
 
   it('reads numbered slices as frames', async () => {
@@ -535,7 +569,7 @@ describe('gen-glyphs', () => {
     ]
     const glyphs = readGlyphs(sheet)
     assert.equal(glyphs.dot.frames.length, 2)
-    assert.match(glyphs.dot.frames[0], /^M0 0h1v1h-1z/) // close came first
+    assert.match(glyphs.dot.frames[0], /^M0 0h1v1H0z/) // close came first
     assert.deepEqual(glyphs.dot.ms, [250, 100])
   })
 
@@ -580,8 +614,13 @@ describe('gen-glyphs', () => {
 })
 
 describe('gen-chrome', () => {
+  // The fixture's bodies; everything else in it is chrome and stays night.
+  const BODIES = { paper: ['window', 'shadow-tile'] }
+  const css = async (options = BODIES) =>
+    chromeCss(await loadSheet(fixture('chrome-fixture')), undefined, options)
+
   it('turns 9-slices into border-images with the drawn insets', async () => {
-    const css = chromeCss(await loadSheet(fixture('chrome-fixture')))
+    const out = await css()
     assert.deepEqual(
       sliceInsets({
         bounds: { w: 5, h: 4 },
@@ -589,34 +628,117 @@ describe('gen-chrome', () => {
       }),
       [1, 1, 1, 1]
     )
-    assert.match(css, /\.px-window \{\n {2}border-style: solid;/)
-    assert.match(css, /border-image-slice: 2 2 2 2 fill;/)
-    assert.match(css, /border-image-repeat: round;/) // the button's slice data
-    assert.match(css, /shape-rendering='crispEdges'/)
+    assert.match(out, /\.px-window \{\n {2}border-style: solid;/)
+    assert.match(out, /border-image-slice: 2 2 2 2 fill;/)
+    assert.match(out, /border-image-repeat: round;/) // the button's slice data
+    assert.match(out, /shape-rendering='crispEdges'/)
+    // Stretch and a width of one border are the defaults; not written.
+    assert.ok(!out.includes('border-image-width'))
+    assert.ok(!out.includes('border-image-repeat: stretch'))
   })
 
-  it('recolours bodies for paper and leaves night slices alone', async () => {
-    const css = chromeCss(await loadSheet(fixture('chrome-fixture')))
-    const paper = css.split(':root:not(.dark) .px-window')[1].split('}')[0]
+  it('backs a one-colour centre with its colour, inside the border', async () => {
+    const window = (await css()).split('.px-window {')[1].split('}')[0]
+    assert.match(window, /background-color: #13253a;/)
+    assert.match(window, /background-clip: padding-box;/)
+  })
+
+  it('recolours bodies for paper, outside night subtrees only', async () => {
+    const out = await css()
+    const paper = out
+      .split(':root:not(.dark) .px-window:not(.os-night, .os-night *)')[1]
+      .split('}')[0]
     assert.match(paper, /%23e8e4dc/) // the #13253a body became paper
     assert.match(paper, /%232e6e6e/) // the #4fa3a0 rim became the paper frame
     assert.match(paper, /%230b1420/) // the outline stays navy
+    assert.match(paper, /background-color: #e8e4dc;/)
     assert.ok(
-      !css.includes(':root:not(.dark) .px-skeleton-tile'),
-      'night slice has no paper copy'
+      !out.includes(':root:not(.dark) .px-skeleton-tile'),
+      'a slice marked night has no paper copy'
     )
-    assert.ok(css.includes(':root:not(.dark) .px-shadow-tile'))
+    assert.ok(
+      !out.includes(':root:not(.dark) .px-button'),
+      'chrome that is not a body stays night'
+    )
+    assert.ok(out.includes(':root:not(.dark) .px-shadow-tile'))
   })
 
   it('steps a tile through its frames', async () => {
-    const css = chromeCss(await loadSheet(fixture('chrome-fixture')))
-    assert.match(css, /animation: px-skeleton-tile 400ms step-end infinite;/)
-    assert.match(css, /@keyframes px-skeleton-tile \{\n {2}0% /)
-    assert.match(css, /\n {2}50% \{ background-image/)
+    const out = await css()
+    assert.match(out, /animation: px-skeleton-tile 400ms step-end infinite;/)
+    assert.match(out, /@keyframes px-skeleton-tile \{\n {2}0% /)
+    assert.match(out, /\n {2}50% \{ background-image/)
     assert.ok(
-      !/animation: px-shadow-tile/.test(css),
+      !/animation: px-shadow-tile/.test(out),
       'a still tile does not animate'
     )
+    assert.match(out, /--px-shadow-tile: url\(/)
+    assert.match(out, /background-image: var\(--px-shadow-tile\);/)
+  })
+
+  it('makes one control of rest, hover and pressed slices', async () => {
+    const sheet = await loadSheet(fixture('chrome-fixture'))
+    const button = sheet.data.meta.slices.find((s) => s.name === 'button')
+    const key = button.keys[0]
+    // The pressed state draws its top bevel a row lower.
+    const pressed = { ...key, center: { ...key.center, y: 2, h: 1 } }
+    sheet.data.meta.slices = [
+      { name: 'button-plain-rest', keys: [key] },
+      { name: 'button-plain-hover', keys: [key] },
+      { name: 'button-plain-pressed', keys: [pressed] },
+      { name: 'button-disabled', keys: [key] },
+    ]
+    const out = chromeCss(sheet, undefined, { paper: [] })
+    assert.ok(!out.includes('.px-button-plain-rest'), 'no class per state')
+    assert.match(out, /\.px-button-plain \{\n {2}border-style: solid;/)
+    assert.match(
+      out,
+      /@media \(hover: hover\) \{\n {2}\.px-button-plain:hover:not\(:disabled, \[aria-disabled='true'\]\) \{/
+    )
+    const down = out
+      .split(
+        ":is(.px-button-plain:active, .px-button-plain[aria-pressed='true'])"
+      )[1]
+      .split('}')[0]
+    assert.match(down, /border-image-slice: 2 1 1 1 fill;/) // moved down a row
+    assert.match(
+      out,
+      /\.px-button-plain:is\(:disabled, \[aria-disabled='true'\]\) \{/
+    )
+  })
+
+  it('adds recoloured variants and grown slices', async () => {
+    const out = await css({
+      paper: ['window'],
+      variants: [
+        {
+          name: 'window-warm',
+          from: 'window',
+          recolour: { '#13253a': '#4a2b25' },
+        },
+      ],
+      grow: [{ slice: 'window', height: 9, media: '(pointer: coarse)' }],
+    })
+    const warm = out.split('.px-window-warm {')[1].split('}')[0]
+    assert.match(warm, /background-color: #4a2b25;/)
+    assert.ok(
+      !out.includes(':root:not(.dark) .px-window-warm'),
+      'a variant of a body is not a body'
+    )
+    const coarse = out.split('@media (pointer: coarse) {')[1].split('\n}')[0]
+    assert.match(
+      coarse,
+      /\.px-window \{\n {4}border-image-source: url\("data:image\/svg\+xml,<svg [^"]*height='9'/
+    )
+    assert.match(coarse, /:root:not\(\.dark\) \.px-window:not/)
+  })
+
+  it('grows a slice by repeating its first and last centre rows', () => {
+    const grid = [['t'], ['a'], ['m'], ['z'], ['b']]
+    const grown = growGrid(grid, { x: 0, y: 1, w: 1, h: 3 }, 8)
+    // Three rows more: one above (the floor of half) and two below.
+    assert.equal(grown.grid.map((row) => row[0]).join(''), 'taamzzzb')
+    assert.deepEqual(grown.center, { x: 0, y: 1, w: 1, h: 6 })
   })
 
   it('refuses a 9-slice that changes across frames', async () => {
@@ -634,5 +756,50 @@ describe('gen-chrome', () => {
       },
     ]
     assert.throws(() => chromeCss(sheet), /changes across frames/)
+  })
+})
+
+describe('gen-cursors', () => {
+  it('draws each cursor at the art scale, with its hotspot and keyword', async () => {
+    const sheet = await loadSheet(fixture('chrome-fixture'))
+    sheet.data.meta.slices = [
+      {
+        name: 'grab',
+        keys: [
+          {
+            frame: 0,
+            bounds: { x: 0, y: 0, w: 6, h: 6 },
+            pivot: { x: 3, y: 2 },
+          },
+        ],
+      },
+      {
+        name: 'grabbing',
+        keys: [
+          {
+            frame: 0,
+            bounds: { x: 0, y: 0, w: 6, h: 6 },
+            pivot: { x: 3, y: 3 },
+          },
+        ],
+      },
+    ]
+    const out = await cursorsCss(sheet)
+    const grab = out.split('.px-cursor-grab {')[1].split('}')[0]
+    // 1x first, as a fallback, then the image sets; the hotspot is in the
+    // CSS px of the 1x image (the art at 2x).
+    assert.match(
+      grab,
+      /cursor: url\("data:image\/png;base64,[^"]+"\) 6 4, grab;/
+    )
+    assert.match(grab, /cursor: -webkit-image-set\(.+ 1x, .+ 2x\) 6 4, grab;/)
+    assert.match(grab, /cursor: image-set\(.+ 1x, .+ 2x\) 6 4, grab;/)
+    assert.match(
+      out,
+      /\.px-cursor-grab:active \{\n {2}cursor: url\([^)]+\) 6 6, grabbing;/
+    )
+    const png = Buffer.from(/base64,([^"]+)"/.exec(grab)[1], 'base64')
+    const { width, height } = await sharp(png).metadata()
+    assert.deepEqual([width, height], [12, 12])
   })
 })

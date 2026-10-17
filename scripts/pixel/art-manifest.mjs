@@ -11,12 +11,14 @@
  * `<name>.json` (json-array, tags, slices and layers listed, packed, never
  * trimmed). `splitLayers` sheets put each visible layer in its own frames;
  * their frame `filename` is `<layer>:<frame>`. `scales` adds `<name>@<n>x`
- * copies (cursors need a 2x file for `image-set()`). `ownPalette` marks art
- * that keeps its own colours (the mascot), which the palette check skips.
+ * copies. `ownPalette` marks art that keeps its own colours (the mascot),
+ * which the palette check skips. `oneBit` marks art drawn in one colour that
+ * code recolours (the glyphs, drawn into `currentColor`): any one colour
+ * passes, a second fails.
  */
 export const ART_SOURCES = [
   { name: 'os-chrome', root: 'art', group: 'chrome' },
-  { name: 'os-glyphs-8', root: 'art', group: 'glyphs' },
+  { name: 'os-glyphs-8', root: 'art', group: 'glyphs', oneBit: true },
   { name: 'os-app-icons', root: 'art', group: 'app-icons' },
   { name: 'os-project-icons', root: 'art', group: 'project-icons' },
   {
@@ -29,7 +31,7 @@ export const ART_SOURCES = [
   { name: 'os-boot', root: 'art', group: 'boot' },
   { name: 'os-wallpaper', root: 'art', group: 'wallpaper', splitLayers: true },
   { name: 'minime-ride', root: 'art', group: 'pets' },
-  { name: 'os-cursors', root: 'art', group: 'cursors', scales: [2] },
+  { name: 'os-cursors', root: 'art', group: 'cursors' },
   { name: 'os-neon-404', root: 'art', group: 'neon' },
   {
     name: 'readme-headers',
@@ -84,4 +86,5 @@ export const GENERATED_BUDGETS = [
   { file: 'src/styles/pixel-chrome.css', bytes: 24 * KB },
   { file: 'src/components/pixel/pixel-icon.generated.tsx', bytes: 16 * KB },
   { file: 'src/styles/pixel-sprites.css', bytes: 12 * KB },
+  { file: 'src/styles/pixel-cursors.css', bytes: 6 * KB },
 ]
