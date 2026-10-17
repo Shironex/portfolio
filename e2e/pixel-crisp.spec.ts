@@ -1,4 +1,5 @@
 import {
+  type Locator,
   type Page,
   type PlaywrightWorkerArgs,
   type PlaywrightWorkerOptions,
@@ -10,7 +11,12 @@ import {
   DESKTOP_VIEWPORT,
   mockFeeds,
   openDesktop,
+  osWindow,
+  rectOf,
+  settled,
   skipBootSplash,
+  taskbar,
+  titleBarGrip,
 } from './helpers'
 
 /**
@@ -33,12 +39,21 @@ const DEPARTURE_EM = 11
 const SOFT_LABEL_DPRS = new Set([1.25])
 
 /** Within rounding of the computed style, a whole number. */
-function expectWhole(value: number, what: string) {
+function expectWhole(value: number, what: string, tolerance = 0.01) {
   expect(
     Math.abs(value - Math.round(value)),
     `${what} = ${value} device px`
-  ).toBeLessThan(0.01)
+  ).toBeLessThan(tolerance)
 }
+
+/**
+ * Layout keeps lengths in 1/64 CSS px units (Blink and WebKit), so a box
+ * built from 2.4 px steps sits a few units off the exact value (a row of
+ * 22 art px buttons adds up the error of each). Paint snaps every edge to the
+ * nearest device pixel, so anything this close lands on it; a box really
+ * off the grid is a third or a half of a pixel off.
+ */
+const LAYOUT_TOLERANCE = 0.1
 
 /**
  * The art pixel tokens and every type size, in CSS px. A token that holds a
@@ -162,6 +177,85 @@ for (const dpr of DPRS) {
       expect(m.heading).toBeGreaterThan(21.99)
       expect(m.display).toBeGreaterThan(35.99)
       expect(m.displaySm).toBeGreaterThan(26.99)
+    } finally {
+      await close()
+    }
+  })
+}
+
+/** Ratios the window chrome is checked at: whole, fractional, and HiDPI. */
+const CHROME_DPRS = [1, 1.25, 1.5, 2]
+
+/**
+ * Every edge of `target` on a whole device pixel and a whole art pixel, so
+ * its 9-slice chrome is drawn crisp. The rect includes a drag's transform.
+ */
+async function expectOnArtPixels(
+  page: Page,
+  target: Locator,
+  ratio: number,
+  what: string
+) {
+  const px = await page.evaluate(() =>
+    Number.parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue('--px')
+    )
+  )
+  const box = await rectOf(target)
+  for (const [edge, value] of Object.entries(box)) {
+    expectWhole(value * ratio, `${what} ${edge}`, LAYOUT_TOLERANCE)
+    expect(
+      Math.abs(value / px - Math.round(value / px)),
+      `${what} ${edge} = ${value / px} art px`
+    ).toBeLessThan(LAYOUT_TOLERANCE)
+  }
+}
+
+for (const dpr of CHROME_DPRS) {
+  test(`at DPR ${dpr} a window stays on whole art pixels as it is dragged and resized`, async ({
+    browser,
+    browserName,
+    playwright,
+  }) => {
+    const { page, ratio, close } = await pageAt(dpr, {
+      browser,
+      browserName,
+      playwright,
+    })
+    try {
+      await expectOnArtPixels(page, taskbar(page), ratio, 'taskbar')
+
+      await taskbar(page).getByRole('button', { name: 'Open About' }).click()
+      const about = osWindow(page, 'about.me')
+      await expect(about).toBeVisible()
+      await settled(about)
+      await expectOnArtPixels(page, about, ratio, 'opened')
+
+      // Odd distances, which no art pixel divides.
+      const grip = await titleBarGrip(about)
+      await page.mouse.move(grip.x, grip.y)
+      await page.mouse.down()
+      await page.mouse.move(grip.x + 137, grip.y + 71, { steps: 7 })
+      await expectOnArtPixels(page, about, ratio, 'mid-drag')
+      await page.mouse.up()
+      await expectOnArtPixels(page, about, ratio, 'dropped')
+
+      const east = await rectOf(about.locator('[data-resize-handle="e"]'))
+      const start = { x: east.x + east.width / 2, y: east.y + 40 }
+      await page.mouse.move(start.x, start.y)
+      await page.mouse.down()
+      await page.mouse.move(start.x + 53, start.y, { steps: 5 })
+      await expectOnArtPixels(page, about, ratio, 'mid-resize')
+      await page.mouse.up()
+      await expectOnArtPixels(page, about, ratio, 'resized')
+
+      const corner = await rectOf(about.locator('[data-resize-handle="nw"]'))
+      const nw = { x: corner.x + 2, y: corner.y + 2 }
+      await page.mouse.move(nw.x, nw.y)
+      await page.mouse.down()
+      await page.mouse.move(nw.x - 29, nw.y - 17, { steps: 5 })
+      await page.mouse.up()
+      await expectOnArtPixels(page, about, ratio, 'resized from the corner')
     } finally {
       await close()
     }
