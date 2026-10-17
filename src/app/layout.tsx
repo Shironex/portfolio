@@ -67,7 +67,15 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" data-palette={DEFAULT_PALETTE} suppressHydrationWarning>
+    <html
+      lang="en"
+      data-palette={DEFAULT_PALETTE}
+      // The font variables sit on <html>, not <body>: the `--font-*` theme
+      // tokens in globals.css are declared on `:root` and reference them with
+      // `var()`, so they resolve there or not at all.
+      className={cn(fraunces.variable, geist.variable, jetbrainsMono.variable)}
+      suppressHydrationWarning
+    >
       <head>
         <script
           // Applies the stored mode and palette (and the matching theme
@@ -80,15 +88,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           dangerouslySetInnerHTML={{ __html: serializeJsonLd(personJsonLd) }}
         />
       </head>
-      <body
-        className={cn(
-          fraunces.variable,
-          geist.variable,
-          jetbrainsMono.variable,
-          'font-body antialiased'
-        )}
-        suppressHydrationWarning
-      >
+      <body className="font-body antialiased" suppressHydrationWarning>
         {children}
         <Toaster />
       </body>
