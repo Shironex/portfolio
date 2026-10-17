@@ -277,6 +277,21 @@ export function snapZoneAt(point: Point, area: Rect): SnapZone | null {
 }
 
 /**
+ * A rect moved, and shrunk where it must, to lie inside `area`: a new window
+ * opens whole on the desktop, whatever the viewport and the art pixel.
+ */
+export function fitInArea(rect: Rect, area: Rect): Rect {
+  const w = Math.min(rect.w, area.w)
+  const h = Math.min(rect.h, area.h)
+  return {
+    x: Math.max(area.x, Math.min(rect.x, area.x + area.w - w)),
+    y: Math.max(area.y, Math.min(rect.y, area.y + area.h - h)),
+    w,
+    h,
+  }
+}
+
+/**
  * Rect a window takes when dropped on `zone`: a half, or the whole area (as
  * `desktopArea` measures it, in whole art px). A half is never narrower than
  * `minW`, up to the full width of the area, and is whole art px too.

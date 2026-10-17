@@ -1,7 +1,8 @@
 import { APP_WINDOW_DEFAULTS } from '@/components/os/constants'
 import type { AppId, WindowId, WindowState } from '@/components/os/types'
 
-import { cascadeOrigin } from '@/lib/os/geometry'
+import { measureDesktopArea } from '@/lib/os/dom'
+import { type Rect, cascadeOrigin, fitInArea } from '@/lib/os/geometry'
 import { artPx } from '@/lib/os/pixel'
 
 import type { Project } from '@/types'
@@ -27,6 +28,18 @@ export function projectSlugForWindow(id: WindowId): string {
 }
 
 /**
+ * A new window's rect, in CSS px: from art px, and inside the desktop area,
+ * since the art pixel (2.4 CSS px at DPR 1.25) makes a window larger in CSS
+ * px than the viewport may allow.
+ */
+function openingRect(x: number, y: number, w: number, h: number): Rect {
+  return fitInArea(
+    { x: artPx(x), y: artPx(y), w: artPx(w), h: artPx(h) },
+    measureDesktopArea()
+  )
+}
+
+/**
  * Build a fresh app `WindowState` from its registry defaults (art px) at
  * z-index `z`. Collapses the construction half of the old `openApp`.
  */
@@ -36,10 +49,7 @@ export function createAppWindow(appId: AppId, z: number): WindowState {
     id: appId,
     title: cfg.title,
     icon: cfg.icon,
-    x: artPx(cfg.x),
-    y: artPx(cfg.y),
-    w: artPx(cfg.w),
-    h: artPx(cfg.h),
+    ...openingRect(cfg.x, cfg.y, cfg.w, cfg.h),
     z,
     minimized: false,
     maximized: false,
@@ -60,10 +70,14 @@ export function createProjectWindow(
     id: projectWindowId(project.slug),
     title: `${project.slug}.app`,
     icon: '◆',
-    x: origin.x,
-    y: origin.y,
-    w: artPx(PROJECT_WINDOW_SIZE.w),
-    h: artPx(PROJECT_WINDOW_SIZE.h),
+    ...fitInArea(
+      {
+        ...origin,
+        w: artPx(PROJECT_WINDOW_SIZE.w),
+        h: artPx(PROJECT_WINDOW_SIZE.h),
+      },
+      measureDesktopArea()
+    ),
     z,
     minimized: false,
     maximized: false,
