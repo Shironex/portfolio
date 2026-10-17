@@ -112,7 +112,7 @@ export function GithubActivityStrip() {
       weeks.push(days.slice(i, i + DAYS_PER_WEEK))
     }
     return (
-      <div className="flex gap-[2px]">
+      <div key="grid" className="flex gap-[2px]">
         {weeks.map((week, w) => (
           <div key={week[0].date} className="flex flex-col gap-[2px]">
             {week.map((d, i) => (
@@ -204,8 +204,16 @@ export function GithubActivityStrip() {
           onMouseLeave={handleLeave}
           className="relative overflow-x-auto"
         >
+          {/* Keyed apart: reusing the skeleton's node for the grid counts
+              as that node moving, a layout shift scored from the top of
+              the page. */}
           {grid ?? (
-            <div aria-hidden className={SKELETON_BAR} style={SKELETON_STYLE} />
+            <div
+              key="skeleton"
+              aria-hidden
+              className={SKELETON_BAR}
+              style={SKELETON_STYLE}
+            />
           )}
         </div>
       )}
