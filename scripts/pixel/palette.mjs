@@ -49,6 +49,20 @@ export const PALETTE = {
 export const PALETTE_HEX = Object.values(PALETTE).flat()
 
 /**
+ * Colours only the procedural sky bands use, never a sprite pixel or a token
+ * behind text. The first three are the `skyOnlyColors` of the wallpaper
+ * document (`portfolio-os/art/wallpaper-palette.json`); the last two are the
+ * blues of the living README's day sky (`living/layers/sky_day.png`).
+ */
+export const SKY_COLOURS = [
+  '#201e3e',
+  '#62305c',
+  '#9a88b4',
+  '#5f8fce',
+  '#8fb9de',
+]
+
+/**
  * Night colour of a window, sheet or card body and the paper colour it becomes
  * when the Lamp is on (SPEC 2.2). The chrome generator applies it to the
  * slices that are bodies; menu bar, taskbar and wallpaper stay night in both
