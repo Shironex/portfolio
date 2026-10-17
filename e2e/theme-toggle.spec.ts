@@ -71,8 +71,14 @@ test('the menu bar lamp paints paper bodies and survives a reload', async ({
   await page.setViewportSize(DESKTOP_VIEWPORT)
   await openDesktop(page)
   const about = await launch(page, 'About', 'about.me')
+  // The app body under the title bar, in the colour of the frame's body.
   const body = () =>
-    about.evaluate((el) => getComputedStyle(el).backgroundColor)
+    about.evaluate(
+      (el) =>
+        getComputedStyle(
+          el.querySelector('[role="toolbar"]')?.nextElementSibling ?? el
+        ).backgroundColor
+    )
   expect(await body()).toBe(NIGHT_BODY)
 
   await page

@@ -2,7 +2,7 @@ import { type Locator, type Page, expect, test } from '@playwright/test'
 
 import type { Mode, SkyId } from '../src/lib/os/appearance'
 import {
-  AA_TEXT,
+  AA_LARGE,
   type ContrastWalk,
   DESKTOP_VIEWPORT,
   MOBILE_VIEWPORT,
@@ -231,12 +231,14 @@ for (const sky of SKIES) {
         await page.keyboard.press('Escape')
         await expect(box).toBeHidden()
 
-        // The close button turns into a filled danger button under the pointer.
+        // The close button turns into a filled danger button under the
+        // pointer. Its glyph is an icon, not text, so it needs 3:1 (SPEC
+        // 2.4: cream on the danger red, 4.18:1).
         const close = detail.getByRole('button', { name: 'Close window' })
         await close.hover()
         await settled(close)
         const hovered = await contrastRatio(close)
-        if (hovered < AA_TEXT) {
+        if (hovered < AA_LARGE) {
           failures.push(`close button, hovered: ${hovered.toFixed(2)}:1`)
         }
         await close.click()
