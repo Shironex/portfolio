@@ -1,0 +1,603 @@
+{
+  "frames": [
+    {
+      "filename": "os-chrome 0.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 88,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 88,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 88,
+        "h": 72
+      },
+      "duration": 500
+    },
+    {
+      "filename": "os-chrome 1.aseprite",
+      "frame": {
+        "x": 88,
+        "y": 0,
+        "w": 88,
+        "h": 72
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 88,
+        "h": 72
+      },
+      "sourceSize": {
+        "w": 88,
+        "h": 72
+      },
+      "duration": 350
+    }
+  ],
+  "meta": {
+    "app": "https://www.aseprite.org/",
+    "image": "os-chrome.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 176,
+      "h": 72
+    },
+    "scale": "1",
+    "frameTags": [
+      {
+        "name": "skeleton",
+        "from": 0,
+        "to": 1,
+        "direction": "forward",
+        "color": "#000000ff"
+      }
+    ],
+    "layers": [
+      {
+        "name": "chrome",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "anim",
+        "opacity": 255,
+        "blendMode": "normal"
+      }
+    ],
+    "slices": [
+      {
+        "name": "window-focused",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "w": 16,
+              "h": 16
+            },
+            "center": {
+              "x": 3,
+              "y": 3,
+              "w": 10,
+              "h": 10
+            }
+          }
+        ]
+      },
+      {
+        "name": "window-unfocused",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 18,
+              "y": 0,
+              "w": 16,
+              "h": 16
+            },
+            "center": {
+              "x": 3,
+              "y": 3,
+              "w": 10,
+              "h": 10
+            }
+          }
+        ]
+      },
+      {
+        "name": "titlebar-focused",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 36,
+              "y": 0,
+              "w": 16,
+              "h": 16
+            },
+            "center": {
+              "x": 8,
+              "y": 1,
+              "w": 6,
+              "h": 14
+            }
+          }
+        ]
+      },
+      {
+        "name": "titlebar-unfocused",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 54,
+              "y": 0,
+              "w": 16,
+              "h": 16
+            },
+            "center": {
+              "x": 8,
+              "y": 1,
+              "w": 6,
+              "h": 14
+            }
+          }
+        ]
+      },
+      {
+        "name": "taskbar",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 72,
+              "y": 0,
+              "w": 16,
+              "h": 16
+            },
+            "center": {
+              "x": 2,
+              "y": 2,
+              "w": 12,
+              "h": 12
+            }
+          }
+        ]
+      },
+      {
+        "name": "panel",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 0,
+              "y": 18,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 2,
+              "y": 2,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "card",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 14,
+              "y": 18,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 2,
+              "y": 2,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "popover",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 28,
+              "y": 18,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 2,
+              "y": 2,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "tooltip",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 42,
+              "y": 18,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 2,
+              "y": 2,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "toast",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 56,
+              "y": 18,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 3,
+              "y": 2,
+              "w": 7,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "well",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 70,
+              "y": 18,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 1,
+              "y": 1,
+              "w": 10,
+              "h": 9
+            }
+          }
+        ]
+      },
+      {
+        "name": "button-primary-rest",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 0,
+              "y": 32,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 1,
+              "y": 2,
+              "w": 10,
+              "h": 7
+            }
+          }
+        ]
+      },
+      {
+        "name": "button-primary-hover",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 14,
+              "y": 32,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 1,
+              "y": 2,
+              "w": 10,
+              "h": 7
+            }
+          }
+        ]
+      },
+      {
+        "name": "button-primary-pressed",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 28,
+              "y": 32,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 1,
+              "y": 3,
+              "w": 10,
+              "h": 7
+            }
+          }
+        ]
+      },
+      {
+        "name": "button-secondary-rest",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 42,
+              "y": 32,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 1,
+              "y": 2,
+              "w": 10,
+              "h": 7
+            }
+          }
+        ]
+      },
+      {
+        "name": "button-secondary-hover",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 56,
+              "y": 32,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 1,
+              "y": 2,
+              "w": 10,
+              "h": 7
+            }
+          }
+        ]
+      },
+      {
+        "name": "button-secondary-pressed",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 70,
+              "y": 32,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 1,
+              "y": 3,
+              "w": 10,
+              "h": 7
+            }
+          }
+        ]
+      },
+      {
+        "name": "button-warm-rest",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 0,
+              "y": 46,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 1,
+              "y": 2,
+              "w": 10,
+              "h": 7
+            }
+          }
+        ]
+      },
+      {
+        "name": "button-warm-hover",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 14,
+              "y": 46,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 1,
+              "y": 2,
+              "w": 10,
+              "h": 7
+            }
+          }
+        ]
+      },
+      {
+        "name": "button-warm-pressed",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 28,
+              "y": 46,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 1,
+              "y": 3,
+              "w": 10,
+              "h": 7
+            }
+          }
+        ]
+      },
+      {
+        "name": "button-disabled",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 42,
+              "y": 46,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 1,
+              "y": 2,
+              "w": 10,
+              "h": 7
+            }
+          }
+        ]
+      },
+      {
+        "name": "chip",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 56,
+              "y": 46,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 2,
+              "y": 2,
+              "w": 9,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "keycap",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 70,
+              "y": 46,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 1,
+              "y": 1,
+              "w": 10,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "label-plate",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 0,
+              "y": 60,
+              "w": 12,
+              "h": 12
+            },
+            "center": {
+              "x": 1,
+              "y": 1,
+              "w": 10,
+              "h": 10
+            }
+          }
+        ]
+      },
+      {
+        "name": "tile-snap",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 14,
+              "y": 60,
+              "w": 2,
+              "h": 2
+            }
+          }
+        ]
+      },
+      {
+        "name": "tile-shadow",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 18,
+              "y": 60,
+              "w": 2,
+              "h": 2
+            }
+          }
+        ]
+      },
+      {
+        "name": "tile-skeleton",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 22,
+              "y": 60,
+              "w": 4,
+              "h": 4
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
