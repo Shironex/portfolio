@@ -1,13 +1,20 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useId, useMemo, useRef } from 'react'
+import {
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
-import { Search, X } from 'lucide-react'
-
-import { GithubIcon } from '@/components/icons/github-icon'
+import { AppIcon, ProjectGlyph } from '@/components/pixel/app-icon'
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
 import { AUTHOR_NAME, EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
+import { artPx, floorToArt, onArtPixelChange, snapToArt } from '@/lib/os/pixel'
 import { cn, onBackdropDismiss } from '@/lib/utils'
 import { getPinnedProjects } from '@/lib/utils/projects'
 
@@ -16,11 +23,10 @@ import { useEscapeLayer } from '@/hooks/use-escape-layer'
 import { useFocusTrap } from '@/hooks/use-focus-trap'
 import type { Project } from '@/types'
 
-import { accentFor, accentTileStyle } from './accent-map'
-import { APPS, CMD_PALETTE_SHORTCUT, EYEBROW_CLASS } from './constants'
+import { APPS, CMD_PALETTE_SHORTCUT } from './constants'
 import { ExternalLink } from './external-link'
 import { Kbd } from './kbd'
-import { ProjectAvatar } from './project-avatar'
+import { START_BUTTON_ATTRIBUTE } from './taskbar'
 import type { AppId } from './types'
 
 interface StartMenuProps {
@@ -31,16 +37,60 @@ interface StartMenuProps {
 }
 
 /**
- * Windows-11-inspired start menu overlay.
+ * Width of the menu, the gap over the Start button and the side margin, in
+ * art px. 218 leaves the pinned grid three even 68 px columns.
+ */
+const MENU_WIDTH = 218
+const ANCHOR_GAP = 2
+const EDGE_MARGIN = 4
+
+interface Placement {
+  left: number
+  bottom: number
+  width: number
+}
+
+/**
+ * Where the menu goes: its left edge on the Start button's, just above it,
+ * on whole art px and inside the viewport. `null` before the first measure
+ * and when there is no Start button.
+ */
+function measurePlacement(): Placement | null {
+  const start = document.querySelector(`[${START_BUTTON_ATTRIBUTE}]`)
+  if (!start) return null
+  const box = start.getBoundingClientRect()
+  const margin = artPx(EDGE_MARGIN)
+  const width = Math.min(
+    artPx(MENU_WIDTH),
+    floorToArt(window.innerWidth - 2 * margin)
+  )
+  const left = Math.max(
+    margin,
+    Math.min(
+      snapToArt(box.left),
+      floorToArt(window.innerWidth - margin - width)
+    )
+  )
+  const bottom = snapToArt(window.innerHeight - box.top + artPx(ANCHOR_GAP))
+  return { left, bottom, width }
+}
+
+const SECTION_HEADING_CLASS = 'text-label px-4 text-(--meta) uppercase'
+
+/** A row or tile of the menu: the selection teal under the pointer. */
+const ITEM_CLASS = 'focus-ring hover:bg-(--select)'
+
+/**
+ * The Start menu: a popover anchored above the Start button.
  *
  * Modeled as a dialog (not an ARIA menu) because children include a mix of
  * buttons, links, and static content that don't fit the strict menuitem
  * pattern. A modal layer: traps focus, makes the desktop behind inert,
- * restores focus on close, dismisses on Esc or backdrop.
+ * restores focus on close, dismisses on Esc or on the scrim.
+ *
+ * Night chrome in both Lamp modes (`os-night`), on a 50% navy dither scrim
+ * instead of a blur.
  */
-
-const SECTION_HEADING_CLASS = cn(EYEBROW_CLASS, 'text-ink-4 px-10 pb-2')
-
 export function StartMenu({
   onClose,
   onLaunch,
@@ -51,8 +101,22 @@ export function StartMenu({
   const searchRef = useRef<HTMLButtonElement>(null)
   const pinnedId = useId()
   const recentId = useId()
+  const [placement, setPlacement] = useState<Placement | null>(null)
 
   useFocusTrap(panelRef, true)
+
+  // Measured before paint, and again when the viewport or the art pixel
+  // changes under the open menu.
+  useLayoutEffect(() => {
+    const place = () => setPlacement(measurePlacement())
+    place()
+    window.addEventListener('resize', place)
+    const stopPx = onArtPixelChange(place)
+    return () => {
+      window.removeEventListener('resize', place)
+      stopPx()
+    }
+  }, [])
 
   const recentProjects = useMemo<Project[]>(
     () =>
@@ -72,7 +136,7 @@ export function StartMenu({
 
   return (
     <div
-      className="bg-ink/20 z-overlay fixed inset-0 backdrop-blur-sm"
+      className="px-tile-shadow z-overlay fixed inset-0"
       onMouseDown={onBackdropDismiss(onClose)}
     >
       <div
@@ -80,7 +144,20 @@ export function StartMenu({
         role="dialog"
         aria-modal="true"
         aria-label="Start menu"
-        className="border-rule-2 bg-surf-solid/95 shadow-elev-4 animate-cp-in font-body absolute bottom-40 left-8 w-[min(640px,calc(100vw-2rem))] overflow-hidden rounded-2xl border motion-reduce:animate-none md:left-16"
+        style={
+          placement
+            ? {
+                left: placement.left,
+                bottom: placement.bottom,
+                width: placement.width,
+              }
+            : undefined
+        }
+        className={cn(
+          'os-night px-popover animate-cp-in font-body absolute flex flex-col gap-3 p-3 motion-reduce:animate-none',
+          // Until it is measured (one layout pass), out of sight.
+          !placement && 'invisible'
+        )}
       >
         <button
           ref={searchRef}
@@ -90,53 +167,44 @@ export function StartMenu({
             onClose()
           }}
           aria-keyshortcuts={CMD_PALETTE_SHORTCUT}
-          className="focus-ring border-rule bg-surf-soft text-ink-3 hover:bg-surf-1 flex w-full items-center gap-6 border-b px-10 py-6 text-left text-sm transition-colors"
+          className="focus-ring px-well text-label flex h-18 w-full items-center gap-3 px-3 text-left text-(--meta) hover:text-(--ink)"
         >
-          <Search aria-hidden size={16} />
-          <span className="flex-1">Type to search apps &amp; projects…</span>
+          <PixelIcon name="search" />
+          <span className="flex-1 truncate">
+            Type to search apps &amp; projects…
+          </span>
           <Kbd>⌘K</Kbd>
         </button>
 
-        <h2 id={pinnedId} className={cn(SECTION_HEADING_CLASS, 'pt-8')}>
+        <h2 id={pinnedId} className={SECTION_HEADING_CLASS}>
           Pinned
         </h2>
-        <ul
-          aria-labelledby={pinnedId}
-          className="grid grid-cols-3 gap-4 p-10 pt-4"
-        >
-          {APPS.map((app) => {
-            const Icon = app.icon
-            return (
-              <li key={app.id} className="flex">
-                <button
-                  type="button"
-                  aria-label={`Open ${app.name}`}
-                  onClick={() => {
-                    onLaunch(app.id)
-                    onClose()
-                  }}
-                  className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 hover:border-miku/40 flex flex-1 flex-col items-center justify-center gap-4 rounded-xl border px-6 py-8 text-center transition-colors"
-                >
-                  <span
-                    aria-hidden
-                    className="flex size-(--target) items-center justify-center rounded-xl"
-                    style={accentTileStyle(app.accent)}
-                  >
-                    <Icon size={20} strokeWidth={1.75} />
-                  </span>
-                  <span className="font-body text-ink text-sm font-medium">
-                    {app.name}
-                  </span>
-                </button>
-              </li>
-            )
-          })}
+        <ul aria-labelledby={pinnedId} className="grid grid-cols-3 gap-2">
+          {APPS.map((app) => (
+            <li key={app.id} className="flex">
+              <button
+                type="button"
+                aria-label={`Open ${app.name}`}
+                onClick={() => {
+                  onLaunch(app.id)
+                  onClose()
+                }}
+                className={cn(
+                  ITEM_CLASS,
+                  'group flex flex-1 flex-col items-center gap-2 p-2 text-center'
+                )}
+              >
+                <AppIcon id={app.id} size={32} />
+                <span className="text-body text-(--ink)">{app.name}</span>
+              </button>
+            </li>
+          ))}
         </ul>
 
-        <h2 id={recentId} className={cn(SECTION_HEADING_CLASS, 'pt-4')}>
+        <h2 id={recentId} className={SECTION_HEADING_CLASS}>
           Recent
         </h2>
-        <ul aria-labelledby={recentId} className="pb-6">
+        <ul aria-labelledby={recentId}>
           {recentProjects.map((p) => (
             <li key={p.id}>
               <button
@@ -145,42 +213,44 @@ export function StartMenu({
                   onOpenProject(p)
                   onClose()
                 }}
-                className="focus-ring hover:bg-surf-soft flex w-full items-center gap-6 px-10 py-4 text-left transition-colors"
+                className={cn(
+                  ITEM_CLASS,
+                  'flex w-full items-center gap-3 px-2 py-1 text-left'
+                )}
               >
-                <ProjectAvatar accent={accentFor(p.slug)} size={8} hidden>
-                  {p.title[0]}
-                </ProjectAvatar>
-                <div className="min-w-0 flex-1">
-                  <div className="font-body text-ink truncate text-sm">
+                <ProjectGlyph slug={p.slug} />
+                <span className="min-w-0 flex-1">
+                  <span className="text-body block truncate text-(--ink)">
                     {p.title}
-                  </div>
-                  <div className="text-ink-4 truncate font-mono text-xs">
+                  </span>
+                  <span className="text-label block truncate text-(--meta)">
                     {p.projectType ?? 'project'} ·{' '}
                     {p.technologies.slice(0, 3).join(' · ')}
-                  </div>
-                </div>
+                  </span>
+                </span>
               </button>
             </li>
           ))}
         </ul>
 
-        <div className="border-rule bg-surf-soft flex items-center gap-6 border-t px-10 py-6">
-          <div className="border-rule-2 bg-miku/15 relative size-20 shrink-0 overflow-hidden rounded-full border">
-            <Image
-              src="/mascot.png"
-              alt=""
-              width={80}
-              height={80}
-              className="size-full object-cover object-top"
-            />
-          </div>
+        <div aria-hidden className="rule-dotted" />
+        <div className="flex items-center gap-3 px-2">
+          {/* The mascot head slot (16x16); the photo stands in until the
+              pixel head lands. */}
+          <Image
+            src="/mascot.png"
+            alt=""
+            width={32}
+            height={32}
+            className="size-16 flex-none object-cover object-top"
+          />
           <div className="min-w-0 flex-1">
-            <div className="font-display text-ink truncate text-sm">
+            <div className="text-title truncate text-(--ink)">
               {AUTHOR_NAME}
             </div>
             <a
               href={`mailto:${EMAIL_CONTACT}`}
-              className="focus-ring text-ink-3 hover:text-miku-2-ink block truncate rounded font-mono text-xs"
+              className="focus-ring text-label block truncate text-(--meta) hover:text-(--link)"
             >
               {EMAIL_CONTACT}
             </a>
@@ -189,17 +259,17 @@ export function StartMenu({
             href={GITHUB_URL}
             aria-label="Open GitHub profile"
             onClick={onClose}
-            className="focus-ring text-ink-3 hover:bg-rule hover:text-ink rounded p-2"
+            className="focus-ring flex size-12 flex-none items-center justify-center text-(--meta) hover:bg-(--select) hover:text-(--ink) pointer-coarse:size-(--target)"
           >
-            <GithubIcon className="size-7" />
+            <PixelIcon name="github" />
           </ExternalLink>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close start menu"
-            className="focus-ring text-ink-3 hover:bg-rule hover:text-ink rounded p-2"
+            className="focus-ring flex size-12 flex-none items-center justify-center text-(--meta) hover:bg-(--select) hover:text-(--ink) pointer-coarse:size-(--target)"
           >
-            <X aria-hidden size={14} />
+            <PixelIcon name="close" />
           </button>
         </div>
       </div>
