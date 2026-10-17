@@ -193,7 +193,9 @@
    *   - `font-text`: the face of long text, Shiro Pixel Sans or, with the
    *     Readable text setting, Atkinson Hyperlegible Next (set below).
    */
-  --font-mono: var(--font-departure-mono), ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-mono:
+    var(--font-departure-mono), ui-monospace, SFMono-Regular, Menlo, Consolas,
+    monospace;
   --font-body: var(--font-pixel-sans), system-ui, sans-serif;
   --font-display: var(--font-pixel-sans), system-ui, sans-serif;
   --font-text: var(--font-pixel-sans), system-ui, sans-serif;
@@ -273,7 +275,7 @@
   --animate-floaty: floaty 8s steps(8) infinite;
   --animate-blink: blink 1s steps(2) infinite;
   --animate-win-open: winOpen 0.16s steps(4);
-  --animate-win-close: winClose 0.12s steps(3) forwards;
+  --animate-win-close: winClose 0.12s steps(4) forwards;
   --animate-sheet-up: sheetUp 0.16s steps(4);
   --animate-cp-in: cpIn 0.12s steps(4);
   --animate-menu-in: menuIn 0.08s steps(2);
@@ -373,17 +375,28 @@
     }
   }
 
+  /*
+   * A window opens as a stepped reveal from its title bar down, and closes
+   * back up (SPEC 2.4). The clip reaches past the box on three sides so the
+   * offset shadow is revealed with the window instead of after it.
+   */
   @keyframes winOpen {
     from {
-      opacity: 0;
-      transform: translateY(calc(4 * var(--px)));
+      clip-path: inset(calc(-4 * var(--px)) calc(-4 * var(--px)) 100%);
+    }
+
+    to {
+      clip-path: inset(calc(-4 * var(--px)));
     }
   }
 
   @keyframes winClose {
+    from {
+      clip-path: inset(calc(-4 * var(--px)));
+    }
+
     to {
-      opacity: 0;
-      transform: translateY(calc(3 * var(--px)));
+      clip-path: inset(calc(-4 * var(--px)) calc(-4 * var(--px)) 100%);
     }
   }
 
@@ -452,7 +465,6 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
-
   *,
   ::after,
   ::before,
@@ -598,7 +610,6 @@
    * `motion-safe:` utilities for motion that is critical to comprehension.
    */
   @media (prefers-reduced-motion: reduce) {
-
     *,
     *::before,
     *::after {
@@ -647,8 +658,8 @@
   }
 
   /* Inline code styling - only apply to code not inside pre blocks */
-  :not(pre)>code {
-    @apply rounded bg-muted px-3 py-1 text-sm;
+  :not(pre) > code {
+    @apply bg-muted rounded px-3 py-1 text-sm;
   }
 }
 

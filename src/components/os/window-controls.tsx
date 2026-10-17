@@ -2,86 +2,114 @@
 
 import type { PointerEvent } from 'react'
 
-import { Link } from 'lucide-react'
+import {
+  PixelIcon,
+  type PixelIconName,
+} from '@/components/pixel/pixel-icon.generated'
 
 import { cn } from '@/lib/utils'
 
 import { COPY_LINK_LABEL } from './constants'
 
 interface WindowControlsProps {
+  /** Shows the restore glyph on the maximize toggle. */
+  maximized: boolean
   onCopyLink: () => void
   onMinimize: () => void
   onMaximize: () => void
   onClose: () => void
 }
 
-/** Box of a control button; each adds its own hover colours. */
+/**
+ * A control cell (SPEC 2.4, Window controls): an 8x8 glyph in a 14x12 art px
+ * cell, 22x22 under a coarse pointer, nudged 1 art px up into the title bar
+ * so it spans its whole height. Pressed, the glyph moves down 1 art px. The
+ * title bar is night chrome in both Lamp modes, so the colours are its
+ * night tokens.
+ */
 const CONTROL_CLASS =
-  'focus-ring text-ink-2 flex h-16 w-20 items-center justify-center text-xs transition-colors pointer-coarse:h-(--target) pointer-coarse:w-24'
+  'focus-ring flex h-12 w-14 flex-none items-center justify-center text-(--ink) active:[&>svg]:translate-y-1 pointer-coarse:-my-1 pointer-coarse:size-22'
+
+/** Hover fills: the selection teal, and the danger red behind close. */
+const HOVER_CLASS = 'hover:bg-(--select)'
+const CLOSE_HOVER_CLASS = 'hover:bg-(--danger)'
+
+interface ControlProps {
+  label: string
+  glyph: PixelIconName
+  keyShortcuts?: string
+  onClick: () => void
+  className: string
+}
 
 /**
- * Windows 11 style title-bar controls (copy link, minimize, maximize, close).
- * Each button stops pointerdown propagation so the window drag handler
- * does not begin when a control is pressed. The title bar counts its double
- * taps from that same handler, so two presses on a button never toggle
- * maximize.
+ * Each button stops pointerdown propagation so the window drag handler does
+ * not begin when a control is pressed. The title bar counts its double taps
+ * from that same handler, so two presses on a button never toggle maximize.
  */
+function Control({
+  label,
+  glyph,
+  keyShortcuts,
+  onClick,
+  className,
+}: ControlProps) {
+  const stopPointerDown = (e: PointerEvent<HTMLButtonElement>) => {
+    e.stopPropagation()
+  }
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      aria-keyshortcuts={keyShortcuts}
+      onPointerDown={stopPointerDown}
+      onClick={onClick}
+      className={cn(CONTROL_CLASS, className)}
+    >
+      <PixelIcon name={glyph} />
+    </button>
+  )
+}
+
+/** Title bar controls: copy link, minimize, maximize or restore, close. */
 export function WindowControls({
+  maximized,
   onCopyLink,
   onMinimize,
   onMaximize,
   onClose,
 }: WindowControlsProps) {
-  const stopPointerDown = (e: PointerEvent<HTMLButtonElement>) => {
-    e.stopPropagation()
-  }
-
   return (
-    <div className="flex items-center">
-      <button
-        type="button"
-        aria-label={COPY_LINK_LABEL}
-        onPointerDown={stopPointerDown}
+    <div className="flex flex-none items-center">
+      <Control
+        label={COPY_LINK_LABEL}
+        glyph="link"
         onClick={onCopyLink}
-        className={cn(CONTROL_CLASS, 'hover:bg-rule hover:text-ink')}
-      >
-        <Link aria-hidden size={13} strokeWidth={1.75} />
-      </button>
-      <button
-        type="button"
-        aria-label="Minimize window"
-        aria-keyshortcuts="Control+M"
-        onPointerDown={stopPointerDown}
+        className={HOVER_CLASS}
+      />
+      <Control
+        label="Minimize window"
+        glyph="minimize"
+        keyShortcuts="Control+M"
         onClick={onMinimize}
-        className={cn(CONTROL_CLASS, 'hover:bg-rule hover:text-ink')}
-      >
-        <span aria-hidden>⎯</span>
-      </button>
-      <button
-        type="button"
-        aria-label="Toggle maximize window"
-        aria-keyshortcuts="Control+Shift+M"
-        onPointerDown={stopPointerDown}
+        className={HOVER_CLASS}
+      />
+      <Control
+        label="Toggle maximize window"
+        glyph={maximized ? 'restore' : 'maximize'}
+        keyShortcuts="Control+Shift+M"
         onClick={onMaximize}
-        className={cn(CONTROL_CLASS, 'hover:bg-rule hover:text-ink')}
-      >
-        <span aria-hidden>▢</span>
-      </button>
-      <button
-        type="button"
-        aria-label="Close window"
-        aria-keyshortcuts="Control+W"
-        onPointerDown={stopPointerDown}
+        className={HOVER_CLASS}
+      />
+      {/* The cream glyph on the danger red is 4.18:1, over the 3:1 a
+          non-text control needs. */}
+      <Control
+        label="Close window"
+        glyph="close"
+        keyShortcuts="Control+W"
         onClick={onClose}
-        // The danger button fill and its cream glyph (8.09:1 in both Lamp
-        // modes); Phase 2 draws the pixel control.
-        className={cn(
-          CONTROL_CLASS,
-          'hover:bg-danger-fill hover:text-danger-fill-ink'
-        )}
-      >
-        <span aria-hidden>✕</span>
-      </button>
+        className={CLOSE_HOVER_CLASS}
+      />
     </div>
   )
 }
