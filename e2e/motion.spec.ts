@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test'
+import { type Page, expect, test } from '@playwright/test'
 
 import {
   AMBIENT_LOOP_CLASS,
@@ -101,6 +101,56 @@ test.describe('decorative loops', () => {
     await expect.poll(() => ambientPlayStates(page)).toEqual(ALL_PAUSED)
     await titleBar(about).press('Control+M')
     await expect.poll(() => ambientPlayStates(page)).toEqual(ALL_RUNNING)
+  })
+})
+
+test.describe('app icons', () => {
+  /** The animation and background position of the Contact desktop icon. */
+  async function contactIcon(page: Page) {
+    return page
+      .locator('[data-app-icon="contact"]')
+      .first()
+      .evaluate((el) => {
+        const style = getComputedStyle(el)
+        return {
+          name: style.animationName,
+          position: style.backgroundPosition,
+        }
+      })
+  }
+
+  test('loop on hover and keyboard focus only, from their still', async ({
+    page,
+  }) => {
+    await openDesktop(page)
+    const button = page.getByRole('button', { name: 'Open Contact' }).first()
+    const still = await contactIcon(page)
+    expect(still.name).toBe('none')
+
+    await button.hover()
+    await expect
+      .poll(async () => (await contactIcon(page)).name)
+      .toBe('px-app-icons-32-contact')
+    await page.mouse.move(720, 450)
+    await expect.poll(() => contactIcon(page)).toEqual(still)
+
+    await button.focus()
+    await page.keyboard.press('Shift+Tab')
+    await page.keyboard.press('Tab')
+    await expect
+      .poll(async () => (await contactIcon(page)).name)
+      .toBe('px-app-icons-32-contact')
+  })
+
+  test('stay on their still with reduced motion', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await openDesktop(page)
+    const still = await contactIcon(page)
+    await page.getByRole('button', { name: 'Open Contact' }).first().hover()
+    for (let i = 0; i < 4; i++) {
+      await page.waitForTimeout(120)
+      expect((await contactIcon(page)).position).toBe(still.position)
+    }
   })
 })
 
