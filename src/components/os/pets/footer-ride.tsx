@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 
+import { artLength as art } from '@/lib/os/pixel'
 import { type TickerHandle, schedule } from '@/lib/os/ticker'
 
 import rideSheet from '@/assets/pixel/pets/minime-ride.png'
@@ -40,9 +41,6 @@ const LANE = 15
 const THRESHOLD = 0.6
 
 const PARKED = RIDE_SHEET.tags.parked.frames[0]
-
-/** `n` art px as a CSS length. */
-const art = (n: number) => `calc(${n} * var(--px))`
 
 /** Once per page view: the module outlives the shell's remounts. */
 let rodeThisView = false

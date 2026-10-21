@@ -1,5 +1,6 @@
 import type { CSSProperties } from 'react'
 
+import { artLength as art } from '@/lib/os/pixel'
 import { cn } from '@/lib/utils'
 
 /**
@@ -14,7 +15,6 @@ export const DAYS_PER_WEEK = 7
 export const CELL = 5
 const GAP = 1
 const PITCH = CELL + GAP
-const art = (n: number) => `calc(${n} * var(--px))`
 
 export const GRID_SIZE: CSSProperties = {
   width: art(WEEKS_SHOWN * PITCH - GAP),

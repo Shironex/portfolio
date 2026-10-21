@@ -2,6 +2,7 @@
 
 import { type CSSProperties, useEffect, useRef } from 'react'
 
+import { artLength as art } from '@/lib/os/pixel'
 import { type TickerHandle, schedule } from '@/lib/os/ticker'
 import { cn } from '@/lib/utils'
 
@@ -24,9 +25,6 @@ const WAVE_LOOPS = 2
 
 /** Held, a tap shows one wave frame this long (SPEC 3.6). */
 const STILL_WAVE_MS = 1000
-
-/** `n` art px as a CSS length. */
-const art = (n: number) => `calc(${n} * var(--px))`
 
 /** The seated pose's pointer box (PET.md); she waves from the same spot. */
 const HIT = PET_HITBOX.sit
