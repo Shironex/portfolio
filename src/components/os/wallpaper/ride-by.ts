@@ -35,14 +35,15 @@ const PUFF_AT = 24
 const LANE = 15
 
 /** Movement per step is capped, so a long gap never jumps her across. */
-const MAX_STEP_MS = 100
+export const MAX_STEP_MS = 100
 
 /** Steps between counted visible time are capped too (a stall, a sleep). */
 const MAX_GAP_MS = 2000
 
 type Frame = readonly [number, number, number]
 
-interface Ride {
+/** One ride under way: where she is and which frame shows. */
+export interface Ride {
   x: number
   /** The tag playing and where in it she is. */
   frames: readonly Frame[]
@@ -50,6 +51,40 @@ interface Ride {
   /** Time into the current frame. */
   elapsed: number
   puffed: boolean
+}
+
+/** A ride starting at `x` art px (default: just off the left edge). */
+export function newRide(x: number = -RIDE_SHEET.frame.w): Ride {
+  return {
+    x,
+    frames: RIDE_SHEET.tags.ride.frames,
+    index: 0,
+    elapsed: 0,
+    puffed: false,
+  }
+}
+
+/**
+ * Moves a ride on by `ms` at `speed` art px per ms: the ride loop, and the
+ * exhaust puff once, where she is in view. Shared by the wallpaper and the
+ * phone feed footer.
+ */
+export function advanceRide(ride: Ride, ms: number, speed: number) {
+  ride.x += speed * ms
+  ride.elapsed += ms
+  while (ride.elapsed >= ride.frames[ride.index][2]) {
+    ride.elapsed -= ride.frames[ride.index][2]
+    ride.index++
+    if (ride.index < ride.frames.length) continue
+    // The puff plays once, then the ride loop again.
+    ride.frames = RIDE_SHEET.tags.ride.frames
+    ride.index = 0
+  }
+  if (ride.puffed || ride.x < PUFF_AT) return
+  ride.puffed = true
+  ride.frames = RIDE_SHEET.tags.puff.frames
+  ride.index = 0
+  ride.elapsed = 0
 }
 
 function storedRides(): number {
@@ -117,22 +152,7 @@ export class RideBy {
 
     const move = Math.min(dt, MAX_STEP_MS)
     const before = `${Math.round(ride.x)} ${ride.frames[ride.index][0]}`
-    ride.x += SPEED * move
-    ride.elapsed += move
-    while (ride.elapsed >= ride.frames[ride.index][2]) {
-      ride.elapsed -= ride.frames[ride.index][2]
-      ride.index++
-      if (ride.index < ride.frames.length) continue
-      // The puff plays once, then the ride loop again.
-      ride.frames = RIDE_SHEET.tags.ride.frames
-      ride.index = 0
-    }
-    if (!ride.puffed && ride.x >= PUFF_AT) {
-      ride.puffed = true
-      ride.frames = RIDE_SHEET.tags.puff.frames
-      ride.index = 0
-      ride.elapsed = 0
-    }
+    advanceRide(ride, move, SPEED)
     if (ride.x >= cols) {
       this.finish()
       return { changed: true, next: now + (this.nextAt - this.visible) }
@@ -142,13 +162,7 @@ export class RideBy {
   }
 
   private begin() {
-    this.ride = {
-      x: -RIDE_SHEET.frame.w,
-      frames: RIDE_SHEET.tags.ride.frames,
-      index: 0,
-      elapsed: 0,
-      puffed: false,
-    }
+    this.ride = newRide()
   }
 
   private finish() {

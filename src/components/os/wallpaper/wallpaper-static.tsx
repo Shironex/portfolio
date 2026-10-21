@@ -93,18 +93,21 @@ function skyBackground(sky: SkyName): string {
   ].join(', ')
 }
 
+/** Each sky's background; `wallpaper.css` picks one from `data-sky`. */
+const BACKGROUNDS = Object.fromEntries(
+  (Object.keys(TILES) as SkyName[]).map((sky) => [
+    `--wp-background-${sky}`,
+    skyBackground(sky),
+  ])
+) as CSSProperties
+
 const VARIABLES = {
   '--wp-atlas': `url(${atlasPng.src})`,
   '--wp-atlas-size': `${art(atlasPng.width)} ${art(atlasPng.height)}`,
   '--wp-stars-image': `url(${starsPng.src})`,
   '--wp-stars-size': `${art(STATIC_TILES.stars.w)} ${art(STATIC_TILES.stars.h)}`,
   '--wp-stars-clear': art(LAYOUT.road.height + LAYOUT.stars.clearAboveHorizon),
-  ...Object.fromEntries(
-    (Object.keys(TILES) as SkyName[]).map((sky) => [
-      `--wp-background-${sky}`,
-      skyBackground(sky),
-    ])
-  ),
+  ...BACKGROUNDS,
 } as CSSProperties
 
 const [moonX, moonY] = LAYOUT.moon.desktop
@@ -148,4 +151,13 @@ export function WallpaperStatic() {
       />
     </div>
   )
+}
+
+/**
+ * The foot of that frame alone: the skyline, its lamps and the sky bands of
+ * the sky on <html>, bottom aligned, with no stars, moon or glow. The phone
+ * feed ends on it (SPEC 3.8), and the mini-me rides along its road.
+ */
+export function WallpaperStrip() {
+  return <div aria-hidden className="wallpaper-static" style={BACKGROUNDS} />
 }
