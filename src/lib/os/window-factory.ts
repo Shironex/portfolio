@@ -2,8 +2,13 @@ import { APP_WINDOW_DEFAULTS } from '@/components/os/constants'
 import type { AppId, WindowId, WindowState } from '@/components/os/types'
 
 import { measureDesktopArea } from '@/lib/os/dom'
-import { type Rect, cascadeOrigin, fitInArea } from '@/lib/os/geometry'
-import { artPx } from '@/lib/os/pixel'
+import {
+  CASCADE_OFFSET,
+  NEW_WINDOW_HEADROOM,
+  type Rect,
+  fitInArea,
+} from '@/lib/os/geometry'
+import { DEFAULT_ART_PIXEL, artPx, snapToArt } from '@/lib/os/pixel'
 
 import type { Project } from '@/types'
 
@@ -28,14 +33,32 @@ export function projectSlugForWindow(id: WindowId): string {
 }
 
 /**
- * A new window's rect, in CSS px: from art px, and inside the desktop area,
- * since the art pixel (2.4 CSS px at DPR 1.25) makes a window larger in CSS
- * px than the viewport may allow.
+ * `n` art px of a window default as the CSS px it takes at DPR 1, snapped
+ * to the art pixel of this screen. New windows open at that CSS size and
+ * place at every DPR (decision 1 of SPEC 11): at 1.25, where an art px is
+ * 2.4 CSS px, a window drawn at its art size would be 20% larger and cover
+ * the panel column.
+ */
+function openingPx(n: number): number {
+  return snapToArt(artPx(n, DEFAULT_ART_PIXEL))
+}
+
+/**
+ * A new window's rect, in CSS px: its default at the DPR 1 size, no higher
+ * than {@link NEW_WINDOW_HEADROOM} under the top of the desktop area, so the
+ * pet can sit on it the moment it opens, and inside the area, which moves a
+ * window up (or shrinks it) only where the area is too short for both.
  */
 function openingRect(x: number, y: number, w: number, h: number): Rect {
+  const area = measureDesktopArea()
   return fitInArea(
-    { x: artPx(x), y: artPx(y), w: artPx(w), h: artPx(h) },
-    measureDesktopArea()
+    {
+      x: openingPx(x),
+      y: Math.max(openingPx(y), area.y + artPx(NEW_WINDOW_HEADROOM)),
+      w: openingPx(w),
+      h: openingPx(h),
+    },
+    area
   )
 }
 
@@ -65,18 +88,16 @@ export function createProjectWindow(
   z: number,
   openCount: number
 ): WindowState {
-  const origin = cascadeOrigin(openCount)
+  const step = CASCADE_OFFSET
   return {
     id: projectWindowId(project.slug),
     title: `${project.slug}.app`,
     icon: '◆',
-    ...fitInArea(
-      {
-        ...origin,
-        w: artPx(PROJECT_WINDOW_SIZE.w),
-        h: artPx(PROJECT_WINDOW_SIZE.h),
-      },
-      measureDesktopArea()
+    ...openingRect(
+      step.baseX + openCount * step.stepX,
+      step.baseY + openCount * step.stepY,
+      PROJECT_WINDOW_SIZE.w,
+      PROJECT_WINDOW_SIZE.h
     ),
     z,
     minimized: false,

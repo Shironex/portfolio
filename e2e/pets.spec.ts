@@ -315,6 +315,38 @@ test.describe('the desktop pet', () => {
   })
 })
 
+/**
+ * A window that has just opened takes her at every DPR (SPEC 11, decision
+ * 1): new windows leave her seated height of room under the menu bar.
+ * Projects opens highest of the apps.
+ */
+for (const dpr of [1, 1.25, 2]) {
+  test.describe(`a fresh window at DPR ${dpr}`, () => {
+    test.use({ deviceScaleFactor: dpr })
+
+    test('takes her when she is dropped on it', async ({ page }) => {
+      await openDesktop(page)
+      const projects = await launch(page, 'Projects', 'projects.app')
+      await waitForPet(page)
+      const px = await page.evaluate(() =>
+        Number.parseFloat(
+          getComputedStyle(document.documentElement).getPropertyValue('--px')
+        )
+      )
+      const bar = await rectOf(titleBar(projects))
+      await dragPet(page, bar.x + bar.width * 0.55, bar.y - 40 * px)
+      const top = Math.round((await rectOf(projects)).y / px)
+      await expect
+        .poll(async () => {
+          const view = await petView(page)
+          if (!view || !OUT.test(view.state)) return null
+          return view.y === top - FRAME || view.y === top - SEAT
+        })
+        .toBe(true)
+    })
+  })
+}
+
 test.describe('the desktop pet under reduced motion', () => {
   test.use({ reducedMotion: 'reduce' })
   test.slow()

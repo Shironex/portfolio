@@ -472,3 +472,51 @@ test.describe('session restore', () => {
     await expect(page.getByRole('dialog', { name: 'about.me' })).toHaveCount(0)
   })
 })
+
+/**
+ * Where new windows open (SPEC 11, decision 1): at the CSS rect they have
+ * at DPR 1 whatever the art pixel, at least 33 art px under the top of the
+ * desktop area (room for the pet seated).
+ */
+test.describe('new windows', () => {
+  /** The art pixel on this page, in css px. */
+  const artPixelOf = (page: Page) =>
+    page.evaluate(() =>
+      Number.parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue('--px')
+      )
+    )
+
+  /** Projects' default rect at DPR 1 (`APP_WINDOW_DEFAULTS`), in css px. */
+  const PROJECTS_AT_DPR_1 = { x: 120, width: 900, height: 620 }
+
+  /** The top of the desktop area and the pet's seated height, in art px. */
+  const AREA_TOP = 22
+  const HEADROOM = 33
+
+  for (const dpr of [1, 1.25, 2]) {
+    test.describe(`at DPR ${dpr}`, () => {
+      test.use({ deviceScaleFactor: dpr })
+
+      test('Projects opens at its DPR 1 size, with room above it for the pet', async ({
+        page,
+      }) => {
+        await openDesktop(page)
+        const projects = await launch(page, 'Projects', 'projects.app')
+        const px = await artPixelOf(page)
+        const rect = await rectOf(projects)
+        // Snapped to the art pixel: within one of the DPR 1 rect.
+        expect(Math.abs(rect.x - PROJECTS_AT_DPR_1.x)).toBeLessThanOrEqual(px)
+        expect(
+          Math.abs(rect.width - PROJECTS_AT_DPR_1.width)
+        ).toBeLessThanOrEqual(px)
+        expect(
+          Math.abs(rect.height - PROJECTS_AT_DPR_1.height)
+        ).toBeLessThanOrEqual(px)
+        expect(Math.round(rect.y / px) - AREA_TOP).toBeGreaterThanOrEqual(
+          HEADROOM
+        )
+      })
+    })
+  }
+})

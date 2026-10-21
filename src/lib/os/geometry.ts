@@ -5,7 +5,9 @@
  * constants, preserved here as named values rather than blind-merged:
  *
  * - `useOsWindows` (move + maximize + new-window cascade) uses
- *   {@link MOVE_VIEWPORT_MARGIN} / {@link MAXIMIZED_INSET} / {@link CASCADE_OFFSET}.
+ *   {@link MOVE_VIEWPORT_MARGIN} / {@link MAXIMIZED_INSET} / {@link CASCADE_OFFSET}
+ *   (the window factory opens new windows with the cascade and
+ *   {@link NEW_WINDOW_HEADROOM}).
  * - `Window` (pointer-resize clamp) uses {@link RESIZE_VIEWPORT_MARGIN}.
  *
  * The constants are in art px (SPEC 2.1); rects are in CSS px, and every rect
@@ -32,6 +34,15 @@ export const MOVE_VIEWPORT_MARGIN = {
 
 /** Inset of the usable desktop area from the viewport edges, in art px. */
 export const MAXIMIZED_INSET = { top: 22, bottom: 32, side: 4 } as const
+
+/**
+ * Room a new window leaves above its top edge, under the top of the desktop
+ * area, in art px: the pet's height seated (`SIT_HEIGHT` in
+ * `components/os/pets/perches.ts`, 33), so she can sit on any window the
+ * moment it opens, at every DPR (decision 1 of SPEC 11). `pets.spec.ts`
+ * holds the two together.
+ */
+export const NEW_WINDOW_HEADROOM = 33
 
 /** Cascade origin + per-window step for new project windows, in art px. */
 export const CASCADE_OFFSET = {
@@ -195,17 +206,6 @@ export function desktopArea(safeBottom = 0): Rect {
       window.innerHeight - y - artPx(MAXIMIZED_INSET.bottom, px) - safeBottom,
       px
     ),
-  }
-}
-
-/**
- * Cascade origin for a newly opened window, offset by how many windows are
- * already open. Matches the original inline math in `openProject`.
- */
-export function cascadeOrigin(openCount: number): { x: number; y: number } {
-  return {
-    x: artPx(CASCADE_OFFSET.baseX + openCount * CASCADE_OFFSET.stepX),
-    y: artPx(CASCADE_OFFSET.baseY + openCount * CASCADE_OFFSET.stepY),
   }
 }
 
