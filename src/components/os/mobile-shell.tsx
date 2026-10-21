@@ -285,11 +285,16 @@ function MobileDock({ os, onOpenCmd, onOpenApp }: MobileDockProps) {
           onClick={onOpenCmd}
           aria-label="Search apps and projects"
           aria-keyshortcuts={CMD_PALETTE_SHORTCUT}
-          className="focus-ring px-well text-label flex h-(--target) min-w-18 flex-1 items-center justify-center gap-2 text-(--meta) hover:text-(--ink) min-[380px]:justify-start min-[380px]:px-3"
+          className="focus-ring px-well text-label @container h-(--target) min-w-18 flex-1 text-(--meta) hover:text-(--ink)"
         >
-          <PixelIcon name="search" className="flex-none" />
-          <span aria-hidden className="hidden truncate min-[380px]:inline">
-            search…
+          {/* The word shows only where the well has room for all of it
+              (it is what is left of the bar, so it depends on the DPR as
+              much as the width); otherwise the glyph sits centred. */}
+          <span className="flex size-full items-center justify-center gap-2 @min-[6rem]:justify-start @min-[6rem]:px-3">
+            <PixelIcon name="search" className="flex-none" />
+            <span aria-hidden className="hidden @min-[6rem]:inline">
+              search…
+            </span>
           </span>
         </button>
         <div className="flex min-w-0 items-center">
