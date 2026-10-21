@@ -26,6 +26,13 @@ import { HeroPlate } from './apps/panels/hero-plate'
 import { TerminalPanel } from './apps/panels/terminal-panel'
 import { DesktopCanvas } from './desktop-canvas'
 import { DesktopIcons } from './desktop-icons'
+import {
+  DESKTOP_CONTENT_CLASS,
+  DESKTOP_HERO_CLASS,
+  DESKTOP_PANELS_CLASS,
+  DESKTOP_ROW_CLASS,
+  DESKTOP_TERMINAL_CLASS,
+} from './desktop-layout'
 import { MenuBar } from './menubar'
 import { MobileShell } from './mobile-shell'
 import {
@@ -37,6 +44,7 @@ import {
 import { ShellMain } from './static-layer'
 import { Taskbar } from './taskbar'
 import type { AppId, WindowId } from './types'
+import { DESKTOP_BARE_ATTRIBUTE } from './wallpaper/wallpaper'
 import { Window } from './window'
 
 const Boot = dynamic(() => import('./boot').then((m) => m.Boot), {
@@ -54,6 +62,9 @@ const StartMenu = dynamic(
 interface OsShellProps {
   initialWindow?: DeepLinkTarget
 }
+
+/** The desktop surfaces the wallpaper's parallax counts as bare. */
+const BARE = { [DESKTOP_BARE_ATTRIBUTE]: '' }
 
 /**
  * Root ShiroOS shell.
@@ -234,15 +245,18 @@ export default function OsShell({ initialWindow }: OsShellProps) {
             <ShellMain overStaticLayer={onProjectRoute}>
               <DesktopIcons onLaunch={launchApp} />
 
-              <div className="relative flex min-h-dvh flex-col px-12 pt-28 pb-48 md:pr-16 md:pl-64 lg:pr-32 lg:pl-72 xl:pr-48 xl:pl-80">
-                <div className="grid flex-1 gap-12 md:grid-cols-[minmax(0,1.3fr)_minmax(340px,1fr)]">
+              <div {...BARE} className={DESKTOP_CONTENT_CLASS}>
+                <div {...BARE} className={DESKTOP_ROW_CLASS}>
                   <HeroPlate
                     onOpenCmd={openCmd}
                     onOpenContact={openContact}
                     headingLevel={heroHeadingLevel}
+                    className={DESKTOP_HERO_CLASS}
                   />
-                  <div className="flex flex-col gap-6">
-                    <TerminalPanel />
+                  <div className={DESKTOP_PANELS_CLASS}>
+                    <div className={DESKTOP_TERMINAL_CLASS}>
+                      <TerminalPanel />
+                    </div>
                     <FeaturedPanel onOpenProject={launchProject} />
                   </div>
                 </div>

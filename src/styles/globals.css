@@ -13,6 +13,31 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/*
+ * Desktop heights in art px, for the desktop layout (`desktop-layout.ts`).
+ * Media queries cannot read --px, so each art pixel size has its own query:
+ * --px 2 (DPR 1, 1.5, 2 and 3), 2.4 (DPR 1.25) and 2.29 (DPR 1.75).
+ *
+ * short-desk: under 436 art px, too short for the hero's activity strip
+ * (872 css px, 1046 and 998).
+ */
+@custom-variant short-desk {
+  @media (max-height: 871px),
+    (min-resolution: 1.2dppx) and (max-resolution: 1.3dppx) and (max-height: 1045px),
+    (min-resolution: 1.7dppx) and (max-resolution: 1.8dppx) and (max-height: 997px) {
+    @slot;
+  }
+}
+
+/* low-desk: under 344 art px, too short for both panels (688, 826 and 787). */
+@custom-variant low-desk {
+  @media (max-height: 687px),
+    (min-resolution: 1.2dppx) and (max-resolution: 1.3dppx) and (max-height: 825px),
+    (min-resolution: 1.7dppx) and (max-resolution: 1.8dppx) and (max-height: 786px) {
+    @slot;
+  }
+}
+
 @utility container {
   margin-inline: auto;
   padding-inline: 2rem;
