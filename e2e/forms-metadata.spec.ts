@@ -276,3 +276,55 @@ test('the 404 has its own title and is not indexed', async ({ page }) => {
   for (const content of robots) expect(content).toMatch(/^noindex/)
   await expect(page.locator('link[rel="canonical"]')).toHaveCount(0)
 })
+
+/** Width and height of a PNG, from its IHDR chunk. */
+function pngSize(body: Buffer) {
+  expect(body.subarray(1, 4).toString('latin1')).toBe('PNG')
+  return { width: body.readUInt32BE(16), height: body.readUInt32BE(20) }
+}
+
+/**
+ * The pixel Open Graph and Twitter cards (SPEC 1.1): the home page and a
+ * project page point at their own card, and each is a 1200x630 PNG (the
+ * 400x210 art at 3x).
+ */
+for (const [path, card] of [
+  ['/', '/opengraph-image'],
+  ['/projects/moekoder', '/projects/moekoder/opengraph-image'],
+  // An archived project, whose card draws its letter on the bare tile.
+  ['/projects/write-wiz', '/projects/write-wiz/opengraph-image'],
+] as const) {
+  test(`${path} points og:image and twitter:image at its 1200x630 card`, async ({
+    page,
+    request,
+  }) => {
+    await skipBootSplash(page)
+    await page.goto(path)
+    const og = await page
+      .locator('meta[property="og:image"]')
+      .first()
+      .getAttribute('content')
+    const twitter = await page
+      .locator('meta[name="twitter:image"]')
+      .first()
+      .getAttribute('content')
+    expect(new URL(og!).pathname).toMatch(new RegExp(`^${card}`))
+    // The home card is shared by both; a project page has no Twitter card of
+    // its own, so it falls back to its Open Graph card.
+    const twitterCard = path === '/' ? '/twitter-image' : card
+    expect(new URL(twitter!).pathname).toMatch(new RegExp(`^${twitterCard}`))
+    await expect(
+      page.locator('meta[property="og:image:width"]')
+    ).toHaveAttribute('content', '1200')
+
+    for (const url of [og!, twitter!]) {
+      const response = await request.get(new URL(url).pathname)
+      expect(response.status(), url).toBe(200)
+      expect(response.headers()['content-type']).toBe('image/png')
+      expect(pngSize(await response.body())).toEqual({
+        width: 1200,
+        height: 630,
+      })
+    }
+  })
+}

@@ -179,12 +179,12 @@ const eslintConfig = [
       'n/no-process-env': 'off',
     },
   },
-  // The image renderer of the Open Graph cards takes a plain <img>, and the
-  // rule skips these files by itself, but only where the path separator is a
+  // The image renderer of the Open Graph cards takes a plain <img>. The rule
+  // skips the image routes by itself, but only where the path separator is a
   // slash: on Windows it rewrites the first backslash alone, misses the file
-  // name and reports them.
+  // name and reports them. The card module they share is never a page.
   {
-    files: ['src/app/**/{opengraph,twitter}-image.tsx'],
+    files: ['src/app/**/{opengraph,twitter}-image.tsx', 'src/lib/og/**/*.tsx'],
     rules: {
       'next/no-img-element': 'off',
       '@next/next/no-img-element': 'off',
