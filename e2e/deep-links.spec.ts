@@ -229,9 +229,11 @@ test.describe('desktop', () => {
     await expect(about).toBeVisible()
     await expect.poll(() => location(page)).toBe('/?utm_source=test&open=about')
 
-    // About opens overlapping Projects but leaves the top of its title bar
-    // showing; pressing there brings Projects back to the front.
-    await projects.click({ position: { x: 60, y: 10 } })
+    // About opens over Projects, 30 art px right of it and 5 below, so the
+    // left end of Projects' title bar stays in view; pressing there brings
+    // Projects back to the front. (60, 10) is About's own corner, where its
+    // resize handle takes the press once its open animation has run.
+    await projects.click({ position: { x: 50, y: 10 } })
     await expect
       .poll(() => location(page))
       .toBe('/?utm_source=test&open=projects')
