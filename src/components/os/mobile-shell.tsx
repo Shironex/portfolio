@@ -306,6 +306,7 @@ function MobileDock({ os, onOpenCmd, onOpenApp }: MobileDockProps) {
               {os.isOpen(app.id) && (
                 <span
                   aria-hidden
+                  data-running-pip
                   className="absolute bottom-0 left-1/2 -ml-1 h-1 w-2 bg-(--lamp)"
                 />
               )}
