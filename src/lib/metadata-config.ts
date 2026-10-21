@@ -113,8 +113,9 @@ export const defaultMetadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  // Icons + manifest are auto-discovered from:
-  //   src/app/icon.png        → /icon.png         (favicon)
+  // Icons + manifest are auto-discovered from (`pnpm generate:icons`):
+  //   src/app/favicon.ico     → /favicon.ico      (16 and 32)
+  //   src/app/icon.png        → /icon.png         (favicon, 32)
   //   src/app/apple-icon.png  → /apple-icon.png   (iOS touch)
   //   src/app/manifest.ts     → /manifest.webmanifest
   // Declaring them manually here would pin Apple touch to the wrong size.
