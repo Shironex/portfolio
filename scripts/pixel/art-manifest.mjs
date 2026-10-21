@@ -22,6 +22,9 @@
  * to the export as they are, for a generator to read. `layer` exports one
  * layer alone and `frames` (`[from, to]`, 0-based) a range of frames, with no
  * tags listed, since a tag can reach past the range (the project icon tile).
+ * `stillsOnly` marks art that script animates (the pet on the shared ticker,
+ * the ride in the wallpaper canvas): its sprite CSS holds each tag's still and
+ * no loops.
  */
 export const ART_SOURCES = [
   { name: 'os-chrome', root: 'art', group: 'chrome' },
@@ -52,7 +55,7 @@ export const ART_SOURCES = [
     skyPalette: true,
     companions: ['wallpaper-palette.json'],
   },
-  { name: 'minime-ride', root: 'art', group: 'pets' },
+  { name: 'minime-ride', root: 'art', group: 'pets', stillsOnly: true },
   { name: 'os-cursors', root: 'art', group: 'cursors' },
   { name: 'os-neon-404', root: 'art', group: 'neon' },
   {
@@ -75,6 +78,7 @@ export const ART_SOURCES = [
     file: 'mascot-pet.aseprite',
     group: 'pets',
     ownPalette: true,
+    stillsOnly: true,
   },
 ]
 
@@ -167,4 +171,6 @@ export const GENERATED_BUDGETS = [
   { file: `${SPRITE_CSS_DIR}/os-neon-404.css`, bytes: 1 * KB },
   { file: `${SPRITE_CSS_DIR}/stack-shelf.css`, bytes: 2 * KB },
   { file: `${SPRITE_CSS_DIR}/minime.css`, bytes: 3 * KB },
+  { file: `${SPRITE_CSS_DIR}/mascot-pet.css`, bytes: 2 * KB },
+  { file: `${SPRITE_CSS_DIR}/minime-ride.css`, bytes: 1 * KB },
 ]

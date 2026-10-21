@@ -30,6 +30,12 @@
  * A sheet with no tags whose frames are named (`app-icons-16`: `projects`,
  * `logo`) gets a resting class per frame instead, `.px-<sheet>-<frame>`.
  *
+ * A source marked `stillsOnly` in the manifest is animated by script (the
+ * mascot pet on the shared ticker, the mini-me ride in the wallpaper
+ * canvas), so its stylesheet holds the sheet class and each tag's resting
+ * class, with no loops and no slice classes (its slices are data for that
+ * script): the stills a page shows on their own.
+ *
  * The loop runs where the component says: `animate-(--px-loop)` always (with
  * `ambient-loop`, so the pause rules hold it), or only under a hover or
  * focus variant, as the app icons do. The component sets `background-image`
@@ -134,9 +140,10 @@ function loopCss(id, tag, data, at, size = []) {
 
 /**
  * CSS for one sheet: its slices, its tags, or its named frames when it has
- * neither. `name` is the sheet's class stem.
+ * neither. `name` is the sheet's class stem. `stillsOnly` keeps the sheet
+ * class and each tag's resting class only.
  */
-export function spriteCss(name, data) {
+export function spriteCss(name, data, { stillsOnly = false } = {}) {
   const { w, h } = data.frames[0].sourceSize
   if (data.frames.some((f) => f.trimmed)) {
     throw new Error(
@@ -159,6 +166,16 @@ export function spriteCss(name, data) {
   const at = (i, dx = 0, dy = 0) => {
     const { x, y } = data.frames[i].frame
     return `${tightPx(-(x + dx))} ${tightPx(-(y + dy))}`
+  }
+
+  if (stillsOnly) {
+    for (const tag of data.meta.frameTags) {
+      const first = tagFrames(tag)[0]
+      blocks.push(
+        `.px-${sheet}-${cssName(tag.name)} { background-position: ${at(first)}; }`
+      )
+    }
+    return blocks.join('\n\n')
   }
 
   const sliceNames = new Set()
@@ -252,7 +269,8 @@ export function sheetStylesheet(file) {
   const data = readSheetJson(file)
   if (!animatable(data)) return null
   const name = basename(file, '.json')
-  const body = spriteCss(name, data)
+  const stillsOnly = ART_SOURCES.some((s) => s.name === name && s.stillsOnly)
+  const body = spriteCss(name, data, { stillsOnly })
     .split('\n')
     .map((line) => (line ? `  ${line}` : line))
     .join('\n')

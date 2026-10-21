@@ -607,6 +607,27 @@ describe('gen-sprites', () => {
     assert.equal(hasNamedFrames(data), false)
   })
 
+  it('writes only the stills of a sheet script animates', () => {
+    const data = readSheetJson(fixture('sheet-fixture'))
+    data.meta.slices = [
+      {
+        name: 'pivot',
+        keys: [{ frame: 0, bounds: { x: 1, y: 2, w: 1, h: 1 } }],
+      },
+    ]
+    const css = spriteCss('sheet-fixture', data, { stillsOnly: true })
+    assert.match(
+      css,
+      /\.px-sheet-fixture \{\n {2}width: calc\(4\*var\(--px\)\);/
+    )
+    // pulse rests on its first frame (2, at 0,4 on the sheet).
+    assert.match(
+      css,
+      /\.px-sheet-fixture-pulse \{ background-position: 0 calc\(-4\*var\(--px\)\); \}/
+    )
+    assert.doesNotMatch(css, /@keyframes|--px-loop|px-sheet-fixture-pivot/)
+  })
+
   it('refuses trimmed sheets', () => {
     const data = readSheetJson(fixture('sheet-fixture'))
     data.frames[1].trimmed = true
