@@ -1,8 +1,15 @@
-import { type Locator, type Page, expect, test } from '@playwright/test'
+import {
+  type Browser,
+  type Locator,
+  type Page,
+  expect,
+  test,
+} from '@playwright/test'
 
 import type { Mode, SkyId } from '../src/lib/os/appearance'
 import {
   AA_LARGE,
+  AA_TEXT,
   type ContrastWalk,
   DESKTOP_VIEWPORT,
   MOBILE_VIEWPORT,
@@ -51,10 +58,10 @@ const LAMP: Record<Mode, string> = { dark: 'lamp off', light: 'lamp on' }
 /** Dock name, window title, and a line that is there once the app has loaded. */
 const APPS = [
   ['Projects', 'projects.app', 'Pick one and it opens in its own window.'],
-  ['About', 'about.me', 'Outside the editor'],
+  ['About', 'about.me', 'A full-stack developer from Poland.'],
   ['Monitor', 'monitor.sys', 'Skills & tools'],
   ['Contact', 'contact.app', 'Send message'],
-  ['Writing', 'writing.rss', 'Latest posts'],
+  ['Writing', 'writing.rss', 'Field notes on things I build'],
   ['Readme', 'readme.md', 'Welcome to ShiroOS'],
 ] as const
 
@@ -85,19 +92,17 @@ const PROJECT = {
  * What the walk leaves out, and what it does not reach at all.
  *
  * `exempt`: the ambient loops (the terminal cursor, the featured banner) are
- * pure decoration, which AA does not cover. `overImage`: a gallery caption sits on a screenshot, under a scrim that
- * fades to nothing above the text; the probe measures every stop of a
- * gradient, the clear one included, so the caption cannot pass on its own.
- * It is held to one line, where the scrim is 60% black or more (see
- * `GalleryThumb`). Any other text over a picture fails unless its worst case
- * passes, as the lightbox caption does over the dimmed shell.
+ * pure decoration, which AA does not cover. `overImage`: a gallery caption
+ * sits on a screenshot, on a one-line strip of solid ground (see
+ * `GalleryThumb`), so it passes on its own; the probe still finds the
+ * picture under it, and this marks that as expected. Any other text over a
+ * picture fails unless its worst case passes.
  *
  * Not walked: hover, focus and pressed states (the hovered close button is
- * the one exception below), placeholders, disabled controls, the text
- * selection colour, the mobile sheets of Monitor, Contact, Writing and
- * Readme, and the page without JavaScript in anything but the default
- * appearance, which is the only one it can have. Dusk and Dawn sit between
- * the two skies the apps are walked in.
+ * the one exception below), placeholders, disabled controls (the locked
+ * submit button is measured on its own), the text selection colour, and the
+ * mobile sheets of Monitor, Contact, Writing and Readme. Dusk and Dawn sit
+ * between the two skies the apps are walked in.
  */
 const WALK: ContrastWalk = {
   exempt: ['.ambient-loop'],
@@ -147,22 +152,30 @@ async function fakeTurnstile(page: Page) {
 
 /**
  * Answer the contact form's server action here, so nothing is sent: an empty
- * result, which is what the action returns when the mail has gone out.
+ * result, which is what the action returns when the mail has gone out. The
+ * answer waits for the returned `release`, so the form can be read while it
+ * is sending.
  */
 async function mockSend(page: Page) {
+  let release = () => {}
+  const held = new Promise<void>((resolve) => {
+    release = resolve
+  })
   await page.route(
     (url) => url.pathname === '/',
-    (route) => {
+    async (route) => {
       const request = route.request()
       if (request.method() !== 'POST' || !request.headers()['next-action']) {
         return route.fallback()
       }
+      await held
       return route.fulfill({
         contentType: 'text/x-component',
         body: '0:{"a":"$@1","f":"","b":"development"}\n1:{}\n',
       })
     }
   )
+  return release
 }
 
 // Contrast is a property of the settled page: with reduced motion nothing is
@@ -325,7 +338,7 @@ for (const sky of SKIES) {
       }) => {
         test.slow()
         await fakeTurnstile(page)
-        await mockSend(page)
+        const release = await mockSend(page)
         await context.grantPermissions(['clipboard-read', 'clipboard-write'])
         await page.setViewportSize(DESKTOP_VIEWPORT)
 
@@ -355,6 +368,18 @@ for (const sky of SKIES) {
           .fill('test@example.com')
         await contact.getByRole('textbox', { name: 'Message' }).fill('Hello.')
         await send.click()
+        // Sending: the fields stay readable and the locked button keeps its
+        // flat slice with meta text, measured on its own since the walk
+        // leaves disabled controls out.
+        const sending = contact.getByRole('button', { name: /^Sending/ })
+        await expect(sending).toBeDisabled()
+        await settled(contact)
+        await walk('contact form, sending', contact, 'Get in touch')
+        const locked = await contrastRatio(sending)
+        if (locked < AA_TEXT) {
+          failures.push(`submit button, sending: ${locked.toFixed(2)}:1`)
+        }
+        release()
         await expect(contact.getByText('Message sent')).toBeVisible()
         await walk('contact form, sent', contact, 'Message sent')
         await closeWindow(contact)
@@ -438,25 +463,82 @@ for (const sky of PAINTED_SKIES) {
   }
 }
 
-test('the project page without JavaScript meets AA', async ({ browser }) => {
+/*
+ * The pages without JavaScript. With no script the Lamp is always off; the
+ * Lamp-on walk covers the same server HTML as a visitor with JavaScript
+ * sees it before the shell covers it, after the boot script has turned the
+ * Lamp on (here by hand, the one thing that script changes in it).
+ */
+for (const mode of MODES) {
+  test.describe(`without JavaScript, ${LAMP[mode]}`, () => {
+    async function staticPage(browser: Browser, path: string) {
+      const context = await browser.newContext({
+        javaScriptEnabled: false,
+        viewport: DESKTOP_VIEWPORT,
+        reducedMotion: 'reduce',
+      })
+      const page = await context.newPage()
+      await page.goto(path)
+      if (mode === 'light') {
+        // Reduced motion leaves every property a 0.01ms transition, so the
+        // colours are read once those have run.
+        await page.evaluate(() => {
+          document.documentElement.classList.remove('dark')
+          return Promise.all(
+            document
+              .getAnimations()
+              .filter((animation) => animation instanceof CSSTransition)
+              .map((animation) => animation.finished)
+          )
+        })
+      }
+      return { page, context }
+    }
+
+    test('the project page meets AA', async ({ browser }) => {
+      const { page, context } = await staticPage(
+        browser,
+        `/projects/${PROJECT.slug}`
+      )
+      const article = page.locator('[data-ssr-project]')
+      await expect(
+        article.getByRole('heading', { name: PROJECT.title, level: 1 })
+      ).toBeVisible()
+
+      const { readings, failures } = await failuresOn(
+        'static project page',
+        article,
+        PROJECT.title
+      )
+      expect(readings.some((reading) => reading.expected)).toBe(true)
+      expect(failures).toEqual([])
+      await context.close()
+    })
+  })
+}
+
+// Only ever painted with scripting off, so only ever with the Lamp off.
+test('the noscript card without JavaScript meets AA', async ({ browser }) => {
   const context = await browser.newContext({
     javaScriptEnabled: false,
     viewport: DESKTOP_VIEWPORT,
     reducedMotion: 'reduce',
   })
   const page = await context.newPage()
-  await page.goto(`/projects/${PROJECT.slug}`)
-  const article = page.locator('[data-ssr-project]')
-  await expect(
-    article.getByRole('heading', { name: PROJECT.title, level: 1 })
-  ).toBeVisible()
-
-  const { readings, failures } = await failuresOn(
-    'static project page',
-    article,
-    PROJECT.title
+  await page.goto('/')
+  const card = page.locator('.z-noscript')
+  await expect(card.getByText('ShiroOS needs JavaScript')).toBeVisible()
+  // The walk leaves out what sits in a <noscript>, which scripting on never
+  // paints. Scripting is off here, so the card is lifted out of it first.
+  await page.evaluate(() => {
+    const noscript = document.querySelector('.z-noscript')?.closest('noscript')
+    if (noscript) noscript.replaceWith(...noscript.childNodes)
+  })
+  const { failures } = await failuresOn(
+    'noscript card',
+    card,
+    'ShiroOS needs JavaScript'
   )
-  expect(readings.some((reading) => reading.expected)).toBe(true)
   expect(failures).toEqual([])
   await context.close()
 })
