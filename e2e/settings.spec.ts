@@ -223,7 +223,9 @@ test('Readable text swaps long text and leaves the chrome pixel', async ({
 
 /**
  * The phone launcher's switches (SPEC 1.7): the same flags, storage and
- * announcements as the View menu, and the Lamp, which swaps the bodies.
+ * announcements as the View menu, and the Lamp, which swaps the bodies. The
+ * announcement is read from a live region inside the launcher, since the
+ * launcher is a modal dialog and the shell's region is outside it.
  */
 test.describe('phone launcher', () => {
   test.use({ viewport: MOBILE_VIEWPORT, hasTouch: true, isMobile: true })
@@ -236,6 +238,7 @@ test.describe('phone launcher', () => {
     await mobileLauncher(page).click()
     await expect(launcher(page)).toBeVisible()
   }
+  const said = (page: Page) => launcher(page).getByRole('status')
 
   for (const setting of SETTINGS) {
     test(`${setting.menu} flips, says so and persists`, async ({ page }) => {
@@ -253,7 +256,8 @@ test.describe('phone launcher', () => {
         'aria-checked',
         String(!setting.onByDefault)
       )
-      await expect(announcer(page)).toHaveText(setting.said[0])
+      await expect(said(page)).toHaveText(setting.said[0])
+      await expect(announcer(page)).toBeEmpty()
 
       await page.reload()
       await mobileReady(page, AFTER_RELOAD)
@@ -267,7 +271,7 @@ test.describe('phone launcher', () => {
       // And back, to the default, which stores nothing.
       await toggle.click()
       await expect(html(page)).not.toHaveAttribute(setting.attribute, /.*/)
-      await expect(announcer(page)).toHaveText(setting.said[1])
+      await expect(said(page)).toHaveText(setting.said[1])
       expect(
         await page.evaluate(
           (key) => window.localStorage.getItem(key),

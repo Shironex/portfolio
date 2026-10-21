@@ -12,6 +12,7 @@ import { useFocusTrap } from '@/hooks/use-focus-trap'
 import { useScrollLock } from '@/hooks/use-scroll-lock'
 import '@/styles/mobile-chrome.css'
 
+import { ModalLiveRegion } from './announcer'
 import { COPY_LINK_LABEL } from './constants'
 
 /**
@@ -49,7 +50,9 @@ interface MobileSheetProps {
  * scroll via a ref-counted helper so stacked sheets don't fight over
  * `overflow`, and closes on Esc (unless focus is in a field, as with a
  * window). It always sits on the one overlay layer, under the command
- * palette; a later sheet in the DOM covers an earlier one.
+ * palette; a later sheet in the DOM covers an earlier one. What the shell
+ * says while it is open (a launcher switch) is read from its own live
+ * region, inside the dialog.
  */
 export function MobileSheet({
   title,
@@ -121,6 +124,7 @@ export function MobileSheet({
       <div className="font-body text-ink bg-surf-solid min-h-0 flex-1 overflow-y-auto px-8 pt-10 pb-[calc(12*var(--px)+env(safe-area-inset-bottom))]">
         {children}
       </div>
+      <ModalLiveRegion />
     </div>
   )
 }

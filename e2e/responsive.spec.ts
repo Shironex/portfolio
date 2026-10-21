@@ -75,8 +75,8 @@ const GRIP_GOLD = '%23f0c070'
 const barImageOf = (bar: Locator) =>
   bar.evaluate((el) => getComputedStyle(el).borderImageSource)
 
-/** The scrolling body of a sheet: its last child. */
-const sheetBody = (dialog: Locator) => dialog.locator('> div').last()
+/** The scrolling body of a sheet: its second child, under the title bar. */
+const sheetBody = (dialog: Locator) => dialog.locator('> div').nth(1)
 
 /**
  * Every control in `root` someone can reach that is under 44 css either way:
