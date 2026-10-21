@@ -59,7 +59,11 @@ function PetLayerImpl({ windows, covered }: PetLayerProps) {
   return (
     <div ref={layerRef} aria-hidden data-pet className="pet">
       <div ref={spriteRef} className="px-mascot-pet pet-sprite" style={SHEET} />
-      <div ref={hitboxRef} data-pet-hitbox className="pet-hitbox px-cursor-grab" />
+      <div
+        ref={hitboxRef}
+        data-pet-hitbox
+        className="pet-hitbox px-cursor-grab"
+      />
     </div>
   )
 }

@@ -43,10 +43,7 @@ function TerminalPanelImpl() {
   let cursor = 0
 
   return (
-    <div
-      {...PERCH}
-      className="os-night px-panel flex flex-col gap-2 p-2"
-    >
+    <div {...PERCH} className="os-night px-panel flex flex-col gap-2 p-2">
       <div className="text-label flex items-center gap-3 px-2 pt-1 text-(--meta)">
         <span aria-hidden className="flex items-center gap-1">
           <span className="block size-2 bg-(--error)" />

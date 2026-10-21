@@ -62,7 +62,10 @@ export function RideStill({ className }: { className?: string }) {
  */
 export function PetOnLedge({ className }: { className?: string }) {
   return (
-    <span aria-hidden className={cn('relative block size-48 flex-none', className)}>
+    <span
+      aria-hidden
+      className={cn('relative block size-48 flex-none', className)}
+    >
       <span className="absolute top-38 -left-8 h-2 w-64 bg-(--frame)" />
       <PetStill pose="sit" className="relative" />
     </span>
