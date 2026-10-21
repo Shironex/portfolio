@@ -1,9 +1,8 @@
 'use client'
 
-import { ArrowUpRight } from 'lucide-react'
-
-import { SKELETON_BAR } from '@/components/os/constants'
+import { PROSE_CLASS, SKELETON_BAR } from '@/components/os/constants'
 import { ExternalLink } from '@/components/os/external-link'
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
 import { GITHUB_URL } from '@/lib/constants'
 import {
@@ -29,30 +28,27 @@ function ProfileLink() {
   )
 }
 
+/** The pull request list: a card 9-slice with dotted rules between rows. */
+const LIST_CLASS = 'px-card flex flex-col p-1'
+
 function Skeleton() {
   return (
-    <div aria-busy="true">
+    <div aria-busy="true" className="flex flex-col gap-3">
       <p role="status" className="sr-only">
         Loading pull requests
       </p>
-      <div
-        aria-hidden
-        className={cn('h-8 w-3/4 rounded-[2px]', SKELETON_BAR)}
-      />
-      <div className="border-rule bg-surf-0 divide-rule mt-6 divide-y overflow-hidden rounded-2xl border">
+      <div aria-hidden className={cn('h-4 w-3/4', SKELETON_BAR)} />
+      <div aria-hidden className={LIST_CLASS}>
         {Array.from({ length: PULLS_SHOWN }).map((_, i) => (
           <div
             key={i}
-            aria-hidden
-            className="flex items-center justify-between gap-8 px-8 py-5"
+            className="flex items-center justify-between gap-6 px-2 py-2"
           >
-            <div className="min-w-0 flex-1">
-              <div className={cn('h-7 w-2/3 rounded-[2px]', SKELETON_BAR)} />
-              <div
-                className={cn('mt-4 h-5 w-1/3 rounded-[2px]', SKELETON_BAR)}
-              />
+            <div className="flex min-w-0 flex-1 flex-col gap-2">
+              <div className={cn('h-4 w-2/3', SKELETON_BAR)} />
+              <div className={cn('h-3 w-1/3', SKELETON_BAR)} />
             </div>
-            <div className={cn('h-5 w-32 rounded-[2px]', SKELETON_BAR)} />
+            <div className={cn('h-3 w-16', SKELETON_BAR)} />
           </div>
         ))}
       </div>
@@ -64,8 +60,8 @@ function Contributions({ data }: { data: GithubContributions }) {
   const hiddenRepos = data.repoCount - data.repos.length
 
   return (
-    <>
-      <p className="text-ink-2 text-sm leading-relaxed">
+    <div className="flex flex-col gap-3">
+      <p className={PROSE_CLASS}>
         {data.capped && 'More than '}
         {plural(
           data.total,
@@ -76,51 +72,50 @@ function Contributions({ data }: { data: GithubContributions }) {
         These are the latest.
       </p>
 
-      <ul className="mt-6 flex flex-wrap items-center gap-3">
+      <ul className="flex flex-wrap items-center gap-2">
         {data.repos.map((repo) => (
-          <li key={repo.name}>
+          <li key={repo.name} className="flex">
             <ExternalLink
               href={repo.url}
               aria-label={`${repo.name}, ${plural(repo.count, 'merged pull request', 'merged pull requests')}`}
-              className="focus-ring border-rule bg-surf-0 text-ink-2 hover:bg-surf-soft inline-flex items-center gap-3 rounded-full border px-5 py-2 font-mono text-[11px] transition"
+              className="os-night focus-ring px-chip text-label inline-flex items-center gap-2 px-2 text-(--ink) hover:text-(--ink-hi)"
             >
               {repo.name}
-              <span className="text-miku-ink font-bold tabular-nums">
-                {repo.count}
-              </span>
+              <span className="text-(--lamp) tabular-nums">{repo.count}</span>
             </ExternalLink>
           </li>
         ))}
         {hiddenRepos > 0 && (
-          <li className="text-ink-3 font-mono text-[11px]">
+          <li className="text-label text-(--meta)">
             +{hiddenRepos}
             {data.capped && ' or'} more
           </li>
         )}
       </ul>
 
-      <ul className="border-rule bg-surf-0 divide-rule mt-6 divide-y overflow-hidden rounded-2xl border">
-        {data.pulls.map((pull) => (
-          <li key={pull.url}>
+      <ul className={LIST_CLASS}>
+        {data.pulls.map((pull, i) => (
+          <li key={pull.url} className="flex flex-col">
+            {i > 0 && <span aria-hidden className="rule-dotted mx-2" />}
             <ExternalLink
               href={pull.url}
-              className="focus-ring group hover:bg-surf-soft flex items-center justify-between gap-8 px-8 py-5 transition"
+              className="focus-ring group flex items-center justify-between gap-6 px-2 py-2 hover:bg-(--select)"
             >
-              <span className="min-w-0">
-                <span className="text-ink flex items-center gap-2 text-sm font-semibold">
+              <span className="flex min-w-0 flex-col gap-1">
+                <span className="text-body flex items-center gap-2 text-(--ink)">
                   <span className="truncate">{pull.title}</span>
-                  <ArrowUpRight
-                    aria-hidden
-                    className="text-ink-3 size-7 shrink-0 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
+                  <PixelIcon
+                    name="external"
+                    className="opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
                   />
                 </span>
-                <span className="text-ink-3 mt-1 block truncate font-mono text-[11px]">
+                <span className="text-label block truncate text-(--meta) group-hover:text-(--ink)">
                   {pull.repo}
                 </span>
               </span>
               <time
                 dateTime={pull.mergedAt}
-                className="text-ink-3 shrink-0 font-mono text-[11px]"
+                className="text-label flex-none text-(--meta) group-hover:text-(--ink)"
               >
                 {formatMerged(pull.mergedAt)}
               </time>
@@ -128,7 +123,7 @@ function Contributions({ data }: { data: GithubContributions }) {
           </li>
         ))}
       </ul>
-    </>
+    </div>
   )
 }
 
@@ -148,7 +143,7 @@ export function OpenSourcePanel() {
 
   if (state.kind !== 'ready') {
     return (
-      <p className="text-ink-2 text-sm leading-relaxed">
+      <p className={PROSE_CLASS}>
         I couldn&apos;t load my pull requests right now. They are all on{' '}
         <ProfileLink />.
       </p>
@@ -157,7 +152,7 @@ export function OpenSourcePanel() {
 
   if (state.data.pulls.length === 0) {
     return (
-      <p className="text-ink-3 text-sm leading-relaxed">
+      <p className={PROSE_CLASS}>
         No merged pull requests to other people&apos;s repositories yet.
       </p>
     )
