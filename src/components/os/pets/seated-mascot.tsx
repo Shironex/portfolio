@@ -42,7 +42,8 @@ const HIT = PET_HITBOX.sit
  * (a tap then shows one wave frame for a second), and with Pets off she is
  * hidden by CSS and nothing runs.
  *
- * Place it in a positioned card; `className` sets how far from its right.
+ * Place it in a positioned `panel` 9-slice (a 2 art px frame, which her
+ * offset clears); `className` sets how far from its right.
  */
 export function SeatedMascot({ className }: { className?: string }) {
   const rootRef = useRef<HTMLSpanElement>(null)
@@ -152,10 +153,10 @@ export function SeatedMascot({ className }: { className?: string }) {
       aria-hidden
       data-cameo="mascot"
       // The frame's top sits her seat line (or, standing, her feet) on the
-      // card's top edge.
+      // card's top edge: the offset is from inside its 2 art px frame.
       style={{ '--seat': PET_ANCHOR.sit.y } as CSSProperties}
       className={cn(
-        'pointer-events-none absolute top-[calc(var(--seat)*var(--px)*-1)] block size-48 in-data-[pets=hidden]:hidden',
+        'pointer-events-none absolute top-[calc((var(--seat)+2)*var(--px)*-1)] block size-48 in-data-[pets=hidden]:hidden',
         className
       )}
     >

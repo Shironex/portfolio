@@ -220,7 +220,7 @@ export function MobileShell({
  */
 function ContactCard({ onOpenContact }: { onOpenContact: () => void }) {
   return (
-    <div className="px-panel relative mt-38 flex flex-col items-start gap-5 p-10 in-data-[pets=hidden]:mt-0">
+    <div className="px-panel relative mt-40 flex flex-col items-start gap-5 p-10 in-data-[pets=hidden]:mt-0">
       <SeatedMascot className="right-8" />
       <h2 className="text-title text-(--heading)">
         Hiring, a contract, or an MVP to build
