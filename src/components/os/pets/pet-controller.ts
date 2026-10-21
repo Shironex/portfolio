@@ -27,6 +27,7 @@ import {
   floorPerch,
   panelHasRoom,
   panelPerch,
+  taskbarPerch,
   windowHasRoom,
   windowPerch,
 } from './perches'
@@ -63,7 +64,7 @@ interface PetElements {
  * open layer (`data-ambient`) and in a hidden tab (the ticker sleeps);
  * she is off the screen under Pets off and a maximized window, and comes
  * back with a fall when both clear. Under reduced motion she sits still on
- * the floor and nothing ticks.
+ * the floor (the road's kerb) and nothing ticks.
  */
 export class PetController {
   private readonly brain = new PetBrain()
@@ -258,7 +259,11 @@ export class PetController {
     const px = artPixel()
     const area = measureDesktopArea()
     const width = this.art(window.innerWidth, px)
-    const floorY = this.art(area.y + area.h, px)
+    // The floor is the lit kerb of the road, which the wallpaper draws along
+    // the bottom, rounding its rows up from the viewport (decision 3 of
+    // SPEC 11). The taskbar floats over part of it, a perch of its own.
+    const floorY =
+      Math.ceil(window.innerHeight / px) - LAYOUT.road.height + KERB_ROW
     // The menu bar's bottom (and the gap under it): nothing above is room.
     const ceiling = this.art(area.y, px)
     const windows: WindowBox[] = []
@@ -292,20 +297,24 @@ export class PetController {
       if (panelHasRoom(rect, ceiling, panels)) perches.push(panelPerch(rect, i))
     })
     perches.push(floorPerch(width, floorY))
-    // The wallpaper rounds its rows up from the viewport and draws the road
-    // along the bottom; the taskbar floats over part of it.
-    const kerbY =
-      Math.ceil(window.innerHeight / px) - LAYOUT.road.height + KERB_ROW
     const taskbar = document
       .querySelector(`[${TASKBAR_ATTRIBUTE}]`)
       ?.getBoundingClientRect()
-    const kerbHidden: (readonly [number, number])[] = taskbar
-      ? [[this.art(taskbar.left, px), this.art(taskbar.right, px)]]
-      : []
+    const kerbHidden: (readonly [number, number])[] = []
+    if (taskbar && taskbar.width > 0) {
+      const bar: Box = {
+        x: this.art(taskbar.left, px),
+        y: this.art(taskbar.top, px),
+        w: this.art(taskbar.width, px),
+        h: this.art(taskbar.height, px),
+      }
+      perches.push(taskbarPerch(bar))
+      kerbHidden.push([bar.x, bar.x + bar.w])
+    }
     this.brain.setWorld(
       perches,
       windows,
-      { width, floorY, kerbY, kerbHidden },
+      { width, floorY, kerbHidden },
       performance.now()
     )
     this.render()

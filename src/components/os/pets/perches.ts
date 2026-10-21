@@ -5,12 +5,13 @@ import { type Box, PET_ANCHOR, PET_HITBOX, SIT_HALF_WIDTH } from './pet-sheet'
 /**
  * Where the pet can stand (SPEC 3.3), all in art px in the windows layer,
  * whose origin is the viewport's: the top edge of every open window, the
- * top edges of the desktop panels, and the floor (the top of the taskbar
- * row). Built from the window store and from rects measured on stack and
- * size changes, never in the frame loop.
+ * top edges of the desktop panels, the top edge of the taskbar, and the
+ * floor, which is the kerb of the wallpaper's road across the whole width
+ * (decision 3 of SPEC 11). Built from the window store and from rects
+ * measured on stack and size changes, never in the frame loop.
  */
 export interface Perch {
-  /** `window:<id>`, `panel:<n>` or `floor`. */
+  /** `window:<id>`, `panel:<n>`, `taskbar` or `floor`. */
   key: string
   windowId?: WindowId
   /** The surface line: the y her feet (or her seat) rest on. */
@@ -122,7 +123,25 @@ export function panelPerch(rect: Box, index: number): Perch {
   }
 }
 
-/** The floor, across the whole width. */
+/**
+ * The taskbar's top edge: walkable, no sit slot (seated, her legs would
+ * hang behind the bar, which draws over the windows layer). She steps off
+ * its ends onto the kerb.
+ */
+export function taskbarPerch(rect: Box): Perch {
+  return {
+    key: 'taskbar',
+    y: rect.y,
+    left: rect.x,
+    right: rect.x + rect.w,
+    z: 0,
+    floor: false,
+    slots: [],
+    roomy: true,
+  }
+}
+
+/** The floor: the road's kerb, across the whole width. */
 export function floorPerch(width: number, y: number): Perch {
   return {
     key: 'floor',

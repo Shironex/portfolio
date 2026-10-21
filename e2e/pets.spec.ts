@@ -9,6 +9,7 @@ import {
   openDesktop,
   rectOf,
   skipBootSplash,
+  taskbar,
   titleBar,
   titleBarGrip,
 } from './helpers'
@@ -18,20 +19,26 @@ import {
  * in the accessibility tree or the tab order, the Pets setting puts her away
  * for good, reduced motion sits her still, a focused control she covers
  * sends her away, a maximized window hides her, and she drags, falls, rides
- * a dragged window and lands where the physics says. All in art px at DPR 1
- * (2 css px each).
+ * a dragged window and lands where the physics says: on a window, on the
+ * taskbar, or on the road's kerb, her floor. All in art px at DPR 1 (2 css
+ * px each).
  */
 const ART_PX = 2
 const FRAME = 48
-/** The top of the taskbar row: the floor she stands on. */
-const FLOOR = DESKTOP_VIEWPORT.height / ART_PX - MAXIMIZED_INSET.bottom
-/** Her frame's top while she stands on the floor. */
-const ON_FLOOR = FLOOR - FRAME
-/** Her seat line is 10 art px above her feet (PET.md). */
-const SEAT = 38
-/** The lit kerb of the wallpaper's road, 4 rows into the road piece. */
+/**
+ * The floor she stands on: the lit kerb of the wallpaper's road, 4 rows
+ * into the road piece, across the whole width (SPEC 11, decision 3).
+ */
 const KERB =
   Math.ceil(DESKTOP_VIEWPORT.height / ART_PX) - LAYOUT.road.height + 4
+/** Her frame's top while she stands on the floor. */
+const ON_FLOOR = KERB - FRAME
+/** The taskbar's top edge, a perch of its own: the top of the taskbar row. */
+const TASKBAR_TOP = DESKTOP_VIEWPORT.height / ART_PX - MAXIMIZED_INSET.bottom
+/** Her frame's top while she stands on the taskbar. */
+const ON_TASKBAR = TASKBAR_TOP - FRAME
+/** Her seat line is 10 art px above her feet (PET.md). */
+const SEAT = 38
 
 /** States in which she is out and on a perch. */
 const OUT = /^(idle|walk|sit|sleep|wave|land)$/
@@ -177,10 +184,11 @@ test.describe('the desktop pet', () => {
     expect(await petState(page)).toMatch(/^(out|)$/)
   })
 
-  test('drags, falls and lands on the floor', async ({ page }) => {
+  test('drags, falls and lands on the kerb', async ({ page }) => {
     await openDesktop(page)
     await waitForPet(page)
-    await dragPet(page, 720, 300, false)
+    // Left of the taskbar, over the bare road.
+    await dragPet(page, 240, 300, false)
     await expect.poll(() => petState(page)).toBe('drag')
     await page.mouse.up()
     await expect.poll(() => petState(page)).toMatch(/fall|land/)
@@ -188,6 +196,23 @@ test.describe('the desktop pet', () => {
       .poll(async () => (await petView(page))?.y, { timeout: 5000 })
       .toBe(ON_FLOOR)
     await expect.poll(() => petState(page)).toMatch(OUT)
+  })
+
+  test('lands on the taskbar when dropped over it', async ({ page }) => {
+    await openDesktop(page)
+    await waitForPet(page)
+    const bar = await rectOf(taskbar(page))
+    await dragPet(page, bar.x + bar.width / 2, 300)
+    await expect
+      .poll(async () => (await petView(page))?.y, { timeout: 5000 })
+      .toBe(ON_TASKBAR)
+    await expect.poll(() => petState(page)).toMatch(OUT)
+    // Her feet are on the bar's top edge, in its span.
+    const view = await petView(page)
+    const centre = ((view?.x ?? 0) + FRAME / 2) * ART_PX
+    expect(centre).toBeGreaterThan(bar.x)
+    expect(centre).toBeLessThan(bar.x + bar.width)
+    expect(TASKBAR_TOP * ART_PX).toBe(Math.round(bar.y))
   })
 
   test('rides a window dragged slowly and falls off a fling', async ({
@@ -225,9 +250,13 @@ test.describe('the desktop pet', () => {
     await perchOn(page, about)
     await about.getByRole('button', { name: 'Minimize window' }).click()
     await expect.poll(() => petState(page), { timeout: 2000 }).toBe('fall')
+    // Onto the taskbar under her, or the kerb beside it.
+    const bar = await rectOf(taskbar(page))
+    const centre = (((await petView(page))?.x ?? 0) + FRAME / 2) * ART_PX
+    const overBar = centre >= bar.x && centre <= bar.x + bar.width
     await expect
       .poll(async () => (await petView(page))?.y, { timeout: 5000 })
-      .toBe(ON_FLOOR)
+      .toBe(overBar ? ON_TASKBAR : ON_FLOOR)
   })
 
   test('hides under a maximized window and comes back on restore', async ({
@@ -334,7 +363,8 @@ for (const dpr of [1, 1.25, 2]) {
         )
       )
       const bar = await rectOf(titleBar(projects))
-      await dragPet(page, bar.x + bar.width * 0.55, bar.y - 40 * px)
+      // From 60 art px over the bar, as `perchOn` does: her feet fall onto it.
+      await dragPet(page, bar.x + bar.width * 0.55, bar.y - 60 * px)
       const top = Math.round((await rectOf(projects)).y / px)
       await expect
         .poll(async () => {

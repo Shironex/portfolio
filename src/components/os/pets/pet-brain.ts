@@ -73,11 +73,9 @@ const STILL_FROM_RIGHT = 40
 /** The ground and where her still pose sits (art px). */
 export interface PetGround {
   width: number
-  /** The floor: the top of the taskbar row. */
+  /** The floor: the kerb of the wallpaper's road. */
   floorY: number
-  /** The kerb of the wallpaper's road, where the still pose sits. */
-  kerbY: number
-  /** Spans the taskbar hides the kerb in; there she sits on the floor. */
+  /** Spans the taskbar hides the kerb in; the still pose sits clear of them. */
   kerbHidden: readonly (readonly [number, number])[]
 }
 
@@ -156,7 +154,6 @@ export class PetBrain {
   private perches: Perch[] = []
   private windows: WindowBox[] = []
   private floorY = 0
-  private kerbY = 0
   private kerbHidden: PetGround['kerbHidden'] = []
   private width = 0
   private topZ = 0
@@ -188,7 +185,6 @@ export class PetBrain {
     this.windows = windows
     this.width = ground.width
     this.floorY = ground.floorY
-    this.kerbY = ground.kerbY
     this.kerbHidden = ground.kerbHidden
     this.topZ = windows.reduce((z, w) => Math.max(z, w.z), 0)
     if (this.state === 'out') return
@@ -680,19 +676,27 @@ export class PetBrain {
   }
 
   /**
-   * Reduced motion: seated still in from the right end, on the kerb of the
-   * road so her legs hang over something, or on the floor line where the
-   * taskbar hides the kerb.
+   * Reduced motion: seated still on the floor (the road's kerb, so her legs
+   * hang over its edge), in from the right end, at the spot nearest there
+   * that the taskbar does not hide.
    */
   private placeStill(now: number) {
     const floor = this.floor()
-    this.perch = floor
-    this.x = clamp(floor.right - STILL_FROM_RIGHT, ...walkSpan(floor))
+    const [from, to] = walkSpan(floor)
     const half = PET_FRAME.w / 2
-    const hidden = this.kerbHidden.some(
-      ([from, to]) => this.x + half > from && this.x - half < to
-    )
-    this.y = hidden ? floor.y : this.kerbY
+    const target = clamp(floor.right - STILL_FROM_RIGHT, from, to)
+    const clear = (x: number) =>
+      x >= from &&
+      x <= to &&
+      !this.kerbHidden.some(([a, b]) => x + half > a && x - half < b)
+    const spots = [
+      target,
+      ...this.kerbHidden.flatMap(([a, b]) => [b + half, a - half]),
+    ].filter(clear)
+    spots.sort((a, b) => Math.abs(a - target) - Math.abs(b - target))
+    this.perch = floor
+    this.x = spots[0] ?? target
+    this.y = floor.y
     this.state = 'sit'
     this.tag = 'sit'
     this.frame = 0
