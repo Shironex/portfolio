@@ -78,7 +78,7 @@ function Contributions({ data }: { data: GithubContributions }) {
             <ExternalLink
               href={repo.url}
               aria-label={`${repo.name}, ${plural(repo.count, 'merged pull request', 'merged pull requests')}`}
-              className="os-night focus-ring px-chip text-label inline-flex items-center gap-2 px-2 text-(--ink) hover:text-(--ink-hi)"
+              className="os-night focus-ring px-chip text-label inline-flex items-center gap-2 px-2 text-(--ink) hover:text-(--ink-hi) pointer-coarse:h-(--target)"
             >
               {repo.name}
               <span className="text-(--lamp) tabular-nums">{repo.count}</span>
