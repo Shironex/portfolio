@@ -281,6 +281,16 @@
   background-color: #0b1420;
   background-clip: padding-box;
 }
+:root:not(.dark) .px-well:not(.os-night, .os-night *) {
+  border-image-source: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' shape-rendering='crispEdges'><path fill='%23fff2c8' d='M1 0h10v1H1zM0 1h12v10H0zM1 11h10v1H1z'/><path fill='%232e6e6e' d='M1 0h10v1H1zM0 1h1v10H0zM11 1h1v10H11zM1 11h10v1H1z'/><path fill='%231f5058' d='M1 10h10v1H1z'/></svg>");
+  background-color: #fff2c8;
+}
+.px-well[aria-invalid='true'] {
+  border-image-source: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' shape-rendering='crispEdges'><path fill='%230b1420' d='M1 0h10v1H1zM0 1h12v10H0zM1 11h10v1H1z'/><path fill='%23f0a068' d='M1 0h10v1H1zM0 1h1v10H0zM11 1h1v10H11zM1 11h10v1H1z'/><path fill='%231f5058' d='M1 10h10v1H1z'/></svg>");
+}
+:root:not(.dark) .px-well[aria-invalid='true']:not(.os-night, .os-night *) {
+  border-image-source: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' shape-rendering='crispEdges'><path fill='%23fff2c8' d='M1 0h10v1H1zM0 1h12v10H0zM1 11h10v1H1z'/><path fill='%237a1e2a' d='M1 0h10v1H1zM0 1h1v10H0zM11 1h1v10H11zM1 11h10v1H1z'/><path fill='%231f5058' d='M1 10h10v1H1z'/></svg>");
+}
 
 .px-window-focused {
   border-style: solid;

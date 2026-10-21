@@ -1045,6 +1045,32 @@ describe('gen-chrome', () => {
     assert.match(coarse, /:root:not\(\.dark\) \.px-window:not/)
   })
 
+  it('adds paper colours of one body and recoloured states', async () => {
+    const out = await css({
+      paper: ['window'],
+      paperRecolour: { window: { '#13253a': '#fff2c8' } },
+      states: [
+        {
+          slice: 'window',
+          selector: "[aria-invalid='true']",
+          recolour: { '#13253a': '#4a2b25' },
+        },
+      ],
+    })
+    const paper = out
+      .split(':root:not(.dark) .px-window:not(.os-night, .os-night *) {')[1]
+      .split('}')[0]
+    assert.match(paper, /background-color: #fff2c8;/)
+    assert.match(
+      out,
+      /\.px-window\[aria-invalid='true'\] \{\n {2}border-image-source: url\("[^"]*%234a2b25/
+    )
+    assert.match(
+      out,
+      /:root:not\(\.dark\) \.px-window\[aria-invalid='true'\]:not\(\.os-night, \.os-night \*\) \{/
+    )
+  })
+
   it('grows a slice by repeating its first and last centre rows', () => {
     const grid = [['t'], ['a'], ['m'], ['z'], ['b']]
     const grown = growGrid(grid, { x: 0, y: 1, w: 1, h: 3 }, 8)

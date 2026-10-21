@@ -35,12 +35,16 @@
  * night too, like the tokens there. The bodies of `os-chrome.aseprite` carry
  * no slice data, so they are listed in `CHROME_OPTIONS.paper`.
  *
- * Code adds two kinds of piece the atlas does not draw (`CHROME_OPTIONS`):
+ * Code adds what the atlas does not draw (`CHROME_OPTIONS`):
  *   - variants: a slice recoloured, as its own class (chip tones)
  *   - grown slices: a slice redrawn taller by repeating its first and last
  *     centre row, swapped in under a media query. The title bar keeps its
  *     grip in the left cap, so it only maps 1:1 at its drawn height; the
  *     coarse pointer bar is 22 art px, with flat rows above and below.
+ *   - paper colours of one body on top of `PAPER_RECOLOUR` (the well's
+ *     ground fill, which is not a body colour anywhere else)
+ *   - states: a 9-slice recoloured under an attribute selector, in night and
+ *     paper (the well's rim when its field is invalid)
  *
  * Each piece becomes an SVG of merged pixel runs with `crispEdges`, inlined as
  * a data URI (CSP allows `data:` images), so there is no request and no
@@ -88,6 +92,7 @@ export const CHROME_OPTIONS = {
     'window-unfocused',
     'panel',
     'card',
+    'well',
     'tile-skeleton',
   ],
   variants: [
@@ -99,6 +104,18 @@ export const CHROME_OPTIONS = {
   grow: [
     { slice: 'titlebar-focused', height: 22, media: '(pointer: coarse)' },
     { slice: 'titlebar-unfocused', height: 22, media: '(pointer: coarse)' },
+  ],
+  // The field well on paper: cream fill (`--surf-raised`, 13.88:1 under the
+  // ink), the rim teal through PAPER_RECOLOUR (5.26:1 as a boundary).
+  paperRecolour: { well: { '#0b1420': '#fff2c8' } },
+  states: [
+    // An invalid field: the rim in `--error` (8.75:1 on the ground at night,
+    // 9.18:1 on cream in paper), as its message is.
+    {
+      slice: 'well',
+      selector: "[aria-invalid='true']",
+      recolour: { '#4fa3a0': '#f0a068' },
+    },
   ],
 }
 
@@ -158,7 +175,7 @@ export function growGrid(grid, center, height) {
 }
 
 /** A slice as a piece: its frames (runs of equal frames merged) and options. */
-function slicePiece(sheet, slice, paperNames) {
+function slicePiece(sheet, slice, paperNames, paperMaps) {
   const name = cssName(slice.name)
   if (name !== slice.name) {
     throw new Error(
@@ -192,6 +209,7 @@ function slicePiece(sheet, slice, paperNames) {
     frames,
     repeat,
     paper,
+    paperMap: { ...PAPER_RECOLOUR, ...paperMaps[name] },
   }
 }
 
@@ -246,10 +264,9 @@ function media(query, rules) {
   return `@media ${query} {\n${rules.join('\n').replace(/^(?=.)/gm, '  ')}\n}`
 }
 
-const paperGrid = (grid) => recolourGrid(grid, PAPER_RECOLOUR)
-
-/** CSS for one 9-slice piece, its paper copy and its grown copies. */
-function nineSliceCss(piece, selector, grows) {
+/** CSS for one 9-slice piece, its paper copy, states and grown copies. */
+function nineSliceCss(piece, selector, grows, states = []) {
+  const paperGrid = (g) => recolourGrid(g, piece.paperMap)
   const { grid } = piece.frames[0]
   const night = nineSlice(grid, piece.center, piece.repeat)
   const rules = [rule(selector, night.lines)]
@@ -259,6 +276,21 @@ function nineSliceCss(piece, selector, grows) {
   if (hasPaper) {
     const paper = nineSlice(recoloured, piece.center, piece.repeat, night)
     rules.push(rule(paperSelector, paper.lines))
+  }
+  for (const state of states) {
+    const stateGrid = recolourGrid(grid, state.recolour)
+    rules.push(
+      rule(`${selector}${state.selector}`, [
+        `border-image-source: ${url(stateGrid)};`,
+      ])
+    )
+    if (hasPaper) {
+      rules.push(
+        rule(`${PAPER_SCOPE} ${selector}${state.selector}${OUTSIDE_NIGHT}`, [
+          `border-image-source: ${url(paperGrid(stateGrid))};`,
+        ])
+      )
+    }
   }
   for (const grow of grows) {
     const tall = growGrid(grid, piece.center, grow.height)
@@ -278,6 +310,7 @@ function nineSliceCss(piece, selector, grows) {
 /** CSS for one tile piece: a repeated background, stepped if animated. */
 function tileCss(piece) {
   const { name, frames, w, h } = piece
+  const paperGrid = (g) => recolourGrid(g, piece.paperMap)
   const total = frames.reduce((sum, f) => sum + f.ms, 0)
   const lines = [
     `background-image: var(--px-${name});`,
@@ -365,9 +398,10 @@ export function chromeCss(
   const { slices } = sheet.data.meta
   if (slices.length === 0) throw new Error(`${sheet.json}: no slices`)
   const paperNames = new Set(options.paper ?? [])
+  const paperMaps = options.paperRecolour ?? {}
   const pieces = new Map()
   for (const slice of slices) {
-    const piece = slicePiece(sheet, slice, paperNames)
+    const piece = slicePiece(sheet, slice, paperNames, paperMaps)
     if (pieces.has(piece.name))
       throw new Error(`chrome slice "${piece.name}" appears twice`)
     pieces.set(piece.name, piece)
@@ -379,6 +413,12 @@ export function chromeCss(
     if (pieces.has(variant.name))
       throw new Error(`variant "${variant.name}" is also a slice`)
     pieces.set(variant.name, variantPiece(from, variant, paperNames))
+  }
+  const states = new Map()
+  for (const state of options.states ?? []) {
+    if (!pieces.get(state.slice)?.center)
+      throw new Error(`state "${state.selector}": no 9-slice "${state.slice}"`)
+    states.set(state.slice, [...(states.get(state.slice) ?? []), state])
   }
   const grows = new Map()
   for (const grow of options.grow ?? []) {
@@ -418,7 +458,8 @@ export function chromeCss(
         css: nineSliceCss(
           piece,
           `.px-${piece.name}`,
-          grows.get(piece.name) ?? []
+          grows.get(piece.name) ?? [],
+          states.get(piece.name)
         ),
       })
     } else {
