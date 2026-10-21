@@ -53,7 +53,7 @@ export function HeroText({ headingLevel = 1 }: HeroTextProps) {
             <PixelIcon
               name="chevron-right"
               aria-hidden
-              className="mt-3 flex-none text-(--lamp)"
+              className="mt-3 flex-none text-(--accent-warm-icon)"
             />
             <span>{line}</span>
           </li>

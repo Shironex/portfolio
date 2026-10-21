@@ -92,7 +92,7 @@ function FeaturedPanelImpl({ onOpenProject }: FeaturedPanelProps) {
                 </span>
                 <PixelIcon
                   name="arrow-right"
-                  className="text-(--meta) group-hover:text-(--lamp) group-focus-visible:text-(--lamp)"
+                  className="text-(--meta) group-hover:text-(--accent-warm-icon) group-focus-visible:text-(--accent-warm-icon)"
                 />
               </button>
             </li>
