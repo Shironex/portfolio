@@ -42,7 +42,7 @@ This is my portfolio. Instead of a long scrolling page, it opens as a desktop: m
     <td width="50%"><img src="assets/showcase/projects.webp" alt="shirone.dev: Projects" /></td>
   </tr>
   <tr>
-    <td align="center"><sub>The desktop: who I am, a short shell transcript, featured projects and my GitHub activity.</sub></td>
+    <td align="center"><sub>The desktop: a pixel night city, who I am, a short shell transcript, featured projects and my GitHub activity.</sub></td>
     <td align="center"><sub>Projects: everything I have built, filterable by status.</sub></td>
   </tr>
   <tr>
