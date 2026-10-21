@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import {
   useEffect,
   useId,
@@ -11,6 +10,7 @@ import {
 } from 'react'
 
 import { AppIcon, ProjectGlyph } from '@/components/pixel/app-icon'
+import { MascotHead } from '@/components/pixel/mascot-head'
 import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
 import { AUTHOR_NAME, EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
@@ -235,15 +235,9 @@ export function StartMenu({
 
         <div aria-hidden className="rule-dotted" />
         <div className="flex items-center gap-3 px-2">
-          {/* The mascot head slot (16x16); the photo stands in until the
-              pixel head lands. */}
-          <Image
-            src="/mascot.png"
-            alt=""
-            width={32}
-            height={32}
-            className="size-16 flex-none object-cover object-top"
-          />
+          {/* The menu covers the desktop, so the desktop's pause would
+              hold it; here it is what is in view, so it keeps blinking. */}
+          <MascotHead pausesWithDesktop={false} />
           <div className="min-w-0 flex-1">
             <div className="text-title truncate text-(--ink)">
               {AUTHOR_NAME}
