@@ -165,7 +165,7 @@ export default function WritingApp() {
       <header className="flex flex-col items-start gap-3">
         <span
           aria-hidden
-          className="os-night px-readme-headers px-readme-headers-writing ambient-loop block flex-none animate-(--px-loop)"
+          className="os-night px-readme-headers px-readme-headers-writing ambient-loop block max-w-full flex-none animate-(--px-loop)"
           style={{ backgroundImage: `url(${banners.src})` }}
         />
         <h2 className="sr-only">Recent writing</h2>

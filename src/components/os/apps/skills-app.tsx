@@ -17,9 +17,11 @@ export default function SkillsApp() {
   return (
     <div className="@container flex flex-col gap-8">
       <header className="flex flex-col items-start gap-5 @min-[40rem]:flex-row-reverse @min-[40rem]:items-end @min-[40rem]:justify-end">
+        {/* At most the column's width: on a 320 css phone the shelf's
+            right end is cut, never the sheet pushed sideways. */}
         <span
           aria-hidden
-          className="os-night px-stack-shelf px-stack-shelf-loop ambient-loop block flex-none animate-(--px-loop)"
+          className="os-night px-stack-shelf px-stack-shelf-loop ambient-loop block max-w-full flex-none animate-(--px-loop)"
           style={{ backgroundImage: `url(${shelf.src})` }}
         />
         <div className="flex min-w-0 flex-col gap-2">

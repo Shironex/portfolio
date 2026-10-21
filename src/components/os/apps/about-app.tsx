@@ -90,10 +90,13 @@ export default function AboutApp() {
             <PetStill pose="idle" />
           </span>
         </span>
-        <div className="flex min-w-0 flex-col items-start gap-3">
+        {/* Stretched across in the column, so on a 320 css phone the
+            banner's sparkle tail is cut at the edge, not the text pushed
+            past it. */}
+        <div className="flex min-w-0 flex-col items-start gap-3 self-stretch">
           <span
             aria-hidden
-            className="os-night px-readme-headers px-readme-headers-hi ambient-loop block flex-none animate-(--px-loop)"
+            className="os-night px-readme-headers px-readme-headers-hi ambient-loop block max-w-full flex-none animate-(--px-loop)"
             style={{ backgroundImage: `url(${banners.src})` }}
           />
           <h2 className="sr-only">Hi, I&apos;m Kacper</h2>

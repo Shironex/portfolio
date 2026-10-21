@@ -46,15 +46,17 @@ function FeaturedPanelImpl({ onOpenProject }: FeaturedPanelProps) {
       className="px-panel flex flex-col gap-2 p-2"
     >
       <div className="flex items-center justify-between gap-3">
+        {/* It may shrink: on a 320 css phone the banner's sparkle tail is
+            cut at the panel's edge, never the panel. */}
         <span
           aria-hidden
-          className="os-night px-readme-headers px-readme-headers-featured ambient-loop block flex-none animate-(--px-loop)"
+          className="os-night px-readme-headers px-readme-headers-featured ambient-loop block min-w-0 shrink animate-(--px-loop)"
           style={{ backgroundImage: `url(${banners.src})` }}
         />
         <h2 id={headingId} className="sr-only">
           Featured work
         </h2>
-        <span className="text-label pr-2 text-(--meta) tabular-nums">
+        <span className="text-label flex-none pr-2 whitespace-nowrap text-(--meta) tabular-nums">
           {pinned.length} pinned
         </span>
       </div>

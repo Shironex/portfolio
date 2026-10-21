@@ -47,7 +47,7 @@ export default function ReadmeApp() {
       <header className="flex flex-col items-start gap-3">
         <span
           aria-hidden
-          className="os-night px-readme-headers px-readme-headers-hi ambient-loop block flex-none animate-(--px-loop)"
+          className="os-night px-readme-headers px-readme-headers-hi ambient-loop block max-w-full flex-none animate-(--px-loop)"
           style={{ backgroundImage: `url(${banners.src})` }}
         />
         <h2 className="text-display lamp-heading">Welcome to ShiroOS</h2>

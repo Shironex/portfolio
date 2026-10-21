@@ -22,8 +22,11 @@ import { Textarea } from '@/components/ui/textarea'
 import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 import { PixelSpinner } from '@/components/pixel/pixel-spinner'
 
+import { cn } from '@/lib/utils'
+
 import { env } from '@/env/client'
 import { EMPTY_DRAFT, useContactDraft } from '@/hooks/use-contact-draft'
+import { useMediaQuery } from '@/hooks/use-media-query'
 
 import { sendEmailAction } from './action'
 import {
@@ -53,6 +56,12 @@ export interface ContactFormProps {
   onSent?: () => void
 }
 
+/**
+ * Under 352 css the 300 css widget, its bezel and a phone sheet's gutters
+ * do not fit, so the widget comes in its compact size (SPEC 4.4, reflow).
+ */
+const COMPACT_CAPTCHA_QUERY = '(max-width: 351px)'
+
 export function ContactForm({
   theme = 'light',
   onSent,
@@ -67,6 +76,7 @@ export function ContactForm({
   const [serverError, setServerError] = useState<string | null>(null)
   const turnstile = useRef<BoundTurnstileObject | null>(null)
   const sentPanel = useRef<HTMLDivElement>(null)
+  const compactCaptcha = useMediaQuery(COMPACT_CAPTCHA_QUERY)
 
   // Closing the window unmounts the form, so the draft is kept outside it.
   useEffect(() => {
@@ -199,9 +209,19 @@ export function ContactForm({
         />
 
         {/* The widget sits in a bezel, a well one art px wider than it, that
-            keeps its 300x65 place while the script loads. */}
-        <div className="px-well w-fit p-1 [&>div]:min-h-[65px] [&>div]:min-w-[300px]">
+            keeps its place (300x65, compact 150x140) while the script
+            loads. */}
+        <div
+          className={cn(
+            'px-well w-fit p-1',
+            compactCaptcha
+              ? '[&>div]:min-h-[140px] [&>div]:min-w-[150px]'
+              : '[&>div]:min-h-[65px] [&>div]:min-w-[300px]'
+          )}
+        >
           <Turnstile
+            key={compactCaptcha ? 'compact' : 'normal'}
+            size={compactCaptcha ? 'compact' : 'normal'}
             aria-label="Captcha"
             theme={theme}
             sitekey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
