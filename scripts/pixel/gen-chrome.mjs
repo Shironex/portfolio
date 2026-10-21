@@ -61,8 +61,9 @@
  *     imports it after the main stylesheet, whose rules it overrides.
  *   - `src/styles/mobile-chrome.css` (`MOBILE_CHROME_OPTIONS`): the chrome
  *     only the phone shell draws, loaded with the sheet that imports it:
- *     copies of a slice under a new class, grown to another height (the
- *     sheet title bar, 24 art px).
+ *     copies of a slice under a new class, grown to another height and with
+ *     a flat left cap where asked (the sheet title bar: 24 art px, no grip,
+ *     since a sheet does not move).
  *
  * Both read the border width variables of the main stylesheet, which every
  * page loads; neither may need one it does not declare.
@@ -149,12 +150,19 @@ export const COARSE_CHROME_OPTIONS = {
 
 /**
  * The phone shell's own pieces (`mobile-chrome.css`): the sheet title bar is
- * the focused title bar grown to 24 art px with flat rows, its grip kept the
- * drawn size in the middle (SPEC 1.3 and section 9: "its own slice or flat
- * padding").
+ * the focused title bar grown to 24 art px with flat rows (SPEC 1.3 and
+ * section 9: "its own slice or flat padding"), its left cap flat: a sheet
+ * and the launcher cannot be dragged, so they draw no grip (SPEC 11).
  */
 export const MOBILE_CHROME_OPTIONS = {
-  copies: [{ name: 'titlebar-sheet', from: 'titlebar-focused', height: 24 }],
+  copies: [
+    {
+      name: 'titlebar-sheet',
+      from: 'titlebar-focused',
+      height: 24,
+      flatLeft: true,
+    },
+  ],
 }
 
 function url(grid) {
@@ -210,6 +218,16 @@ export function growGrid(grid, center, height) {
     ],
     center: { ...center, h: center.h + extra },
   }
+}
+
+/**
+ * A 9-slice with its left cap redrawn as the centre's first column, row by
+ * row: whatever the cap draws (a grip) goes, its edges stay.
+ */
+export function flattenLeftCap(grid, center) {
+  return grid.map((row) =>
+    row.map((c, x) => (x < center.x ? row[center.x] : c))
+  )
 }
 
 /** A slice as a piece: its frames (runs of equal frames merged) and options. */
@@ -564,9 +582,10 @@ export function coarseChromeCss(
 
 /**
  * The phone stylesheet: each copy is a 9-slice of the atlas, grown to its
- * height, under its own class, in the components layer (it is imported by a
- * component, not by globals.css). `known` are the border widths the main
- * stylesheet declares on `:root`; a copy that needs another one fails.
+ * height (and its left cap flattened when `flatLeft`), under its own class,
+ * in the components layer (it is imported by a component, not by
+ * globals.css). `known` are the border widths the main stylesheet declares
+ * on `:root`; a copy that needs another one fails.
  */
 export function mobileChromeCss(
   sheet,
@@ -584,7 +603,10 @@ export function mobileChromeCss(
     const tall = copy.height
       ? growGrid(grid, piece.center, copy.height)
       : { grid, center: piece.center }
-    const { lines } = nineSlice(tall.grid, tall.center, piece.repeat)
+    const drawn = copy.flatLeft
+      ? flattenLeftCap(tall.grid, tall.center)
+      : tall.grid
+    const { lines } = nineSlice(drawn, tall.center, piece.repeat)
     blocks.push(rule(`.px-${copy.name}`, lines))
   }
   const body = blocks.join('\n\n')

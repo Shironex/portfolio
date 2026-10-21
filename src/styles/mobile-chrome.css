@@ -9,7 +9,7 @@
     border-style: solid;
     border-width: var(--px1) var(--px2) var(--px1) var(--px8);
     border-image-width: var(--px1) var(--px2) var(--px1) var(--px8);
-    border-image-source: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='24' viewBox='0 0 16 24' shape-rendering='crispEdges'><path fill='%23173a45' d='M0 0h16v24H0z'/><path fill='%230b1420' d='M3 9h1v1H3zM5 9h1v1H5zM3 12h1v1H3zM5 12h1v1H5zM3 15h1v1H3zM5 15h1v1H5zM0 23h16v1H0z'/><path fill='%232e6e6e' d='M0 0h16v1H0z'/><path fill='%23f0c070' d='M3 8h1v1H3zM5 8h1v1H5zM3 11h1v1H3zM5 11h1v1H5zM3 14h1v1H3zM5 14h1v1H5z'/></svg>");
+    border-image-source: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='24' viewBox='0 0 16 24' shape-rendering='crispEdges'><path fill='%23173a45' d='M0 0h16v24H0z'/><path fill='%230b1420' d='M0 23h16v1H0z'/><path fill='%232e6e6e' d='M0 0h16v1H0z'/></svg>");
     border-image-slice: 1 2 1 8 fill;
     background-color: #173a45;
     background-clip: padding-box;

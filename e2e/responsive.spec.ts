@@ -67,6 +67,14 @@ const backgroundOf = (target: Locator) =>
 /** The title bar of a sheet: its first child. */
 const sheetBar = (dialog: Locator) => dialog.locator('> div').first()
 
+/**
+ * The lamp gold of a window's grip dots, as the title bar's image writes it.
+ * A sheet cannot be dragged, so its bar draws no grip (SPEC 11).
+ */
+const GRIP_GOLD = '%23f0c070'
+const barImageOf = (bar: Locator) =>
+  bar.evaluate((el) => getComputedStyle(el).borderImageSource)
+
 /** The scrolling body of a sheet: its last child. */
 const sheetBody = (dialog: Locator) => dialog.locator('> div').last()
 
@@ -233,6 +241,7 @@ test.describe('phone, 390x844', () => {
     ).toBeVisible()
 
     expect((await boxOf(sheetBar(launcher))).height).toBe(48)
+    expect(await barImageOf(sheetBar(launcher))).not.toContain(GRIP_GOLD)
     await launcher.getByRole('button', { name: 'Close launcher' }).click()
     await expect(launcher).toBeHidden()
     await expect(mobileLauncher(page)).toBeFocused()
@@ -256,6 +265,7 @@ test.describe('phone, 390x844', () => {
         const bar = sheetBar(dialog)
         expect((await boxOf(bar)).height).toBe(48)
         expect(await backgroundOf(bar)).toBe(TITLE_BAR_FILL)
+        expect(await barImageOf(bar)).not.toContain(GRIP_GOLD)
         await expect(bar.getByRole('heading', { name: title })).toBeVisible()
         expect(await backgroundOf(sheetBody(dialog))).toBe(
           mode === 'dark' ? NIGHT_BODY : PAPER_BODY
@@ -446,6 +456,8 @@ test.describe('coarse pointer at DPR 2.625, 820x1180', () => {
       (el) => getComputedStyle(el).borderImageSource
     )
     expect(source).toContain("height='24'")
+    // A window can be dragged, so it keeps its grip.
+    expect(source).toContain(GRIP_GOLD)
     expect(await smallTargets(bar)).toEqual([])
     for (const name of [
       'Copy link to this window',

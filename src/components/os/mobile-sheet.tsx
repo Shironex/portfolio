@@ -41,8 +41,9 @@ interface MobileSheetProps {
 /**
  * Full-screen slide-up sheet: the phone's window, and the app launcher. In
  * pixels (SPEC 1.2): a 24 art px title bar like a focused window's, with its
- * grip, icon and title and 22 art px glyph buttons, over a body that follows
- * the Lamp like a window body. It comes up in four held steps.
+ * icon and title and 22 art px glyph buttons but no grip, since a sheet does
+ * not move (SPEC 11), over a body that follows the Lamp like a window body.
+ * It comes up in four held steps.
  *
  * A modal layer: it traps focus, makes the page behind inert, locks body
  * scroll via a ref-counted helper so stacked sheets don't fight over

@@ -24,6 +24,7 @@ import { appIconLayout, appIconSheetJson } from '../gen-app-icons.mjs'
 import {
   chromeCss,
   coarseChromeCss,
+  flattenLeftCap,
   growGrid,
   mobileChromeCss,
   sliceInsets,
@@ -1130,6 +1131,19 @@ describe('gen-chrome', () => {
     assert.deepEqual(grown.center, { x: 0, y: 1, w: 1, h: 6 })
   })
 
+  it('flattens a left cap into the centre, row by row', () => {
+    const grid = [
+      ['t', 't', 't', 'T'],
+      ['g', 'a', 'm', 'r'],
+      ['b', 'b', 'b', 'B'],
+    ]
+    const flat = flattenLeftCap(grid, { x: 2, y: 1, w: 1, h: 1 })
+    assert.deepEqual(
+      flat.map((row) => row.join('')),
+      ['tttT', 'mmmr', 'bbbB']
+    )
+  })
+
   it('writes the phone pieces as grown copies in the components layer', async () => {
     const sheet = await loadSheet(fixture('chrome-fixture'))
     const options = {
@@ -1143,6 +1157,17 @@ describe('gen-chrome', () => {
     assert.throws(
       () => mobileChromeCss(sheet, undefined, options, new Set([1])),
       /needs --px2/
+    )
+    const flat = mobileChromeCss(sheet, undefined, {
+      copies: [{ name: 'window-flat', from: 'window', flatLeft: true }],
+    })
+    assert.match(flat, /\.px-window-flat \{/)
+    assert.notEqual(
+      flat.split('border-image-source')[1],
+      mobileChromeCss(sheet, undefined, {
+        copies: [{ name: 'window-flat', from: 'window' }],
+      }).split('border-image-source')[1],
+      'the flat cap draws a different image'
     )
     assert.throws(
       () =>
