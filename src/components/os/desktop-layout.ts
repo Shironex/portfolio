@@ -12,7 +12,7 @@
  *            under the moon (the wallpaper's, at 168, 26), or from y 26 on
  *            a desktop under 436 art px tall (`short-desk`), which also
  *            drops the activity strip
- *   panels   the terminal and featured work, 240 wide at the right edge,
+ *   panels   the terminal and featured work, 224 wide at the right edge,
  *            from 1280 css px up (below that the hero has the desktop);
  *            the terminal drops under 344 art px (`low-desk`)
  *
@@ -34,7 +34,7 @@ export const DESKTOP_HERO_CLASS = 'max-h-full min-w-0 max-w-384 flex-1'
 
 /** The panel column. */
 export const DESKTOP_PANELS_CLASS =
-  'flex w-240 flex-none flex-col gap-8 max-xl:hidden'
+  'flex w-224 flex-none flex-col gap-8 max-xl:hidden'
 
 /** The terminal's slot in the panel column. */
 export const DESKTOP_TERMINAL_CLASS = 'low-desk:hidden'
