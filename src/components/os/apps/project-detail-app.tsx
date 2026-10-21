@@ -218,8 +218,9 @@ function GalleryLightbox({
           )}
         </div>
         {/* Two lines are kept free so a caption that wraps does not move
-            the frame and its buttons. */}
-        <p className="text-body min-h-[2lh] max-w-[66ch] px-3 pt-2 pb-1 text-(--ink)">
+            the frame and its buttons: 2lh plus the 3 art px of padding,
+            which border-box sizing counts inside the minimum. */}
+        <p className="text-body min-h-[calc(2lh+3*var(--px))] max-w-[66ch] px-3 pt-2 pb-1 text-(--ink)">
           {item.caption}
         </p>
       </div>
