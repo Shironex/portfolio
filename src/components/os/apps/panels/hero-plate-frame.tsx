@@ -9,8 +9,11 @@ import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 import { PET_PERCH } from '@/lib/os/pets'
 import { cn } from '@/lib/utils'
 
-/** The two calls to action share their look; only the handlers differ. */
-const CTA_CLASS =
+/**
+ * The two calls to action share their look; only the handlers differ. The
+ * phone feed's contact card uses it for its button too.
+ */
+export const CTA_CLASS =
   'focus-ring text-title flex h-18 items-center gap-4 px-5 pointer-coarse:h-(--target)'
 
 /**

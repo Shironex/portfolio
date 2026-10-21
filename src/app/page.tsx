@@ -11,7 +11,10 @@ import {
   HERO_STRIP_CLASS,
   HeroPlateFrame,
 } from '@/components/os/apps/panels/hero-plate-frame'
-import { MOBILE_GUTTER_CLASS } from '@/components/os/constants'
+import {
+  MOBILE_FEED_TOP_BELOW_MD_CLASS,
+  MOBILE_GUTTER_CLASS,
+} from '@/components/os/constants'
 import {
   DESKTOP_CONTENT_CLASS,
   DESKTOP_HERO_CLASS,
@@ -56,7 +59,9 @@ function StaticHero() {
       <div
         className={cn(
           DESKTOP_CONTENT_CLASS,
-          'max-md:pt-[calc(3rem+env(safe-area-inset-top)+8*var(--px))] max-md:pb-0',
+          'max-md:pb-0',
+          // The phone feed's top and sides; the desktop's from md up.
+          MOBILE_FEED_TOP_BELOW_MD_CLASS,
           MOBILE_GUTTER_CLASS,
           'md:pr-6 md:pl-58'
         )}

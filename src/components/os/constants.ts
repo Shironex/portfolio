@@ -27,13 +27,32 @@ export const COPY_LINK_LABEL = 'Copy link to this window'
 /** `aria-keyshortcuts` of every control that opens the command palette. */
 export const CMD_PALETTE_SHORTCUT = 'Control+K Meta+K'
 
-/** Height and top padding of a mobile top bar, status-bar inset included. */
+/**
+ * Height and top padding of the phone header, status-bar inset included:
+ * one hit target tall (22 art px, 44 css at DPR 1, 2 and 3), like the menu
+ * bar under a coarse pointer.
+ */
 export const MOBILE_BAR_CLASS =
-  'h-[calc(3rem+env(safe-area-inset-top))] pt-[env(safe-area-inset-top)]'
+  'h-[calc(var(--target)+env(safe-area-inset-top))] pt-[env(safe-area-inset-top)]'
 
-/** Side padding of mobile content: 1rem, or the safe-area inset when larger. */
+/**
+ * Where the phone feed starts: under the header and 8 art px clear of it.
+ * The server hero (`StaticHero`) starts there too, so hydration moves
+ * nothing.
+ */
+export const MOBILE_FEED_TOP_CLASS =
+  'pt-[calc(var(--target)+env(safe-area-inset-top)+8*var(--px))]'
+
+/** The same, under the `md` breakpoint only (the server hero serves both). */
+export const MOBILE_FEED_TOP_BELOW_MD_CLASS =
+  'max-md:pt-[calc(var(--target)+env(safe-area-inset-top)+8*var(--px))]'
+
+/**
+ * Side padding of phone content: 8 art px (16 css at DPR 1, 2 and 3), or
+ * the safe-area inset when larger.
+ */
 export const MOBILE_GUTTER_CLASS =
-  'pr-[max(1rem,env(safe-area-inset-right))] pl-[max(1rem,env(safe-area-inset-left))]'
+  'pr-[max(calc(8*var(--px)),env(safe-area-inset-right))] pl-[max(calc(8*var(--px)),env(safe-area-inset-left))]'
 
 /**
  * Text link inside running copy: the link colour, a 1 art px underline 2 art

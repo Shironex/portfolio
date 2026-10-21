@@ -23,7 +23,10 @@ const Toaster = ({ ...props }: ToasterProps) => {
       // Clear the taskbar (desktop) and bottom dock (mobile) so toasts never
       // overlap the OS chrome, home indicator inset included.
       offset={{ bottom: 'calc(36 * var(--px) + env(safe-area-inset-bottom))' }}
-      mobileOffset={{ bottom: 'calc(88px + env(safe-area-inset-bottom))' }}
+      mobileOffset={{
+        bottom:
+          'calc(var(--target) + 10 * var(--px) + env(safe-area-inset-bottom))',
+      }}
       icons={{
         success: <PixelIcon name="check" className="text-(--link)" />,
         error: <PixelIcon name="alert" className="text-(--error)" />,
