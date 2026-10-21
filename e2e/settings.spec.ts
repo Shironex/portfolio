@@ -4,10 +4,14 @@ import { SETTING_FLAGS } from '../src/lib/os/appearance'
 import {
   AFTER_RELOAD,
   DESKTOP_VIEWPORT,
+  MOBILE_VIEWPORT,
   cmdPalette,
   desktopReady,
+  mobileLauncher,
+  mobileReady,
   mockFeeds,
   openDesktop,
+  openMobile,
   skipBootSplash,
 } from './helpers'
 
@@ -55,6 +59,39 @@ const viewTrigger = (page: Page) =>
 const announcer = (page: Page) =>
   page.locator('[data-os-shell] > [role="status"]')
 const html = (page: Page) => page.locator('html')
+
+/** The first family of a font list, unquoted. */
+const firstFamily = (list: string) =>
+  list.split(',')[0].trim().replace(/["']/g, '')
+
+/** The pixel face and the readable face, as next/font named them on <html>. */
+async function faces(page: Page) {
+  const face = async (variable: string) =>
+    firstFamily(
+      await page.evaluate(
+        (name) =>
+          getComputedStyle(document.documentElement).getPropertyValue(name),
+        variable
+      )
+    )
+  const pixel = await face('--font-pixel-sans')
+  const readable = await face('--font-atkinson')
+  expect(pixel).not.toBe('')
+  expect(readable).not.toBe(pixel)
+  return { pixel, readable }
+}
+
+/** The face a piece of text is set in. */
+const familyOf = async (target: Locator) =>
+  firstFamily(await target.evaluate((el) => getComputedStyle(el).fontFamily))
+
+/** Store Readable text on, as the switch would. Call before the first `goto`. */
+async function storeReadable(page: Page) {
+  await page.addInitScript(
+    ([key, value]) => window.localStorage.setItem(key, value),
+    [SETTING_FLAGS.text.key, SETTING_FLAGS.text.value]
+  )
+}
 
 test.use({ viewport: DESKTOP_VIEWPORT })
 
@@ -144,30 +181,10 @@ for (const setting of SETTINGS) {
 test('Readable text swaps long text and leaves the chrome pixel', async ({
   page,
 }) => {
-  await page.addInitScript(
-    ([key, value]) => window.localStorage.setItem(key, value),
-    [SETTING_FLAGS.text.key, SETTING_FLAGS.text.value]
-  )
+  await storeReadable(page)
   await openDesktop(page)
   await expect(html(page)).toHaveAttribute('data-text', 'readable')
-
-  /** The first family of a font list, unquoted. */
-  const first = (list: string) => list.split(',')[0].trim().replace(/["']/g, '')
-  /** The first family of a font variable on <html>: the face next/font named. */
-  const face = async (variable: string) =>
-    first(
-      await page.evaluate(
-        (name) =>
-          getComputedStyle(document.documentElement).getPropertyValue(name),
-        variable
-      )
-    )
-  const pixel = await face('--font-pixel-sans')
-  const readable = await face('--font-atkinson')
-  expect(pixel).not.toBe('')
-  expect(readable).not.toBe(pixel)
-  const familyOf = async (target: Locator) =>
-    first(await target.evaluate((el) => getComputedStyle(el).fontFamily))
+  const { pixel, readable } = await faces(page)
 
   // A button of the hero.
   await expect(
@@ -202,4 +219,99 @@ test('Readable text swaps long text and leaves the chrome pixel', async ({
     .getByText(/^I work in TypeScript and Rust/)
   await expect(paragraph).toBeVisible()
   expect(await familyOf(paragraph)).toBe(readable)
+})
+
+/**
+ * The phone launcher's switches (SPEC 1.7): the same flags, storage and
+ * announcements as the View menu, and the Lamp, which swaps the bodies.
+ */
+test.describe('phone launcher', () => {
+  test.use({ viewport: MOBILE_VIEWPORT, hasTouch: true, isMobile: true })
+
+  const launcher = (page: Page) =>
+    page.getByRole('dialog', { name: 'App launcher' })
+  const switchFor = (page: Page, name: string) =>
+    launcher(page).getByRole('switch', { name, exact: true })
+  const openLauncher = async (page: Page) => {
+    await mobileLauncher(page).click()
+    await expect(launcher(page)).toBeVisible()
+  }
+
+  for (const setting of SETTINGS) {
+    test(`${setting.menu} flips, says so and persists`, async ({ page }) => {
+      test.slow()
+      await openMobile(page)
+      await openLauncher(page)
+      const toggle = switchFor(page, setting.menu)
+      await expect(toggle).toHaveAttribute(
+        'aria-checked',
+        String(setting.onByDefault)
+      )
+      await toggle.click()
+      await expect(html(page)).toHaveAttribute(setting.attribute, setting.flag)
+      await expect(toggle).toHaveAttribute(
+        'aria-checked',
+        String(!setting.onByDefault)
+      )
+      await expect(announcer(page)).toHaveText(setting.said[0])
+
+      await page.reload()
+      await mobileReady(page, AFTER_RELOAD)
+      await expect(html(page)).toHaveAttribute(setting.attribute, setting.flag)
+      await openLauncher(page)
+      await expect(toggle).toHaveAttribute(
+        'aria-checked',
+        String(!setting.onByDefault)
+      )
+
+      // And back, to the default, which stores nothing.
+      await toggle.click()
+      await expect(html(page)).not.toHaveAttribute(setting.attribute, /.*/)
+      await expect(announcer(page)).toHaveText(setting.said[1])
+      expect(
+        await page.evaluate(
+          (key) => window.localStorage.getItem(key),
+          SETTING_FLAGS[setting.id].key
+        )
+      ).toBeNull()
+    })
+  }
+
+  test('the Lamp turns paper bodies on and persists', async ({ page }) => {
+    await openMobile(page)
+    await openLauncher(page)
+    const lamp = switchFor(page, 'Lamp')
+    await expect(lamp).toHaveAttribute('aria-checked', 'false')
+    await lamp.click()
+    await expect(html(page)).not.toHaveClass(/dark/)
+    await expect(lamp).toHaveAttribute('aria-checked', 'true')
+
+    await page.reload()
+    await mobileReady(page, AFTER_RELOAD)
+    await expect(html(page)).not.toHaveClass(/dark/)
+    await openLauncher(page)
+    await expect(lamp).toHaveAttribute('aria-checked', 'true')
+    await lamp.click()
+    await expect(html(page)).toHaveClass(/dark/)
+  })
+
+  test('Readable text swaps sheet prose and keeps the phone chrome pixel', async ({
+    page,
+  }) => {
+    await storeReadable(page)
+    await openMobile(page)
+    const { pixel, readable } = await faces(page)
+
+    await openLauncher(page)
+    expect(await familyOf(switchFor(page, 'Readable text'))).toBe(pixel)
+    await launcher(page).getByRole('button', { name: 'Open About' }).click()
+    const sheet = page.getByRole('dialog', { name: 'about.me' })
+    await expect(sheet).toBeVisible()
+    expect(
+      await familyOf(sheet.getByRole('heading', { name: 'about.me' }))
+    ).toBe(pixel)
+    expect(
+      await familyOf(sheet.getByText(/^I work in TypeScript and Rust/))
+    ).toBe(readable)
+  })
 })
