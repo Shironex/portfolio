@@ -9,8 +9,10 @@ import {
   ProjectGallery,
   ProjectSections,
 } from '@/components/os/apps/project-detail/project-sections'
+import { INLINE_LINK_CLASS } from '@/components/os/constants'
 import OsShell from '@/components/os/os-shell'
 import { StaticLayer } from '@/components/os/static-layer'
+import { WallpaperStatic } from '@/components/os/wallpaper/wallpaper-static'
 
 import { AUTHOR_FULL_NAME } from '@/lib/constants'
 import {
@@ -53,31 +55,49 @@ export async function generateMetadata({
  * this, opaque: without JavaScript a `<noscript>` rule hides it and this is
  * the page; with it, the shell opens the same project in a window and
  * `StaticLayer` takes this copy out of the accessibility tree.
+ *
+ * It wears the pixel look with no script at all: the wallpaper's static
+ * frame behind (wide screens only, as on the desktop), and a window frame
+ * whose title bar is only a picture: it has no controls to offer here.
  */
 function StaticProject({ project }: { project: Project }) {
   return (
     <StaticLayer
-      className="text-ink from-sky-0 via-sky-1 to-sky-2 fixed inset-0 overflow-y-auto bg-linear-to-br"
+      className="fixed inset-0 isolate overflow-y-auto bg-(--ground) text-(--ink)"
       data-ssr-project
     >
-      <article className="border-rule-2 bg-surf-solid shadow-elev-3 mx-auto my-12 w-[min(100%-2rem,52rem)] rounded-3xl border p-10 md:my-28 md:p-16">
-        <ProjectSections project={project}>
-          {project.gallery.length > 0 && (
-            <ProjectGallery>
-              {project.gallery.map((item) => (
-                <figure key={item.src} className={GALLERY_CELL_CLASS}>
-                  <GalleryThumb item={item} />
-                </figure>
-              ))}
-            </ProjectGallery>
-          )}
-        </ProjectSections>
-        <p className="text-ink-3 mt-16 font-mono text-xs">
-          One of my projects.{' '}
-          <Link href="/" prefetch={false} className="focus-ring text-miku-ink">
-            More on the {AUTHOR_FULL_NAME} desktop
-          </Link>
-        </p>
+      <div aria-hidden className="fixed inset-0 -z-1 max-md:hidden">
+        <WallpaperStatic />
+      </div>
+      <article className="px-window-focused mx-auto my-6 w-[min(100%-2rem,calc(420*var(--px)))] md:my-14">
+        <div
+          aria-hidden
+          className="os-night px-titlebar-focused flex h-16 items-center gap-3 px-6"
+        >
+          <span className="text-title min-w-0 flex-1 truncate text-(--ink-hi)">
+            {project.title}
+          </span>
+        </div>
+        <div className="flex flex-col gap-8 p-6 md:p-8">
+          <ProjectSections project={project}>
+            {project.gallery.length > 0 && (
+              <ProjectGallery>
+                {project.gallery.map((item) => (
+                  <figure key={item.src} className={GALLERY_CELL_CLASS}>
+                    <GalleryThumb item={item} />
+                  </figure>
+                ))}
+              </ProjectGallery>
+            )}
+          </ProjectSections>
+          <div aria-hidden className="rule-dotted" />
+          <p className="text-label -mt-4 text-(--meta)">
+            One of my projects.{' '}
+            <Link href="/" prefetch={false} className={INLINE_LINK_CLASS}>
+              More on the {AUTHOR_FULL_NAME} desktop
+            </Link>
+          </p>
+        </div>
       </article>
     </StaticLayer>
   )
