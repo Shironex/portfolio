@@ -10,9 +10,11 @@ import bootSheet from '@/assets/pixel/boot/os-boot.png'
 import { useEscapeLayer } from '@/hooks/use-escape-layer'
 import { useFocusTrap } from '@/hooks/use-focus-trap'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
+import '@/styles/sprites/mascot-pet.css'
 import '@/styles/sprites/os-boot.css'
 
 import { Kbd } from './kbd'
+import { PET_SHEET_URL, framePosition, petFrames } from './pets/pet-sheet'
 
 const STEPS = [
   'Mounting desk',
@@ -50,6 +52,50 @@ const SHEET = { backgroundImage: `url(${bootSheet.src})` }
 const HELD_STILL =
   'motion-reduce:animate-none in-data-[motion=paused]:animate-none'
 
+const PET_SHEET = { backgroundImage: `url(${PET_SHEET_URL})` }
+
+/**
+ * The pet beside the wordmark (decision 4 of SPEC 11): she pops in with
+ * the first step and plays her `wave` once on its drawn timing, then rests
+ * on her idle still. Under the Pause setting or reduced motion (the splash
+ * is skipped then, unless it was already showing) she shows the first wave
+ * frame, still, from the start. Decorative.
+ */
+function BootWave({ start, held }: { start: boolean; held: boolean }) {
+  const ref = useRef<HTMLSpanElement>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el || !start || held) return
+    const frames = petFrames('wave')
+    const timers: number[] = []
+    const show = (tag: 'wave' | 'idle', index: number) => {
+      el.style.backgroundPosition = framePosition(tag, index)
+      el.dataset.bootWave = `${tag}:${index}`
+    }
+    let at = 0
+    frames.forEach(([, , ms], index) => {
+      timers.push(window.setTimeout(() => show('wave', index), at))
+      at += ms
+    })
+    timers.push(window.setTimeout(() => show('idle', 0), at))
+    return () => timers.forEach((id) => window.clearTimeout(id))
+  }, [start, held])
+
+  return (
+    <span
+      ref={ref}
+      aria-hidden
+      data-boot-wave={held ? 'still' : 'wave:0'}
+      className={cn(
+        'px-mascot-pet px-mascot-pet-wave absolute bottom-0 left-[calc(100%+6*var(--px))] block',
+        !start && !held && 'invisible'
+      )}
+      style={PET_SHEET}
+    />
+  )
+}
+
 // Step advancement timings in ms; final entry auto-dismisses the splash.
 // Kept tight (~2.4s total): the splash is a greeting, not a loading screen,
 // and first-time visitors shouldn't wait on it. The CSS fade
@@ -58,8 +104,8 @@ const BOOT_STEP_TIMINGS_MS = [420, 950, 1500, 1950, 2400] as const
 
 /**
  * ShiroOS boot splash (SPEC 2.6): a black monitor powering on, the pixel
- * wordmark with シロOS under it, and a checklist in Departure Mono with the
- * run, check and wait marks. Shown only once per tab session; skippable via
+ * wordmark with シロOS under it and the pet waving beside it, and a
+ * checklist in Departure Mono with the run, check and wait marks. Shown only once per tab session; skippable via
  * Esc or the "skip" button. Respects `prefers-reduced-motion` by collapsing
  * to an instant dismiss. Auto-dismisses at ~2.4s for first-time visitors.
  * While it shows it is a modal layer: focus stays on it and the desktop
@@ -72,6 +118,9 @@ const BOOT_STEP_TIMINGS_MS = [420, 950, 1500, 1950, 2400] as const
 export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
   const reducedMotion = useReducedMotion()
   const [ready, setReady] = useState(false)
+  // The Pause setting as the splash opens (it is modal, so it cannot change
+  // while it shows).
+  const [paused, setPaused] = useState(false)
   const [gone, setGone] = useState(false)
   const [step, setStep] = useState(0)
   const skipButtonRef = useRef<HTMLButtonElement>(null)
@@ -92,6 +141,7 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
       setGone(true)
       return
     }
+    setPaused(document.documentElement.dataset.motion === 'paused')
     setReady(true)
   }, [reducedMotion, initialWindow])
 
@@ -136,6 +186,7 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
   }, [ready, gone])
 
   if (gone || !ready) return null
+  const held = paused || reducedMotion
 
   return (
     <div
@@ -160,16 +211,21 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
           HELD_STILL
         )}
       >
-        <span
-          aria-hidden
-          className="px-os-boot px-os-boot-wordmark block"
-          style={SHEET}
-        />
-        <span
-          aria-hidden
-          className="px-os-boot px-os-boot-kana mt-6 block"
-          style={SHEET}
-        />
+        {/* The wordmark stays centred; the pet stands beside it, her feet
+            on the line under the kana. */}
+        <div className="relative flex flex-col items-center">
+          <span
+            aria-hidden
+            className="px-os-boot px-os-boot-wordmark block"
+            style={SHEET}
+          />
+          <span
+            aria-hidden
+            className="px-os-boot px-os-boot-kana mt-6 block"
+            style={SHEET}
+          />
+          <BootWave start={step >= 1} held={held} />
+        </div>
 
         <ul
           className="text-heading mt-16 flex flex-col leading-11"

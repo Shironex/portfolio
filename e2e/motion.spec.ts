@@ -15,6 +15,7 @@ import {
   openDesktop,
   openMobile,
   recordAnimations,
+  rectOf,
   skipBootSplash,
   startMenu,
   taskbar,
@@ -392,6 +393,35 @@ test.describe('boot splash', () => {
     await expect(bootSplash(page)).toBeHidden()
   })
 
+  /** The pet beside the wordmark: `wave:<frame>`, `idle:0`, or `still`. */
+  const bootWave = (page: Page) => page.locator('[data-boot-wave]')
+
+  test('the pet waves once beside the wordmark, then rests', async ({
+    page,
+  }) => {
+    await firstVisit(page)
+    await page.goto('/')
+    const wave = bootWave(page)
+    await expect(bootSplash(page)).toBeVisible()
+    const seen = new Set<string>()
+    await expect
+      .poll(
+        async () => {
+          seen.add((await wave.getAttribute('data-boot-wave')) ?? '')
+          return seen.has('idle:0')
+        },
+        { intervals: [40], timeout: 3000 }
+      )
+      .toBe(true)
+    // She played through her wave on the way (frames 1 to 8, sampled).
+    expect(
+      [...seen].filter((s) => s.startsWith('wave:')).length
+    ).toBeGreaterThan(2)
+    const pet = await rectOf(wave)
+    const wordmark = await rectOf(page.locator('.px-os-boot-wordmark'))
+    expect(pet.x).toBeGreaterThan(wordmark.x + wordmark.width)
+  })
+
   test('holds still under the Pause setting, and Escape skips it', async ({
     page,
   }) => {
@@ -413,6 +443,17 @@ test.describe('boot splash', () => {
           ).length
     )
     expect(moving).toBe(0)
+    // The pet beside the wordmark shows one wave frame, still.
+    const wave = bootWave(page)
+    await expect(wave).toBeVisible()
+    const frame = await wave.evaluate(
+      (el) => getComputedStyle(el).backgroundPosition
+    )
+    await page.waitForTimeout(1200)
+    expect(await wave.getAttribute('data-boot-wave')).toBe('still')
+    expect(
+      await wave.evaluate((el) => getComputedStyle(el).backgroundPosition)
+    ).toBe(frame)
     await page.keyboard.press('Escape')
     await expect(splash).toBeHidden()
   })
