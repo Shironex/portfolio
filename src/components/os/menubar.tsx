@@ -269,7 +269,7 @@ function MenuBarImpl({
           onClick={onToggleTheme}
           aria-label={lampLabel(theme)}
           className={cn(
-            'focus-ring flex h-16 w-14 items-center justify-center hover:bg-(--select)',
+            'focus-ring flex h-16 w-14 items-center justify-center hover:bg-(--select) pointer-coarse:size-22',
             theme === 'dark' ? 'text-(--meta)' : 'text-(--lamp)'
           )}
         >

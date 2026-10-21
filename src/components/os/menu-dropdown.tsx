@@ -278,7 +278,7 @@ export function MenuDropdown<Id extends string>({
         aria-expanded={isOpen}
         aria-controls={isOpen ? menuId : undefined}
         className={cn(
-          'focus-ring text-body flex h-16 items-center px-3 text-(--ink) hover:bg-(--select)',
+          'focus-ring text-body flex h-16 items-center justify-center px-3 text-(--ink) hover:bg-(--select) pointer-coarse:h-22 pointer-coarse:min-w-22',
           isOpen && 'bg-(--select)'
         )}
       >
@@ -325,7 +325,7 @@ export function MenuDropdown<Id extends string>({
                       item.onClick()
                       close()
                     }}
-                    className="group focus-ring text-body flex h-14 w-full items-center gap-2 pr-3 pl-1 whitespace-nowrap text-(--ink) hover:bg-(--select) focus-visible:bg-(--select) disabled:cursor-not-allowed disabled:text-(--meta)"
+                    className="group focus-ring text-body flex h-14 w-full items-center gap-2 pr-3 pl-1 whitespace-nowrap text-(--ink) hover:bg-(--select) focus-visible:bg-(--select) disabled:cursor-not-allowed disabled:text-(--meta) pointer-coarse:h-22"
                   >
                     <PixelIcon
                       name="chevron-right"
