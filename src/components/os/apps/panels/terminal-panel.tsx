@@ -1,9 +1,10 @@
 'use client'
 
-import type { CSSProperties } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
 import { memo } from 'react'
 
 import { TERMINAL_BLOCKS } from '@/components/os/constants'
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
 /** Gap between one line starting to appear and the next. */
 const LINE_STAGGER_MS = 180
@@ -13,74 +14,80 @@ function staggerAt(index: number): CSSProperties {
   return { animationDelay: `${index * LINE_STAGGER_MS}ms` }
 }
 
+/** The prompt: the path in link teal and a lamp chevron (SPEC 1.4). */
+function Prompt({ children }: { children?: ReactNode }) {
+  return (
+    <span className="flex items-center gap-2">
+      <span className="text-(--link)">~/kacper</span>
+      <PixelIcon name="chevron-right" className="text-(--lamp)" />
+      {children}
+    </span>
+  )
+}
+
 /**
- * TerminalPanel: static zsh-style transcript that surfaces three concrete
- * claims (who, what, when). Every line is in the markup from the start, so it
- * is there for assistive tech and in the server HTML; the reveal in sequence
- * is CSS only (`animate-term-in` with a per-line delay), and with reduced
- * motion the whole transcript simply shows. The cursor blink is an
- * `ambient-loop`, paused with the wallpaper while the desktop is covered.
+ * TerminalPanel: a short zsh transcript that surfaces three concrete claims
+ * (who, what, when), in a CRT well in Departure Mono. Night in both Lamp
+ * modes (`os-night`): it is a terminal.
+ *
+ * Every line is in the markup from the start, so it is there for assistive
+ * tech and in the server HTML; the reveal in sequence is CSS only
+ * (`animate-term-in`, two held steps per line, with a per-line delay), and
+ * with reduced motion the whole transcript simply shows. The block cursor
+ * blinks as an `ambient-loop`, paused with the wallpaper while the desktop
+ * is covered.
  */
 function TerminalPanelImpl() {
   let cursor = 0
 
   return (
-    <div className="border-rule-2 bg-surf-solid overflow-hidden rounded-2xl border">
-      <div className="border-rule bg-surf-soft flex items-center gap-6 border-b px-6 py-4">
-        <span aria-hidden className="flex items-center gap-3">
-          <span className="bg-danger/50 size-4 rounded-full" />
-          <span className="bg-peach/50 size-4 rounded-full" />
-          <span className="bg-miku-3/60 size-4 rounded-full" />
+    <div className="os-night px-panel flex flex-col gap-2 p-2">
+      <div className="text-label flex items-center gap-3 px-2 pt-1 text-(--meta)">
+        <span aria-hidden className="flex items-center gap-1">
+          <span className="block size-2 bg-(--error)" />
+          <span className="block size-2 bg-(--lamp)" />
+          <span className="block size-2 bg-(--link)" />
         </span>
-        <span className="text-ink flex-1 font-mono text-xs font-bold">
-          ~/kacper · zsh
-        </span>
+        <span className="flex-1 truncate">~/kacper · zsh</span>
       </div>
 
-      <div className="text-ink-2 min-h-100 p-8 font-mono text-xs">
+      <div className="px-well text-label flex flex-col gap-3 px-4 pt-3 pb-4 text-(--ink)">
         {TERMINAL_BLOCKS.map((block, blockIdx) => {
           const promptIdx = cursor++
           const outputIndices = block.output.map(() => cursor++)
           const isLast = blockIdx === TERMINAL_BLOCKS.length - 1
           return (
-            <div
-              key={block.prompt}
-              className={blockIdx > 0 ? 'mt-6' : undefined}
-            >
-              <div
-                className="motion-safe:animate-term-in"
-                style={staggerAt(promptIdx)}
-              >
-                <span className="text-miku-2-ink font-bold">~/kacper</span>
-                <span aria-hidden className="text-miku-ink mx-3 font-bold">
-                  ❯
-                </span>
-                <span className="text-ink">{block.prompt}</span>
-              </div>
-              {block.output.map((line, i) => (
+            <div key={block.prompt} className="flex flex-col gap-3">
+              <div>
                 <div
-                  key={line}
-                  className="motion-safe:animate-term-in text-ink-3"
-                  style={staggerAt(outputIndices[i])}
+                  className="motion-safe:animate-term-in"
+                  style={staggerAt(promptIdx)}
                 >
-                  {line}
+                  <Prompt>
+                    <span>{block.prompt}</span>
+                  </Prompt>
                 </div>
-              ))}
+                {block.output.map((line, i) => (
+                  <div
+                    key={line}
+                    className="motion-safe:animate-term-in text-(--meta)"
+                    style={staggerAt(outputIndices[i])}
+                  >
+                    {line}
+                  </div>
+                ))}
+              </div>
               {isLast && (
                 <div
-                  className="motion-safe:animate-term-in mt-6"
+                  className="motion-safe:animate-term-in"
                   style={staggerAt(cursor)}
                 >
-                  <span className="text-miku-2-ink font-bold">~/kacper</span>
-                  <span aria-hidden className="text-miku-ink mx-3 font-bold">
-                    ❯
-                  </span>
-                  <span
-                    aria-hidden
-                    className="animate-blink ambient-loop text-miku-ink ml-1 motion-reduce:animate-none"
-                  >
-                    ▌
-                  </span>
+                  <Prompt>
+                    <span
+                      aria-hidden
+                      className="animate-blink ambient-loop block h-7 w-3 bg-(--lamp) motion-reduce:animate-none"
+                    />
+                  </Prompt>
                 </div>
               )}
             </div>

@@ -5,20 +5,26 @@ import { memo, useId } from 'react'
 import { accentFor } from '@/components/os/accent-map'
 import { ProjectAvatar } from '@/components/os/project-avatar'
 import { StatusChip } from '@/components/os/status-chip'
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
+import { ProjectIcon, hasProjectIcon } from '@/components/pixel/project-icon'
 
 import { getPinnedProjects } from '@/lib/utils/projects'
 
+import banners from '@/assets/pixel/banners/readme-headers.png'
 import { projectsData } from '@/data/projects-data'
+import '@/styles/sprites/readme-headers.css'
 import type { Project } from '@/types'
 
 /**
- * FeaturedPanel: pinned-work tile list that sits on the desktop canvas.
- * Ported from new-design/index.html `function FeaturedPanel()`.
+ * FeaturedPanel: the pinned work on the desktop (SPEC 1.4), under the README
+ * `featured` banner. The banner is the heading's picture: the heading itself
+ * is there for assistive tech, visually hidden.
  *
  * Pins the top featured projects first, then fills remaining slots with
  * in-progress work (so active efforts like ShiroAni and Shiranami surface
- * alongside shipped favorites). Clicking a tile delegates to
- * `onOpenProject`.
+ * alongside shipped favorites). Each row shows the project's 32x32 icon
+ * (its loop plays on hover and focus) or its letter tile, and opens the
+ * project through `onOpenProject`.
  */
 const MAX_PINNED = 4
 
@@ -37,51 +43,57 @@ function FeaturedPanelImpl({ onOpenProject }: FeaturedPanelProps) {
   return (
     <section
       aria-labelledby={headingId}
-      className="border-rule-2 bg-surf-solid overflow-hidden rounded-2xl border"
+      className="px-panel flex flex-col gap-2 p-2"
     >
-      <div className="border-rule bg-surf-soft flex items-center gap-6 border-b px-6 py-4">
-        <h2
-          id={headingId}
-          className="font-display text-ink flex-1 text-sm font-bold"
-        >
+      <div className="flex items-center justify-between gap-3">
+        <span
+          aria-hidden
+          className="os-night px-readme-headers px-readme-headers-featured ambient-loop block flex-none animate-(--px-loop)"
+          style={{ backgroundImage: `url(${banners.src})` }}
+        />
+        <h2 id={headingId} className="sr-only">
           Featured work
         </h2>
-        <span className="text-ink-4 font-mono text-xs tabular-nums">
+        <span className="text-label pr-2 text-(--meta) tabular-nums">
           {pinned.length} pinned
         </span>
       </div>
 
-      <ul className="flex flex-col">
+      <ul className="flex flex-col gap-1">
         {pinned.map((p) => {
           const accent = accentFor(p.slug)
           return (
-            <li key={p.slug} className="border-rule border-b last:border-b-0">
+            <li key={p.slug}>
               <button
                 type="button"
                 onClick={() => onOpenProject(p)}
                 aria-label={`Open ${p.title}`}
-                className="focus-ring group hover:bg-surf-0 relative flex w-full items-start gap-6 px-8 py-6 text-left transition-colors"
+                className="focus-ring group flex w-full items-center gap-3 p-1 text-left hover:bg-(--select)"
               >
-                <ProjectAvatar accent={accent} className="shrink-0">
-                  {p.title[0]}
-                </ProjectAvatar>
-                <div className="min-w-0 flex-1">
-                  <div className="font-display text-ink flex items-center gap-3 text-sm">
-                    <span className="truncate">{p.title}</span>
+                {hasProjectIcon(p.slug) ? (
+                  <ProjectIcon slug={p.slug} />
+                ) : (
+                  <ProjectAvatar accent={accent} hidden className="shrink-0">
+                    {p.title[0]}
+                  </ProjectAvatar>
+                )}
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-2">
+                    <span className="text-title truncate text-(--ink)">
+                      {p.title}
+                    </span>
                     <StatusChip tone="neutral">
                       {p.projectType ?? 'project'}
                     </StatusChip>
-                  </div>
-                  <div className="font-body text-ink-3 mt-1 line-clamp-2 text-xs">
+                  </span>
+                  <span className="text-body block truncate text-(--meta)">
                     {p.summary}
-                  </div>
-                </div>
-                <span
-                  aria-hidden
-                  className="text-ink-4 group-hover:text-miku-ink transition-[translate,color] duration-150 group-hover:translate-x-1"
-                >
-                  →
+                  </span>
                 </span>
+                <PixelIcon
+                  name="arrow-right"
+                  className="text-(--meta) group-hover:text-(--lamp) group-focus-visible:text-(--lamp)"
+                />
               </button>
             </li>
           )
