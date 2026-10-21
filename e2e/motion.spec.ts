@@ -38,8 +38,12 @@ const TERMINAL_LINES = [
 /** Longest an interaction may animate for, in ms (SPEC 2.8). */
 const FEEDBACK_BUDGET_MS = 160
 
-/** The terminal cursor and the featured banner. */
+/**
+ * The desktop's own loops, the terminal cursor and the featured banner. An
+ * open app adds its own (the banners of About, Skills and Writing).
+ */
 const LOOP_COUNT = 2
+/** Every loop of the bare desktop, running or paused. */
 const ALL_RUNNING = Array.from({ length: LOOP_COUNT }, () => 'running')
 const ALL_PAUSED = Array.from({ length: LOOP_COUNT }, () => 'paused')
 
@@ -48,16 +52,20 @@ function wallpaperState(page: Page) {
   return page.locator('canvas[data-wallpaper]').getAttribute('data-state')
 }
 
-/** The decorative loops and the wallpaper, in one reading. */
+/**
+ * The decorative loops and the wallpaper, in one reading: the play states
+ * the loops are in, once each, when the desktop's own are among them.
+ */
 async function motionState(page: Page) {
+  const loops = await ambientPlayStates(page)
   return {
-    loops: await ambientPlayStates(page),
+    loops: loops.length >= LOOP_COUNT ? [...new Set(loops)] : loops,
     wallpaper: await wallpaperState(page),
   }
 }
 
-const RUNNING = { loops: ALL_RUNNING, wallpaper: 'running' }
-const PAUSED = { loops: ALL_PAUSED, wallpaper: 'paused' }
+const RUNNING = { loops: ['running'], wallpaper: 'running' }
+const PAUSED = { loops: ['paused'], wallpaper: 'paused' }
 
 /** Hold every loop for good, as the View menu's Pause motion does. */
 async function usePausedMotion(page: Page) {
@@ -257,6 +265,113 @@ test.describe('app icons', () => {
         icon.evaluate((el) => getComputedStyle(el).animationPlayState)
       )
       .toBe('running')
+  })
+})
+
+/** The animation, its count and the background position of a sprite. */
+async function spriteState(sprite: Locator) {
+  return sprite.evaluate((el) => {
+    const style = getComputedStyle(el)
+    return {
+      name: style.animationName,
+      count: style.animationIterationCount,
+      position: style.backgroundPosition,
+    }
+  })
+}
+
+/** Positions of a sprite read a few times over `ms`. */
+async function positionsOver(sprite: Locator, page: Page, ms = 600) {
+  const seen = new Set<string>()
+  for (let i = 0; i < 5; i++) {
+    seen.add((await spriteState(sprite)).position)
+    await page.waitForTimeout(ms / 5)
+  }
+  return [...seen]
+}
+
+test.describe('project icons', () => {
+  const PROJECT = 'Moekoder'
+
+  async function openProjects(page: Page) {
+    await openDesktop(page)
+    const projects = await launch(page, 'Projects', 'projects.app')
+    const card = projects.getByRole('button', {
+      name: `Open ${PROJECT}`,
+      exact: true,
+    })
+    return { card, icon: card.locator('[data-project-icon="moekoder"]') }
+  }
+
+  test('play their tag once on hover, then rest on the still', async ({
+    page,
+  }) => {
+    const { card, icon } = await openProjects(page)
+    const still = await spriteState(icon)
+    expect(still.name).toBe('none')
+    await icon.evaluate((el) =>
+      el.addEventListener(
+        'animationend',
+        () => el.setAttribute('data-ended', ''),
+        { once: true }
+      )
+    )
+
+    await card.hover()
+    await expect
+      .poll(async () => (await spriteState(icon)).name)
+      .toBe('px-project-icons-32-moekoder')
+    expect((await spriteState(icon)).count).toBe('1')
+    // The tag runs 975 ms and ends with the pointer still on the card.
+    await expect(icon).toHaveAttribute('data-ended', '', { timeout: 3000 })
+    expect(await positionsOver(icon, page)).toEqual([still.position])
+  })
+
+  test('stay on their still with reduced motion', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    const { card, icon } = await openProjects(page)
+    const still = await spriteState(icon)
+    await card.hover()
+    expect(await positionsOver(icon, page)).toEqual([still.position])
+  })
+
+  test('stay on their still under the Pause setting', async ({ page }) => {
+    await usePausedMotion(page)
+    const { card, icon } = await openProjects(page)
+    await card.hover()
+    await page.waitForTimeout(200)
+    expect((await spriteState(icon)).name).toBe('none')
+  })
+})
+
+test.describe('404 sign', () => {
+  function sign(page: Page) {
+    return page.locator('.px-os-neon-404')
+  }
+
+  test('flickers on its drawn timing', async ({ page }) => {
+    await page.goto('/no-such-page')
+    await expect
+      .poll(async () => (await spriteState(sign(page))).name)
+      .toBe('px-os-neon-404-flicker')
+    expect(
+      await sign(page).evaluate((el) => getComputedStyle(el).animationDuration)
+    ).toBe('3.44s')
+  })
+
+  test('holds frame 1 with reduced motion', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await page.goto('/no-such-page')
+    await expect(sign(page)).toBeVisible()
+    expect(await positionsOver(sign(page), page)).toEqual(['0px 0px'])
+  })
+
+  test('holds frame 1 under the Pause setting', async ({ page }) => {
+    await usePausedMotion(page)
+    await page.goto('/no-such-page')
+    await expect(sign(page)).toBeVisible()
+    expect((await spriteState(sign(page))).name).toBe('none')
+    expect(await positionsOver(sign(page), page)).toEqual(['0px 0px'])
   })
 })
 
