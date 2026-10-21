@@ -16,7 +16,7 @@ import '@/styles/sprites/stack-shelf.css'
 export default function SkillsApp() {
   return (
     <div className="@container flex flex-col gap-8">
-      <header className="flex flex-col items-start gap-5 @min-[40rem]:flex-row-reverse @min-[40rem]:items-end @min-[40rem]:justify-end">
+      <div className="flex flex-col items-start gap-5 @min-[40rem]:flex-row-reverse @min-[40rem]:items-end @min-[40rem]:justify-end">
         {/* At most the column's width: on a 320 css phone the shelf's
             right end is cut, never the sheet pushed sideways. */}
         <span
@@ -33,7 +33,7 @@ export default function SkillsApp() {
             don&apos;t reach for today.
           </p>
         </div>
-      </header>
+      </div>
 
       <div className="flex flex-col gap-6">
         {skillsData.map((col) => (

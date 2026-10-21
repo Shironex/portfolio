@@ -18,6 +18,7 @@ import {
   startMenu,
   taskbar,
   titleBar,
+  windowById,
 } from './helpers'
 
 /**
@@ -654,6 +655,31 @@ test.describe('landmarks and headings', () => {
     await win.getByRole('button', { name: 'Close window' }).click()
     await expect(osWindows(page)).toHaveCount(0)
     await expectOneMainAndH1(page)
+  })
+
+  test('an open app window adds no second banner', async ({ page }) => {
+    for (const app of [
+      'projects',
+      'about',
+      'skills',
+      'contact',
+      'writing',
+      'readme',
+    ]) {
+      // The session keeps the windows opened before, so they pile up.
+      await page.goto(`/?open=${app}`)
+      await expect(windowById(page, app)).toBeVisible()
+      await expect(page.getByRole('banner')).toHaveCount(1)
+    }
+  })
+
+  test('the noscript card puts its text in a labelled region', async ({
+    request,
+  }) => {
+    const html = await (await request.get('/')).text()
+    const card = /<noscript>([\s\S]*?)<\/noscript>/.exec(html)?.[1] ?? ''
+    expect(card).toMatch(/<section[^>]*aria-labelledby="noscript-title"/)
+    expect(card).toMatch(/<h2[^>]*id="noscript-title"/)
   })
 
   test('the noscript card adds no second h1 to the home page', async ({

@@ -86,14 +86,14 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
 
   return (
     <div className="@container flex flex-col gap-6">
-      <header className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1">
         <h2 className="text-display lamp-heading tabular-nums">
           {projectsData.length} projects
         </h2>
         <p className="text-prose text-(--ink)">
           Pick one and it opens in its own window.
         </p>
-      </header>
+      </div>
 
       <div className="flex flex-wrap items-center gap-3">
         <div className="flex flex-wrap items-center gap-2">

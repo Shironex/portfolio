@@ -102,7 +102,7 @@ export default function ContactApp() {
 
   return (
     <div className="@container flex flex-col gap-8">
-      <header className="flex items-end gap-4">
+      <div className="flex items-end gap-4">
         <MiniMe key={waves} tag="wave" play="once" />
         <div className="flex min-w-0 flex-col gap-1">
           <h2 className="text-display lamp-heading">Get in touch</h2>
@@ -111,7 +111,7 @@ export default function ContactApp() {
             hours.
           </p>
         </div>
-      </header>
+      </div>
 
       <div className="grid grid-cols-1 gap-8 @min-[44rem]:grid-cols-[minmax(0,1fr)_calc(150*var(--px))]">
         <ContactForm theme={theme} onSent={waveAgain} />

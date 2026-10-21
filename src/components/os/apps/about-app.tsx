@@ -83,7 +83,7 @@ export default function AboutApp() {
 
   return (
     <div className="@container flex flex-col gap-8">
-      <header className="flex flex-col items-start gap-5 @min-[30rem]:flex-row">
+      <div className="flex flex-col items-start gap-5 @min-[30rem]:flex-row">
         {/* The portrait: the pet's first idle frame at 2x on a night plate. */}
         <span className="os-night px-panel block flex-none p-2">
           <span className="px-scale-2 block">
@@ -111,7 +111,7 @@ export default function AboutApp() {
             kept catching.
           </p>
         </div>
-      </header>
+      </div>
 
       <Section title="What I work on">
         <p className={PROSE_CLASS}>

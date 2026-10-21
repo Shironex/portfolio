@@ -55,7 +55,7 @@ const PHONE_ONLY = 'md:hidden'
 export default function ReadmeApp() {
   return (
     <div className="flex flex-col gap-8">
-      <header className="flex flex-col items-start gap-3">
+      <div className="flex flex-col items-start gap-3">
         <span
           aria-hidden
           className="os-night px-readme-headers px-readme-headers-hi ambient-loop block max-w-full flex-none animate-(--px-loop)"
@@ -75,7 +75,7 @@ export default function ReadmeApp() {
           </span>
           <span className="text-label text-(--meta)">portfolio build</span>
         </p>
-      </header>
+      </div>
 
       <p className={`${PROSE_CLASS} ${DESKTOP_ONLY}`}>
         This is my portfolio, reimagined as a small desktop. Click the icons on

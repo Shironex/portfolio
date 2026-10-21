@@ -26,10 +26,14 @@ export function NoscriptFallback() {
               noscript.txt
             </span>
           </div>
-          <div className="flex flex-col gap-4 p-8">
+          {/* A labelled region, so the card's text sits in a landmark. */}
+          <section
+            aria-labelledby="noscript-title"
+            className="flex flex-col gap-4 p-8"
+          >
             {/* Not an `h1`: with no JavaScript the static hero under this
                 card is still in the document, and it has the page's one. */}
-            <h2 className="text-heading lamp-heading">
+            <h2 id="noscript-title" className="text-heading lamp-heading">
               ShiroOS needs JavaScript
             </h2>
             <p className="text-body text-(--ink)">
@@ -60,7 +64,7 @@ export function NoscriptFallback() {
                 </a>
               </li>
             </ul>
-          </div>
+          </section>
         </div>
       </div>
     </noscript>

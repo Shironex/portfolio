@@ -162,7 +162,7 @@ export default function WritingApp() {
 
   return (
     <div className="flex flex-col gap-6">
-      <header className="flex flex-col items-start gap-3">
+      <div className="flex flex-col items-start gap-3">
         <span
           aria-hidden
           className="os-night px-readme-headers px-readme-headers-writing ambient-loop block max-w-full flex-none animate-(--px-loop)"
@@ -173,7 +173,7 @@ export default function WritingApp() {
           Field notes on things I build, from my blog at{' '}
           <BlogLink>{BLOG_HOST}</BlogLink>.
         </p>
-      </header>
+      </div>
 
       <div aria-busy={state.kind === 'loading'}>
         <PostList state={state} />
