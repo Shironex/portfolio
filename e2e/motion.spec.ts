@@ -1,10 +1,13 @@
-import { type Page, expect, test } from '@playwright/test'
+import { type Locator, type Page, expect, test } from '@playwright/test'
 
+import { MOTION_STORAGE_KEY } from '../src/lib/os/appearance'
+import { BOOT_STORAGE_KEY } from '../src/lib/os/boot-flag'
 import {
   AMBIENT_LOOP_CLASS,
   DESKTOP_VIEWPORT,
   MOBILE_VIEWPORT,
   ambientPlayStates,
+  bootSplash,
   cmdPalette,
   launch,
   mockFeeds,
@@ -18,10 +21,12 @@ import {
 } from './helpers'
 
 /**
- * Motion on the shell: the wallpaper loops stand still while the desktop is
- * covered, nothing blurs live behind them or behind the bars, interaction
- * feedback stays short, the terminal transcript is text before it is
- * animation, and the theme switch is one short cross-fade.
+ * Motion on the shell: the wallpaper's clock and the decorative loops stand
+ * still while the desktop is covered, under the Pause setting, in a hidden
+ * tab and under reduced motion; hover loops hold only for the user's own
+ * pause; nothing blurs live behind them or behind the bars; interaction
+ * feedback stays short; the terminal transcript is text before it is
+ * animation; and the theme switch is one short cross-fade.
  */
 const TERMINAL_LINES = [
   'cat about.md',
@@ -33,12 +38,49 @@ const TERMINAL_LINES = [
 /** Longest an interaction may animate for, in ms (SPEC 2.8). */
 const FEEDBACK_BUDGET_MS = 160
 
-/**
- * Four drifting notes and the terminal cursor.
- */
-const LOOP_COUNT = 5
+/** The terminal cursor and the featured banner. */
+const LOOP_COUNT = 2
 const ALL_RUNNING = Array.from({ length: LOOP_COUNT }, () => 'running')
 const ALL_PAUSED = Array.from({ length: LOOP_COUNT }, () => 'paused')
+
+/** Whether the wallpaper's clock runs (`data-state` on its canvas). */
+function wallpaperState(page: Page) {
+  return page.locator('canvas[data-wallpaper]').getAttribute('data-state')
+}
+
+/** The decorative loops and the wallpaper, in one reading. */
+async function motionState(page: Page) {
+  return {
+    loops: await ambientPlayStates(page),
+    wallpaper: await wallpaperState(page),
+  }
+}
+
+const RUNNING = { loops: ALL_RUNNING, wallpaper: 'running' }
+const PAUSED = { loops: ALL_PAUSED, wallpaper: 'paused' }
+
+/** Hold every loop for good, as the View menu's Pause motion does. */
+async function usePausedMotion(page: Page) {
+  await page.addInitScript(
+    ([key]) => window.localStorage.setItem(key, 'paused'),
+    [MOTION_STORAGE_KEY]
+  )
+}
+
+/** Make the tab hidden or visible again, as switching tabs does. */
+async function setTabHidden(page: Page, hidden: boolean) {
+  await page.evaluate((value) => {
+    Object.defineProperty(document, 'hidden', {
+      configurable: true,
+      get: () => value,
+    })
+    Object.defineProperty(document, 'visibilityState', {
+      configurable: true,
+      get: () => (value ? 'hidden' : 'visible'),
+    })
+    document.dispatchEvent(new Event('visibilitychange'))
+  }, hidden)
+}
 
 test.use({ viewport: DESKTOP_VIEWPORT })
 
@@ -47,12 +89,12 @@ test.beforeEach(async ({ page }) => {
   await skipBootSplash(page)
 })
 
-test.describe('decorative loops', () => {
+test.describe('decorative loops and the wallpaper', () => {
   test('run on the desktop and under a floating window, with nothing filtered live', async ({
     page,
   }) => {
     await openDesktop(page)
-    await expect.poll(() => ambientPlayStates(page)).toEqual(ALL_RUNNING)
+    await expect.poll(() => motionState(page)).toEqual(RUNNING)
 
     const filters = await page.evaluate(
       (loopClass) => ({
@@ -70,7 +112,7 @@ test.describe('decorative loops', () => {
     expect(filters.chrome).toEqual(['none', 'none'])
 
     await launch(page, 'About', 'about.me')
-    await expect.poll(() => ambientPlayStates(page)).toEqual(ALL_RUNNING)
+    await expect.poll(() => motionState(page)).toEqual(RUNNING)
   })
 
   test('pause under a maximized window, the palette and the start menu', async ({
@@ -80,43 +122,77 @@ test.describe('decorative loops', () => {
 
     await page.keyboard.press('Control+k')
     await expect(cmdPalette(page)).toBeVisible()
-    await expect.poll(() => ambientPlayStates(page)).toEqual(ALL_PAUSED)
+    await expect.poll(() => motionState(page)).toEqual(PAUSED)
     await page.keyboard.press('Escape')
-    await expect.poll(() => ambientPlayStates(page)).toEqual(ALL_RUNNING)
+    await expect.poll(() => motionState(page)).toEqual(RUNNING)
 
     await taskbar(page).getByRole('button', { name: 'Open Start menu' }).click()
     await expect(startMenu(page)).toBeVisible()
-    await expect.poll(() => ambientPlayStates(page)).toEqual(ALL_PAUSED)
+    await expect.poll(() => motionState(page)).toEqual(PAUSED)
     await page.keyboard.press('Escape')
-    await expect.poll(() => ambientPlayStates(page)).toEqual(ALL_RUNNING)
+    await expect.poll(() => motionState(page)).toEqual(RUNNING)
 
     const about = await launch(page, 'About', 'about.me')
     await titleBar(about).press('Control+Shift+M')
-    await expect.poll(() => ambientPlayStates(page)).toEqual(ALL_PAUSED)
+    await expect.poll(() => motionState(page)).toEqual(PAUSED)
 
     await titleBar(about).press('Control+Shift+M')
-    await expect.poll(() => ambientPlayStates(page)).toEqual(ALL_RUNNING)
+    await expect.poll(() => motionState(page)).toEqual(RUNNING)
 
     await titleBar(about).press('Control+Shift+M')
-    await expect.poll(() => ambientPlayStates(page)).toEqual(ALL_PAUSED)
+    await expect.poll(() => motionState(page)).toEqual(PAUSED)
     await titleBar(about).press('Control+M')
-    await expect.poll(() => ambientPlayStates(page)).toEqual(ALL_RUNNING)
+    await expect.poll(() => motionState(page)).toEqual(RUNNING)
+  })
+
+  test('hold for good under the Pause setting', async ({ page }) => {
+    await usePausedMotion(page)
+    await openDesktop(page)
+    await expect.poll(() => motionState(page)).toEqual(PAUSED)
+    await launch(page, 'About', 'about.me')
+    await expect.poll(() => motionState(page)).toEqual(PAUSED)
+  })
+
+  test('stop the wallpaper in a hidden tab', async ({ page }) => {
+    await openDesktop(page)
+    await expect.poll(() => wallpaperState(page)).toBe('running')
+    await setTabHidden(page, true)
+    await expect.poll(() => wallpaperState(page)).toBe('paused')
+    await setTabHidden(page, false)
+    await expect.poll(() => wallpaperState(page)).toBe('running')
+  })
+
+  test('leave a still wallpaper, drawn, under reduced motion', async ({
+    page,
+  }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await openDesktop(page)
+    const canvas = page.locator('canvas[data-wallpaper]')
+    await expect(canvas).toHaveAttribute('data-drawn', '')
+    await expect(canvas).toHaveAttribute('data-state', 'paused')
+    const frame = () =>
+      canvas.evaluate((el: HTMLCanvasElement) => el.toDataURL())
+    const first = await frame()
+    // Longer than a twinkle, a window switch and a cloud step.
+    await page.waitForTimeout(1600)
+    expect(await frame()).toBe(first)
   })
 })
 
 test.describe('app icons', () => {
-  /** The animation and background position of the Contact desktop icon. */
-  async function contactIcon(page: Page) {
-    return page
-      .locator('[data-app-icon="contact"]')
-      .first()
-      .evaluate((el) => {
-        const style = getComputedStyle(el)
-        return {
-          name: style.animationName,
-          position: style.backgroundPosition,
-        }
-      })
+  /** The animation and background position of an app icon. */
+  async function iconState(icon: Locator) {
+    return icon.evaluate((el) => {
+      const style = getComputedStyle(el)
+      return {
+        name: style.animationName,
+        position: style.backgroundPosition,
+      }
+    })
+  }
+
+  function contactIcon(page: Page) {
+    return iconState(page.locator('[data-app-icon="contact"]').first())
   }
 
   test('loop on hover and keyboard focus only, from their still', async ({
@@ -151,6 +227,78 @@ test.describe('app icons', () => {
       await page.waitForTimeout(120)
       expect((await contactIcon(page)).position).toBe(still.position)
     }
+  })
+
+  test('stay on their still under the Pause setting', async ({ page }) => {
+    await usePausedMotion(page)
+    await openDesktop(page)
+    await page.getByRole('button', { name: 'Open Contact' }).first().hover()
+    await page.waitForTimeout(200)
+    expect((await contactIcon(page)).name).toBe('none')
+  })
+
+  test('keep looping in the start menu, under its ambient pause', async ({
+    page,
+  }) => {
+    await openDesktop(page)
+    await taskbar(page).getByRole('button', { name: 'Open Start menu' }).click()
+    const menu = startMenu(page)
+    await expect(menu).toBeVisible()
+    await expect.poll(() => motionState(page)).toEqual(PAUSED)
+
+    const icon = menu.locator('[data-app-icon="contact"]').first()
+    expect((await iconState(icon)).name).toBe('none')
+    await icon.hover()
+    await expect
+      .poll(async () => (await iconState(icon)).name)
+      .toBe('px-app-icons-32-contact')
+    await expect
+      .poll(() =>
+        icon.evaluate((el) => getComputedStyle(el).animationPlayState)
+      )
+      .toBe('running')
+  })
+})
+
+test.describe('boot splash', () => {
+  /** Show the splash on this load, as a first visit in the tab does. */
+  async function firstVisit(page: Page) {
+    await page.addInitScript(
+      ([key]) => window.sessionStorage.removeItem(key),
+      [BOOT_STORAGE_KEY]
+    )
+  }
+
+  test('is skipped under reduced motion', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await firstVisit(page)
+    await openDesktop(page)
+    await expect(bootSplash(page)).toBeHidden()
+  })
+
+  test('holds still under the Pause setting, and Escape skips it', async ({
+    page,
+  }) => {
+    await usePausedMotion(page)
+    await firstVisit(page)
+    await page.goto('/')
+    const splash = bootSplash(page)
+    await expect(splash).toBeVisible()
+    const moving = await splash.evaluate(
+      (root) =>
+        document
+          .getAnimations()
+          .filter(
+            (animation) =>
+              animation.playState === 'running' &&
+              root.contains(
+                (animation.effect as KeyframeEffect | null)?.target ?? null
+              )
+          ).length
+    )
+    expect(moving).toBe(0)
+    await page.keyboard.press('Escape')
+    await expect(splash).toBeHidden()
   })
 })
 
