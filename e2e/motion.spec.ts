@@ -1,5 +1,6 @@
 import { type Locator, type Page, expect, test } from '@playwright/test'
 
+import { RIDES_STORAGE_KEY } from '../src/components/os/wallpaper/ride-by'
 import { MOTION_STORAGE_KEY } from '../src/lib/os/appearance'
 import { BOOT_STORAGE_KEY } from '../src/lib/os/boot-flag'
 import {
@@ -645,5 +646,96 @@ test.describe('theme switch', () => {
       }
     })
     expect(transitions).toEqual({ dark: false, pseudo: 0 })
+  })
+})
+
+test.describe('mini-me ride-by', () => {
+  test.slow()
+
+  /** A minute and a bit of visible time: past the first ride's start. */
+  const PAST_FIRST_RIDE = 66_000
+
+  /**
+   * Mark the page once the canvas carries `data-ride`, so a ride that came
+   * and went between two readings still counts.
+   */
+  async function watchRides(page: Page) {
+    await page.evaluate(() => {
+      const canvas = document.querySelector('canvas[data-wallpaper]')
+      const state = window as unknown as { __rode: boolean }
+      state.__rode = false
+      if (!canvas) return
+      new MutationObserver(() => {
+        if (canvas.hasAttribute('data-ride')) state.__rode = true
+      }).observe(canvas, { attributes: true, attributeFilter: ['data-ride'] })
+    })
+    return () =>
+      page.evaluate(() => (window as unknown as { __rode: boolean }).__rode)
+  }
+
+  /** The desktop under a fake clock, the wallpaper running or not. */
+  async function openWithClock(page: Page) {
+    await page.clock.install()
+    await openDesktop(page)
+    await expect(page.locator('canvas[data-wallpaper]')).toHaveAttribute(
+      'data-drawn',
+      ''
+    )
+  }
+
+  test('rides by after a minute of visible time, and not before', async ({
+    page,
+  }) => {
+    await openWithClock(page)
+    const rode = await watchRides(page)
+    await page.clock.runFor(50_000)
+    expect(await rode()).toBe(false)
+    await page.clock.runFor(PAST_FIRST_RIDE - 50_000)
+    expect(await rode()).toBe(true)
+  })
+
+  test('stops after three rides in a tab', async ({ page }) => {
+    await page.addInitScript(
+      ([key]) => window.sessionStorage.setItem(key, '3'),
+      [RIDES_STORAGE_KEY]
+    )
+    await openWithClock(page)
+    const rode = await watchRides(page)
+    await page.clock.runFor(PAST_FIRST_RIDE)
+    expect(await rode()).toBe(false)
+  })
+
+  test('never starts under the Pause setting', async ({ page }) => {
+    await usePausedMotion(page)
+    await openWithClock(page)
+    const rode = await watchRides(page)
+    await page.clock.runFor(PAST_FIRST_RIDE)
+    expect(await rode()).toBe(false)
+  })
+
+  test('never starts under reduced motion', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await openWithClock(page)
+    const rode = await watchRides(page)
+    await page.clock.runFor(PAST_FIRST_RIDE)
+    expect(await rode()).toBe(false)
+  })
+
+  test('never starts in a hidden tab', async ({ page }) => {
+    await openWithClock(page)
+    const rode = await watchRides(page)
+    await setTabHidden(page, true)
+    await page.clock.runFor(PAST_FIRST_RIDE)
+    expect(await rode()).toBe(false)
+  })
+
+  test('never starts under a maximized window', async ({ page }) => {
+    await openWithClock(page)
+    const about = await launch(page, 'About', 'about.me')
+    await about.getByRole('button', { name: 'Toggle maximize window' }).click()
+    await expect.poll(() => wallpaperState(page)).toBe('paused')
+    const rode = await watchRides(page)
+    await page.clock.runFor(PAST_FIRST_RIDE)
+    expect(await rode()).toBe(false)
   })
 })

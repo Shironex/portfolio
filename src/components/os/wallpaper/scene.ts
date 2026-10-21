@@ -1,4 +1,5 @@
 import type { MoonPiece } from './moon'
+import { RideBy } from './ride-by'
 import {
   BAND_DITHER,
   BRIGHT_FRAMES,
@@ -28,6 +29,9 @@ import { paintSky } from './sky'
  * `step(now)` advances whatever is due and returns when the next thing is,
  * for the shared ticker; frame 0 (no step yet) is the static frame the server
  * renders, so the swap from the static frame to the canvas is invisible.
+ *
+ * On the desktop layout the mini-me rides by on the road now and then
+ * (`RideBy`, SPEC 3.7), drawn over the front once her sheet is in.
  */
 
 export type SkyName = keyof typeof SKIES
@@ -194,9 +198,20 @@ export class WallpaperScene {
   private direction = 0
   private target = 0
   private due = { twinkle: 0, cloud: 0, window: 0, parallax: 0 }
+  private rider: RideBy | null = null
 
   constructor(image: HTMLImageElement) {
     this.image = image
+  }
+
+  /** The mini-me ride sheet is decoded: rides can start. */
+  setRider(image: CanvasImageSource) {
+    this.rider ??= new RideBy(image)
+  }
+
+  /** Whether the mini-me is riding by now. */
+  get riding(): boolean {
+    return this.rider?.active ?? false
   }
 
   private skin(): Skin {
@@ -216,6 +231,7 @@ export class WallpaperScene {
     this.target = 0
     this.lit = { far: [], mid: [], near: [] }
     this.frontDirty = true
+    this.rider?.reset()
   }
 
   setSky(sky: SkyName, moon: MoonPiece) {
@@ -416,6 +432,7 @@ export class WallpaperScene {
 
     if (this.frontDirty || !this.front) this.drawFront()
     if (this.front) ctx.drawImage(this.front, 0, 0)
+    if (layout === 'desktop') this.rider?.draw(ctx, horizon)
   }
 
   /** Whether anything in this sky moves on its own. */
@@ -432,6 +449,7 @@ export class WallpaperScene {
       window: now + this.windowGap(),
       parallax: now,
     }
+    this.rider?.start(now)
   }
 
   private windowGap() {
@@ -506,6 +524,11 @@ export class WallpaperScene {
       }
     }
     const dues: number[] = []
+    if (this.rider && this.layout === 'desktop') {
+      const ride = this.rider.step(now, this.cols)
+      if (ride.changed) changed = true
+      dues.push(ride.next)
+    }
     if (visible.stars) dues.push(this.due.twinkle)
     if (visible.clouds) dues.push(this.due.cloud)
     if (visible.lights) dues.push(this.due.window)

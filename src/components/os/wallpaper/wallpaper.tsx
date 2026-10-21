@@ -10,6 +10,7 @@ import {
 import { artPixel, artPx, onArtPixelChange } from '@/lib/os/pixel'
 import { type TickerHandle, schedule } from '@/lib/os/ticker'
 
+import ridePng from '@/assets/pixel/pets/minime-ride.png'
 import atlasPng from '@/assets/pixel/scene/wallpaper.png'
 
 import { SHELL_ROOT_ATTRIBUTE } from '../noscript-fallback'
@@ -42,7 +43,8 @@ function isSky(value: string | undefined): value is SkyName {
  * layer is open (`data-ambient` on the shell root), during a window drag
  * (`data-gesture`), under the Pause setting (`data-motion`), in a hidden tab,
  * and under reduced motion, where the canvas shows frame 0 and never moves.
- * Parallax follows the pointer only over bare desktop.
+ * Parallax follows the pointer only over bare desktop. While the mini-me
+ * rides by on the road the canvas carries `data-ride`.
  */
 export function Wallpaper({ live }: WallpaperProps) {
   const rootRef = useRef<HTMLDivElement>(null)
@@ -79,6 +81,8 @@ export function Wallpaper({ live }: WallpaperProps) {
       if (!scene || !ctx) return
       scene.draw(ctx)
       el.dataset.drawn = ''
+      if (scene.riding) el.dataset.ride = ''
+      else delete el.dataset.ride
     }
 
     const resize = () => {
@@ -162,6 +166,13 @@ export function Wallpaper({ live }: WallpaperProps) {
         resize()
         sized.observe(root)
         refresh()
+        // The mini-me ride-by (SPEC 3.7): her sheet, then the first ride
+        // a minute of visible time later.
+        const rider = new Image()
+        rider.src = ridePng.src
+        return rider.decode().then(() => {
+          if (!disposed) scene?.setRider(rider)
+        })
       })
       .catch(() => {
         // The static frame stays: the scene is decoration.
