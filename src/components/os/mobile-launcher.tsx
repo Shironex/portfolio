@@ -168,11 +168,15 @@ function SettingSwitch({ label, glyph, on, onToggle }: SettingSwitchProps) {
       role="switch"
       aria-checked={on}
       onClick={onToggle}
-      className={ROW_CLASS}
+      className={cn(ROW_CLASS, 'group')}
     >
       <PixelIcon name={glyph} className="text-(--meta)" />
       <span className="text-body flex-1 text-(--ink)">{label}</span>
-      <span aria-hidden className="text-label text-(--meta)">
+      {/* Ink on the hover fill: the grey is 3.52:1 on the night teal. */}
+      <span
+        aria-hidden
+        className="text-label text-(--meta) group-hover:text-(--ink)"
+      >
         {on ? 'on' : 'off'}
       </span>
       <span
