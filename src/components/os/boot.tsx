@@ -1,25 +1,54 @@
 'use client'
 
-import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { readBootFlag, writeBootFlag } from '@/lib/os/boot-flag'
 import { type DeepLinkTarget, initialDeepLinkTarget } from '@/lib/os/deep-link'
 import { cn } from '@/lib/utils'
 
+import bootSheet from '@/assets/pixel/boot/os-boot.png'
 import { useEscapeLayer } from '@/hooks/use-escape-layer'
 import { useFocusTrap } from '@/hooks/use-focus-trap'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
+import '@/styles/sprites/os-boot.css'
 
-import { EYEBROW_CLASS } from './constants'
+import { Kbd } from './kbd'
 
 const STEPS = [
-  { label: 'Mounting desk', detail: '42ms' },
-  { label: 'Loading projects', detail: '218ms' },
-  { label: 'Priming panels', detail: '96ms' },
-  { label: 'Waking windows', detail: '12ms' },
+  'Mounting desk',
+  'Loading projects',
+  'Priming panels',
+  'Waking windows',
 ] as const
 
-export const BOOT_STORAGE_KEY = 'shiroos:booted'
+type StepState = 'done' | 'run' | 'wait'
+
+/** Each step's text: done in ink, the current one in lamp, the rest in meta. */
+const STEP_TEXT: Record<StepState, string> = {
+  done: 'text-(--ink)',
+  run: 'text-(--lamp)',
+  wait: 'text-(--meta)',
+}
+
+/** Its 7x7 mark from the boot sheet: a check, the spinning ring, dots. */
+const STEP_MARK: Record<StepState, string> = {
+  done: 'px-os-boot-check',
+  run: 'px-os-boot-run',
+  wait: 'px-os-boot-wait',
+}
+
+/** What the mark says, for the live region. */
+const STEP_STATUS: Record<StepState, string> = {
+  done: ', done',
+  run: ', in progress',
+  wait: ', waiting',
+}
+
+const SHEET = { backgroundImage: `url(${bootSheet.src})` }
+
+/** Nothing on the splash moves under reduced motion or the Pause setting. */
+const HELD_STILL =
+  'motion-reduce:animate-none in-data-[motion=paused]:animate-none'
 
 // Step advancement timings in ms; final entry auto-dismisses the splash.
 // Kept tight (~2.4s total): the splash is a greeting, not a loading screen,
@@ -28,36 +57,13 @@ export const BOOT_STORAGE_KEY = 'shiroos:booted'
 const BOOT_STEP_TIMINGS_MS = [420, 950, 1500, 1950, 2400] as const
 
 /**
- * Reading the flag fails toward SHOWING the splash.
- *
- * A `typeof window` check guards SSR, not the access: `sessionStorage` throws
- * outright in a browser set to block site data, inside a sandboxed iframe, and
- * under a partitioned store. An unreadable flag is treated as an unset one, so
- * a tab that cannot remember replays the greeting. That is the harmless
- * direction for something skippable that lasts 2.4 seconds.
- */
-function readBootFlag(): string | null {
-  try {
-    return window.sessionStorage.getItem(BOOT_STORAGE_KEY)
-  } catch {
-    return null
-  }
-}
-
-/** Writing fails silently: an unrecordable boot is a replay, not a crash. */
-function writeBootFlag(): void {
-  try {
-    window.sessionStorage.setItem(BOOT_STORAGE_KEY, '1')
-  } catch {
-    /* Blocked storage or an exhausted quota. The splash shows again next time. */
-  }
-}
-
-/**
- * ShiroOS boot splash. Shown only once per tab session; skippable via Esc or
- * the "skip" button. Respects `prefers-reduced-motion` by collapsing to an
- * instant dismiss. Auto-dismisses at ~2.4s for first-time visitors. While it
- * shows it is a modal layer: focus stays on it and the desktop behind is inert.
+ * ShiroOS boot splash (SPEC 2.6): a black monitor powering on, the pixel
+ * wordmark with シロOS under it, and a checklist in Departure Mono with the
+ * run, check and wait marks. Shown only once per tab session; skippable via
+ * Esc or the "skip" button. Respects `prefers-reduced-motion` by collapsing
+ * to an instant dismiss. Auto-dismisses at ~2.4s for first-time visitors.
+ * While it shows it is a modal layer: focus stays on it and the desktop
+ * behind is inert.
  *
  * A deep link skips it too: someone sent to a specific window should land on
  * that window, not on a greeting. `initialWindow` is a window handed in by a
@@ -137,118 +143,73 @@ export function Boot({ initialWindow }: { initialWindow?: DeepLinkTarget }) {
       role="dialog"
       aria-modal="true"
       aria-label="ShiroOS boot sequence"
-      className="os-night bg-sky-1 animate-boot-out z-boot fixed inset-0 overflow-hidden motion-reduce:animate-none"
+      className={cn(
+        'os-night animate-boot-out z-boot fixed inset-0 overflow-hidden bg-black',
+        HELD_STILL
+      )}
     >
-      <span
+      {/* The monitor powering on: the picture opens from the middle line in
+          four steps while the scanline steps down to its rest. */}
+      <div
         aria-hidden
-        className="font-display text-ink/[0.06] dark:text-ink/[0.08] pointer-events-none absolute -top-[8dvh] -right-[4vw] text-[48dvh] leading-none font-bold select-none"
+        className={cn('boot-scanline absolute inset-x-0 h-6', HELD_STILL)}
+      />
+      <div
+        className={cn(
+          'animate-boot-open absolute inset-0 flex flex-col items-center pt-[calc(50dvh-75*var(--px))]',
+          HELD_STILL
+        )}
       >
-        白
-      </span>
+        <span
+          aria-hidden
+          className="px-os-boot px-os-boot-wordmark block"
+          style={SHEET}
+        />
+        <span
+          aria-hidden
+          className="px-os-boot px-os-boot-kana mt-6 block"
+          style={SHEET}
+        />
 
-      <div className="relative z-10 flex min-h-dvh flex-col items-center justify-center gap-12 px-12">
-        <div className="relative">
-          <span
-            aria-hidden
-            className="pointer-events-none absolute rounded-full motion-reduce:hidden"
-            style={{
-              inset: '-1rem',
-              border: '2px solid transparent',
-              borderTopColor: 'var(--color-miku)',
-              borderRightColor:
-                'color-mix(in oklab, var(--color-miku) 45%, transparent)',
-              animation: 'spinSlow 1.8s linear infinite',
-            }}
-          />
-          <span
-            aria-hidden
-            className="pointer-events-none absolute rounded-full motion-reduce:hidden"
-            style={{
-              inset: '-0.4rem',
-              border: '2px solid transparent',
-              borderTopColor: 'var(--color-miku-2)',
-              borderLeftColor:
-                'color-mix(in oklab, var(--color-miku-2) 35%, transparent)',
-              animation: 'spinSlow 2.6s linear infinite reverse',
-            }}
-          />
-          <div className="animate-logo-pop relative flex size-55 items-center justify-center motion-reduce:animate-none">
-            <Image
-              src="/mascot.png"
-              alt="ShiroOS mascot"
-              width={220}
-              height={220}
-              priority
-              draggable={false}
-              className="size-full object-contain [filter:drop-shadow(0_10px_22px_color-mix(in_oklab,var(--color-miku)_45%,transparent))_drop-shadow(0_0_14px_color-mix(in_oklab,var(--color-cloud)_28%,transparent))]"
-            />
-          </div>
-          <span
-            aria-hidden
-            className="text-miku-2-ink animate-bob-note pointer-events-none absolute -top-10 -right-10 text-[28px] [text-shadow:0_2px_6px_color-mix(in_oklab,var(--color-surf-solid)_80%,transparent)] motion-reduce:animate-none"
-          >
-            ♪
-          </span>
-        </div>
-
-        <div className="text-center">
-          <div className="font-display text-ink text-[22px] font-semibold">
-            <b className="text-miku-2-ink font-bold">ShiroOS</b>
-            <span className="mx-2">·</span>
-            <span>booting with love</span>
-            <span
-              aria-hidden
-              className="animate-bob-note text-miku-2-ink ml-2 inline-block motion-reduce:animate-none"
-            >
-              ♪
-            </span>
-          </div>
-          <div className={cn(EYEBROW_CLASS, 'text-ink-4 mt-3')}>
-            シロOS · portfolio build
-          </div>
-        </div>
-
-        <div className="grid w-150 gap-2" role="status" aria-live="polite">
-          {STEPS.map((s, i) => {
-            const state: 'done' | 'run' | 'wait' =
-              i < step ? 'done' : i === step ? 'run' : 'wait'
+        <ul
+          className="text-heading mt-16 flex flex-col leading-11"
+          role="status"
+          aria-live="polite"
+        >
+          {STEPS.map((label, i) => {
+            const state = i < step ? 'done' : i === step ? 'run' : 'wait'
             return (
-              <div
-                key={s.label}
-                className="border-rule bg-surf-0 font-body text-ink-2 grid grid-cols-[16px_1fr_auto] items-center gap-4 rounded-md border px-5 py-3 text-[11px]"
+              <li
+                key={label}
+                className={cn('flex items-center gap-4', STEP_TEXT[state])}
               >
                 <span
                   aria-hidden
                   className={cn(
-                    'flex size-8 items-center justify-center rounded-full text-[11px] leading-none font-bold',
-                    state === 'done'
-                      ? 'border-miku-3 bg-miku-3/30 text-ink border'
-                      : state === 'run'
-                        ? 'border-miku bg-miku/20 text-miku-ink animate-blink border motion-reduce:animate-none'
-                        : 'border-rule text-ink-3 border'
+                    'px-os-boot block flex-none',
+                    STEP_MARK[state],
+                    state === 'run' && cn('animate-(--px-loop)', HELD_STILL)
                   )}
-                >
-                  {state === 'done' ? '✓' : state === 'run' ? '●' : '○'}
-                </span>
-                <span>{s.label}</span>
-                <span className="text-ink-4 font-mono text-[11px] tabular-nums">
-                  {state === 'wait' ? '-' : s.detail}
-                </span>
-              </div>
+                  style={SHEET}
+                />
+                {label}
+                <span className="sr-only">{STEP_STATUS[state]}</span>
+              </li>
             )
           })}
-        </div>
-
-        <button
-          ref={skipButtonRef}
-          type="button"
-          onClick={dismiss}
-          aria-keyshortcuts="Escape Enter Space"
-          className="focus-ring border-rule-2 bg-surf-0 text-ink-3 hover:bg-surf-1 hover:text-ink rounded-full border px-8 py-3 font-mono text-[11px] uppercase transition-colors"
-        >
-          skip · esc
-        </button>
+        </ul>
       </div>
+
+      <button
+        ref={skipButtonRef}
+        type="button"
+        onClick={dismiss}
+        aria-keyshortcuts="Escape Enter Space"
+        className="focus-ring text-label absolute inset-x-0 bottom-16 mx-auto flex w-fit items-center gap-3 px-3 py-1 text-(--meta) hover:text-(--ink)"
+      >
+        skip
+        <Kbd>esc</Kbd>
+      </button>
     </div>
   )
 }

@@ -323,6 +323,7 @@
   --animate-bob-note: bobNote 1.4s steps(1, end) infinite;
   --animate-logo-pop: logoPop 0.4s steps(4);
   --animate-boot-out: bootOut 0.32s steps(4) 1.9s forwards;
+  --animate-boot-open: bootOpen 0.28s steps(4);
   /*
    * `backwards`: a line with an `animation-delay` stays hidden until its
    * turn, and holds nothing once it is in (its keyframes end on its own
@@ -336,6 +337,22 @@
     to {
       opacity: 0;
       visibility: hidden;
+    }
+  }
+
+  /* The boot picture opening from the middle line (SPEC 2.6). */
+  @keyframes bootOpen {
+    from {
+      clip-path: inset(50% 0 50% 0);
+    }
+    to {
+      clip-path: inset(0);
+    }
+  }
+
+  @keyframes bootScan {
+    from {
+      top: calc(50% - 3 * var(--px));
     }
   }
 
@@ -700,6 +717,22 @@
   :not(pre) > code {
     @apply bg-muted rounded px-3 py-1 text-sm;
   }
+}
+
+/*
+ * The boot screen's scanline: two rows of navy between two of ground, 6 art
+ * px, resting two thirds down the screen (300 of 450 in the mock). It steps
+ * down from the middle line as the picture opens.
+ */
+@utility boot-scanline {
+  top: 66.667%;
+  top: round(down, 66.667%, var(--px));
+  background: linear-gradient(
+    var(--ground) 0 33.333%,
+    var(--surf) 0 66.667%,
+    var(--ground) 0
+  );
+  animation: bootScan 0.28s steps(4);
 }
 
 /*

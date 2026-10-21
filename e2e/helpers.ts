@@ -1,7 +1,6 @@
 import { type Locator, type Page, expect } from '@playwright/test'
 import { join } from 'node:path'
 
-import { BOOT_STORAGE_KEY } from '../src/components/os/boot'
 import {
   SHELL_READY_ATTRIBUTE,
   SHELL_ROOT_ATTRIBUTE,
@@ -11,6 +10,7 @@ import {
   SKY_STORAGE_KEY,
   type SkyId,
 } from '../src/lib/os/appearance'
+import { BOOT_STORAGE_KEY } from '../src/lib/os/boot-flag'
 import { WINDOW_ID_ATTRIBUTE } from '../src/lib/os/dom'
 
 /** API routes answered from the showcase fixtures, so no test waits on GitHub or the blog. */
