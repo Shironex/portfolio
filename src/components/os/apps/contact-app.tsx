@@ -1,20 +1,23 @@
 /**
- * contact.app window: ShiroOS chrome around the real contact form.
- * Ported from new-design/components/apps.jsx `function ContactApp()`,
- * but wired into the production next-safe-action + Turnstile flow via
- * `@/lib/contact/contact-form`.
+ * contact.app window: the real contact form (next-safe-action and
+ * Turnstile, `@/lib/contact/contact-form`) and the ways to reach me, in
+ * pixels (SPEC 1.5): field wells, the mini-me waving hello as it opens.
  */
 
 'use client'
 
 import dynamic from 'next/dynamic'
+import { useId } from 'react'
 
-import { Clock, Copy, Mail, MapPin } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
-import { GithubIcon } from '@/components/icons/github-icon'
+import { MiniMe } from '@/components/pixel/mini-me'
+import {
+  PixelIcon,
+  type PixelIconName,
+} from '@/components/pixel/pixel-icon.generated'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
-import { cn } from '@/lib/utils'
 import { copyToClipboard } from '@/lib/utils/copy-to-clipboard'
 
 import { useTheme } from '@/hooks/use-theme'
@@ -24,16 +27,13 @@ const ContactForm = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div
-        aria-hidden
-        className="border-rule-2 bg-surf-solid h-210 animate-pulse rounded-2xl border"
-      />
+      <div aria-hidden className="px-tile-skeleton ambient-loop h-150" />
     ),
   }
 )
 
 type ReachRow = {
-  icon: React.ReactNode
+  icon: PixelIconName
   label: string
   value: string
   href?: string
@@ -43,107 +43,113 @@ type ReachRow = {
 
 const rows: ReachRow[] = [
   {
-    icon: <Mail className="size-8" />,
+    icon: 'mail',
     label: 'Email',
     value: EMAIL_CONTACT,
     href: `mailto:${EMAIL_CONTACT}`,
     copyValue: EMAIL_CONTACT,
   },
   {
-    icon: <GithubIcon className="size-8" />,
+    icon: 'github',
     label: 'GitHub',
     value: GITHUB_URL.replace(/^https?:\/\//, ''),
     href: GITHUB_URL,
   },
   {
-    icon: <MapPin className="size-8" />,
+    icon: 'pin',
     label: 'Location',
     value: 'Poland · remote',
   },
   {
-    icon: <Clock className="size-8" />,
+    icon: 'clock',
     label: 'Timezone',
     value: 'UTC+1 · CET',
   },
 ]
 
+/** The glyph on its plate, and the label over the value. */
+function RowContent({ row }: { row: ReachRow }) {
+  return (
+    <>
+      <span
+        aria-hidden
+        className="os-night px-label-plate flex size-14 flex-none items-center justify-center text-(--link)"
+      >
+        <PixelIcon name={row.icon} />
+      </span>
+      <span className="flex min-w-0 flex-col">
+        <span className="text-label text-(--meta) group-hover:text-(--ink)">
+          {row.label}
+        </span>
+        <span className="text-body truncate text-(--ink)">{row.value}</span>
+      </span>
+    </>
+  )
+}
+
 export default function ContactApp() {
   const { theme } = useTheme()
+  const reachId = useId()
 
   return (
-    <div className="font-body max-w-4xl">
-      <h2 className="font-display text-ink mb-4 text-3xl font-bold">
-        Get in touch
-      </h2>
-      <p className="font-body text-ink-2 mb-12">
-        Full-time roles, contracts, MVPs, or just to talk. I reply within 24
-        hours.
-      </p>
+    <div className="@container flex flex-col gap-8">
+      <header className="flex items-end gap-4">
+        <MiniMe tag="wave" play="once" />
+        <div className="flex min-w-0 flex-col gap-1">
+          <h2 className="text-display lamp-heading">Get in touch</h2>
+          <p className="text-body max-w-[66ch] text-(--ink)">
+            Full-time roles, contracts, MVPs, or just to talk. I reply within 24
+            hours.
+          </p>
+        </div>
+      </header>
 
-      <div className="grid gap-12 md:grid-cols-[1fr_320px]">
-        <ContactForm theme={theme} surface="card" />
+      <div className="grid gap-8 @min-[44rem]:grid-cols-[minmax(0,1fr)_calc(150*var(--px))]">
+        <ContactForm theme={theme} />
 
-        <aside className="border-rule-2 bg-surf-solid flex h-fit flex-col gap-6 rounded-2xl border p-10">
-          <div className="font-display text-ink mb-2 text-sm font-bold">
+        <aside
+          aria-labelledby={reachId}
+          className="px-card flex h-fit flex-col gap-2 p-3"
+        >
+          <h3 id={reachId} className="text-heading lamp-heading px-1">
             Reach me
-          </div>
+          </h3>
           {rows.map((row) => {
-            const inner = (
-              <>
-                <span className="bg-miku/15 text-miku-ink flex size-18 shrink-0 items-center justify-center rounded-lg">
-                  {row.icon}
-                </span>
-                <div className="flex min-w-0 flex-col">
-                  <span className="font-body text-ink-4 text-xs">
-                    {row.label}
-                  </span>
-                  <span className="font-body text-ink truncate text-sm">
-                    {row.value}
-                  </span>
-                </div>
-              </>
-            )
-
-            if (row.href) {
+            if (!row.href) {
               return (
-                <div key={row.label} className="relative">
-                  <a
-                    href={row.href}
-                    target={row.href.startsWith('http') ? '_blank' : undefined}
-                    rel={row.href.startsWith('http') ? 'noreferrer' : undefined}
-                    aria-label={`${row.label}: ${row.value}`}
-                    className={cn(
-                      'focus-ring border-rule bg-surf-0 hover:border-miku/40 hover:bg-surf-soft flex items-center gap-6 rounded-xl border p-6 transition-colors',
-                      row.copyValue && 'pr-22'
-                    )}
-                  >
-                    {inner}
-                  </a>
-                  {row.copyValue && (
-                    <button
-                      type="button"
-                      aria-label={`Copy ${row.label.toLowerCase()}`}
-                      onClick={() =>
-                        copyToClipboard(
-                          row.copyValue ?? '',
-                          `${row.label} copied`
-                        )
-                      }
-                      className="focus-ring text-ink-4 hover:bg-surf-soft hover:text-miku-2-icon absolute top-1/2 right-4 -translate-y-1/2 rounded-md p-4 transition-colors"
-                    >
-                      <Copy aria-hidden className="size-7" />
-                    </button>
-                  )}
+                <div key={row.label} className="flex items-center gap-3 p-1">
+                  <RowContent row={row} />
                 </div>
               )
             }
-
+            const external = row.href.startsWith('http')
             return (
-              <div
-                key={row.label}
-                className="border-rule bg-surf-0 flex items-center gap-6 rounded-xl border p-6"
-              >
-                {inner}
+              <div key={row.label} className="flex items-center gap-1">
+                <a
+                  href={row.href}
+                  target={external ? '_blank' : undefined}
+                  rel={external ? 'noreferrer' : undefined}
+                  aria-label={`${row.label}: ${row.value}`}
+                  className="focus-ring group flex min-w-0 flex-1 items-center gap-3 p-1 hover:bg-(--select)"
+                >
+                  <RowContent row={row} />
+                </a>
+                {row.copyValue && (
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="icon"
+                    aria-label={`Copy ${row.label.toLowerCase()}`}
+                    onClick={() =>
+                      copyToClipboard(
+                        row.copyValue ?? '',
+                        `${row.label} copied`
+                      )
+                    }
+                  >
+                    <PixelIcon name="copy" />
+                  </Button>
+                )}
               </div>
             )
           })}

@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CheckCircle2, Loader2, Send } from 'lucide-react'
 import { useAction } from 'next-safe-action/hooks'
 import { useForm } from 'react-hook-form'
 import Turnstile, { type BoundTurnstileObject } from 'react-turnstile'
@@ -19,6 +18,10 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+
+import { MiniMe } from '@/components/pixel/mini-me'
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
+import { PixelSpinner } from '@/components/pixel/pixel-spinner'
 
 import { env } from '@/env/client'
 import { EMPTY_DRAFT, useContactDraft } from '@/hooks/use-contact-draft'
@@ -45,14 +48,11 @@ const CAPTCHA_MISSING = 'Please complete the captcha above before sending.'
 const SEND_FAILED = 'Something went wrong. Please try again.'
 
 export interface ContactFormProps {
+  /** The Turnstile widget's theme: `dark` at night, `light` on paper. */
   theme?: 'light' | 'dark'
-  surface?: 'card' | 'plain'
 }
 
-export function ContactForm({
-  theme = 'light',
-  surface = 'plain',
-}: ContactFormProps = {}) {
+export function ContactForm({ theme = 'light' }: ContactFormProps = {}) {
   const draft = useContactDraft()
   const { save: saveDraft, clear: clearDraft } = draft
   const form = useForm<ContactFormValues>({
@@ -107,42 +107,46 @@ export function ContactForm({
     serverError ??
     (form.formState.errors.turnstileToken ? CAPTCHA_MISSING : null)
 
-  const formInner = sent ? (
-    <div
-      ref={sentPanel}
-      role="status"
-      tabIndex={-1}
-      className="flex flex-col items-start gap-6 outline-none"
-    >
-      <CheckCircle2 aria-hidden className="text-miku-icon size-16" />
-      <p className="font-display text-ink text-lg font-bold">Message sent</p>
-      <p className="text-ink-2 text-sm">
-        Thanks for reaching out. I will reply within 24 hours.
-      </p>
-      <Button
-        type="button"
-        variant="outline"
-        onClick={() => setSent(false)}
-        className="border-rule-2 bg-surf-0 text-ink hover:bg-surf-1 hover:text-ink"
+  if (sent) {
+    return (
+      <div
+        ref={sentPanel}
+        role="status"
+        tabIndex={-1}
+        className="flex flex-col items-start gap-4 outline-none"
       >
-        Send another message
-      </Button>
-    </div>
-  ) : (
+        <MiniMe tag="wave" play="once" />
+        <p className="text-heading lamp-heading">Message sent</p>
+        <p className="text-body max-w-[66ch] text-(--ink)">
+          Thanks for reaching out. I will reply within 24 hours.
+        </p>
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={() => setSent(false)}
+        >
+          Send another message
+        </Button>
+      </div>
+    )
+  }
+
+  return (
     <Form {...form}>
       {/* noValidate: the fields are marked required, and the inline messages
           below report it instead of the browser's own bubbles. */}
-      <form onSubmit={handleSubmit} noValidate className="space-y-12">
+      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
-            <FormItem className="w-full">
+            <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input
                   type="text"
-                  placeholder="Your Name"
+                  placeholder="Your name"
+                  autoComplete="name"
                   required
                   {...field}
                 />
@@ -155,12 +159,13 @@ export function ContactForm({
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem className="w-full">
+            <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
                   type="email"
                   placeholder="Your email address"
+                  autoComplete="email"
                   required
                   {...field}
                 />
@@ -178,7 +183,7 @@ export function ContactForm({
               <FormLabel>Message</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Your Message"
+                  placeholder="Your message"
                   rows={6}
                   required
                   {...field}
@@ -188,51 +193,42 @@ export function ContactForm({
             </FormItem>
           )}
         />
-        <Turnstile
-          aria-label="Captcha"
-          theme={theme}
-          sitekey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
-          onVerify={(token, bound) => {
-            turnstile.current = bound
-            form.setValue('turnstileToken', token)
-            form.clearErrors('turnstileToken')
-          }}
-          onExpire={() => form.setValue('turnstileToken', '')}
-        />
+
+        {/* The widget sits in a bezel, a well one art px wider than it, that
+            keeps its 300x65 place while the script loads. */}
+        <div className="px-well w-fit p-1 [&>div]:min-h-[65px] [&>div]:min-w-[300px]">
+          <Turnstile
+            aria-label="Captcha"
+            theme={theme}
+            sitekey={env.NEXT_PUBLIC_TURNSTILE_SITE_KEY}
+            onVerify={(token, bound) => {
+              turnstile.current = bound
+              form.setValue('turnstileToken', token)
+              form.clearErrors('turnstileToken')
+            }}
+            onExpire={() => form.setValue('turnstileToken', '')}
+          />
+        </div>
 
         <input type="hidden" name="verify" />
 
         {alert && (
-          <p role="alert" className="text-danger-ink text-sm font-medium">
-            {alert}
+          <p
+            role="alert"
+            className="text-body flex items-start gap-2 text-(--error)"
+          >
+            <PixelIcon name="alert" className="mt-3" />
+            <span>{alert}</span>
           </p>
         )}
 
-        <Button
-          type="submit"
-          disabled={isPending}
-          className="bg-miku text-cloud hover:bg-miku-2 w-full gap-4 font-semibold disabled:opacity-70"
-        >
+        <Button type="submit" disabled={isPending} className="w-full">
           {isPending ? 'Sending…' : 'Send message'}
-          {isPending ? (
-            <Loader2 aria-hidden className="size-8 motion-safe:animate-spin" />
-          ) : (
-            <Send aria-hidden className="size-8" />
-          )}
+          {isPending ? <PixelSpinner /> : <PixelIcon name="send" />}
         </Button>
       </form>
     </Form>
   )
-
-  if (surface === 'card') {
-    return (
-      <div className="border-rule-2 bg-surf-2 rounded-2xl border p-12 backdrop-blur-xl md:p-16">
-        {formInner}
-      </div>
-    )
-  }
-
-  return formInner
 }
 
 export default ContactForm
