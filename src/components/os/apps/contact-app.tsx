@@ -19,6 +19,7 @@ import {
 } from '@/components/pixel/pixel-icon.generated'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
+import { requestPetWave } from '@/lib/os/pets'
 import { copyToClipboard } from '@/lib/utils/copy-to-clipboard'
 
 import { useTheme } from '@/hooks/use-theme'
@@ -91,9 +92,13 @@ function RowContent({ row }: { row: ReachRow }) {
 export default function ContactApp() {
   const { theme } = useTheme()
   const reachId = useId()
-  // Bumped when a message goes out: the mini-me remounts and waves again.
+  // Bumped when a message goes out: the mini-me remounts and waves again,
+  // and so does the desktop pet (SPEC 3.2).
   const [waves, setWaves] = useState(0)
-  const waveAgain = useCallback(() => setWaves((n) => n + 1), [])
+  const waveAgain = useCallback(() => {
+    setWaves((n) => n + 1)
+    requestPetWave()
+  }, [])
 
   return (
     <div className="@container flex flex-col gap-8">

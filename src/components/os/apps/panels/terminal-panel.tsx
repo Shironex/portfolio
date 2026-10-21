@@ -6,6 +6,8 @@ import { memo } from 'react'
 import { TERMINAL_BLOCKS } from '@/components/os/constants'
 import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
+import { PET_PERCH as PERCH } from '@/lib/os/pets'
+
 /** Gap between one line starting to appear and the next. */
 const LINE_STAGGER_MS = 180
 
@@ -41,7 +43,10 @@ function TerminalPanelImpl() {
   let cursor = 0
 
   return (
-    <div className="os-night px-panel flex flex-col gap-2 p-2">
+    <div
+      {...PERCH}
+      className="os-night px-panel flex flex-col gap-2 p-2"
+    >
       <div className="text-label flex items-center gap-3 px-2 pt-1 text-(--meta)">
         <span aria-hidden className="flex items-center gap-1">
           <span className="block size-2 bg-(--error)" />

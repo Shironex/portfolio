@@ -6,6 +6,7 @@ import { ProjectAvatar } from '@/components/os/project-avatar'
 import { StatusChip } from '@/components/os/status-chip'
 import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
+import { PET_PERCH as PERCH } from '@/lib/os/pets'
 import { getPinnedProjects } from '@/lib/utils/projects'
 
 import banners from '@/assets/pixel/banners/readme-headers.png'
@@ -40,6 +41,7 @@ function FeaturedPanelImpl({ onOpenProject }: FeaturedPanelProps) {
 
   return (
     <section
+      {...PERCH}
       aria-labelledby={headingId}
       className="px-panel flex flex-col gap-2 p-2"
     >

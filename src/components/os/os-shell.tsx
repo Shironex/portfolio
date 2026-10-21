@@ -11,6 +11,7 @@ import { useDeepLink } from '@/hooks/use-deep-link'
 import { isLayerOpenAbove, useEscapeLayer } from '@/hooks/use-escape-layer'
 import { useHotkeys } from '@/hooks/use-hotkeys'
 import { useHydrated } from '@/hooks/use-hydrated'
+import { useIdle } from '@/hooks/use-idle'
 import { useIsMobile } from '@/hooks/use-is-mobile'
 import { useOsWindows } from '@/hooks/use-os-windows'
 import { useSessionRestore } from '@/hooks/use-session-restore'
@@ -57,6 +58,7 @@ const StartMenu = dynamic(
   () => import('./start-menu').then((m) => m.StartMenu),
   { ssr: false }
 )
+const PetLayer = dynamic(() => import('./pets/pet-layer'), { ssr: false })
 
 interface OsShellProps {
   initialWindow?: DeepLinkTarget
@@ -101,6 +103,11 @@ const BARE = { [DESKTOP_BARE_ATTRIBUTE]: '' }
  * are memoized the same way, and the taskbar's id lists keep their identity
  * while the stack does (`useStackIds`). Pausing the wallpaper under an open
  * layer does not go through this component at all (`AmbientPause`).
+ *
+ * The desktop pet (SPEC 3) is the last child of the windows layer, so her
+ * z-index stacks her among the windows. Her code is a late chunk, loaded
+ * once the shell is hydrated and the browser is idle; she decodes her sheet
+ * before she comes out. Not on a phone (SPEC 3.8).
  *
  * The boot splash, cmd palette, and noscript fallback are shared across both
  * modes, and so is the live region (`Announcer`) that says what has no
@@ -190,6 +197,7 @@ export default function OsShell({ initialWindow }: OsShellProps) {
   useHotkeys(useMemo(() => ({ 'mod+k': toggleCmd }), [toggleCmd]))
 
   const desktopCovered = os.windows.some((w) => w.maximized && !w.minimized)
+  const petsReady = useIdle(hydrated && !isMobile)
 
   // Until hydration both shells are in the tree, as in the server HTML.
   const showMobile = !hydrated || isMobile
@@ -285,6 +293,9 @@ export default function OsShell({ initialWindow }: OsShellProps) {
                   onOpenProject={launchProject}
                 />
               ))}
+              {petsReady && !isMobile && (
+                <PetLayer windows={os.windows} covered={desktopCovered} />
+              )}
             </div>
 
             <Taskbar

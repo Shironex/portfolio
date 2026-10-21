@@ -11,6 +11,9 @@ export const WINDOW_ID_ATTRIBUTE = 'data-window-id'
 /** Marks the title bar of a window: the stop keyboard users land on. */
 export const WINDOW_TITLE_BAR_ATTRIBUTE = 'data-window-title-bar'
 
+/** Marks a window's controls, so the pet keeps her seat clear of them. */
+export const WINDOW_CONTROLS_ATTRIBUTE = 'data-window-controls'
+
 /**
  * Set on the shell root while the desktop is covered (see `AmbientPause`),
  * and on the document root while a window is dragged or resized: both hold

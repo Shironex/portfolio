@@ -7,6 +7,7 @@ import {
   type PixelIconName,
 } from '@/components/pixel/pixel-icon.generated'
 
+import { WINDOW_CONTROLS_ATTRIBUTE } from '@/lib/os/dom'
 import { cn } from '@/lib/utils'
 
 import { COPY_LINK_LABEL } from './constants'
@@ -80,7 +81,10 @@ export function WindowControls({
   onClose,
 }: WindowControlsProps) {
   return (
-    <div className="flex flex-none items-center">
+    <div
+      {...{ [WINDOW_CONTROLS_ATTRIBUTE]: '' }}
+      className="flex flex-none items-center"
+    >
       <Control
         label={COPY_LINK_LABEL}
         glyph="link"

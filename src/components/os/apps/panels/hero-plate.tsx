@@ -17,7 +17,7 @@ type HeroPlateProps = Omit<HeroPlateFrameProps, 'animated' | 'children'>
  */
 function HeroPlateImpl(props: HeroPlateProps) {
   return (
-    <HeroPlateFrame {...props}>
+    <HeroPlateFrame {...props} perch>
       <div className={HERO_STRIP_CLASS}>
         <GithubActivityStrip />
       </div>

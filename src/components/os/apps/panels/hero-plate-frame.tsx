@@ -6,6 +6,7 @@ import type { HeadingLevel } from '@/components/os/types'
 import { MascotHead } from '@/components/pixel/mascot-head'
 import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
+import { PET_PERCH } from '@/lib/os/pets'
 import { cn } from '@/lib/utils'
 
 /** The two calls to action share their look; only the handlers differ. */
@@ -31,6 +32,8 @@ export interface HeroPlateFrameProps {
   /** The activity strip, under the author row. */
   children?: ReactNode
   className?: string
+  /** Whether the desktop pet can stand on its top edge (the shell's hero). */
+  perch?: boolean
 }
 
 /**
@@ -49,10 +52,14 @@ export function HeroPlateFrame({
   animated = true,
   children,
   className,
+  perch = false,
 }: HeroPlateFrameProps) {
   const still = !onOpenContact
   return (
-    <div className={cn('px-panel flex flex-col p-10', className)}>
+    <div
+      {...(perch ? PET_PERCH : undefined)}
+      className={cn('px-panel flex flex-col p-10', className)}
+    >
       <HeroText headingLevel={headingLevel} />
 
       <div className="mt-6 flex flex-wrap gap-4">
