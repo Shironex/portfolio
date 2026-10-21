@@ -32,7 +32,8 @@ import {
  * Colour contrast of what is actually on screen.
  *
  * Every main screen is walked with the Lamp off and on (night and paper
- * bodies), under the darkest sky and the lightest: each visible run of text
+ * bodies), under the darkest sky and the lightest (the desktop and the boot
+ * screen under all four): each visible run of text
  * has to reach WCAG AA (4.5:1, or 3:1 for large text) against its composited
  * background, and each icon 3:1. The generator's own gate
  * (`scripts/gen-tokens.mjs`) checks the token pairings; this checks that the
@@ -40,6 +41,9 @@ import {
  */
 const SKIES: SkyId[] = ['night', 'day']
 const MODES: Mode[] = ['dark', 'light']
+
+/** Every sky the wallpaper paints, for the desktop and the boot screen. */
+const PAINTED_SKIES: SkyId[] = ['night', 'dusk', 'dawn', 'day']
 
 /** A test title for a Lamp mode. */
 const LAMP: Record<Mode, string> = { dark: 'lamp off', light: 'lamp on' }
@@ -77,15 +81,11 @@ const PROJECT = {
   caption: 'Home screen',
 }
 
-/** The faint character behind the boot splash. */
-const BOOT_WATERMARK =
-  '[aria-label="ShiroOS boot sequence"] > span[aria-hidden]'
-
 /**
  * What the walk leaves out, and what it does not reach at all.
  *
- * `exempt`: the notes that drift over the wallpaper and the watermark of the
- * boot splash are pure decoration, which AA does not cover. `overImage`: a gallery caption sits on a screenshot, under a scrim that
+ * `exempt`: the ambient loops (the terminal cursor, the featured banner) are
+ * pure decoration, which AA does not cover. `overImage`: a gallery caption sits on a screenshot, under a scrim that
  * fades to nothing above the text; the probe measures every stop of a
  * gradient, the clear one included, so the caption cannot pass on its own.
  * It is held to one line, where the scrim is 60% black or more (see
@@ -97,10 +97,10 @@ const BOOT_WATERMARK =
  * selection colour, the mobile sheets of Monitor, Contact, Writing and
  * Readme, and the page without JavaScript in anything but the default
  * appearance, which is the only one it can have. Dusk and Dawn sit between
- * the two skies walked here.
+ * the two skies the apps are walked in.
  */
 const WALK: ContrastWalk = {
-  exempt: ['.ambient-loop', BOOT_WATERMARK],
+  exempt: ['.ambient-loop'],
   overImage: [
     'button[aria-label^="View full size"] > span[title]',
     'figure > span[title]',
@@ -197,7 +197,7 @@ for (const sky of SKIES) {
           return result.readings
         }
 
-        await walk('desktop', page.locator('body'), 'Featured work')
+        await walk('desktop', page.locator('body'), "hi, I'm Kacper.")
 
         for (const [name, title, line] of APPS) {
           const win = await launch(page, name, title)
@@ -277,7 +277,7 @@ for (const sky of SKIES) {
           failures.push(...result.failures)
         }
 
-        await walk('feed', page.locator('body'), 'Featured work')
+        await walk('feed', page.locator('body'), "hi, I'm Kacper.")
 
         await mobileLauncher(page).click()
         const launcher = page.getByRole('dialog', { name: 'App launcher' })
@@ -371,11 +371,39 @@ for (const sky of SKIES) {
         expect(failures).toEqual([])
       })
     })
+  }
+}
+
+/*
+ * The desktop and the boot screen in every painted sky: the wallpaper is
+ * the one thing a sky changes, and these two are what sits on it or comes
+ * before it. Live paints one of these four, by the hour in Warsaw.
+ */
+for (const sky of PAINTED_SKIES) {
+  for (const mode of MODES) {
+    test.describe(`${sky} sky, ${LAMP[mode]}, the desktop`, () => {
+      test('the bare desktop meets AA', async ({ page }) => {
+        await skipBootSplash(page)
+        await useMode(page, mode)
+        await useSky(page, sky)
+        await mockFeeds(page)
+        await page.setViewportSize(DESKTOP_VIEWPORT)
+        await openDesktop(page)
+        await expect(page.locator('html')).toHaveAttribute('data-sky', sky)
+        await feedsLoaded(page)
+        const { failures } = await failuresOn(
+          'desktop',
+          page.locator('body'),
+          "hi, I'm Kacper."
+        )
+        expect(failures).toEqual([])
+      })
+    })
 
     test.describe(`${sky} sky, ${LAMP[mode]}, first visit`, () => {
       // Reduced motion skips the splash, so this one runs with motion on and
       // holds the page still itself: a frozen clock keeps the splash up, and
-      // no animation is left to fade it out or to blink a dot away.
+      // no animation is left to fade it out or to spin a mark away.
       test.use({ reducedMotion: 'no-preference' })
 
       test('the boot splash meets AA', async ({ page }) => {
@@ -393,14 +421,16 @@ for (const sky of SKIES) {
         await page.goto('/')
         const splash = bootSplash(page)
         await expect(splash).toBeVisible()
-        // Two steps done, one running, one waiting: every state of a dot.
+        // Two steps done, one running, one waiting: every state of a step.
         await page.clock.runFor(1000)
-        await expect(splash.getByText('96ms')).toBeVisible()
+        await expect(
+          splash.getByRole('listitem').filter({ hasText: 'in progress' })
+        ).toHaveText(/Priming panels/)
 
         const { failures } = await failuresOn(
           'boot splash',
           splash,
-          'booting with love'
+          'Mounting desk'
         )
         expect(failures).toEqual([])
       })
