@@ -1,3 +1,10 @@
+## [2.23.1](https://github.com/Shironex/portfolio/compare/v2.23.0...v2.23.1) (2026-10-21)
+
+
+### Bug Fixes
+
+* **forms:** keep the ink text colour in autofilled fields ([9d5f3c7](https://github.com/Shironex/portfolio/commit/9d5f3c706e7e8afd6b0f7c9053910c0b46f204aa))
+
 # [2.23.0](https://github.com/Shironex/portfolio/compare/v2.22.4...v2.23.0) (2026-10-21)
 
 
