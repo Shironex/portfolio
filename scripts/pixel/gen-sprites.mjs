@@ -92,11 +92,22 @@ export function hasNamedFrames(data) {
 
 /**
  * The loop of one tag: its resting class and its keyframes. `at(i)` is the
- * background position that shows frame i.
+ * background position that shows frame i; `size` adds declarations to the
+ * class (a slice's width and height). A tag of one frame is a pose, not a
+ * loop: it gets the resting class only.
  */
-function loopCss(id, tag, data, at) {
+function loopCss(id, tag, data, at, size = []) {
   const order = tagFrames(tag)
   const total = order.reduce((sum, i) => sum + data.frames[i].duration, 0)
+  if (order.length === 1) {
+    return [
+      `/* ${tag.name}: frame ${order[0]} */`,
+      `.${id} {`,
+      ...size,
+      `  background-position: ${at(order[0])};`,
+      '}',
+    ].join('\n')
+  }
   // No 0% and no 100%: the missing ends take the resting first frame,
   // and `step-end` holds each frame to the next keyframe, the last one
   // to the end of the loop.
@@ -111,6 +122,7 @@ function loopCss(id, tag, data, at) {
   return [
     `/* ${tag.name}: frames ${order.join(', ')}, ${total}ms */`,
     `.${id} {`,
+    ...size,
     `  background-position: ${at(order[0])};`,
     `  --px-loop: ${id} ${total}ms step-end infinite;`,
     '}',
@@ -155,24 +167,32 @@ export function spriteCss(name, data) {
     sliceNames.add(slice.name)
     const { bounds } = sliceKey(slice, 0)
     const size = [
-      `.${id} {`,
       `  width: ${tightPx(bounds.w)};`,
       `  height: ${tightPx(bounds.h)};`,
-      '}',
-    ].join('\n')
+    ]
     const tag = data.meta.frameTags.find((t) => t.name === slice.name)
     if (!tag) {
       blocks.push(
-        `${size.slice(0, -2)}\n  background-position: ${at(0, bounds.x, bounds.y)};\n}`
+        [
+          `.${id} {`,
+          ...size,
+          `  background-position: ${at(0, bounds.x, bounds.y)};`,
+          '}',
+        ].join('\n')
       )
       continue
     }
-    blocks.push(size)
     blocks.push(
-      loopCss(id, tag, data, (i) => {
-        const key = sliceKey(slice, i).bounds
-        return at(i, key.x, key.y)
-      })
+      loopCss(
+        id,
+        tag,
+        data,
+        (i) => {
+          const key = sliceKey(slice, i).bounds
+          return at(i, key.x, key.y)
+        },
+        size
+      )
     )
   }
 
