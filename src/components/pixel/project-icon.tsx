@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react'
+import type { ReactNode } from 'react'
 
 import { type AccentRole, accentInk } from '@/components/os/accent-map'
 
@@ -91,17 +91,19 @@ export function ProjectTile({
   className,
 }: ProjectTileProps) {
   return (
-    <TileSprite
-      tag="tile"
-      scale={scale}
-      className={className}
-      spriteClassName={cn(
-        'os-night flex items-center justify-center uppercase',
-        scale === 2 ? 'text-display' : 'text-heading'
-      )}
-      spriteStyle={{ color: accentInk(accent) }}
-    >
-      {letter}
+    <TileSprite tag="tile" scale={scale} className={className}>
+      {/* On the tile's navy body as a colour too, 3 art px in, inside its
+          rim and rounded corners, where the drawn body is the same navy:
+          what reads the colour behind the letter finds what it sits on. */}
+      <span
+        className={cn(
+          'os-night absolute inset-[calc(3*var(--px))] flex items-center justify-center bg-(--surf) uppercase',
+          scale === 2 ? 'text-display' : 'text-heading'
+        )}
+        style={{ color: accentInk(accent) }}
+      >
+        {letter}
+      </span>
     </TileSprite>
   )
 }
@@ -111,37 +113,25 @@ interface TileSpriteProps {
   scale: ProjectIconScale
   /** Classes for the outer element (the wrapper at scale 2). */
   className?: string
-  /** Classes for the sprite itself. */
-  spriteClassName?: string
-  /** Extra inline style for the sprite. */
-  spriteStyle?: CSSProperties
-  children?: string
+  children?: ReactNode
 }
 
 /**
  * One cell of the sheet; at scale 2 inside a `px-scale-2` wrapper, which
  * doubles the art px of the sprite (and of the letter's spacing).
  */
-function TileSprite({
-  tag,
-  scale,
-  className,
-  spriteClassName,
-  spriteStyle,
-  children,
-}: TileSpriteProps) {
+function TileSprite({ tag, scale, className, children }: TileSpriteProps) {
   const sprite = (
     <span
       aria-hidden
       data-project-icon={tag}
       className={cn(
-        'px-project-icons-32 block flex-none',
+        'px-project-icons-32 relative block flex-none',
         `px-project-icons-32-${tag}`,
         tag !== 'tile' && HOVER_ONCE_CLASS,
-        scale === 1 && className,
-        spriteClassName
+        scale === 1 && className
       )}
-      style={{ ...spriteStyle, backgroundImage: `url(${sheet.src})` }}
+      style={{ backgroundImage: `url(${sheet.src})` }}
     >
       {children}
     </span>
