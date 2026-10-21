@@ -57,11 +57,12 @@ async function settleDesktop(page) {
 
 /**
  * Start each shot from a fresh desktop, run its steps, then park the pointer
- * where it hovers nothing. The reload keeps shots independent of each other.
+ * where it hovers nothing. A fresh load of `/` keeps shots independent of
+ * each other: a reload would keep the last shot's `?open=` deep link.
  */
 function view(then) {
   return async (page) => {
-    await page.reload()
+    await page.goto(`${ORIGIN}/`)
     await settleDesktop(page)
     if (then) await then(page)
     await page.mouse.move(1439, 450)
@@ -126,6 +127,12 @@ export default defineConfig({
       },
       [MODE, SKY]
     )
+    // The tab remembers its open windows (`shiroos:windows`) and saves them
+    // as it unloads, so forget them as each load starts: otherwise one
+    // shot's windows, a maximized Contact among them, open in the next.
+    await context.addInitScript(() =>
+      sessionStorage.removeItem('shiroos:windows')
+    )
     /* eslint-enable noctcore-react/no-unguarded-web-storage */
     await page.reload()
   },
@@ -160,12 +167,16 @@ export default defineConfig({
         await win
           .getByRole('heading', { name: 'tech stack', exact: true })
           .evaluate((heading) => heading.scrollIntoView({ block: 'start' }))
-        // Gallery thumbnails load lazily; wait until each one has decoded.
-        await win
-          .locator('img')
-          .evaluateAll((images) =>
-            Promise.all(images.map((img) => img.decode().catch(() => {})))
+        // Gallery thumbnails load lazily, and a lazy image out of view never
+        // decodes, so load them all now and wait until each one has.
+        await win.locator('img').evaluateAll((images) =>
+          Promise.all(
+            images.map((img) => {
+              img.loading = 'eager'
+              return img.decode().catch(() => {})
+            })
           )
+        )
       }),
       delayMs: 500,
     },
