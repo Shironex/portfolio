@@ -1,16 +1,16 @@
 import { type Locator, type Page, expect } from '@playwright/test'
 import { join } from 'node:path'
 
-import { BOOT_STORAGE_KEY } from '../src/components/os/boot'
 import {
   SHELL_READY_ATTRIBUTE,
   SHELL_ROOT_ATTRIBUTE,
 } from '../src/components/os/noscript-fallback'
 import {
   MODE_STORAGE_KEY,
-  PALETTE_STORAGE_KEY,
-  type PaletteId,
+  SKY_STORAGE_KEY,
+  type SkyId,
 } from '../src/lib/os/appearance'
+import { BOOT_STORAGE_KEY } from '../src/lib/os/boot-flag'
 import { WINDOW_ID_ATTRIBUTE } from '../src/lib/os/dom'
 
 /** API routes answered from the showcase fixtures, so no test waits on GitHub or the blog. */
@@ -21,8 +21,12 @@ const FIXTURE_DIR = join(process.cwd(), 'showcase', 'fixtures')
 export const DESKTOP_VIEWPORT = { width: 1440, height: 900 }
 export const MOBILE_VIEWPORT = { width: 390, height: 844 }
 
-/** Default rect of the About window, from `APP_WINDOW_DEFAULTS`. */
-export const ABOUT_RECT = { x: 180, y: 120, width: 820, height: 580 }
+/**
+ * Default rect of the About window on `DESKTOP_VIEWPORT`, from
+ * `APP_WINDOW_DEFAULTS`: 820 wide, narrowed to end 8 art px left of the
+ * panel column (980 css from the left at this width).
+ */
+export const ABOUT_RECT = { x: 180, y: 120, width: 784, height: 580 }
 
 /** Class of every decorative loop the shell can hold still. */
 export const AMBIENT_LOOP_CLASS = 'ambient-loop'
@@ -75,7 +79,7 @@ export async function blockTurnstile(page: Page) {
   await page.route('**/challenges.cloudflare.com/**', (route) => route.abort())
 }
 
-/** Store the site's mode, as the theme toggle would. Call before the first `goto`. */
+/** Store the Lamp (`dark` night bodies, `light` paper), as its toggle would. Call before the first `goto`. */
 export async function useMode(page: Page, mode: 'light' | 'dark') {
   await page.addInitScript(
     ([key, value]) => window.localStorage.setItem(key, value),
@@ -83,11 +87,11 @@ export async function useMode(page: Page, mode: 'light' | 'dark') {
   )
 }
 
-/** Store the site's palette, as the picker would. Call before the first `goto`. */
-export async function usePalette(page: Page, palette: PaletteId) {
+/** Store the sky, as the picker would. Call before the first `goto`. */
+export async function useSky(page: Page, sky: SkyId) {
   await page.addInitScript(
     ([key, value]) => window.localStorage.setItem(key, value),
-    [PALETTE_STORAGE_KEY, palette]
+    [SKY_STORAGE_KEY, sky]
   )
 }
 
@@ -378,7 +382,7 @@ function probeContrast(
   const layersBehind = (el: Element, x: number, y: number) => {
     const chain = chainOf(el)
     const hits = document.elementsFromPoint(x, y)
-    // Whatever is above the element (another window, the grain) is not behind
+    // Whatever is above the element (another window, an overlay) is not behind
     // it. Off screen or clipped, nothing is hit and the ancestors are all.
     const at = hits.findIndex((hit) => hit === el || el.contains(hit))
     const under =
@@ -614,7 +618,7 @@ function probeContrast(
 export interface ContrastWalk {
   /** Subtrees of pure decoration, which AA does not cover. */
   exempt?: string[]
-  /** Layers too faint to count as a background (the film grain). */
+  /** Layers too faint to count as a background (a full-screen texture). */
   ignored?: string[]
   /** Text known to sit on a picture, whose reading is not a failure. */
   overImage?: string[]

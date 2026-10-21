@@ -1,0 +1,45 @@
+/*
+ * The desktop pet (SPEC 3.4, 3.5, 3.9). `PetController` sets her place in
+ * whole art px (`--pet-x`, `--pet-y`), her frame (`background-position`),
+ * her facing (`scale`) and her pointer box (`--hit-*`); everything here is
+ * in multiples of `--px`, so she lands on whole device pixels.
+ */
+@layer components {
+  .pet {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    transform: translate3d(
+      calc(var(--pet-x, 0) * var(--px)),
+      calc(var(--pet-y, 0) * var(--px)),
+      0
+    );
+  }
+
+  /* Not out yet, put away, or Pets off (at once, before any script). */
+  .pet:not([data-pet-state]),
+  .pet[data-pet-state='out'],
+  [data-pets='hidden'] .pet {
+    display: none;
+  }
+
+  .pet-sprite {
+    display: block;
+  }
+
+  .pet-hitbox {
+    position: absolute;
+    top: calc(var(--hit-y, 4) * var(--px));
+    left: calc(var(--hit-x, 12) * var(--px));
+    width: calc(var(--hit-w, 24) * var(--px));
+    height: calc(var(--hit-h, 44) * var(--px));
+    pointer-events: auto;
+    touch-action: none;
+  }
+
+  /* A window drag or resize owns the pointer. */
+  [data-gesture] .pet-hitbox {
+    pointer-events: none;
+  }
+}

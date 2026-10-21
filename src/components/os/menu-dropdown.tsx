@@ -9,9 +9,13 @@ import {
   useRef,
 } from 'react'
 
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
+
 import { cn } from '@/lib/utils'
 
 import { useEscapeLayer } from '@/hooks/use-escape-layer'
+
+import { Kbd } from './kbd'
 
 export interface MenuDropdownItem {
   label: string
@@ -21,6 +25,11 @@ export interface MenuDropdownItem {
   icon?: ReactNode
   onClick: () => void
   disabled?: boolean
+  /**
+   * Makes the item a `menuitemcheckbox` (a View setting): the box glyph
+   * shows the state, ticked or empty, and `aria-checked` says it.
+   */
+  checked?: boolean
 }
 
 export interface MenuDropdownSection {
@@ -29,7 +38,7 @@ export interface MenuDropdownSection {
   divider?: boolean
   /**
    * Arbitrary content rendered instead of `items`. Anything in it that should
-   * be a stop for Up/Down needs a menu item role (see `PalettePicker`).
+   * be a stop for Up/Down needs a menu item role (see `SkyPicker`).
    */
   node?: ReactNode
 }
@@ -66,14 +75,34 @@ export const MENU_TRIGGER_ATTRIBUTE = 'data-menu-trigger'
 /** Role of a radio item inside a menu (a palette swatch). */
 export const MENU_RADIO_ROLE = 'menuitemradio'
 
+/** Role of a checkbox item inside a menu (a View setting). */
+export const MENU_CHECKBOX_ROLE = 'menuitemcheckbox'
+
 /** Role of the element that groups the radio items of one choice. */
 export const MENU_RADIO_GROUP_ROLE = 'group'
 
 /**
- * Stops of a menu for Up/Down: every enabled item, and for a radio group only
- * its checked item (Left/Right move inside the group).
+ * Stops of a menu for Up/Down: every enabled item and checkbox item, and for
+ * a radio group only its checked item (Left/Right move inside the group).
  */
-const MENU_STOP_SELECTOR = `[role="menuitem"]:not(:disabled), [role="${MENU_RADIO_ROLE}"][aria-checked="true"]`
+const MENU_STOP_SELECTOR = `:is([role="menuitem"], [role="${MENU_CHECKBOX_ROLE}"]):not(:disabled), [role="${MENU_RADIO_ROLE}"][aria-checked="true"]`
+
+/**
+ * The state of a checkbox item: a 10x10 art px box with a 1 art px frame in
+ * the row's ink, holding the lamp check while it is on. The frame is an
+ * inset box shadow, which stays one art px where a border would round.
+ */
+function CheckBox({ checked }: { checked: boolean }) {
+  return (
+    <span
+      aria-hidden
+      data-menu-check={checked ? 'on' : 'off'}
+      className="flex size-10 flex-none items-center justify-center shadow-[inset_0_0_0_var(--px)_currentColor]"
+    >
+      {checked && <PixelIcon name="check" className="text-(--heading)" />}
+    </span>
+  )
+}
 
 /** The step a Left/Right key asks for, or `null` for any other key. */
 function stepFromKey(key: string): MenuStep | null {
@@ -101,6 +130,11 @@ function menuStops(menu: HTMLElement | null): HTMLElement[] {
  *   or focus leaving any other way closes it too.
  *
  * Rendered in place under the trigger; `z-menu` only has to clear the bar.
+ * The popover 9-slice, night chrome like the bar: the active row is the
+ * selection teal with a lamp `❯` in front, separators are dotted 1 art px
+ * rules and shortcuts are keycaps. A checkbox item shows its state in a box
+ * glyph, never by colour alone, and activating it closes the menu like any
+ * item does (the announcer says the outcome).
  */
 export function MenuDropdown<Id extends string>({
   id,
@@ -244,8 +278,8 @@ export function MenuDropdown<Id extends string>({
         aria-expanded={isOpen}
         aria-controls={isOpen ? menuId : undefined}
         className={cn(
-          'focus-ring font-body text-ink-2 hover:bg-surf-0 hover:text-ink rounded-md px-2 py-1 text-sm transition-colors',
-          isOpen && 'bg-surf-0 text-ink'
+          'focus-ring text-body flex h-16 items-center justify-center px-3 text-(--ink) hover:bg-(--select) pointer-coarse:h-22 pointer-coarse:min-w-22',
+          isOpen && 'bg-(--select)'
         )}
       >
         {label}
@@ -258,15 +292,15 @@ export function MenuDropdown<Id extends string>({
           role="menu"
           aria-label={label}
           onKeyDown={handleMenuKey}
-          className="animate-menu-in border-rule-2 bg-surf-solid shadow-elev-3 z-menu absolute top-full left-0 mt-1 min-w-[200px] rounded-lg border py-1 motion-reduce:animate-none"
+          className="os-night px-popover animate-menu-in z-menu absolute top-full left-0 mt-2 min-w-100 py-1 motion-reduce:animate-none"
         >
           {sections.map((section, sectionIndex) => (
             <div key={sectionIndex} role="none">
               {section.divider && (
-                <div role="separator" className="bg-rule my-1 h-px" />
+                <div role="separator" className="rule-dotted mx-2 my-1" />
               )}
               {section.node && (
-                <div role="none" className="px-3 py-1.5">
+                <div role="none" className="px-3 py-2">
                   {section.node}
                 </div>
               )}
@@ -275,7 +309,12 @@ export function MenuDropdown<Id extends string>({
                   <button
                     key={`${sectionIndex}-${itemIndex}-${item.label}`}
                     type="button"
-                    role="menuitem"
+                    role={
+                      item.checked === undefined
+                        ? 'menuitem'
+                        : MENU_CHECKBOX_ROLE
+                    }
+                    aria-checked={item.checked}
                     tabIndex={-1}
                     disabled={item.disabled}
                     aria-keyshortcuts={item.keyShortcuts}
@@ -286,19 +325,22 @@ export function MenuDropdown<Id extends string>({
                       item.onClick()
                       close()
                     }}
-                    className="focus-ring text-ink hover:bg-surf-soft focus-visible:bg-surf-soft flex w-full items-center gap-3 px-3 py-1.5 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+                    className="group focus-ring text-body flex h-14 w-full items-center gap-2 pr-3 pl-1 whitespace-nowrap text-(--ink) hover:bg-(--select) focus-visible:bg-(--select) disabled:cursor-not-allowed disabled:text-(--meta) pointer-coarse:h-22"
                   >
+                    <PixelIcon
+                      name="chevron-right"
+                      className="invisible text-(--heading) group-hover:visible group-focus-visible:visible group-disabled:invisible"
+                    />
+                    {item.checked !== undefined && (
+                      <CheckBox checked={item.checked} />
+                    )}
                     {item.icon && (
-                      <span aria-hidden className="text-ink-3 size-4">
+                      <span aria-hidden className="flex text-(--meta)">
                         {item.icon}
                       </span>
                     )}
                     <span className="flex-1 text-left">{item.label}</span>
-                    {item.kbd && (
-                      <kbd className="text-ink-3 font-mono text-[11px]">
-                        {item.kbd}
-                      </kbd>
-                    )}
+                    {item.kbd && <Kbd className="ml-4">{item.kbd}</Kbd>}
                   </button>
                 ))}
             </div>

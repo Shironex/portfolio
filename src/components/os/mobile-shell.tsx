@@ -1,39 +1,52 @@
 'use client'
 
-import Image from 'next/image'
 import { useCallback, useState } from 'react'
 
-import { LayoutGrid, Menu, Moon, Search, Sun } from 'lucide-react'
+import { AppIcon, WindowIcon } from '@/components/pixel/app-icon'
+import { MascotHead } from '@/components/pixel/mascot-head'
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
-import { GithubIcon } from '@/components/icons/github-icon'
-
-import { GITHUB_URL } from '@/lib/constants'
-import type { PaletteId } from '@/lib/os/appearance'
-import { GLOW } from '@/lib/os/palettes.generated'
+import type { SkyId } from '@/lib/os/appearance'
 import { cn } from '@/lib/utils'
 
+import bootSheet from '@/assets/pixel/boot/os-boot.png'
 import type { OsWindowsApi } from '@/hooks/use-os-windows'
-import type { Theme } from '@/hooks/use-theme'
+import { type Theme, lampLabel } from '@/hooks/use-theme'
+import '@/styles/sprites/os-boot.css'
 
-import { accentIcon, accentTileStyle, glowStyle } from './accent-map'
 import { AppBody } from './app-registry'
 import { FeaturedPanel } from './apps/panels/featured-panel'
 import { HeroPlate } from './apps/panels/hero-plate'
+import { CTA_CLASS } from './apps/panels/hero-plate-frame'
 import {
   APPS,
   CMD_PALETTE_SHORTCUT,
-  EYEBROW_CLASS,
   MOBILE_BAR_CLASS,
+  MOBILE_FEED_TOP_CLASS,
   MOBILE_GUTTER_CLASS,
-  windowIconFor,
+  PROSE_CLASS,
+  scrollStopLabelFor,
 } from './constants'
-import { ExternalLink } from './external-link'
+import { MobileLauncher } from './mobile-launcher'
 import { MobileSheet } from './mobile-sheet'
-import { PalettePicker } from './palette-picker'
+import { FooterRide } from './pets/footer-ride'
+import { SeatedMascot } from './pets/seated-mascot'
 import { ShellMain } from './static-layer'
 import type { AppId, HeadingLevel, WindowId } from './types'
 
-const LAUNCHER_HEADING_CLASS = cn(EYEBROW_CLASS, 'text-ink-4 mb-3')
+/**
+ * A glyph button of the header: a 22 art px target (44 css), the selection
+ * teal under the pointer, the glyph one art px down while pressed.
+ */
+const HEADER_BUTTON_CLASS =
+  'focus-ring flex size-(--target) flex-none items-center justify-center hover:bg-(--select) active:[&>svg]:translate-y-1'
+
+/**
+ * Room under the feed for the dock: its 22 art px targets, its 2 art px
+ * frame and 1 of padding above and below, and the home indicator.
+ */
+const DOCK_CLEAR_CLASS =
+  'pb-[calc(var(--target)+6*var(--px)+env(safe-area-inset-bottom))]'
 
 interface MobileShellProps {
   os: OsWindowsApi
@@ -41,8 +54,8 @@ interface MobileShellProps {
   onCopyLink: (id: WindowId) => void
   theme: Theme
   onToggleTheme: () => void
-  palette: PaletteId
-  onSelectPalette: (id: PaletteId) => void
+  sky: SkyId
+  onSelectSky: (id: SkyId) => void
   /** Level of the hero headline; see `HeroText`. */
   heroHeadingLevel?: HeadingLevel
   /** Passed to {@link ShellMain}. */
@@ -50,17 +63,19 @@ interface MobileShellProps {
 }
 
 /**
- * Mobile-only layout for ShiroOS (< 768px).
- *
- * Replaces the draggable desktop metaphor with a vertical feed:
- *   - 48px top bar (`<header>`) with logo + launcher menu
- *   - the feed (`<main>`): hero plate, github activity, featured projects
- *   - closing "signal" card that opens the contact sheet
- *   - 56px bottom dock (`<nav>`) with app icons + ⌘K search pill
+ * Mobile-only layout for ShiroOS (< 768px), in pixels (SPEC 1.7):
+ *   - a header in the menu bar's style (`<header>`): the mascot head, the
+ *     wordmark, the Lamp and the launcher button, 22 art px tall;
+ *   - the feed (`<main>`): the hero plate, the featured panel and the
+ *     contact card with the mascot seated on it, then the skyline footer
+ *     the mini-me rides across once;
+ *   - the dock (`<nav>`): search and the six apps in a taskbar 9-slice.
  *
  * The top window of `os.windows` renders as a full-screen slide-up sheet, and
  * so does the app launcher: the same `useOsWindows` state drives both desktop
  * and mobile. Bars and sheets pad themselves with the safe-area insets.
+ * The header and dock are night chrome in both Lamp modes; the feed's
+ * panels and the sheets' bodies follow the Lamp.
  *
  * A sheet is modal, so the feed and its `h1` are inert under it: a project
  * sheet carries the project title as the exposed `h1` instead.
@@ -71,8 +86,8 @@ export function MobileShell({
   onCopyLink,
   theme,
   onToggleTheme,
-  palette,
-  onSelectPalette,
+  sky,
+  onSelectSky,
   heroHeadingLevel,
   overStaticLayer,
 }: MobileShellProps) {
@@ -100,46 +115,35 @@ export function MobileShell({
 
   return (
     <>
-      {/* Top bar. A solid surface, in place of a see-through fill over a
-          backdrop blur that resampled the feed scrolling under it on every
-          frame; the dock below is the same. */}
+      {/* The header: the menu bar's ground navy and its 1 art px teal rule,
+          which hangs just under the bar so a pressed button never covers
+          it. Solid, so nothing resamples the feed scrolling under it. */}
       <header
         className={cn(
-          'border-rule bg-surf-solid z-chrome fixed inset-x-0 top-0 flex items-center justify-between gap-3 border-b',
+          'os-night z-chrome fixed inset-x-0 top-0 flex items-center gap-3 bg-(--ground)',
           MOBILE_BAR_CLASS,
           MOBILE_GUTTER_CLASS
         )}
       >
-        <div className="flex items-center gap-2">
-          <Image
-            aria-hidden
-            src="/mascot.png"
-            alt=""
-            width={44}
-            height={44}
-            priority
-            className="border-rule bg-miku/10 size-5 rounded-full border object-cover object-top"
-          />
-          <span className="font-display text-ink text-sm font-semibold">
-            ShiroOS
-          </span>
-        </div>
-        <div className="flex items-center gap-1">
+        <div
+          aria-hidden
+          className="absolute inset-x-0 top-full h-1 bg-(--select)"
+        />
+        <MascotHead />
+        <span className="text-title text-(--lamp)">ShiroOS</span>
+        {/* Pulled out by the glyph's margin, so the last glyph lines up
+            with the feed's right edge. */}
+        <div className="-mr-7 ml-auto flex items-center">
           <button
             type="button"
             onClick={onToggleTheme}
-            aria-label={
-              theme === 'dark'
-                ? 'Switch to light theme'
-                : 'Switch to dark theme'
-            }
-            className="focus-ring text-ink-2 hover:bg-surf-0 hover:text-miku-2-icon flex size-11 items-center justify-center rounded-md"
-          >
-            {theme === 'dark' ? (
-              <Sun aria-hidden size={18} />
-            ) : (
-              <Moon aria-hidden size={18} />
+            aria-label={lampLabel(theme)}
+            className={cn(
+              HEADER_BUTTON_CLASS,
+              theme === 'dark' ? 'text-(--meta)' : 'text-(--lamp)'
             )}
+          >
+            <PixelIcon name={theme === 'dark' ? 'lamp-off' : 'lamp-on'} />
           </button>
           <button
             type="button"
@@ -147,9 +151,9 @@ export function MobileShell({
             aria-label="Open app launcher"
             aria-haspopup="dialog"
             aria-expanded={launcherOpen}
-            className="focus-ring text-ink-2 hover:bg-surf-0 hover:text-ink flex size-11 items-center justify-center rounded-md"
+            className={cn(HEADER_BUTTON_CLASS, 'text-(--ink)')}
           >
-            <Menu aria-hidden size={18} />
+            <PixelIcon name="menu" />
           </button>
         </div>
       </header>
@@ -157,174 +161,166 @@ export function MobileShell({
       {/* Feed */}
       <ShellMain
         overStaticLayer={overStaticLayer}
-        className="fixed inset-0 overflow-y-auto pt-[calc(3rem+env(safe-area-inset-top))] pb-[calc(56px+env(safe-area-inset-bottom)+16px)]"
+        className={cn(
+          'fixed inset-0 overflow-y-auto',
+          MOBILE_FEED_TOP_CLASS,
+          DOCK_CLEAR_CLASS
+        )}
       >
-        <div className={cn('flex flex-col gap-4 pt-4', MOBILE_GUTTER_CLASS)}>
+        <div className={cn('flex flex-col gap-8', MOBILE_GUTTER_CLASS)}>
           <HeroPlate
             onOpenCmd={onOpenCmd}
             onOpenContact={openContact}
             headingLevel={heroHeadingLevel}
           />
           <FeaturedPanel onOpenProject={os.openProject} />
-
-          <div className="border-rule-2 bg-surf-solid shadow-elev-2 relative overflow-hidden rounded-2xl border p-5">
-            <span
-              aria-hidden
-              className="orb pointer-events-none absolute -top-[156px] -right-[140px] size-[376px]"
-              style={glowStyle('primary', GLOW.card)}
-            />
-            <div className="relative">
-              <h2 className="font-display text-ink text-lg font-bold">
-                Hiring, a contract, or an MVP to build
-              </h2>
-              <p className="font-body text-ink-2 mt-2 text-sm">
-                Open to full-time remote roles and to contracts or MVPs. Remote,
-                CET (UTC+1). I reply within 24 hours.
-              </p>
-              <button
-                type="button"
-                onClick={openContact}
-                className="focus-ring bg-miku text-cloud hover:bg-miku-2 mt-4 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
-              >
-                Get in touch
-              </button>
-            </div>
-          </div>
-
-          <div
-            className={cn(EYEBROW_CLASS, 'text-ink-4 pt-2 pb-4 text-center')}
-          >
-            ShiroOS · シロOS
-          </div>
+          <ContactCard onOpenContact={openContact} />
+          <FeedWordmark />
         </div>
+        <FooterRide />
       </ShellMain>
 
-      {/* Bottom dock */}
-      <nav
-        aria-label="Dock"
-        className="border-rule bg-surf-solid z-chrome fixed inset-x-0 bottom-0 border-t pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]"
-      >
-        {/* Seven 44px targets fill a 320px screen edge to edge, so below
-            440px search is an icon and the apps spread across what is left;
-            from there up it grows back into the labelled pill. */}
-        <div className="flex h-14 items-center px-1.5 min-[360px]:gap-2 min-[360px]:px-3">
-          <button
-            type="button"
-            onClick={onOpenCmd}
-            aria-label="Search apps and projects"
-            aria-keyshortcuts={CMD_PALETTE_SHORTCUT}
-            className="focus-ring bg-surf-0 text-ink-3 flex size-11 shrink-0 items-center justify-center gap-2 rounded-lg text-xs min-[440px]:w-auto min-[440px]:min-w-0 min-[440px]:flex-1 min-[440px]:shrink min-[440px]:justify-start min-[440px]:px-3"
-          >
-            <Search aria-hidden size={14} className="shrink-0" />
-            <span aria-hidden className="hidden truncate min-[440px]:inline">
-              search apps &amp; projects…
-            </span>
-          </button>
-          <div className="flex flex-1 items-center justify-between min-[440px]:flex-none min-[440px]:justify-start min-[440px]:gap-1">
-            {APPS.map((app) => {
-              const isOpen = os.isOpen(app.id)
-              const Icon = app.icon
-              return (
-                <button
-                  key={app.id}
-                  type="button"
-                  onClick={() => openApp(app.id)}
-                  aria-label={`Open ${app.name}`}
-                  className="focus-ring hover:bg-surf-0 relative flex size-11 shrink-0 items-center justify-center rounded-lg transition-colors"
-                >
-                  <span aria-hidden style={{ color: accentIcon(app.accent) }}>
-                    <Icon size={18} strokeWidth={1.75} />
-                  </span>
-                  {isOpen && (
-                    <span
-                      aria-hidden
-                      className="bg-miku absolute -bottom-0.5 left-1/2 size-1 -translate-x-1/2 rounded-full"
-                    />
-                  )}
-                </button>
-              )
-            })}
-          </div>
-        </div>
-      </nav>
+      <MobileDock os={os} onOpenCmd={onOpenCmd} onOpenApp={openApp} />
 
-      {/* App launcher sheet */}
       {launcherOpen && (
-        <MobileSheet
-          title="launcher"
-          label="App launcher"
-          closeLabel="Close launcher"
-          layer="launcher"
-          icon={<LayoutGrid size={16} strokeWidth={1.75} />}
+        <MobileLauncher
+          onOpenApp={openApp}
           onClose={closeLauncher}
-        >
-          <ul className="grid grid-cols-3 gap-3">
-            {APPS.map((app) => {
-              const Icon = app.icon
-              return (
-                <li key={app.id} className="flex">
-                  <button
-                    type="button"
-                    onClick={() => openApp(app.id)}
-                    aria-label={`Open ${app.name}`}
-                    className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 flex flex-1 flex-col items-center gap-2 rounded-xl border px-2 py-4 transition-colors"
-                  >
-                    <span
-                      aria-hidden
-                      className="flex size-12 items-center justify-center rounded-xl"
-                      style={accentTileStyle(app.accent)}
-                    >
-                      <Icon size={22} strokeWidth={1.75} />
-                    </span>
-                    <span className="font-display text-ink text-sm">
-                      {app.name}
-                    </span>
-                  </button>
-                </li>
-              )
-            })}
-          </ul>
-
-          <div className="border-rule mt-6 border-t pt-5">
-            <h3 className={LAUNCHER_HEADING_CLASS}>Elsewhere</h3>
-            <ExternalLink
-              href={GITHUB_URL}
-              onClick={closeLauncher}
-              className="focus-ring border-rule bg-surf-0 hover:bg-surf-1 text-ink flex h-11 items-center gap-3 rounded-xl border px-3 text-sm transition-colors"
-            >
-              <GithubIcon className="text-miku-icon size-[18px]" />
-              GitHub profile
-            </ExternalLink>
-          </div>
-
-          <div className="border-rule mt-6 border-t pt-5">
-            <h3 className={LAUNCHER_HEADING_CLASS}>Palette</h3>
-            <PalettePicker value={palette} onSelect={onSelectPalette} />
-          </div>
-        </MobileSheet>
+          theme={theme}
+          onToggleTheme={onToggleTheme}
+          sky={sky}
+          onSelectSky={onSelectSky}
+        />
       )}
 
       {/* Top mobile sheet only: the rest of the window stack waits behind it. */}
-      {topSheet &&
-        (() => {
-          const SheetIcon = windowIconFor(topSheet.id)
-          return (
-            <MobileSheet
-              key={topSheet.id}
-              title={topSheet.title}
-              icon={<SheetIcon size={16} strokeWidth={1.75} />}
-              onClose={closeTopSheet}
-              onCopyLink={() => onCopyLink(topSheet.id)}
-            >
-              <AppBody
-                id={topSheet.id}
-                project={topSheet.project}
-                onOpenProject={os.openProject}
-                projectTitleLevel={1}
-              />
-            </MobileSheet>
-          )
-        })()}
+      {topSheet && (
+        <MobileSheet
+          key={topSheet.id}
+          title={topSheet.title}
+          icon={<WindowIcon win={topSheet} />}
+          onClose={closeTopSheet}
+          onCopyLink={() => onCopyLink(topSheet.id)}
+          bodyLabel={scrollStopLabelFor(topSheet)}
+        >
+          <AppBody
+            id={topSheet.id}
+            project={topSheet.project}
+            onOpenProject={os.openProject}
+            projectTitleLevel={1}
+          />
+        </MobileSheet>
+      )}
     </>
+  )
+}
+
+/**
+ * The feed's closing card, a panel 9-slice with the mascot seated on its
+ * top edge (SPEC 3.8). The margin over it is the room her head needs, and
+ * goes with her when Pets is off.
+ */
+function ContactCard({ onOpenContact }: { onOpenContact: () => void }) {
+  return (
+    <div className="px-panel relative mt-40 flex flex-col items-start gap-5 p-10 in-data-[pets=hidden]:mt-0">
+      <SeatedMascot className="right-8" />
+      <h2 className="text-title text-(--heading)">
+        Hiring, a contract, or an MVP to build
+      </h2>
+      <p className={PROSE_CLASS}>
+        Open to full-time remote roles and to contracts or MVPs. Remote, CET
+        (UTC+1). I reply within 24 hours.
+      </p>
+      <button
+        type="button"
+        onClick={onOpenContact}
+        className={cn(CTA_CLASS, 'os-night px-button-primary text-(--ground)')}
+      >
+        Get in touch
+      </button>
+    </div>
+  )
+}
+
+/** The wordmark over the footer: the name, and the boot screen's kana. */
+function FeedWordmark() {
+  return (
+    <p className="os-night flex items-center justify-center gap-3 pt-6">
+      <span className="text-title text-(--lamp)">ShiroOS</span>
+      <span
+        role="img"
+        aria-label="シロOS"
+        className="px-label-plate block flex-none p-1"
+      >
+        <span
+          className="px-os-boot px-os-boot-kana block"
+          style={{ backgroundImage: `url(${bootSheet.src})` }}
+        />
+      </span>
+    </p>
+  )
+}
+
+interface MobileDockProps {
+  os: OsWindowsApi
+  onOpenCmd: () => void
+  onOpenApp: (id: AppId) => void
+}
+
+/**
+ * The dock: the taskbar 9-slice across the foot of the screen, night in
+ * both Lamp modes, with search (a well, labelled once there is room) and the
+ * six apps as 16x16 icons in 22 art px targets. An open app shows the
+ * taskbar's running pip. On a 320 css screen at DPR 2 the seven targets and
+ * the frame fill the width exactly; at a DPR where a target is more than
+ * 2 css px per art px they may shrink, which only a fine pointer meets.
+ */
+function MobileDock({ os, onOpenCmd, onOpenApp }: MobileDockProps) {
+  return (
+    <nav
+      aria-label="Dock"
+      className="os-night z-chrome fixed inset-x-0 bottom-0 bg-(--ground) pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]"
+    >
+      <div className="px-taskbar flex w-[round(down,100%,var(--px))] items-center p-1 min-[360px]:gap-2">
+        <button
+          type="button"
+          onClick={onOpenCmd}
+          aria-label="Search apps and projects"
+          aria-keyshortcuts={CMD_PALETTE_SHORTCUT}
+          className="focus-ring px-well text-label @container h-(--target) min-w-18 flex-1 text-(--meta) hover:text-(--ink)"
+        >
+          {/* The word shows only where the well has room for all of it
+              (it is what is left of the bar, so it depends on the DPR as
+              much as the width); otherwise the glyph sits centred. */}
+          <span className="flex size-full items-center justify-center gap-2 @min-[6rem]:justify-start @min-[6rem]:px-3">
+            <PixelIcon name="search" className="flex-none" />
+            <span aria-hidden className="hidden @min-[6rem]:inline">
+              search…
+            </span>
+          </span>
+        </button>
+        <div className="flex min-w-0 items-center">
+          {APPS.map((app) => (
+            <button
+              key={app.id}
+              type="button"
+              onClick={() => onOpenApp(app.id)}
+              aria-label={`Open ${app.name}`}
+              className="focus-ring relative flex h-(--target) w-(--target) min-w-18 shrink items-center justify-center hover:bg-(--select)"
+            >
+              <AppIcon id={app.id} />
+              {/* The running pip: 2x1 art px of lamp, centred. */}
+              {os.isOpen(app.id) && (
+                <span
+                  aria-hidden
+                  data-running-pip
+                  className="absolute bottom-0 left-1/2 -ml-1 h-1 w-2 bg-(--lamp)"
+                />
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
+    </nav>
   )
 }

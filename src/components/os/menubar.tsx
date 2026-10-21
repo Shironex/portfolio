@@ -1,15 +1,18 @@
 'use client'
 
-import Image from 'next/image'
 import { memo, useCallback, useRef, useState } from 'react'
 
-import { Moon, Sun } from 'lucide-react'
+import { AppLogo } from '@/components/pixel/app-icon'
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
-import type { PaletteId } from '@/lib/os/appearance'
+import type { SkyId } from '@/lib/os/appearance'
+import { PREF_COPY, PREF_IDS } from '@/lib/os/prefs'
+import { cn } from '@/lib/utils'
 import { copyToClipboard } from '@/lib/utils/copy-to-clipboard'
 
-import type { Theme } from '@/hooks/use-theme'
+import { usePrefs } from '@/hooks/use-prefs'
+import { type Theme, lampLabel } from '@/hooks/use-theme'
 
 import { Clock } from './clock'
 import { CMD_PALETTE_SHORTCUT } from './constants'
@@ -20,7 +23,7 @@ import {
   type MenuFocusEdge,
   type MenuStep,
 } from './menu-dropdown'
-import { PalettePicker } from './palette-picker'
+import { SkyPicker } from './sky-picker'
 import type { AppId } from './types'
 
 const MENU_IDS = ['file', 'edit', 'view', 'go', 'help'] as const
@@ -41,18 +44,22 @@ interface MenuBarProps {
   onCloseAll: () => void
   theme: Theme
   onToggleTheme: () => void
-  palette: PaletteId
-  onSelectPalette: (id: PaletteId) => void
+  sky: SkyId
+  onSelectSky: (id: SkyId) => void
 }
 
 /**
  * Fixed top menu bar, the page's `<header>`. Three sections: logo (left),
- * menu items (center), theme toggle + clock (right). File/Edit/View/Go/Help
+ * menu items (center), Lamp toggle + clock (right). File/Edit/View/Go/Help
  * all expand into dropdowns.
  *
  * The menu items are a `role="menubar"` with a roving tabindex: one tab stop,
  * Left/Right move between the menus (wrapping) and, when a menu is open, open
  * the neighbour instead. The keys inside a menu are in `MenuDropdown`.
+ *
+ * The View menu holds the Lamp, the sky and the three settings (Pets, Pause
+ * animations, Readable text) as checkbox items; the settings come from
+ * `usePrefs`, so the bar re-renders when one changes and the shell does not.
  *
  * Memoized: the shell re-renders on every frame of a window drag, and none
  * of that reaches the bar.
@@ -63,8 +70,8 @@ function MenuBarImpl({
   onCloseAll,
   theme,
   onToggleTheme,
-  palette,
-  onSelectPalette,
+  sky,
+  onSelectSky,
 }: MenuBarProps) {
   const [open, setOpen] = useState<{
     id: DropdownId
@@ -73,6 +80,7 @@ function MenuBarImpl({
   // The one menu in the tab order.
   const [rovingId, setRovingId] = useState<DropdownId>(MENU_IDS[0])
   const barRef = useRef<HTMLDivElement>(null)
+  const { prefs, toggle: togglePref } = usePrefs()
 
   // Closes only the menu that asks, so a menu losing focus to its neighbour
   // does not close the neighbour that just opened.
@@ -164,16 +172,24 @@ function MenuBarImpl({
     {
       items: [
         {
-          label:
-            theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme',
-          icon: theme === 'dark' ? <Sun size={14} /> : <Moon size={14} />,
+          label: lampLabel(theme),
+          icon: <PixelIcon name={theme === 'dark' ? 'lamp-off' : 'lamp-on'} />,
           onClick: onToggleTheme,
         },
       ],
     },
     {
       divider: true,
-      node: <PalettePicker value={palette} onSelect={onSelectPalette} inMenu />,
+      node: <SkyPicker value={sky} onSelect={onSelectSky} inMenu />,
+    },
+    {
+      // Pets, Pause animations, Readable text: checkbox items.
+      divider: true,
+      items: PREF_IDS.map((id) => ({
+        label: PREF_COPY[id].menu,
+        checked: prefs[id],
+        onClick: () => togglePref(id),
+      })),
     },
     {
       divider: true,
@@ -207,23 +223,19 @@ function MenuBarImpl({
   }
 
   return (
-    // Near opaque like the taskbar, in place of a thinner fill over a
-    // backdrop blur that resampled the wallpaper on every frame.
-    <header className="border-rule bg-surf-2 z-chrome fixed inset-x-0 top-0 flex h-11 items-center gap-3 border-b px-3">
-      {/* Left: logo chip */}
-      <div className="flex items-center gap-2">
-        <Image
-          aria-hidden
-          src="/mascot.png"
-          alt=""
-          width={44}
-          height={44}
-          priority
-          className="border-rule bg-miku/10 size-5 rounded-full border object-cover object-top"
-        />
-        <span className="font-display text-ink text-sm font-semibold">
-          ShiroOS
-        </span>
+    // The 20 art px bar on the ground navy (22 under a coarse pointer).
+    // Night in both Lamp modes.
+    <header className="os-night z-chrome fixed inset-x-0 top-0 flex h-20 items-center gap-4 bg-(--ground) px-3 pointer-coarse:h-22">
+      {/* The 1 art px teal rule under the bar: a box, since a border width
+          is snapped to whole px and would not stay one art px. */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 bottom-0 h-1 bg-(--select)"
+      />
+      {/* Left: the 16x16 logo and the wordmark. */}
+      <div className="flex items-center gap-3">
+        <AppLogo />
+        <span className="text-title text-(--lamp)">ShiroOS</span>
       </div>
 
       {/* Center: menu items */}
@@ -231,7 +243,7 @@ function MenuBarImpl({
         ref={barRef}
         role="menubar"
         aria-label="ShiroOS"
-        className="flex items-center gap-0.5"
+        className="flex items-center"
       >
         {MENU_IDS.map((id) => (
           <MenuDropdown
@@ -250,23 +262,20 @@ function MenuBarImpl({
         ))}
       </div>
 
-      {/* Right: theme toggle + status + date + time */}
-      <div className="text-ink-3 ml-auto flex items-center gap-4 font-mono text-xs">
+      {/* Right: the Lamp toggle (the bulb as it is now) and the clock. */}
+      <div className="ml-auto flex items-center gap-4">
         <button
           type="button"
           onClick={onToggleTheme}
-          aria-label={
-            theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'
-          }
-          className="focus-ring text-ink-3 hover:bg-surf-0 hover:text-miku-2-icon rounded p-1 transition-colors"
-        >
-          {theme === 'dark' ? (
-            <Sun aria-hidden size={14} />
-          ) : (
-            <Moon aria-hidden size={14} />
+          aria-label={lampLabel(theme)}
+          className={cn(
+            'focus-ring flex h-16 w-14 items-center justify-center hover:bg-(--select) pointer-coarse:size-22',
+            theme === 'dark' ? 'text-(--meta)' : 'text-(--lamp)'
           )}
+        >
+          <PixelIcon name={theme === 'dark' ? 'lamp-off' : 'lamp-on'} />
         </button>
-        <Clock />
+        <Clock className="text-(--meta)" />
       </div>
     </header>
   )

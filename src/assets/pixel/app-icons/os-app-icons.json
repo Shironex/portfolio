@@ -1,0 +1,1340 @@
+{
+  "frames": [
+    {
+      "filename": "os-app-icons 0.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 200
+    },
+    {
+      "filename": "os-app-icons 1.aseprite",
+      "frame": {
+        "x": 192,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 90
+    },
+    {
+      "filename": "os-app-icons 2.aseprite",
+      "frame": {
+        "x": 384,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 90
+    },
+    {
+      "filename": "os-app-icons 3.aseprite",
+      "frame": {
+        "x": 576,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 100
+    },
+    {
+      "filename": "os-app-icons 4.aseprite",
+      "frame": {
+        "x": 768,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 110
+    },
+    {
+      "filename": "os-app-icons 5.aseprite",
+      "frame": {
+        "x": 960,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 100
+    },
+    {
+      "filename": "os-app-icons 6.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 48,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 110
+    },
+    {
+      "filename": "os-app-icons 7.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 150
+    },
+    {
+      "filename": "os-app-icons 8.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 200
+    },
+    {
+      "filename": "os-app-icons 9.aseprite",
+      "frame": {
+        "x": 192,
+        "y": 48,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 120
+    },
+    {
+      "filename": "os-app-icons 10.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 120
+    },
+    {
+      "filename": "os-app-icons 11.aseprite",
+      "frame": {
+        "x": 384,
+        "y": 48,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 90
+    },
+    {
+      "filename": "os-app-icons 12.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 110
+    },
+    {
+      "filename": "os-app-icons 13.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 120
+    },
+    {
+      "filename": "os-app-icons 14.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 130
+    },
+    {
+      "filename": "os-app-icons 15.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 160
+    },
+    {
+      "filename": "os-app-icons 16.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 140
+    },
+    {
+      "filename": "os-app-icons 17.aseprite",
+      "frame": {
+        "x": 576,
+        "y": 48,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 100
+    },
+    {
+      "filename": "os-app-icons 18.aseprite",
+      "frame": {
+        "x": 768,
+        "y": 48,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 110
+    },
+    {
+      "filename": "os-app-icons 19.aseprite",
+      "frame": {
+        "x": 960,
+        "y": 48,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 100
+    },
+    {
+      "filename": "os-app-icons 20.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 96,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 120
+    },
+    {
+      "filename": "os-app-icons 21.aseprite",
+      "frame": {
+        "x": 192,
+        "y": 96,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 100
+    },
+    {
+      "filename": "os-app-icons 22.aseprite",
+      "frame": {
+        "x": 384,
+        "y": 96,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 110
+    },
+    {
+      "filename": "os-app-icons 23.aseprite",
+      "frame": {
+        "x": 576,
+        "y": 96,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 130
+    },
+    {
+      "filename": "os-app-icons 24.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 200
+    },
+    {
+      "filename": "os-app-icons 25.aseprite",
+      "frame": {
+        "x": 768,
+        "y": 96,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 90
+    },
+    {
+      "filename": "os-app-icons 26.aseprite",
+      "frame": {
+        "x": 960,
+        "y": 96,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 90
+    },
+    {
+      "filename": "os-app-icons 27.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 144,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 110
+    },
+    {
+      "filename": "os-app-icons 28.aseprite",
+      "frame": {
+        "x": 192,
+        "y": 144,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 120
+    },
+    {
+      "filename": "os-app-icons 29.aseprite",
+      "frame": {
+        "x": 384,
+        "y": 144,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 200
+    },
+    {
+      "filename": "os-app-icons 30.aseprite",
+      "frame": {
+        "x": 576,
+        "y": 144,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 100
+    },
+    {
+      "filename": "os-app-icons 31.aseprite",
+      "frame": {
+        "x": 768,
+        "y": 96,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 90
+    },
+    {
+      "filename": "os-app-icons 32.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 200
+    },
+    {
+      "filename": "os-app-icons 33.aseprite",
+      "frame": {
+        "x": 768,
+        "y": 144,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 110
+    },
+    {
+      "filename": "os-app-icons 34.aseprite",
+      "frame": {
+        "x": 960,
+        "y": 144,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 90
+    },
+    {
+      "filename": "os-app-icons 35.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 192,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 110
+    },
+    {
+      "filename": "os-app-icons 36.aseprite",
+      "frame": {
+        "x": 192,
+        "y": 192,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 90
+    },
+    {
+      "filename": "os-app-icons 37.aseprite",
+      "frame": {
+        "x": 384,
+        "y": 192,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 150
+    },
+    {
+      "filename": "os-app-icons 38.aseprite",
+      "frame": {
+        "x": 576,
+        "y": 192,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 100
+    },
+    {
+      "filename": "os-app-icons 39.aseprite",
+      "frame": {
+        "x": 768,
+        "y": 192,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 120
+    },
+    {
+      "filename": "os-app-icons 40.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 200
+    },
+    {
+      "filename": "os-app-icons 41.aseprite",
+      "frame": {
+        "x": 960,
+        "y": 192,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 110
+    },
+    {
+      "filename": "os-app-icons 42.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 240,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 90
+    },
+    {
+      "filename": "os-app-icons 43.aseprite",
+      "frame": {
+        "x": 192,
+        "y": 240,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 90
+    },
+    {
+      "filename": "os-app-icons 44.aseprite",
+      "frame": {
+        "x": 384,
+        "y": 240,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 100
+    },
+    {
+      "filename": "os-app-icons 45.aseprite",
+      "frame": {
+        "x": 576,
+        "y": 240,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 150
+    },
+    {
+      "filename": "os-app-icons 46.aseprite",
+      "frame": {
+        "x": 768,
+        "y": 240,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 130
+    },
+    {
+      "filename": "os-app-icons 47.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 48
+      },
+      "duration": 160
+    }
+  ],
+  "meta": {
+    "app": "https://www.aseprite.org/",
+    "image": "os-app-icons.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 1152,
+      "h": 288
+    },
+    "scale": "1",
+    "frameTags": [
+      {
+        "name": "projects",
+        "from": 0,
+        "to": 7,
+        "direction": "forward",
+        "color": "#4fa3a0ff"
+      },
+      {
+        "name": "about",
+        "from": 8,
+        "to": 15,
+        "direction": "forward",
+        "color": "#f0a068ff"
+      },
+      {
+        "name": "monitor",
+        "from": 16,
+        "to": 23,
+        "direction": "forward",
+        "color": "#5a5e8cff"
+      },
+      {
+        "name": "contact",
+        "from": 24,
+        "to": 31,
+        "direction": "forward",
+        "color": "#c23a3aff"
+      },
+      {
+        "name": "writing",
+        "from": 32,
+        "to": 39,
+        "direction": "forward",
+        "color": "#c98a4aff"
+      },
+      {
+        "name": "readme",
+        "from": 40,
+        "to": 47,
+        "direction": "forward",
+        "color": "#8fe0cfff"
+      }
+    ],
+    "layers": [
+      {
+        "name": "tile",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "app-projects",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "app-about",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "app-monitor",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "app-contact",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "app-writing",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "app-readme",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "small16",
+        "opacity": 255,
+        "blendMode": "normal"
+      }
+    ],
+    "slices": [
+      {
+        "name": "app-projects-32",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "w": 32,
+              "h": 32
+            }
+          }
+        ]
+      },
+      {
+        "name": "app-about-32",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 32,
+              "y": 0,
+              "w": 32,
+              "h": 32
+            }
+          }
+        ]
+      },
+      {
+        "name": "app-monitor-32",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 64,
+              "y": 0,
+              "w": 32,
+              "h": 32
+            }
+          }
+        ]
+      },
+      {
+        "name": "app-contact-32",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 96,
+              "y": 0,
+              "w": 32,
+              "h": 32
+            }
+          }
+        ]
+      },
+      {
+        "name": "app-writing-32",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 128,
+              "y": 0,
+              "w": 32,
+              "h": 32
+            }
+          }
+        ]
+      },
+      {
+        "name": "app-readme-32",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 160,
+              "y": 0,
+              "w": 32,
+              "h": 32
+            }
+          }
+        ]
+      },
+      {
+        "name": "app-projects-16",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 0,
+              "y": 32,
+              "w": 16,
+              "h": 16
+            }
+          }
+        ]
+      },
+      {
+        "name": "app-about-16",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 16,
+              "y": 32,
+              "w": 16,
+              "h": 16
+            }
+          }
+        ]
+      },
+      {
+        "name": "app-monitor-16",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 32,
+              "y": 32,
+              "w": 16,
+              "h": 16
+            }
+          }
+        ]
+      },
+      {
+        "name": "app-contact-16",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 48,
+              "y": 32,
+              "w": 16,
+              "h": 16
+            }
+          }
+        ]
+      },
+      {
+        "name": "app-writing-16",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 64,
+              "y": 32,
+              "w": 16,
+              "h": 16
+            }
+          }
+        ]
+      },
+      {
+        "name": "app-readme-16",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 80,
+              "y": 32,
+              "w": 16,
+              "h": 16
+            }
+          }
+        ]
+      },
+      {
+        "name": "logo-16",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 96,
+              "y": 32,
+              "w": 16,
+              "h": 16
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -6,8 +6,7 @@ import {
   BLOG_URL,
   GITHUB_URL,
 } from '@/lib/constants'
-import { DEFAULT_APPEARANCE, groundColor } from '@/lib/os/appearance'
-import { DEFAULT_THEME_COLOR } from '@/lib/os/palettes.generated'
+import { GROUND } from '@/lib/os/appearance'
 import {
   completedDateIso,
   hasUsableDemo,
@@ -44,13 +43,13 @@ export const siteConfig = {
     'Poland',
   ],
   author: AUTHOR_FULL_NAME,
-  themeColor: DEFAULT_THEME_COLOR,
+  /** The ground navy: night in both Lamp modes (SPEC 2.2). */
+  themeColor: GROUND,
   /**
-   * Page ground of the default appearance (light mode, default palette), for
-   * the places CSS variables cannot reach: the `theme-color` meta as served
-   * and the manifest.
+   * Page ground, the same navy, for the places CSS variables cannot reach:
+   * the `theme-color` meta as served and the manifest.
    */
-  ground: groundColor(DEFAULT_APPEARANCE),
+  ground: GROUND,
 }
 
 /** Absolute URL of a root-relative path on this site. */
@@ -114,8 +113,9 @@ export const defaultMetadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  // Icons + manifest are auto-discovered from:
-  //   src/app/icon.png        → /icon.png         (favicon)
+  // Icons + manifest are auto-discovered from (`pnpm generate:icons`):
+  //   src/app/favicon.ico     → /favicon.ico      (16 and 32)
+  //   src/app/icon.png        → /icon.png         (favicon, 32)
   //   src/app/apple-icon.png  → /apple-icon.png   (iOS touch)
   //   src/app/manifest.ts     → /manifest.webmanifest
   // Declaring them manually here would pin Apple touch to the wrong size.

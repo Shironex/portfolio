@@ -11,6 +11,7 @@ import { useDeepLink } from '@/hooks/use-deep-link'
 import { isLayerOpenAbove, useEscapeLayer } from '@/hooks/use-escape-layer'
 import { useHotkeys } from '@/hooks/use-hotkeys'
 import { useHydrated } from '@/hooks/use-hydrated'
+import { useIdle } from '@/hooks/use-idle'
 import { useIsMobile } from '@/hooks/use-is-mobile'
 import { useOsWindows } from '@/hooks/use-os-windows'
 import { useSessionRestore } from '@/hooks/use-session-restore'
@@ -26,10 +27,16 @@ import { HeroPlate } from './apps/panels/hero-plate'
 import { TerminalPanel } from './apps/panels/terminal-panel'
 import { DesktopCanvas } from './desktop-canvas'
 import { DesktopIcons } from './desktop-icons'
+import {
+  DESKTOP_CONTENT_CLASS,
+  DESKTOP_HERO_CLASS,
+  DESKTOP_PANELS_CLASS,
+  DESKTOP_ROW_CLASS,
+  DESKTOP_TERMINAL_CLASS,
+} from './desktop-layout'
 import { MenuBar } from './menubar'
 import { MobileShell } from './mobile-shell'
 import {
-  NoscriptFallback,
   NoscriptStaticPage,
   SHELL_READY_ATTRIBUTE,
   SHELL_ROOT_ATTRIBUTE,
@@ -37,6 +44,7 @@ import {
 import { ShellMain } from './static-layer'
 import { Taskbar } from './taskbar'
 import type { AppId, WindowId } from './types'
+import { DESKTOP_BARE_ATTRIBUTE } from './wallpaper/wallpaper'
 import { Window } from './window'
 
 const Boot = dynamic(() => import('./boot').then((m) => m.Boot), {
@@ -50,15 +58,19 @@ const StartMenu = dynamic(
   () => import('./start-menu').then((m) => m.StartMenu),
   { ssr: false }
 )
+const PetLayer = dynamic(() => import('./pets/pet-layer'), { ssr: false })
 
 interface OsShellProps {
   initialWindow?: DeepLinkTarget
 }
 
+/** The desktop surfaces the wallpaper's parallax counts as bare. */
+const BARE = { [DESKTOP_BARE_ATTRIBUTE]: '' }
+
 /**
  * Root ShiroOS shell.
  *
- * Owns window state (`useOsWindows`), theme, and palette/start-menu toggles.
+ * Owns window state (`useOsWindows`), the appearance, and palette/start-menu toggles.
  * On desktop the open windows are kept in `sessionStorage`, so a reload in
  * the same tab restores them (`useSessionRestore`).
  * Branches on viewport:
@@ -92,8 +104,14 @@ interface OsShellProps {
  * while the stack does (`useStackIds`). Pausing the wallpaper under an open
  * layer does not go through this component at all (`AmbientPause`).
  *
+ * The desktop pet (SPEC 3) is the last child of the windows layer, so her
+ * z-index stacks her among the windows. Her code is a late chunk, loaded
+ * once the shell is hydrated and the browser is idle; she decodes her sheet
+ * before she comes out. Not on a phone (SPEC 3.8).
+ *
  * The boot splash, cmd palette, and noscript fallback are shared across both
- * modes, and so is the live region that announces keyboard window snaps.
+ * modes, and so is the live region (`Announcer`) that says what has no
+ * visible text of its own: keyboard window snaps and the View settings.
  * Hotkeys stay bound in both (⌘K still works on tablets with a keyboard).
  *
  * `initialWindow` lets a server route boot the shell with a window already
@@ -109,7 +127,7 @@ export default function OsShell({ initialWindow }: OsShellProps) {
   const [cmdOpen, setCmdOpen] = useState(false)
   const [startOpen, setStartOpen] = useState(false)
   const os = useOsWindows()
-  const { theme, palette, toggleTheme, setPalette } = useTheme()
+  const { theme, sky, toggleTheme, setSky } = useTheme()
   const isMobile = useIsMobile()
   const hydrated = useHydrated()
   const rootRef = useRef<HTMLDivElement | null>(null)
@@ -179,6 +197,7 @@ export default function OsShell({ initialWindow }: OsShellProps) {
   useHotkeys(useMemo(() => ({ 'mod+k': toggleCmd }), [toggleCmd]))
 
   const desktopCovered = os.windows.some((w) => w.maximized && !w.minimized)
+  const petsReady = useIdle(hydrated && !isMobile)
 
   // Until hydration both shells are in the tree, as in the server HTML.
   const showMobile = !hydrated || isMobile
@@ -189,68 +208,73 @@ export default function OsShell({ initialWindow }: OsShellProps) {
     // paints its richer wallpaper over this, so it's invisible there; on
     // mobile `MobileShell` renders a transparent feed, so this layer is what
     // the user actually sees behind the cards: without it the `body` ground
-    // and the SSR `StaticHero` bleed through the gaps.
+    // and the SSR `StaticHero` bleed through the gaps. `overflow-clip`, not
+    // `hidden`: a desktop taller than the viewport must never scroll under
+    // the windows when focus or `scrollIntoView` reaches its lower part.
     <div
       ref={rootRef}
       {...{
         [SHELL_ROOT_ATTRIBUTE]: '',
         [SHELL_READY_ATTRIBUTE]: hydrated ? '' : undefined,
       }}
-      className="text-ink from-sky-0 via-sky-1 to-sky-2 fixed inset-0 overflow-hidden bg-linear-to-br"
+      className="text-ink from-sky-0 via-sky-1 to-sky-2 fixed inset-0 overflow-clip bg-linear-to-br"
     >
-      <AmbientPause rootRef={rootRef} covered={desktopCovered} />
-      {onProjectRoute ? <NoscriptStaticPage /> : <NoscriptFallback />}
-      <Boot initialWindow={initialWindow} />
-      {showMobile && (
-        <div className="md:hidden">
-          <MobileShell
-            os={os}
-            onOpenCmd={openCmd}
-            onCopyLink={copyLink}
-            theme={theme}
-            onToggleTheme={toggleTheme}
-            palette={palette}
-            onSelectPalette={setPalette}
-            heroHeadingLevel={heroHeadingLevel}
-            overStaticLayer={onProjectRoute}
-          />
-        </div>
-      )}
-      {showDesktop && (
-        <div className="max-md:hidden">
-          <MenuBar
-            onOpenCmd={openCmd}
-            onLaunchApp={launchApp}
-            onCloseAll={os.closeAll}
-            theme={theme}
-            onToggleTheme={toggleTheme}
-            palette={palette}
-            onSelectPalette={setPalette}
-          />
+      <Announcer>
+        <AmbientPause rootRef={rootRef} covered={desktopCovered} />
+        {onProjectRoute && <NoscriptStaticPage />}
+        <Boot initialWindow={initialWindow} />
+        {showMobile && (
+          <div className="md:hidden">
+            <MobileShell
+              os={os}
+              onOpenCmd={openCmd}
+              onCopyLink={copyLink}
+              theme={theme}
+              onToggleTheme={toggleTheme}
+              sky={sky}
+              onSelectSky={setSky}
+              heroHeadingLevel={heroHeadingLevel}
+              overStaticLayer={onProjectRoute}
+            />
+          </div>
+        )}
+        {showDesktop && (
+          <div className="max-md:hidden">
+            <MenuBar
+              onOpenCmd={openCmd}
+              onLaunchApp={launchApp}
+              onCloseAll={os.closeAll}
+              theme={theme}
+              onToggleTheme={toggleTheme}
+              sky={sky}
+              onSelectSky={setSky}
+            />
 
-          <DesktopCanvas>
-            <ShellMain overStaticLayer={onProjectRoute}>
-              <DesktopIcons onLaunch={launchApp} />
+            <DesktopCanvas live={sky === 'live'}>
+              <ShellMain overStaticLayer={onProjectRoute}>
+                <DesktopIcons onLaunch={launchApp} />
 
-              <div className="relative flex min-h-dvh flex-col px-6 pt-14 pb-24 md:pr-8 md:pl-32 lg:pr-16 lg:pl-36 xl:pr-24 xl:pl-40">
-                <div className="grid flex-1 gap-6 md:grid-cols-[minmax(0,1.3fr)_minmax(340px,1fr)]">
-                  <HeroPlate
-                    onOpenCmd={openCmd}
-                    onOpenContact={openContact}
-                    headingLevel={heroHeadingLevel}
-                  />
-                  <div className="flex flex-col gap-3">
-                    <TerminalPanel />
-                    <FeaturedPanel onOpenProject={launchProject} />
+                <div {...BARE} className={DESKTOP_CONTENT_CLASS}>
+                  <div {...BARE} className={DESKTOP_ROW_CLASS}>
+                    <HeroPlate
+                      onOpenCmd={openCmd}
+                      onOpenContact={openContact}
+                      headingLevel={heroHeadingLevel}
+                      className={DESKTOP_HERO_CLASS}
+                    />
+                    <div className={DESKTOP_PANELS_CLASS}>
+                      <div className={DESKTOP_TERMINAL_CLASS}>
+                        <TerminalPanel />
+                      </div>
+                      <FeaturedPanel onOpenProject={launchProject} />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </ShellMain>
-          </DesktopCanvas>
+              </ShellMain>
+            </DesktopCanvas>
 
-          <Announcer>
             {/* The windows layer. Zero-sized, so it never covers the desktop;
-                `isolate` keeps every window's z-index inside it. */}
+              `isolate` keeps every window's z-index inside it. */}
             <div className="z-windows absolute top-0 left-0 isolate size-0">
               {os.windows.map((w) => (
                 <Window
@@ -269,43 +293,46 @@ export default function OsShell({ initialWindow }: OsShellProps) {
                   onOpenProject={launchProject}
                 />
               ))}
+              {petsReady && !isMobile && (
+                <PetLayer windows={os.windows} covered={desktopCovered} />
+              )}
             </div>
-          </Announcer>
 
-          <Taskbar
-            openIds={stackIds.openIds}
-            minimizedIds={stackIds.minimizedIds}
-            topmostId={os.topmostId}
-            onLaunch={launchApp}
-            onActivate={activateWindow}
-            onOpenStart={openStart}
-            onOpenCmd={openCmd}
-          />
-
-          {startOpen && (
-            <StartMenu
-              onClose={closeStart}
+            <Taskbar
+              openIds={stackIds.openIds}
+              minimizedIds={stackIds.minimizedIds}
+              topmostId={os.topmostId}
               onLaunch={launchApp}
-              onOpenProject={launchProject}
+              onActivate={activateWindow}
+              onOpenStart={openStart}
               onOpenCmd={openCmd}
             />
-          )}
-        </div>
-      )}
 
-      {cmdOpen && (
-        <CmdPalette
-          onClose={closeCmd}
-          onLaunch={launchApp}
-          onOpenProject={launchProject}
-          theme={theme}
-          onToggleTheme={toggleTheme}
-          onCloseAll={os.closeAll}
-          onCopyLink={copyTopmostLink}
-          palette={palette}
-          onSelectPalette={setPalette}
-        />
-      )}
+            {startOpen && (
+              <StartMenu
+                onClose={closeStart}
+                onLaunch={launchApp}
+                onOpenProject={launchProject}
+                onOpenCmd={openCmd}
+              />
+            )}
+          </div>
+        )}
+
+        {cmdOpen && (
+          <CmdPalette
+            onClose={closeCmd}
+            onLaunch={launchApp}
+            onOpenProject={launchProject}
+            theme={theme}
+            onToggleTheme={toggleTheme}
+            onCloseAll={os.closeAll}
+            onCopyLink={copyTopmostLink}
+            sky={sky}
+            onSelectSky={setSky}
+          />
+        )}
+      </Announcer>
     </div>
   )
 }

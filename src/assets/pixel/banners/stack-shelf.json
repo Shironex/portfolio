@@ -1,0 +1,281 @@
+{
+  "frames": [
+    {
+      "filename": "stack-shelf 0.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 64
+      },
+      "duration": 160
+    },
+    {
+      "filename": "stack-shelf 1.aseprite",
+      "frame": {
+        "x": 160,
+        "y": 0,
+        "w": 160,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 64
+      },
+      "duration": 120
+    },
+    {
+      "filename": "stack-shelf 2.aseprite",
+      "frame": {
+        "x": 320,
+        "y": 0,
+        "w": 160,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 64
+      },
+      "duration": 110
+    },
+    {
+      "filename": "stack-shelf 3.aseprite",
+      "frame": {
+        "x": 480,
+        "y": 0,
+        "w": 160,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 64
+      },
+      "duration": 90
+    },
+    {
+      "filename": "stack-shelf 4.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 64,
+        "w": 160,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 64
+      },
+      "duration": 110
+    },
+    {
+      "filename": "stack-shelf 5.aseprite",
+      "frame": {
+        "x": 160,
+        "y": 64,
+        "w": 160,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 64
+      },
+      "duration": 150
+    },
+    {
+      "filename": "stack-shelf 6.aseprite",
+      "frame": {
+        "x": 320,
+        "y": 64,
+        "w": 160,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 64
+      },
+      "duration": 110
+    },
+    {
+      "filename": "stack-shelf 7.aseprite",
+      "frame": {
+        "x": 480,
+        "y": 64,
+        "w": 160,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 64
+      },
+      "duration": 120
+    },
+    {
+      "filename": "stack-shelf 8.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 128,
+        "w": 160,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 64
+      },
+      "duration": 140
+    },
+    {
+      "filename": "stack-shelf 9.aseprite",
+      "frame": {
+        "x": 160,
+        "y": 128,
+        "w": 160,
+        "h": 64
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 160,
+        "h": 64
+      },
+      "sourceSize": {
+        "w": 160,
+        "h": 64
+      },
+      "duration": 190
+    }
+  ],
+  "meta": {
+    "app": "https://www.aseprite.org/",
+    "image": "stack-shelf.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 640,
+      "h": 192
+    },
+    "scale": "1",
+    "frameTags": [
+      {
+        "name": "loop",
+        "from": 0,
+        "to": 9,
+        "direction": "forward",
+        "color": "#000000ff"
+      }
+    ],
+    "layers": [
+      {
+        "name": "bg",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "shadows",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "steam",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "shelves",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "objects",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "claw",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "spout",
+        "opacity": 255,
+        "blendMode": "normal"
+      }
+    ],
+    "slices": []
+  }
+}

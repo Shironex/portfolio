@@ -16,8 +16,9 @@ import {
   useState,
 } from 'react'
 
-import { ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-react'
 import { createPortal } from 'react-dom'
+
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
 import { cn, onBackdropDismiss } from '@/lib/utils'
 
@@ -53,11 +54,15 @@ const SWIPE_THRESHOLD = 50
 /** Shared by the shown image and the preloaded neighbours so they resolve to the same URL. */
 const LIGHTBOX_SIZES = '(min-width: 1136px) 1024px, 90vw'
 
+/** The step buttons: secondary pixel buttons over the picture's edges. */
 const NAV_BUTTON_CLASS =
-  'focus-ring bg-surf-solid/85 text-ink hover:bg-surf-solid shadow-elev-2 absolute top-1/2 flex size-10 -translate-y-1/2 items-center justify-center rounded-full backdrop-blur-sm transition-colors'
+  'os-night focus-ring px-button-secondary absolute top-1/2 flex size-18 -translate-y-1/2 items-center justify-center text-(--ink) pointer-coarse:size-(--target)'
 
 /**
- * Full-screen viewer for the gallery screenshots. Portals to <body> so it
+ * Full-screen viewer for the gallery screenshots, drawn as a night window
+ * (SPEC 1.5) on the 50% navy dither scrim of the Start menu: a title bar
+ * with the count and the close control, the picture, then its caption.
+ * Portals to <body> so it
  * escapes the windows layer (an isolated stacking context) and covers the
  * whole shell, and so the shell as a whole goes inert behind it. Escape goes
  * through the shell's Escape layers, where the lightbox outranks the window
@@ -132,7 +137,7 @@ function GalleryLightbox({
 
   return createPortal(
     <div
-      className="z-lightbox fixed inset-0 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm md:p-10"
+      className="z-lightbox px-tile-shadow fixed inset-0 flex items-center justify-center p-4 md:p-12"
       onMouseDown={onBackdropDismiss(onClose)}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
@@ -142,31 +147,40 @@ function GalleryLightbox({
         role="dialog"
         aria-modal="true"
         aria-label={item.alt}
-        className="animate-cp-in relative flex max-h-full max-w-5xl flex-col items-center motion-reduce:animate-none"
+        className="animate-cp-in os-night px-window-focused relative flex max-h-full flex-col motion-reduce:animate-none"
       >
-        {/* First in DOM order so the focus trap lands on it when opening. */}
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close image view"
-          className="focus-ring bg-surf-solid text-ink hover:bg-surf-soft shadow-elev-2 absolute -top-3 -right-3 z-10 flex size-9 items-center justify-center rounded-full transition-colors"
-        >
-          <X aria-hidden size={16} />
-        </button>
+        <div className="px-titlebar-focused flex h-16 items-center gap-3 pr-1 pl-6 pointer-coarse:h-24">
+          <span className="text-title flex-1 truncate text-(--ink-hi)">
+            gallery
+          </span>
+          {hasMany && (
+            <span className="text-label text-(--meta) tabular-nums">
+              {index + 1} / {items.length}
+            </span>
+          )}
+          {/* First focusable in DOM order, so the focus trap lands on it
+              when opening. */}
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close image view"
+            className="focus-ring flex h-12 w-14 items-center justify-center text-(--ink) hover:bg-(--danger) pointer-coarse:size-(--target)"
+          >
+            <PixelIcon name="close" />
+          </button>
+        </div>
         {/* Fixed 16:9 frame: screenshots vary in aspect ratio, so sizing the
             box off the image would collapse it while the next one loads and
             make the nav buttons jump. The <img> is reused across steps (no
             key), so the browser keeps the old picture up until the new one
             has decoded. */}
-        <div className="relative aspect-video w-[min(90vw,64rem,142vh)]">
+        <div className="relative mx-1 aspect-video w-[min(90vw,64rem,124vh)]">
           <Image
             src={item.src}
             alt={item.alt}
             fill
             sizes={LIGHTBOX_SIZES}
-            // A filter, not `shadow-elev-*`: the picture is letterboxed inside
-            // the frame, and a box shadow would trace the frame.
-            className="object-contain drop-shadow-2xl select-none"
+            className="bg-(--ground) object-contain select-none"
             draggable={false}
           />
           {hasMany &&
@@ -188,33 +202,27 @@ function GalleryLightbox({
                 type="button"
                 onClick={showPrev}
                 aria-label="Previous image"
-                className={cn(NAV_BUTTON_CLASS, 'left-2 md:left-3')}
+                className={cn(NAV_BUTTON_CLASS, 'left-3')}
               >
-                <ChevronLeft aria-hidden size={20} />
+                <PixelIcon name="chevron-left" />
               </button>
               <button
                 type="button"
                 onClick={showNext}
                 aria-label="Next image"
-                className={cn(NAV_BUTTON_CLASS, 'right-2 md:right-3')}
+                className={cn(NAV_BUTTON_CLASS, 'right-3')}
               >
-                <ChevronRight aria-hidden size={20} />
+                <PixelIcon name="chevron-right" />
               </button>
             </>
           )}
         </div>
-        {(item.caption || hasMany) && (
-          // Fixed white, like the scrim is fixed black: `cloud` follows the
-          // mode and would be dark on dark here.
-          <p className="font-body mt-3 min-h-10 max-w-2xl text-center text-sm text-white">
-            {hasMany && (
-              <span className="mr-2 font-mono text-xs text-white/70 tabular-nums">
-                {index + 1} / {items.length}
-              </span>
-            )}
-            {item.caption}
-          </p>
-        )}
+        {/* Two lines are kept free so a caption that wraps does not move
+            the frame and its buttons: 2lh plus the 3 art px of padding,
+            which border-box sizing counts inside the minimum. */}
+        <p className="text-prose min-h-[calc(2lh+3*var(--px))] max-w-[66ch] px-3 pt-2 pb-1 text-(--ink)">
+          {item.caption}
+        </p>
       </div>
     </div>,
     document.body
@@ -241,11 +249,12 @@ export default function ProjectDetailApp({
               className={cn(GALLERY_CELL_CLASS, 'focus-ring cursor-zoom-in')}
             >
               <GalleryThumb item={item} />
+              {/* The zoom badge: a plate that shows on hover and focus. */}
               <span
                 aria-hidden
-                className="absolute top-2 right-2 flex size-7 items-center justify-center rounded-md bg-black/50 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                className="px-label-plate absolute top-2 right-2 flex size-12 items-center justify-center text-(--ink) opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100"
               >
-                <Maximize2 size={14} />
+                <PixelIcon name="maximize" />
               </span>
             </button>
           ))}

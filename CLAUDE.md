@@ -16,11 +16,29 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `pnpm start` - Start production server
 - `pnpm typecheck` - Run TypeScript type checking
 
+### Tests
+
+- `pnpm test:e2e` - Playwright end to end tests (Chromium runs every spec, WebKit and Firefox run `pixel-crisp` only)
+- `pnpm test:pixel` - Node unit tests of the pixel art scripts (`scripts/pixel/test/`)
+
 ### Code Quality
 
-- `pnpm lint` - Run ESLint
+- `pnpm lint` - Run ESLint, then `tokens:check`, `art:check`, `art:fresh` and `test:pixel`
+- `pnpm tokens` / `pnpm tokens:check` - Write or check the colour tokens and their contrast gate (`scripts/gen-tokens.mjs`)
 - `pnpm format` - Format code with Prettier
 - `pnpm format:check` - Check code formatting
+
+### Pixel art
+
+The Aseprite sources live outside the repo (`../aseprite-demo/`); their exports in `src/assets/pixel/` and every generated file are committed, so CI never needs Aseprite.
+
+- `pnpm art:export` - Export the sheets from Aseprite (`--list`, `--only <name>`, `--dry-run`; locations at the top of `scripts/pixel/export-art.mjs`)
+- `pnpm art:chrome`, `art:glyphs`, `art:cursors`, `art:icons`, `art:project-icons`, `art:wallpaper`, `art:pets`, `art:sprites` - Generate CSS, components and data from the sheets
+- `pnpm art:check` - Gate on the sheets: palette, alpha, data and byte budgets (`scripts/pixel/art-manifest.mjs`)
+- `pnpm art:fresh` - Fail if a generated file is stale
+- `pnpm fonts:subset` - Subset the pixel fonts to WOFF2 in `src/app/fonts/` (needs uv; `--check`)
+- `pnpm generate:og` - Copy the OG card bases and cut the icons into `src/app/_og/` (`--check`, `--og-dir`)
+- `pnpm generate:icons` - Write the favicons and manifest icons from the README logo tile (`--check`)
 
 ### Git & Release
 
@@ -46,10 +64,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `/src/app/` - Next.js App Router pages and layouts
 - `/src/components/` - Reusable React components
   - `/ui/` - Shadcn UI components
-  - `/os/` - ShiroOS desktop shell (windows, apps, taskbar, command palette)
-  - `/icons/` - Icon components
+  - `/os/` - ShiroOS desktop shell (windows, apps, taskbar, command palette, `pets/`, `wallpaper/`)
+- `/src/assets/pixel/` - Exported pixel art sheets and their JSON (generated, committed)
 - `/src/lib/` - Core utilities and integrations
   - `/discord/` - Discord webhook integration
+  - `/og/` - Open Graph card layout and font metrics (Satori through `next/og`)
+  - `/os/` - Shell state, tokens and the art pixel helpers
   - `/mail/` - Email templates and rendering
   - `/ratelimit/` - Redis-based rate limiting
 - `/src/data/` - Project and skills data

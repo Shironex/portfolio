@@ -6,28 +6,22 @@ import { extendTailwindMerge } from 'tailwind-merge'
 /**
  * tailwind-merge only knows Tailwind's default scale. Every token added in
  * `globals.css` is listed here under its group, or a conflict goes unresolved:
- * `shadow-elev-1` would survive next to `shadow-none`, and count as a shadow
- * colour that a caller's `shadow-miku/20` then deletes.
+ * `text-label` would count as a text colour, and a caller's `text-(--meta)`
+ * would then delete it.
  */
 const twMerge = extendTailwindMerge({
   extend: {
     theme: {
-      shadow: ['elev-1', 'elev-2', 'elev-3', 'elev-4'],
-      tracking: ['eyebrow', 'label', 'display'],
-      ease: ['out-quart', 'sheet'],
+      text: ['label', 'body', 'prose', 'title', 'heading', 'display'],
       animate: [
-        'drift',
-        'floaty',
         'blink',
         'win-open',
         'win-close',
         'sheet-up',
         'cp-in',
         'menu-in',
-        'pulse-slow',
-        'bob-note',
-        'logo-pop',
         'boot-out',
+        'boot-open',
         'term-in',
         'fade-in',
       ],

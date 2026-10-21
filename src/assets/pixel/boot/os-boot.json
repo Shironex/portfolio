@@ -1,0 +1,205 @@
+{
+  "frames": [
+    {
+      "filename": "os-boot 0.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 40
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 40
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 40
+      },
+      "duration": 120
+    },
+    {
+      "filename": "os-boot 1.aseprite",
+      "frame": {
+        "x": 96,
+        "y": 0,
+        "w": 96,
+        "h": 40
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 40
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 40
+      },
+      "duration": 120
+    },
+    {
+      "filename": "os-boot 2.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 40,
+        "w": 96,
+        "h": 40
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 40
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 40
+      },
+      "duration": 120
+    },
+    {
+      "filename": "os-boot 3.aseprite",
+      "frame": {
+        "x": 96,
+        "y": 40,
+        "w": 96,
+        "h": 40
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 96,
+        "h": 40
+      },
+      "sourceSize": {
+        "w": 96,
+        "h": 40
+      },
+      "duration": 120
+    }
+  ],
+  "meta": {
+    "app": "https://www.aseprite.org/",
+    "image": "os-boot.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 192,
+      "h": 80
+    },
+    "scale": "1",
+    "frameTags": [
+      {
+        "name": "run",
+        "from": 0,
+        "to": 3,
+        "direction": "forward",
+        "color": "#000000ff"
+      }
+    ],
+    "layers": [
+      {
+        "name": "wordmark",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "kana",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "status",
+        "opacity": 255,
+        "blendMode": "normal"
+      }
+    ],
+    "slices": [
+      {
+        "name": "wordmark",
+        "color": "#f0c070ff",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 10,
+              "y": 2,
+              "w": 76,
+              "h": 13
+            }
+          }
+        ]
+      },
+      {
+        "name": "kana",
+        "color": "#8fe0cfff",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 28,
+              "y": 19,
+              "w": 40,
+              "h": 10
+            }
+          }
+        ]
+      },
+      {
+        "name": "run",
+        "color": "#c98a4aff",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 0,
+              "y": 32,
+              "w": 7,
+              "h": 7
+            }
+          }
+        ]
+      },
+      {
+        "name": "check",
+        "color": "#4fa3a0ff",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 8,
+              "y": 32,
+              "w": 7,
+              "h": 7
+            }
+          }
+        ]
+      },
+      {
+        "name": "wait",
+        "color": "#2e6e6eff",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 16,
+              "y": 32,
+              "w": 7,
+              "h": 7
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

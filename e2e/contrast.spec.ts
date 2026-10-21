@@ -1,7 +1,14 @@
-import { type Locator, type Page, expect, test } from '@playwright/test'
-
-import type { Mode, PaletteId } from '../src/lib/os/appearance'
 import {
+  type Browser,
+  type Locator,
+  type Page,
+  expect,
+  test,
+} from '@playwright/test'
+
+import type { Mode, SkyId } from '../src/lib/os/appearance'
+import {
+  AA_LARGE,
   AA_TEXT,
   type ContrastWalk,
   DESKTOP_VIEWPORT,
@@ -25,28 +32,36 @@ import {
   startMenu,
   taskbar,
   useMode,
-  usePalette,
+  useSky,
 } from './helpers'
 
 /**
  * Colour contrast of what is actually on screen.
  *
- * Every main screen is walked in both modes, in the default palette and in
- * one other: each visible run of text has to reach WCAG AA (4.5:1, or 3:1
- * for large text) against its composited background, and each icon 3:1. The
- * generator's own gate (`scripts/gen-palettes.mjs`) checks the token pairings
- * for all six palettes; this checks that the components use them.
+ * Every main screen is walked with the Lamp off and on (night and paper
+ * bodies), under the darkest sky and the lightest (the desktop and the boot
+ * screen under all four): each visible run of text
+ * has to reach WCAG AA (4.5:1, or 3:1 for large text) against its composited
+ * background, and each icon 3:1. The generator's own gate
+ * (`scripts/gen-tokens.mjs`) checks the token pairings; this checks that the
+ * components use them, and that nothing reads straight off a sky.
  */
-const PALETTES: PaletteId[] = ['teal', 'sumi']
-const MODES: Mode[] = ['light', 'dark']
+const SKIES: SkyId[] = ['night', 'day']
+const MODES: Mode[] = ['dark', 'light']
+
+/** Every sky the wallpaper paints, for the desktop and the boot screen. */
+const PAINTED_SKIES: SkyId[] = ['night', 'dusk', 'dawn', 'day']
+
+/** A test title for a Lamp mode. */
+const LAMP: Record<Mode, string> = { dark: 'lamp off', light: 'lamp on' }
 
 /** Dock name, window title, and a line that is there once the app has loaded. */
 const APPS = [
   ['Projects', 'projects.app', 'Pick one and it opens in its own window.'],
-  ['About', 'about.me', 'Outside the editor'],
+  ['About', 'about.me', 'A full-stack developer from Poland.'],
   ['Monitor', 'monitor.sys', 'Skills & tools'],
   ['Contact', 'contact.app', 'Send message'],
-  ['Writing', 'writing.rss', 'Latest posts'],
+  ['Writing', 'writing.rss', 'Field notes on things I build'],
   ['Readme', 'readme.md', 'Welcome to ShiroOS'],
 ] as const
 
@@ -73,34 +88,23 @@ const PROJECT = {
   caption: 'Home screen',
 }
 
-/** The faint character behind the boot splash. */
-const BOOT_WATERMARK =
-  '[aria-label="ShiroOS boot sequence"] > span[aria-hidden]'
-
 /**
  * What the walk leaves out, and what it does not reach at all.
  *
- * `exempt`: the notes that drift over the wallpaper, the glows and the
- * watermark of the boot splash are pure decoration, which AA does not cover. `ignored`: the film grain is a `url()`
- * picture over the whole desktop, white noise at 5% opacity at most, which
- * the probe would otherwise have to treat as a picture of unknown colour.
- * `overImage`: a gallery caption sits on a screenshot, under a scrim that
- * fades to nothing above the text; the probe measures every stop of a
- * gradient, the clear one included, so the caption cannot pass on its own.
- * It is held to one line, where the scrim is 60% black or more (see
- * `GalleryThumb`). Any other text over a picture fails unless its worst case
- * passes, as the lightbox caption does over the dimmed shell.
+ * `exempt`: the ambient loops (the terminal cursor, the featured banner) are
+ * pure decoration, which AA does not cover. `overImage`: a gallery caption
+ * sits on a screenshot, on a one-line strip of solid ground (see
+ * `GalleryThumb`), so it passes on its own; the probe still finds the
+ * picture under it, and this marks that as expected. Any other text over a
+ * picture fails unless its worst case passes.
  *
  * Not walked: hover, focus and pressed states (the hovered close button is
- * the one exception below), placeholders, disabled controls, the text
- * selection colour, the mobile sheets of Monitor, Contact, Writing and
- * Readme, and the page without JavaScript in anything but the default
- * appearance, which is the only one it can have. The four palettes that are
- * not listed in `PALETTES` are covered by the generator's gate alone.
+ * the one exception below), placeholders, disabled controls (the locked
+ * submit button is measured on its own), and the text selection colour. Dusk and Dawn sit
+ * between the two skies the apps are walked in.
  */
 const WALK: ContrastWalk = {
-  exempt: ['.ambient-loop', '.grain-layer', BOOT_WATERMARK],
-  ignored: ['.grain-layer'],
+  exempt: ['.ambient-loop'],
   overImage: [
     'button[aria-label^="View full size"] > span[title]',
     'figure > span[title]',
@@ -147,22 +151,30 @@ async function fakeTurnstile(page: Page) {
 
 /**
  * Answer the contact form's server action here, so nothing is sent: an empty
- * result, which is what the action returns when the mail has gone out.
+ * result, which is what the action returns when the mail has gone out. The
+ * answer waits for the returned `release`, so the form can be read while it
+ * is sending.
  */
 async function mockSend(page: Page) {
+  let release = () => {}
+  const held = new Promise<void>((resolve) => {
+    release = resolve
+  })
   await page.route(
     (url) => url.pathname === '/',
-    (route) => {
+    async (route) => {
       const request = route.request()
       if (request.method() !== 'POST' || !request.headers()['next-action']) {
         return route.fallback()
       }
+      await held
       return route.fulfill({
         contentType: 'text/x-component',
         body: '0:{"a":"$@1","f":"","b":"development"}\n1:{}\n',
       })
     }
   )
+  return release
 }
 
 // Contrast is a property of the settled page: with reduced motion nothing is
@@ -173,13 +185,13 @@ test.beforeEach(async ({ page }) => {
   await mockFeeds(page)
 })
 
-for (const palette of PALETTES) {
+for (const sky of SKIES) {
   for (const mode of MODES) {
-    test.describe(`${palette} ${mode}`, () => {
+    test.describe(`${sky} sky, ${LAMP[mode]}`, () => {
       test.beforeEach(async ({ page }) => {
         await skipBootSplash(page)
         await useMode(page, mode)
-        await usePalette(page, palette)
+        await useSky(page, sky)
       })
 
       test('desktop text and icons meet AA', async ({ page }) => {
@@ -187,10 +199,7 @@ for (const palette of PALETTES) {
         await blockTurnstile(page)
         await page.setViewportSize(DESKTOP_VIEWPORT)
         await openDesktop(page)
-        await expect(page.locator('html')).toHaveAttribute(
-          'data-palette',
-          palette
-        )
+        await expect(page.locator('html')).toHaveAttribute('data-sky', sky)
         await feedsLoaded(page)
 
         const failures: string[] = []
@@ -200,7 +209,7 @@ for (const palette of PALETTES) {
           return result.readings
         }
 
-        await walk('desktop', page.locator('body'), 'Featured work')
+        await walk('desktop', page.locator('body'), "hi, I'm Kacper.")
 
         for (const [name, title, line] of APPS) {
           const win = await launch(page, name, title)
@@ -234,12 +243,14 @@ for (const palette of PALETTES) {
         await page.keyboard.press('Escape')
         await expect(box).toBeHidden()
 
-        // The close button turns into a filled danger button under the pointer.
+        // The close button turns into a filled danger button under the
+        // pointer. Its glyph is an icon, not text, so it needs 3:1 (SPEC
+        // 2.4: cream on the danger red, 4.18:1).
         const close = detail.getByRole('button', { name: 'Close window' })
         await close.hover()
         await settled(close)
         const hovered = await contrastRatio(close)
-        if (hovered < AA_TEXT) {
+        if (hovered < AA_LARGE) {
           failures.push(`close button, hovered: ${hovered.toFixed(2)}:1`)
         }
         await close.click()
@@ -261,6 +272,20 @@ for (const palette of PALETTES) {
         await expect(start).toBeVisible()
         await settled(start)
         await walk('start menu', start, 'Pinned')
+        await page.keyboard.press('Escape')
+        await expect(start).toBeHidden()
+
+        // The View menu, with its three settings as checkbox items: the
+        // state glyph is measured with the text. Items styled alike count
+        // as one reading, kept at the worst, under the first item's text.
+        await page
+          .getByRole('menubar')
+          .getByRole('menuitem', { name: 'View', exact: true })
+          .click()
+        const view = page.getByRole('menu', { name: 'View' })
+        await expect(view).toBeVisible()
+        await settled(view)
+        await walk('view menu', view, 'Turn the lamp')
 
         expect(failures).toEqual([])
       })
@@ -278,15 +303,43 @@ for (const palette of PALETTES) {
           failures.push(...result.failures)
         }
 
-        await walk('feed', page.locator('body'), 'Featured work')
+        await walk('feed', page.locator('body'), "hi, I'm Kacper.")
+        await walk('header', page.getByRole('banner'), 'ShiroOS')
+        await walk(
+          'dock',
+          page.getByRole('navigation', { name: 'Dock' }),
+          'search'
+        )
+        // The closing card, with the mascot seated on it (still: reduced
+        // motion shows her first frame).
+        const mascot = page.locator('[data-cameo="mascot"]')
+        await expect(mascot).toBeVisible()
+        await walk(
+          'contact card',
+          mascot.locator('..'),
+          'Hiring, a contract, or an MVP to build'
+        )
 
         await mobileLauncher(page).click()
         const launcher = page.getByRole('dialog', { name: 'App launcher' })
         await expect(launcher).toBeVisible()
         await settled(launcher)
-        await walk('launcher', launcher, 'Elsewhere')
+        await walk('launcher', launcher, 'Settings')
 
-        for (const [name, title, line] of APPS.slice(0, 2)) {
+        // Every setting the other way round (the Lamp is the mode under
+        // test, so it stays), walked, then back.
+        const flipped = ['Pets', 'Pause animations', 'Readable text']
+        const flip = async () => {
+          for (const name of flipped) {
+            await launcher.getByRole('switch', { name, exact: true }).click()
+          }
+        }
+        await flip()
+        await settled(launcher)
+        await walk('launcher, settings flipped', launcher, 'Lamp')
+        await flip()
+
+        for (const [name, title, line] of APPS) {
           await launcher
             .getByRole('button', { name: `Open ${name}`, exact: true })
             .click()
@@ -326,7 +379,7 @@ for (const palette of PALETTES) {
       }) => {
         test.slow()
         await fakeTurnstile(page)
-        await mockSend(page)
+        const release = await mockSend(page)
         await context.grantPermissions(['clipboard-read', 'clipboard-write'])
         await page.setViewportSize(DESKTOP_VIEWPORT)
 
@@ -339,10 +392,7 @@ for (const palette of PALETTES) {
         await page.goto('/no-such-page')
         const missing = page.getByRole('dialog', { name: '404' })
         await expect(missing).toBeVisible()
-        await expect(page.locator('html')).toHaveAttribute(
-          'data-palette',
-          palette
-        )
+        await expect(page.locator('html')).toHaveAttribute('data-sky', sky)
         await settled(missing)
         await walk('404', page.locator('body'), 'No such path')
 
@@ -359,6 +409,18 @@ for (const palette of PALETTES) {
           .fill('test@example.com')
         await contact.getByRole('textbox', { name: 'Message' }).fill('Hello.')
         await send.click()
+        // Sending: the fields stay readable and the locked button keeps its
+        // flat slice with meta text, measured on its own since the walk
+        // leaves disabled controls out.
+        const sending = contact.getByRole('button', { name: /^Sending/ })
+        await expect(sending).toBeDisabled()
+        await settled(contact)
+        await walk('contact form, sending', contact, 'Get in touch')
+        const locked = await contrastRatio(sending)
+        if (locked < AA_TEXT) {
+          failures.push(`submit button, sending: ${locked.toFixed(2)}:1`)
+        }
+        release()
         await expect(contact.getByText('Message sent')).toBeVisible()
         await walk('contact form, sent', contact, 'Message sent')
         await closeWindow(contact)
@@ -375,16 +437,44 @@ for (const palette of PALETTES) {
         expect(failures).toEqual([])
       })
     })
+  }
+}
 
-    test.describe(`${palette} ${mode}, first visit`, () => {
+/*
+ * The desktop and the boot screen in every painted sky: the wallpaper is
+ * the one thing a sky changes, and these two are what sits on it or comes
+ * before it. Live paints one of these four, by the hour in Warsaw.
+ */
+for (const sky of PAINTED_SKIES) {
+  for (const mode of MODES) {
+    test.describe(`${sky} sky, ${LAMP[mode]}, the desktop`, () => {
+      test('the bare desktop meets AA', async ({ page }) => {
+        await skipBootSplash(page)
+        await useMode(page, mode)
+        await useSky(page, sky)
+        await mockFeeds(page)
+        await page.setViewportSize(DESKTOP_VIEWPORT)
+        await openDesktop(page)
+        await expect(page.locator('html')).toHaveAttribute('data-sky', sky)
+        await feedsLoaded(page)
+        const { failures } = await failuresOn(
+          'desktop',
+          page.locator('body'),
+          "hi, I'm Kacper."
+        )
+        expect(failures).toEqual([])
+      })
+    })
+
+    test.describe(`${sky} sky, ${LAMP[mode]}, first visit`, () => {
       // Reduced motion skips the splash, so this one runs with motion on and
       // holds the page still itself: a frozen clock keeps the splash up, and
-      // no animation is left to fade it out or to blink a dot away.
+      // no animation is left to fade it out or to spin a mark away.
       test.use({ reducedMotion: 'no-preference' })
 
       test('the boot splash meets AA', async ({ page }) => {
         await useMode(page, mode)
-        await usePalette(page, palette)
+        await useSky(page, sky)
         await page.addInitScript(() => {
           document.addEventListener('DOMContentLoaded', () => {
             const still = document.createElement('style')
@@ -397,14 +487,16 @@ for (const palette of PALETTES) {
         await page.goto('/')
         const splash = bootSplash(page)
         await expect(splash).toBeVisible()
-        // Two steps done, one running, one waiting: every state of a dot.
+        // Two steps done, one running, one waiting: every state of a step.
         await page.clock.runFor(1000)
-        await expect(splash.getByText('96ms')).toBeVisible()
+        await expect(
+          splash.getByRole('listitem').filter({ hasText: 'in progress' })
+        ).toHaveText(/Priming panels/)
 
         const { failures } = await failuresOn(
           'boot splash',
           splash,
-          'booting with love'
+          'Mounting desk'
         )
         expect(failures).toEqual([])
       })
@@ -412,25 +504,82 @@ for (const palette of PALETTES) {
   }
 }
 
-test('the project page without JavaScript meets AA', async ({ browser }) => {
+/*
+ * The pages without JavaScript. With no script the Lamp is always off; the
+ * Lamp-on walk covers the same server HTML as a visitor with JavaScript
+ * sees it before the shell covers it, after the boot script has turned the
+ * Lamp on (here by hand, the one thing that script changes in it).
+ */
+for (const mode of MODES) {
+  test.describe(`without JavaScript, ${LAMP[mode]}`, () => {
+    async function staticPage(browser: Browser, path: string) {
+      const context = await browser.newContext({
+        javaScriptEnabled: false,
+        viewport: DESKTOP_VIEWPORT,
+        reducedMotion: 'reduce',
+      })
+      const page = await context.newPage()
+      await page.goto(path)
+      if (mode === 'light') {
+        // Reduced motion leaves every property a 0.01ms transition, so the
+        // colours are read once those have run.
+        await page.evaluate(() => {
+          document.documentElement.classList.remove('dark')
+          return Promise.all(
+            document
+              .getAnimations()
+              .filter((animation) => animation instanceof CSSTransition)
+              .map((animation) => animation.finished)
+          )
+        })
+      }
+      return { page, context }
+    }
+
+    test('the project page meets AA', async ({ browser }) => {
+      const { page, context } = await staticPage(
+        browser,
+        `/projects/${PROJECT.slug}`
+      )
+      const article = page.locator('[data-ssr-project]')
+      await expect(
+        article.getByRole('heading', { name: PROJECT.title, level: 1 })
+      ).toBeVisible()
+
+      const { readings, failures } = await failuresOn(
+        'static project page',
+        article,
+        PROJECT.title
+      )
+      expect(readings.some((reading) => reading.expected)).toBe(true)
+      expect(failures).toEqual([])
+      await context.close()
+    })
+  })
+}
+
+// Only ever painted with scripting off, so only ever with the Lamp off.
+test('the noscript card without JavaScript meets AA', async ({ browser }) => {
   const context = await browser.newContext({
     javaScriptEnabled: false,
     viewport: DESKTOP_VIEWPORT,
     reducedMotion: 'reduce',
   })
   const page = await context.newPage()
-  await page.goto(`/projects/${PROJECT.slug}`)
-  const article = page.locator('[data-ssr-project]')
-  await expect(
-    article.getByRole('heading', { name: PROJECT.title, level: 1 })
-  ).toBeVisible()
-
-  const { readings, failures } = await failuresOn(
-    'static project page',
-    article,
-    PROJECT.title
+  await page.goto('/')
+  const card = page.locator('.z-noscript')
+  await expect(card.getByText('ShiroOS needs JavaScript')).toBeVisible()
+  // The walk leaves out what sits in a <noscript>, which scripting on never
+  // paints. Scripting is off here, so the card is lifted out of it first.
+  await page.evaluate(() => {
+    const noscript = document.querySelector('.z-noscript')?.closest('noscript')
+    if (noscript) noscript.replaceWith(...noscript.childNodes)
+  })
+  const { failures } = await failuresOn(
+    'noscript card',
+    card,
+    'ShiroOS needs JavaScript'
   )
-  expect(readings.some((reading) => reading.expected)).toBe(true)
   expect(failures).toEqual([])
   await context.close()
 })

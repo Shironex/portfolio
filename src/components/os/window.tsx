@@ -4,6 +4,7 @@ import type { AnimationEvent, KeyboardEvent, PointerEvent } from 'react'
 import { memo, useId, useLayoutEffect, useRef, useState } from 'react'
 
 import { WindowControls } from '@/components/os/window-controls'
+import { WindowIcon } from '@/components/pixel/app-icon'
 
 import {
   WINDOW_ID_ATTRIBUTE,
@@ -21,7 +22,12 @@ import type { Project } from '@/types'
 
 import { useAnnounce } from './announcer'
 import { AppBody } from './app-registry'
-import { windowIconFor, windowNameFor } from './constants'
+import {
+  SCROLL_STOP_CLASS,
+  scrollStopLabelFor,
+  scrollStopProps,
+  windowNameFor,
+} from './constants'
 import type { WindowId, WindowState } from './types'
 
 interface WindowProps {
@@ -53,53 +59,53 @@ const SHORTCUT_HINT =
   'Arrow keys move, Shift+Arrow resizes, Ctrl+Alt+Left or Right snaps to that half, Ctrl+Alt+Up maximizes, Ctrl+Alt+Down restores, Ctrl+W closes, Ctrl+M minimizes, Ctrl+Shift+M toggles maximize.'
 
 /**
- * Edge and corner resize handles. A fine pointer gets a 4px edge and a 12px
- * corner inside the window. A coarse one gets a 16px strip along each side
- * and a 24px square off each corner, all outside the window box (the offsets
- * count from inside its 1px border): a handle over the box would take presses
- * meant for the title bar controls, and (handles are `touch-action: none`)
- * scrolling meant for the app body.
+ * Edge and corner resize handles, in art px. A fine pointer gets a 2 art px
+ * edge and a 6 art px corner inside the window, over its frame. A coarse one
+ * gets an 8 art px strip along each side and a 12 art px square off each
+ * corner, all outside the window box: a handle over the box would take
+ * presses meant for the title bar controls, and (handles are
+ * `touch-action: none`) scrolling meant for the app body.
  */
 const RESIZE_HANDLES: ReadonlyArray<{ dir: ResizeDir; className: string }> = [
   {
     dir: 'n',
     className:
-      'top-0 right-2 left-2 h-1 cursor-n-resize pointer-coarse:inset-x-0 pointer-coarse:-top-[17px] pointer-coarse:h-4',
+      'top-0 right-6 left-6 h-2 cursor-n-resize pointer-coarse:inset-x-0 pointer-coarse:-top-8 pointer-coarse:h-8',
   },
   {
     dir: 's',
     className:
-      'right-2 bottom-0 left-2 h-1 cursor-s-resize pointer-coarse:inset-x-0 pointer-coarse:-bottom-[17px] pointer-coarse:h-4',
+      'right-6 bottom-0 left-6 h-2 cursor-s-resize pointer-coarse:inset-x-0 pointer-coarse:-bottom-8 pointer-coarse:h-8',
   },
   {
     dir: 'e',
     className:
-      'top-2 right-0 bottom-2 w-1 cursor-e-resize pointer-coarse:inset-y-0 pointer-coarse:-right-[17px] pointer-coarse:w-4',
+      'top-6 right-0 bottom-6 w-2 cursor-e-resize pointer-coarse:inset-y-0 pointer-coarse:-right-8 pointer-coarse:w-8',
   },
   {
     dir: 'w',
     className:
-      'top-2 bottom-2 left-0 w-1 cursor-w-resize pointer-coarse:inset-y-0 pointer-coarse:-left-[17px] pointer-coarse:w-4',
+      'top-6 bottom-6 left-0 w-2 cursor-w-resize pointer-coarse:inset-y-0 pointer-coarse:-left-8 pointer-coarse:w-8',
   },
   {
     dir: 'ne',
     className:
-      'top-0 right-0 size-3 cursor-ne-resize rounded-tr-xl pointer-coarse:-top-[25px] pointer-coarse:-right-[25px] pointer-coarse:size-6',
+      'top-0 right-0 size-6 cursor-ne-resize pointer-coarse:-top-12 pointer-coarse:-right-12 pointer-coarse:size-12',
   },
   {
     dir: 'nw',
     className:
-      'top-0 left-0 size-3 cursor-nw-resize rounded-tl-xl pointer-coarse:-top-[25px] pointer-coarse:-left-[25px] pointer-coarse:size-6',
+      'top-0 left-0 size-6 cursor-nw-resize pointer-coarse:-top-12 pointer-coarse:-left-12 pointer-coarse:size-12',
   },
   {
     dir: 'se',
     className:
-      'right-0 bottom-0 size-3 cursor-se-resize rounded-br-xl pointer-coarse:-right-[25px] pointer-coarse:-bottom-[25px] pointer-coarse:size-6',
+      'right-0 bottom-0 size-6 cursor-se-resize pointer-coarse:-right-12 pointer-coarse:-bottom-12 pointer-coarse:size-12',
   },
   {
     dir: 'sw',
     className:
-      'bottom-0 left-0 size-3 cursor-sw-resize rounded-bl-xl pointer-coarse:-bottom-[25px] pointer-coarse:-left-[25px] pointer-coarse:size-6',
+      'bottom-0 left-0 size-6 cursor-sw-resize pointer-coarse:-bottom-12 pointer-coarse:-left-12 pointer-coarse:size-12',
   },
 ]
 
@@ -140,6 +146,7 @@ function WindowImpl({
   onOpenProject,
 }: WindowProps) {
   const shortcutHintId = useId()
+  const bodyLabel = scrollStopLabelFor(win)
   const say = useAnnounce()
   const rootRef = useRef<HTMLDivElement | null>(null)
   const reducedMotion = useReducedMotion()
@@ -245,7 +252,6 @@ function WindowImpl({
   }
 
   const showHandles = !win.maximized
-  const TitleIcon = windowIconFor(win.id)
 
   const preview = snapZone
     ? snapBounds(snapZone, measureDesktopArea(), win.minW)
@@ -255,7 +261,8 @@ function WindowImpl({
     <>
       {preview && (
         // Same z as the window and earlier in the DOM: under the dragged
-        // window, over every other one.
+        // window, over every other one. The teal checker with a dashed lamp
+        // edge, inset so the dashes stay inside the zone.
         <div
           aria-hidden
           data-snap-preview={snapZone}
@@ -265,8 +272,10 @@ function WindowImpl({
             width: preview.w,
             height: preview.h,
             zIndex: win.z,
+            outline: 'var(--px) dashed var(--lamp)',
+            outlineOffset: 'calc(-1 * var(--px))',
           }}
-          className="border-miku/50 bg-miku/15 animate-fade-in pointer-events-none absolute rounded-xl border motion-reduce:animate-none"
+          className="px-tile-snap animate-fade-in pointer-events-none absolute motion-reduce:animate-none"
         />
       )}
       <div
@@ -285,69 +294,94 @@ function WindowImpl({
           height: win.h,
           zIndex: win.z,
         }}
-        // No `overflow-hidden` here: a rounded clip around the scroller below
-        // makes Chrome hit-test and scroll it on the main thread, so the title
-        // bar rounds its own corners and the scroller stops short of the bottom
-        // radius instead.
-        // The focused window carries the deeper shadow and the others recede,
-        // so the stack reads at a glance (`window-shadow` in globals.css).
+        // Marks the focused window, which carries the rim, the lit bevel,
+        // the grip and the deeper shadow, so the stack reads at a glance.
         data-focused={isFocused ? '' : undefined}
         className={cn(
-          'border-rule-2 bg-surf-solid window-shadow absolute flex flex-col rounded-xl border motion-reduce:animate-none',
+          'absolute motion-reduce:animate-none',
           leaving ? 'animate-win-close' : 'animate-win-open'
         )}
       >
+        {/* The hard offset shadow (SPEC 2.4): the 50% navy dither, 2 art px
+            down and right, 3 when focused. Under the frame, inside the
+            window's own stacking context. */}
         <div
-          role="toolbar"
-          tabIndex={0}
-          {...{ [WINDOW_TITLE_BAR_ATTRIBUTE]: '' }}
-          aria-label={`${win.title} window controls`}
-          aria-describedby={shortcutHintId}
-          onPointerDown={startDrag}
-          onKeyDown={handleTitleKey}
-          // `touch-none`: a finger on the title bar drags the window, it does
-          // not scroll or zoom the page.
-          className="focus-ring border-rule bg-surf-1 flex h-9 cursor-grab touch-none items-center justify-between gap-3 rounded-t-xl border-b px-3 select-none active:cursor-grabbing pointer-coarse:h-11"
+          aria-hidden
+          className={cn(
+            'px-tile-shadow pointer-events-none absolute inset-0 -z-1',
+            isFocused ? 'translate-3' : 'translate-2'
+          )}
+        />
+        {/* The frame 9-slice. No `overflow-hidden`: a clip around the
+            scroller below makes Chrome hit-test and scroll it on the main
+            thread, and the square frame needs none. */}
+        <div
+          className={cn(
+            'flex h-full flex-col',
+            isFocused ? 'px-window-focused' : 'px-window-unfocused'
+          )}
         >
-          <div className="flex items-center gap-2">
-            <span
-              aria-hidden
-              className={isFocused ? 'text-miku-2-icon' : 'text-ink-4'}
-            >
-              <TitleIcon size={14} strokeWidth={1.75} />
-            </span>
+          {/* Night chrome in both Lamp modes: the title bar keeps the night
+              tokens over a paper body. */}
+          <div
+            role="toolbar"
+            tabIndex={0}
+            {...{ [WINDOW_TITLE_BAR_ATTRIBUTE]: '' }}
+            aria-label={`${win.title} window controls`}
+            aria-describedby={shortcutHintId}
+            onPointerDown={startDrag}
+            onKeyDown={handleTitleKey}
+            // `touch-none`: a finger on the title bar drags the window, it
+            // does not scroll or zoom the page.
+            className={cn(
+              'os-night focus-ring px-cursor-grab flex h-16 flex-none touch-none items-center gap-3 select-none pointer-coarse:h-24',
+              isFocused ? 'px-titlebar-focused' : 'px-titlebar-unfocused'
+            )}
+          >
+            {/* 16x16 with a transparent 1 art px margin: it spans the bar. */}
+            <WindowIcon win={win} className="-my-1" />
+            {/* Clipped across only: a vertical clip would cut the
+                descenders below the line box of the title face. */}
             <h2
               className={cn(
-                'font-mono text-xs font-normal tracking-normal',
-                isFocused ? 'text-ink-2' : 'text-ink-4'
+                'text-title min-w-0 flex-1 overflow-x-clip text-ellipsis whitespace-nowrap',
+                isFocused ? 'text-(--ink-hi)' : 'text-(--meta)'
               )}
             >
               {win.title}
             </h2>
+            <WindowControls
+              maximized={win.maximized}
+              onCopyLink={() => onCopyLink(win.id)}
+              onMinimize={requestMinimize}
+              onMaximize={() => onMaximize(win.id)}
+              onClose={requestClose}
+            />
+            {/* `hidden` keeps it out of the reading order; it still
+                describes the toolbar. */}
+            <span id={shortcutHintId} hidden>
+              {SHORTCUT_HINT}
+            </span>
           </div>
-          <WindowControls
-            onCopyLink={() => onCopyLink(win.id)}
-            onMinimize={requestMinimize}
-            onMaximize={() => onMaximize(win.id)}
-            onClose={requestClose}
-          />
-          {/* `hidden` keeps it out of the reading order; it still describes
-              the toolbar. */}
-          <span id={shortcutHintId} hidden>
-            {SHORTCUT_HINT}
-          </span>
-        </div>
-        {/* Opaque and square so Chrome composites it (threaded scrolling keeps
-          LCD text only on an opaque scroller at DPR 1); `mb-3` keeps its
-          corners inside the window's rounded bottom edge. Contained: layout
-          and paint inside an app never reach past the scroller, which clips
-          at the same box anyway (the lightbox and toasts are portals). */}
-        <div className="font-body text-ink bg-surf-solid mb-3 flex-1 overflow-auto px-6 pt-6 pb-3 contain-layout contain-paint contain-style">
-          <AppBody
-            id={win.id}
-            project={win.project}
-            onOpenProject={onOpenProject}
-          />
+          {/* Opaque, in the colour of the frame's body, so Chrome composites
+            it (threaded scrolling keeps LCD text only on an opaque scroller
+            at DPR 1). Contained: layout and paint inside an app never reach
+            past the scroller, which clips at the same box anyway (the
+            lightbox and toasts are portals). An app with nothing to focus
+            makes it a Tab stop (`scrollStopLabelFor`). */}
+          <div
+            {...scrollStopProps(bodyLabel)}
+            className={cn(
+              'font-body text-ink bg-surf-solid min-h-0 flex-1 overflow-auto px-12 pt-12 pb-6 contain-layout contain-paint contain-style',
+              bodyLabel && SCROLL_STOP_CLASS
+            )}
+          >
+            <AppBody
+              id={win.id}
+              project={win.project}
+              onOpenProject={onOpenProject}
+            />
+          </div>
         </div>
 
         {showHandles &&
@@ -358,12 +392,7 @@ function WindowImpl({
               data-resize-handle={dir}
               onPointerDown={startResize(dir)}
               onMouseDown={preventDefault}
-              // The tint is for a pointer that hovers; under a finger it
-              // would stick after the touch.
-              className={cn(
-                'pointer-fine:hover:bg-miku/20 absolute z-10 touch-none',
-                className
-              )}
+              className={cn('absolute z-10 touch-none', className)}
             />
           ))}
       </div>

@@ -1,9 +1,44 @@
 @import 'tailwindcss';
-@import './palettes.css';
+@import './tokens.css';
+/*
+ * The pixel chrome (9-slices, tiles) and cursors, generated from the art
+ * (`pnpm art:chrome`, `pnpm art:cursors`). In the components layer, under
+ * the utilities. The coarse pointer title bars come after the chrome they
+ * override. The sprite loops are one stylesheet per sheet in `sprites/`,
+ * each imported by the component that shows its art.
+ */
+@import './pixel-chrome.css' layer(components);
+@import './coarse-chrome.css' layer(components);
+@import './pixel-cursors.css' layer(components);
 
 @source '../../*.{js,ts,jsx,tsx,mdx}';
 
 @custom-variant dark (&:is(.dark *));
+
+/*
+ * Desktop heights in art px, for the desktop layout (`desktop-layout.ts`).
+ * Media queries cannot read --px, so each art pixel size has its own query:
+ * --px 2 (DPR 1, 1.5, 2 and 3), 2.4 (DPR 1.25) and 2.29 (DPR 1.75).
+ *
+ * short-desk: under 436 art px, too short for the hero's activity strip
+ * (872 css px, 1046 and 998).
+ */
+@custom-variant short-desk {
+  @media (max-height: 871px),
+    (min-resolution: 1.2dppx) and (max-resolution: 1.3dppx) and (max-height: 1045px),
+    (min-resolution: 1.7dppx) and (max-resolution: 1.8dppx) and (max-height: 997px) {
+    @slot;
+  }
+}
+
+/* low-desk: under 344 art px, too short for both panels (688, 826 and 787). */
+@custom-variant low-desk {
+  @media (max-height: 687px),
+    (min-resolution: 1.2dppx) and (max-resolution: 1.3dppx) and (max-height: 825px),
+    (min-resolution: 1.7dppx) and (max-resolution: 1.8dppx) and (max-height: 786px) {
+    @slot;
+  }
+}
 
 @utility container {
   margin-inline: auto;
@@ -18,212 +53,237 @@
   }
 }
 
-/* Hoisted outside @theme so Tailwind v4 doesn't tree-shake it when the
-   animation is applied via inline style / arbitrary value. */
-@keyframes spinSlow {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 /*
- * A window's shadow lives on two pseudo-elements, the resting one and the
- * deeper focused one (`data-focused`), and a focus change cross-fades their
- * opacity. Animating `box-shadow` itself repaints a 60px blur on the main
- * thread for every frame; these are painted once.
+ * Type (SPEC 2.3). Five named styles; each sets face, size, line height and
+ * weight, so it is the only text class an element needs. Sizes come from the
+ * `--type-*` tokens below: whole design pixels of the face, each a whole
+ * number of device pixels, never under the rem floor of the spec table.
  */
-@utility window-shadow {
-
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    /* The border box: `inset: 0` would stop at the padding edge. */
-    inset: -1px;
-    z-index: -1;
-    border-radius: inherit;
-    pointer-events: none;
-    transition: opacity 0.2s var(--default-transition-timing-function);
-  }
-
-  &::before {
-    box-shadow: var(--shiro-elev-2);
-  }
-
-  &::after {
-    box-shadow: var(--shiro-elev-3);
-    opacity: 0;
-  }
-
-  &[data-focused]::before {
-    opacity: 0;
-  }
-
-  &[data-focused]::after {
-    opacity: 1;
-  }
+@utility text-label {
+  font-family: var(--font-mono);
+  font-size: var(--type-label);
+  line-height: max(1rem, calc(8 * var(--px)));
+  font-weight: 400;
 }
 
 /*
- * Film grain over the desktop: white noise at a low alpha. The tile has a
- * fixed size (the noise is stitched, so it repeats without seams); left to
- * size itself it is fitted to the viewport, and the turbulence filter is run
- * again at that size on first paint and on every resize. Plain alpha, no
- * blend mode: a blended full-viewport layer makes the compositor read back
- * everything that moves under it. The two opacities match what
- * `mix-blend-mode: overlay` at 0.06 gave on the light and the dark ground.
+ * Body size in two kinds. `text-body` is the chrome's (menu items, palette
+ * rows, buttons, fields, toasts) and is always pixel. `text-prose` is long
+ * text (paragraphs, descriptions, lists in app bodies, the hero's lines):
+ * the same size and line, in the face of long text, which the Readable text
+ * setting swaps (`--font-text`, below).
  */
-@utility grain-layer {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 100;
-  opacity: 0.05;
-  background-size: 200px 200px;
-  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+@utility text-body {
+  font-family: var(--font-body);
+  font-size: var(--type-body);
+  line-height: calc(14 * var(--type-dp));
+  font-weight: 400;
+}
 
-  &:is(.dark *) {
-    opacity: 0.0075;
+@utility text-prose {
+  font-family: var(--font-text);
+  font-size: var(--type-body);
+  line-height: calc(14 * var(--type-dp));
+  font-weight: 400;
+}
+
+@utility text-title {
+  font-family: var(--font-body);
+  font-size: var(--type-body);
+  line-height: calc(12 * var(--type-dp));
+  font-weight: 700;
+}
+
+@utility text-heading {
+  font-family: var(--font-mono);
+  font-size: var(--type-heading);
+  line-height: calc(16 * var(--type-dp));
+  font-weight: 400;
+}
+
+@utility text-display {
+  font-family: var(--font-display);
+  font-size: var(--type-display-sm);
+  line-height: calc(12 * var(--type-dp-display-sm));
+  font-weight: 700;
+
+  @variant md {
+    font-size: var(--type-display);
+    line-height: calc(24 * var(--type-dp));
   }
 }
 
 /*
- * A soft glow: the falloff of a disc under a wide gaussian blur, painted as a
- * gradient, so nothing is filtered when it moves. `--orb-color` is the colour
- * at the centre; the glow fades out at the edge of the element.
+ * A dotted 1 art px rule (menu separators, popover footers): one art px of
+ * the dim frame teal, one of nothing, so the dots land on whole pixels where
+ * a `dotted` border would draw round, smoothed dots.
  */
-@utility orb {
-  background-image: radial-gradient(closest-side,
-      var(--orb-color) 0%,
-      color-mix(in oklab, var(--orb-color) 97%, transparent) 10%,
-      color-mix(in oklab, var(--orb-color) 87%, transparent) 20%,
-      color-mix(in oklab, var(--orb-color) 73%, transparent) 30%,
-      color-mix(in oklab, var(--orb-color) 54%, transparent) 40%,
-      color-mix(in oklab, var(--orb-color) 36%, transparent) 50%,
-      color-mix(in oklab, var(--orb-color) 21%, transparent) 60%,
-      color-mix(in oklab, var(--orb-color) 10%, transparent) 70%,
-      color-mix(in oklab, var(--orb-color) 4%, transparent) 80%,
-      color-mix(in oklab, var(--orb-color) 1.5%, transparent) 90%,
-      transparent 100%);
+@utility rule-dotted {
+  height: var(--px);
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--frame-dim) 0 var(--px),
+    transparent 0 calc(2 * var(--px))
+  );
 }
 
 /*
- * Easings. `static` so the variables are emitted even though only the
- * animation tokens below read them.
+ * Sprites drawn at 2 or 3 device-whole art px per art px (the project hero
+ * icon, the 404 sign, the empty state mascot). The wrapper turns the `--px`
+ * it inherits into `--px-scaled` and its children take that as their own
+ * `--px`: set on one element the two would be a cycle.
  */
-@theme static {
-  /* ease-out-quart: calm deceleration, the curve of every enter and exit. */
-  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-  /* The mobile sheet: a touch more glide at the end of a long travel. */
-  --ease-sheet: cubic-bezier(0.2, 0.9, 0.3, 1);
+@utility px-scale-2 {
+  --px-scaled: calc(2 * var(--px));
+  & > * {
+    --px: var(--px-scaled);
+  }
+}
+
+@utility px-scale-3 {
+  --px-scaled: calc(3 * var(--px));
+  & > * {
+    --px: var(--px-scaled);
+  }
+}
+
+/* Lamp lettering with its 1 art px shadow, the README header treatment. */
+@utility lamp-heading {
+  color: var(--heading);
+  text-shadow: calc(-1 * var(--px)) var(--px) 0 var(--heading-shadow);
 }
 
 /*
- * Aliases of palette variables. `inline` so a utility carries the variable it
- * aliases (`bg-primary` is `var(--color-miku)`) and resolves it on the element:
- * an alias declared as a plain theme variable is computed once at `:root`, and
- * inside a nested `[data-palette]` swatch it would paint in the palette of the
- * document.
+ * Aliases of token variables. `inline` so a utility carries the variable it
+ * aliases (`bg-ground` is `var(--ground)`) and resolves it on the element:
+ * an alias declared as a plain theme variable is computed once at `:root`,
+ * and inside an `.os-night` subtree in paper mode it would paint the paper
+ * value of the document.
  */
 @theme inline {
   /*
-   * shadcn tokens, mapped onto the ShiroOS palette: a shadcn component as
-   * written (`bg-primary`, `text-muted-foreground`, `border-input`) follows
-   * the active palette and mode, with no neutral scale of its own to drift.
+   * The tokens of SPEC 2.2 (src/styles/tokens.css). `--heading` has no
+   * colour utility: `text-heading` is the type style of SPEC 2.3, so a
+   * heading takes its colour from `lamp-heading` or `text-(--heading)`.
    */
-  --color-background: var(--shiro-sky-1);
-  --color-foreground: var(--shiro-ink);
-  --color-primary: var(--color-miku);
-  --color-primary-foreground: var(--color-cloud);
-  --color-secondary: var(--shiro-surf-soft);
-  --color-secondary-foreground: var(--shiro-ink-2);
-  --color-muted: var(--shiro-surf-soft);
-  --color-muted-foreground: var(--shiro-ink-3);
-  --color-accent: var(--shiro-surf-soft);
-  --color-accent-foreground: var(--shiro-ink);
-  --color-destructive: var(--color-danger-ink);
-  --color-destructive-foreground: var(--color-cloud);
-  --color-border: var(--shiro-rule-2);
-  --color-input: var(--shiro-rule-2);
-  --color-ring: var(--color-miku);
+  --color-ground: var(--ground);
+  --color-surf: var(--surf);
+  --color-surf-raised: var(--surf-raised);
+  --color-select: var(--select);
+  --color-frame: var(--frame);
+  --color-frame-dim: var(--frame-dim);
+  --color-ink-hi: var(--ink-hi);
+  --color-meta: var(--meta);
+  --color-lamp: var(--lamp);
+  --color-lamp-hi: var(--lamp-hi);
+  --color-lamp-shadow: var(--lamp-shadow);
+  --color-link: var(--link);
+  --color-fill-primary: var(--fill-primary);
+  --color-fill-primary-ink: var(--fill-primary-ink);
+  --color-fill-warm: var(--fill-warm);
+  --color-fill-warm-ink: var(--fill-warm-ink);
+  --color-danger-fill: var(--danger-fill);
+  --color-danger-fill-ink: var(--danger-fill-ink);
+  --color-error: var(--error);
+  --color-outline: var(--outline);
 
   /*
-   * Elevations, as shadow tokens: `shadow-elev-2` goes through Tailwind's
-   * shadow utility, so it stacks with a ring (`focus-visible:ring-2`) instead
-   * of being replaced by it. The values are whole shadows per palette and
-   * mode, so a shadow colour utility (`shadow-miku/20`) has nothing to tint.
+   * shadcn tokens, mapped onto the ShiroOS tokens: a shadcn component as
+   * written (`bg-primary`, `text-muted-foreground`, `border-input`) follows
+   * the Lamp, with no neutral scale of its own to drift.
    */
-  --shadow-elev-1: var(--shiro-elev-1);
-  --shadow-elev-2: var(--shiro-elev-2);
-  --shadow-elev-3: var(--shiro-elev-3);
-  --shadow-elev-4: var(--shiro-elev-4);
+  --color-background: var(--color-sky-1);
+  --color-foreground: var(--color-ink);
+  --color-primary: var(--color-miku);
+  --color-primary-foreground: var(--color-cloud);
+  --color-secondary: var(--color-surf-soft);
+  --color-secondary-foreground: var(--color-ink-2);
+  --color-muted: var(--color-surf-soft);
+  --color-muted-foreground: var(--color-ink-3);
+  --color-accent: var(--color-surf-soft);
+  --color-accent-foreground: var(--color-ink);
+  --color-destructive: var(--danger-fill);
+  --color-destructive-foreground: var(--danger-fill-ink);
+  --color-border: var(--color-rule-2);
+  --color-input: var(--color-rule-2);
+  --color-ring: var(--color-miku);
 }
 
 @theme {
   /*
-   * Typography: JetBrains Mono
-   *
-   * The --font-mono variable integrates the JetBrains Mono font (loaded in layout.tsx)
-   * with Tailwind's font-mono utility class. The fallback stack ensures graceful
-   * degradation to system monospace fonts if the primary font fails to load.
-   *
-   * Usage: Apply via Tailwind's `font-mono` class or directly via CSS var(--font-mono)
+   * Spacing counts in art pixels: `p-4` is 4 art px, 8px at DPR 1 and 2,
+   * always a whole number of device pixels. Every numeric spacing class was
+   * doubled once when this replaced the 0.25rem step, so the layout at
+   * `--px: 2px` is the one it was.
    */
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  --spacing: var(--px);
+
+  /*
+   * Fonts (SPEC 2.3), loaded with next/font in layout.tsx, which puts their
+   * variables on <html>. Each `var(--font-*)` carries the face and its
+   * metric-matched Arial fallback.
+   *   - `font-body`, `font-display`: Shiro Pixel Sans (Pixeloid Sans).
+   *   - `font-mono`: Departure Mono.
+   *   - `font-text`: the face of long text, Shiro Pixel Sans or, with the
+   *     Readable text setting, Atkinson Hyperlegible Next (set below).
+   */
+  --font-mono:
+    var(--font-departure-mono), ui-monospace, SFMono-Regular, Menlo, Consolas,
+    monospace;
+  --font-body: var(--font-pixel-sans), system-ui, sans-serif;
+  --font-display: var(--font-pixel-sans), system-ui, sans-serif;
+  --font-text: var(--font-pixel-sans), system-ui, sans-serif;
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
   /*
-   * Palette. Real values live in ./palettes.css, one block per palette per
-   * mode, generated by scripts/gen-palettes.mjs. The declarations here exist
-   * so Tailwind emits the utilities; every one is overridden at runtime by
-   * the active [data-palette] block, which is unlayered and therefore wins.
-   *
-   * An accent is a fill. Its `-ink` (text, 4.5:1) and `-icon` (icons, 3:1)
-   * variants are derived by the generator and are what a foreground uses;
-   * the values here are placeholders that only name the utilities.
+   * The old palette names (`miku`, `peach`, `cloud`, `sky`, `surf`,
+   * `ink-2` to `ink-4`, `rule`), kept so every component works until
+   * Phases 2 to 4 move it onto the tokens above. The declarations here only
+   * make Tailwind emit the utilities: tokens.css sets each one, unlayered,
+   * on `:root` and on every `.os-night` subtree, mapped onto the README
+   * palette and gated like the rest. The values here are placeholders.
    */
-  --color-miku: #0f7c74;
-  --color-miku-2: #0a5954;
-  --color-miku-3: #1ca59b;
-  --color-peach: #b87a1e;
-  --color-peach-2: #cf8a33;
-  --color-cloud: #fbf7ed;
-  --color-miku-ink: var(--color-miku-2);
-  --color-miku-icon: var(--color-miku);
-  --color-miku-2-ink: var(--color-miku-2);
-  --color-miku-2-icon: var(--color-miku-2);
-  --color-miku-3-ink: var(--color-miku-2);
-  --color-miku-3-icon: var(--color-miku);
-  --color-peach-ink: var(--color-peach);
-  --color-peach-icon: var(--color-peach);
-  --color-peach-2-ink: var(--color-peach);
-  --color-peach-2-icon: var(--color-peach);
-  --color-sky-0: var(--shiro-sky-0);
-  --color-sky-1: var(--shiro-sky-1);
-  --color-sky-2: var(--shiro-sky-2);
-  --color-sky-3: var(--shiro-sky-3);
-  --color-surf-0: var(--shiro-surf-0);
-  --color-surf-1: var(--shiro-surf-1);
-  --color-surf-2: var(--shiro-surf-2);
-  --color-surf-solid: var(--shiro-surf-solid);
-  --color-surf-soft: var(--shiro-surf-soft);
-  --color-ink: var(--shiro-ink);
-  --color-ink-2: var(--shiro-ink-2);
-  --color-ink-3: var(--shiro-ink-3);
-  --color-ink-4: var(--shiro-ink-4);
-  --color-rule: var(--shiro-rule);
-  --color-rule-2: var(--shiro-rule-2);
-  --color-danger: #ff5b6a;
-  --color-danger-ink: #b8243a;
+  --color-miku: #4fa3a0;
+  --color-miku-2: #2e6e6e;
+  --color-miku-3: #8fe0cf;
+  --color-peach: #f0c070;
+  --color-peach-2: #c98a4a;
+  --color-cloud: #0b1420;
+  --color-miku-ink: #8fe0cf;
+  --color-miku-icon: #4fa3a0;
+  --color-miku-2-ink: #8fe0cf;
+  --color-miku-2-icon: #4fa3a0;
+  --color-miku-3-ink: #8fe0cf;
+  --color-miku-3-icon: #8fe0cf;
+  --color-peach-ink: #f0c070;
+  --color-peach-icon: #f0c070;
+  --color-peach-2-ink: #f0c070;
+  --color-peach-2-icon: #c98a4a;
+  --color-sky-0: #0b1420;
+  --color-sky-1: #0b1420;
+  --color-sky-2: #0b1420;
+  --color-sky-3: #0b1420;
+  --color-surf-0: #173a45;
+  --color-surf-1: #173a45;
+  --color-surf-2: #13253a;
+  --color-surf-solid: #13253a;
+  --color-surf-soft: #173a45;
+  --color-ink: #e8e4dc;
+  --color-ink-2: #e8e4dc;
+  --color-ink-3: #9aa4a8;
+  --color-ink-4: #9aa4a8;
+  --color-rule: #1f5058;
+  --color-rule-2: #2e6e6e;
+  --color-danger: #c23a3a;
+  --color-danger-ink: #f0a068;
 
   /*
    * Layers, bottom to top. Windows stack inside their own `isolate` container
-   * (1..n), so their z never competes with these. The grain overlay sits at
-   * 100, between the desktop and the windows. Lightbox and toast are mounted
-   * on <body>, above everything inside the shell.
+   * (1..n), so their z never competes with these. Lightbox and toast are
+   * mounted on <body>, above everything inside the shell.
    */
   --z-index-desktop: 10;
   --z-index-windows: 110;
@@ -236,44 +296,29 @@
   --z-index-lightbox: 800;
   --z-index-toast: 900;
 
-  /* =================== ShiroOS fonts =================== */
-  --font-display: var(--font-fraunces), 'Iowan Old Style', 'Palatino Linotype', Palatino, 'URW Palladio L', Georgia, serif;
-  --font-body: var(--font-geist), -apple-system, 'Segoe UI', system-ui, sans-serif;
-
-  /*
-   * Letter spacing. `eyebrow` is the small uppercase mono label over a
-   * section, `label` the tighter one of a badge or a legend, `display` the
-   * pull-in of a serif heading.
-   */
-  --tracking-eyebrow: 0.2em;
-  --tracking-label: 0.1em;
-  --tracking-display: -0.02em;
-
   /* =================== ShiroOS animations =================== */
-  --animate-drift: drift 16s linear infinite;
-  --animate-floaty: floaty 8s ease-in-out infinite;
-  --animate-blink: blink 1s steps(2) infinite;
   /*
-   * Interaction feedback stays at or under 200ms and animates only transform
-   * and opacity. Easings are the tokens above; intentionally no bounce or
-   * overshoot curves, they read as dated.
+   * Frame animation, not tweening (SPEC 2.8). Every animation steps through
+   * a few held frames: `steps(n)` over a move of n art px lands each frame
+   * on the grid, and `steps(1)` holds each keyframe of a loop until the
+   * next, so a loop keeps its uneven timing. Nothing scales or rotates.
+   * Interaction feedback takes at most 160ms.
    */
-  --animate-win-open: winOpen 0.2s var(--ease-out-quart);
-  --animate-win-close: winClose 0.14s var(--ease-out-quart) forwards;
-  --animate-sheet-up: sheetUp 0.2s var(--ease-sheet);
-  --animate-cp-in: cpIn 0.18s var(--ease-out-quart);
-  --animate-menu-in: menuIn 0.15s var(--ease-out-quart);
-  --animate-pulse-slow: pulse 1.8s ease-in-out infinite;
-  --animate-bob-note: bobNote 1.4s ease-in-out infinite;
-  --animate-logo-pop: logoPop 0.6s var(--ease-out-quart);
-  --animate-boot-out: bootOut 0.5s ease 1.9s forwards;
+  --animate-blink: blink 1s steps(2) infinite;
+  --animate-win-open: winOpen 0.16s steps(4);
+  --animate-win-close: winClose 0.12s steps(4) forwards;
+  --animate-sheet-up: sheetUp 0.16s steps(4);
+  --animate-cp-in: cpIn 0.12s steps(4);
+  --animate-menu-in: menuIn 0.08s steps(2);
+  --animate-boot-out: bootOut 0.32s steps(4) 1.9s forwards;
+  --animate-boot-open: bootOpen 0.28s steps(4);
   /*
    * `backwards`: a line with an `animation-delay` stays hidden until its
    * turn, and holds nothing once it is in (its keyframes end on its own
    * style), so no finished animation keeps a `transform` on it.
    */
-  --animate-term-in: termIn 0.3s ease backwards;
-  --animate-fade-in: fadeIn 0.15s ease;
+  --animate-term-in: termIn 0.16s steps(2) backwards;
+  --animate-fade-in: fadeIn 0.12s steps(3);
 
   /* ShiroOS keyframes */
   @keyframes bootOut {
@@ -283,54 +328,19 @@
     }
   }
 
-  @keyframes logoPop {
+  /* The boot picture opening from the middle line (SPEC 2.6). */
+  @keyframes bootOpen {
     from {
-      transform: scale(0.3) rotate(-20deg);
-      opacity: 0;
+      clip-path: inset(50% 0 50% 0);
+    }
+    to {
+      clip-path: inset(0);
     }
   }
 
-  @keyframes bobNote {
-
-    0%,
-    100% {
-      transform: rotate(-10deg) translateY(0);
-    }
-
-    50% {
-      transform: rotate(10deg) translateY(-6px);
-    }
-  }
-
-  @keyframes drift {
-
-    0%,
-    100% {
-      transform: translate(0, 0) rotate(-10deg);
-    }
-
-    25% {
-      transform: translate(20px, -18px) rotate(8deg);
-    }
-
-    50% {
-      transform: translate(-10px, -32px) rotate(-6deg);
-    }
-
-    75% {
-      transform: translate(-24px, -12px) rotate(12deg);
-    }
-  }
-
-  @keyframes floaty {
-
-    0%,
-    100% {
-      transform: translate(0, 0);
-    }
-
-    50% {
-      transform: translate(20px, -15px);
+  @keyframes bootScan {
+    from {
+      top: calc(50% - 3 * var(--px));
     }
   }
 
@@ -343,7 +353,7 @@
   @keyframes termIn {
     from {
       opacity: 0;
-      transform: translateY(-4px);
+      transform: translateY(calc(-2 * var(--px)));
     }
 
     to {
@@ -352,51 +362,55 @@
     }
   }
 
+  /*
+   * A window opens as a stepped reveal from its title bar down, and closes
+   * back up (SPEC 2.4). The clip reaches past the box on three sides so the
+   * offset shadow is revealed with the window instead of after it.
+   */
   @keyframes winOpen {
     from {
-      opacity: 0;
-      transform: scale(0.92) translateY(10px);
+      clip-path: inset(calc(-4 * var(--px)) calc(-4 * var(--px)) 100%);
+    }
+
+    to {
+      clip-path: inset(calc(-4 * var(--px)));
     }
   }
 
   @keyframes winClose {
+    from {
+      clip-path: inset(calc(-4 * var(--px)));
+    }
+
     to {
-      opacity: 0;
-      transform: scale(0.96) translateY(6px);
+      clip-path: inset(calc(-4 * var(--px)) calc(-4 * var(--px)) 100%);
     }
   }
 
+  /*
+   * The phone sheet comes up from below the screen in four held frames
+   * (SPEC 1.3). Its travel is rounded to 4 art px, so each quarter of it
+   * lands on the grid.
+   */
   @keyframes sheetUp {
     from {
-      opacity: 0;
-      transform: translateY(100%);
+      transform: translateY(100vh);
+      transform: translateY(round(up, 100dvh, calc(4 * var(--px))));
     }
   }
 
   @keyframes cpIn {
     from {
-      transform: translateY(-20px) scale(0.96);
       opacity: 0;
+      transform: translateY(calc(-4 * var(--px)));
     }
   }
 
-  /* A dropdown is small and opens next to its trigger: a short drop, no scale. */
+  /* A dropdown is small and opens next to its trigger: a short drop. */
   @keyframes menuIn {
     from {
-      transform: translateY(-4px);
       opacity: 0;
-    }
-  }
-
-  @keyframes pulse {
-
-    0%,
-    100% {
-      opacity: 1;
-    }
-
-    50% {
-      opacity: 0.5;
+      transform: translateY(calc(-2 * var(--px)));
     }
   }
 
@@ -426,7 +440,6 @@
   color utility to any element that depends on these defaults.
 */
 @layer base {
-
   *,
   ::after,
   ::before,
@@ -441,39 +454,93 @@
     --radius: 0.5rem;
 
     --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+
+    /*
+     * The art pixel and the half pixel of the small labels (SPEC 2.1). The
+     * boot script in src/lib/os/appearance.ts sets the real values inline on
+     * <html> (whole device pixels at any DPR); these cover the server render,
+     * the instant before the script and a visit without JavaScript.
+     */
+    --px: 2px;
+    --hpx: 1px;
+    --dpr: 1;
+
+    /*
+     * The side of a hit target (`size-(--target)`, `h-(--target)`): 22 art
+     * px, never under 44px, which it would be at DPR 2.625 (1.905px each).
+     * Where `round()` exists (below) the floor is rounded up to whole art
+     * px too, so a target stays on the grid (24 art px at DPR 2.625).
+     */
+    --target: max(2.75rem, calc(22 * var(--px)));
+
+    /*
+     * Type sizes (SPEC 2.3). `--type-dp` is one design pixel of the 9 px/em
+     * Pixeloid and of the 11 px/em Departure Mono at heading size: an art px,
+     * floored at 0.125rem so a larger browser font size wins. The mobile
+     * display size draws each design pixel one and a half art px wide
+     * (`--type-dp-display-sm`). Where `round()` exists (below) both snap up
+     * to whole device pixels, which the floor alone does not give (at DPR
+     * 2.625 it is 5.25 device px). Labels follow the half pixel and are left
+     * unsnapped: snapping 11px at DPR 1.25 would take them to 17.6px.
+     */
+    --device-px: calc(1px / var(--dpr));
+    --type-dp: max(0.125rem, var(--px));
+    --type-dp-display-sm: max(0.1875rem, calc(1.5 * var(--px)));
+    --type-label: max(0.6875rem, calc(11 * var(--hpx)));
+    --type-body: calc(9 * var(--type-dp));
+    --type-heading: calc(11 * var(--type-dp));
+    --type-display: calc(18 * var(--type-dp));
+    --type-display-sm: calc(9 * var(--type-dp-display-sm));
   }
 
-  /* Custom scrollbar: webkit (Chrome, Safari, Edge) */
+  /*
+   * The snap. `- 0.01px` keeps a value that is already whole device pixels
+   * (2.4px at DPR 1.25 is 3) from rounding up a step on a float error.
+   */
+  @supports (width: round(up, 1px, 1px)) {
+    :root {
+      --target: max(
+        round(up, 2.75rem - 0.01px, var(--px)),
+        calc(22 * var(--px))
+      );
+      --type-dp: round(up, max(0.125rem, var(--px)) - 0.01px, var(--device-px));
+      --type-dp-display-sm: round(
+        up,
+        max(0.1875rem, 1.5 * var(--px)) - 0.01px,
+        var(--device-px)
+      );
+    }
+  }
+
+  /*
+   * Scrollbars (SPEC 2.4): a 6 art px ground track, a frame-dim thumb that
+   * gains a 1 art px frame edge on hover, square ends. Chromium 121 and
+   * later ignore the pseudo-elements once a standard scrollbar property is
+   * set, so the standard pair only goes to browsers without them (Firefox).
+   */
   *::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: calc(6 * var(--px));
+    height: calc(6 * var(--px));
   }
 
-  *::-webkit-scrollbar-track {
-    background: var(--shiro-scrollbar-track);
-    border-radius: 10px;
+  *::-webkit-scrollbar-track,
+  *::-webkit-scrollbar-corner {
+    background: var(--ground);
   }
 
   *::-webkit-scrollbar-thumb {
-    background: var(--shiro-scrollbar-thumb);
-    border-radius: 10px;
-    border: 2px solid transparent;
-    background-clip: content-box;
+    background: var(--frame-dim);
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    background: var(--shiro-scrollbar-thumb-hover);
-    background-clip: content-box;
+    box-shadow: inset 0 0 0 var(--px) var(--frame);
   }
 
-  *::-webkit-scrollbar-corner {
-    background: transparent;
-  }
-
-  /* Firefox */
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: var(--shiro-scrollbar-thumb) var(--shiro-scrollbar-track);
+  @supports not selector(::-webkit-scrollbar) {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--frame-dim) var(--ground);
+    }
   }
 }
 
@@ -482,14 +549,40 @@
     @apply border-border;
   }
 
+  /*
+   * Night in both Lamp modes (menu bar, taskbar, boot, desktop labels):
+   * tokens.css gives the subtree the night values, and this its body ink,
+   * which would otherwise inherit already resolved from a paper <body>.
+   */
+  .os-night {
+    color: var(--color-ink);
+  }
+
+  /*
+   * The Readable text setting (`shiroos:text`, applied by the boot script):
+   * long text (`text-prose`) turns to Atkinson Hyperlegible Next, the chrome
+   * (`text-body` and the rest) stays pixel. The face is not preloaded, so it
+   * is only fetched here.
+   */
+  [data-text='readable'] {
+    --font-text: var(--font-atkinson), system-ui, sans-serif;
+  }
+
   body {
     @apply font-mono antialiased;
     /*
-     * Ground is the page ground of the palette (`--shiro-sky-1`). The OS shell
-     * overlays this with its own wallpaper, but the body still shows
-     * pre-hydration and in any uncovered area (notably the mobile feed).
+     * Pixel faces: no faux bold or italic (neither face has an italic, so
+     * emphasis is colour or weight), and no letter spacing, which the fonts
+     * already build into each glyph's advance.
      */
-    background-color: var(--color-sky-1);
+    font-synthesis: none;
+    letter-spacing: 0;
+    /*
+     * The ground navy, night in both Lamp modes. The OS shell overlays it
+     * with its wallpaper, but the body still shows pre-hydration and in any
+     * uncovered area (notably the mobile feed).
+     */
+    background-color: var(--ground);
     color: var(--color-ink);
   }
 
@@ -499,7 +592,6 @@
    * `motion-safe:` utilities for motion that is critical to comprehension.
    */
   @media (prefers-reduced-motion: reduce) {
-
     *,
     *::before,
     *::after {
@@ -510,22 +602,28 @@
     }
   }
 
-  /* Consistent keyboard focus ring across ShiroOS chrome. Apply via the
-     `focus-ring` utility class rather than repeating the ring each site. */
+  /*
+   * The two-tone focus ring (SPEC 2.4) on every `focus-ring` element: a 1 art
+   * px lamp outline, outside a 1 art px navy ring in the offset gap, so it
+   * reads on night surfaces (lamp, 7.2:1 and up) and on paper (navy, 14.6:1).
+   * The navy ring is also handed to Tailwind's shadow stack, so an element
+   * with a `shadow-*` utility keeps it.
+   */
   .focus-ring {
     outline: none;
   }
 
   .focus-ring:focus-visible {
-    outline: 2px solid var(--color-miku);
-    outline-offset: 2px;
-    border-radius: inherit;
+    outline: var(--px) solid var(--lamp);
+    outline-offset: var(--px);
+    --tw-ring-shadow: 0 0 0 var(--px) var(--ground);
+    box-shadow: 0 0 0 var(--px) var(--ground);
   }
 
-  /* Text selection matches the teal accent instead of the browser default. */
+  /* Selected text: navy on the lamp, 10.99:1. */
   ::selection {
-    background: color-mix(in oklab, var(--color-miku) 25%, transparent);
-    color: var(--color-ink);
+    background: var(--lamp);
+    color: var(--ground);
   }
 
   h1,
@@ -534,7 +632,7 @@
   h4,
   h5,
   h6 {
-    @apply font-bold tracking-display text-balance;
+    @apply font-bold text-balance;
   }
 
   p {
@@ -542,21 +640,40 @@
   }
 
   /* Inline code styling - only apply to code not inside pre blocks */
-  :not(pre)>code {
-    @apply rounded bg-muted px-1.5 py-0.5 text-sm;
+  :not(pre) > code {
+    @apply bg-muted rounded px-3 py-1 text-sm;
   }
+}
+
+/*
+ * The boot screen's scanline: two rows of navy between two of ground, 6 art
+ * px, resting two thirds down the screen (300 of 450 in the mock). It steps
+ * down from the middle line as the picture opens.
+ */
+@utility boot-scanline {
+  top: 66.667%;
+  top: round(down, 66.667%, var(--px));
+  background: linear-gradient(
+    var(--ground) 0 33.333%,
+    var(--surf) 0 66.667%,
+    var(--ground) 0
+  );
+  animation: bootScan 0.28s steps(4);
 }
 
 /*
  * Decorative loops (the wallpaper notes and glows, the terminal cursor) stand
  * still while they cannot be seen or are not the point: `AmbientPause` marks
  * the shell paused under a maximized window or an open overlay, a window
- * gesture marks the document while it drags or resizes, and a theme
- * cross-fade holds them for its 200ms. Unlayered, so the play state wins over
- * the `animation` shorthand of the utility that starts the loop.
+ * gesture marks the document while it drags or resizes, the Pause motion
+ * setting (`data-motion`, applied by the boot script) holds them for good,
+ * and a theme cross-fade holds them for its 160ms. Unlayered, so the play
+ * state wins over the `animation` shorthand of the utility that starts the
+ * loop.
  */
 [data-ambient='paused'] .ambient-loop,
-[data-gesture] .ambient-loop {
+[data-gesture] .ambient-loop,
+[data-motion='paused'] .ambient-loop {
   animation-play-state: paused;
 }
 
@@ -565,12 +682,51 @@
 }
 
 /*
+ * Loops the user starts by hovering or focusing (app and project icons)
+ * keep playing under the automatic pauses above, but the Pause animations
+ * setting holds them on their still, as reduced motion does (decision 2 of
+ * SPEC section 10). `px-rest-paused` does the same for a sprite that plays
+ * on its own but must show its first frame under Pause, not whichever frame
+ * the pause caught (the 404 sign's flicker, the mini-me's wave on open).
+ * Unlayered, so it wins over the hover utility.
+ */
+[data-motion='paused'] :is(.px-hover-loop, .px-rest-paused) {
+  animation: none;
+}
+
+/*
+ * The pixel buttons on a paper body (SPEC 2.4): a 1 art px navy outline,
+ * since their teal and warm fills are only 2.3:1 against paper. Four
+ * unblurred shadows trace the notched shape instead of a square box. Night
+ * bodies and night chrome (any `.os-night` ancestor) leave it out.
+ */
+:root:not(.dark)
+  :is(.px-button-primary, .px-button-secondary, .px-button-warm):not(
+    .os-night *
+  ) {
+  filter: drop-shadow(var(--px) 0 0 #13253a)
+    drop-shadow(calc(-1 * var(--px)) 0 0 #13253a)
+    drop-shadow(0 var(--px) 0 #13253a)
+    drop-shadow(0 calc(-1 * var(--px)) 0 #13253a);
+}
+
+/*
+ * Toasts move in four steps over 160ms, the UI transition ceiling (SPEC
+ * 2.8), instead of sonner's 400ms ease.
+ */
+[data-sonner-toaster] [data-sonner-toast] {
+  transition-duration: 160ms;
+  transition-timing-function: steps(4);
+}
+
+/*
  * Theme switch (`useTheme`): the default root transition, a plain opacity
  * cross-fade of two snapshots with no geometry in it, shortened from the
- * browser's 250ms.
+ * browser's 250ms and stepped in four frames.
  */
 ::view-transition-group(root),
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 0.2s;
+  animation-duration: 0.16s;
+  animation-timing-function: steps(4);
 }

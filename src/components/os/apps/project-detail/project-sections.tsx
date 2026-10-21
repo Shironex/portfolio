@@ -2,36 +2,28 @@
  * Presentational pieces of the project detail view. No state and no browser
  * APIs, so the project window (client) and the `/projects/<slug>` page
  * (server) render the same markup from the same data.
+ *
+ * In pixels (SPEC 1.5): a card 9-slice hero with the project's icon drawn
+ * at 2x, pixel buttons for its links (each with its 8x8 glyph beside the
+ * label), Departure Mono section headings in the heading colour, chips for
+ * the stack and bezelled screenshots.
  */
 import Image from 'next/image'
 import type { ReactNode } from 'react'
 
-import {
-  BookOpen,
-  Calendar,
-  Clock,
-  ExternalLink as ExternalLinkIcon,
-  Link as LinkIcon,
-  type LucideIcon,
-  Newspaper,
-  Package,
-  Tag,
-} from 'lucide-react'
+import { buttonVariants } from '@/components/ui/button'
 
-import { GithubIcon } from '@/components/icons/github-icon'
-import {
-  accentFor,
-  accentInk,
-  accentTint,
-  glowStyle,
-} from '@/components/os/accent-map'
-import { EYEBROW_CLASS } from '@/components/os/constants'
+import { accentFor } from '@/components/os/accent-map'
+import { PROSE_CLASS } from '@/components/os/constants'
 import { ExternalLink } from '@/components/os/external-link'
+import { ProjectAvatar } from '@/components/os/project-avatar'
 import { StatusChip } from '@/components/os/status-chip'
 import type { HeadingLevel } from '@/components/os/types'
+import {
+  PixelIcon,
+  type PixelIconName,
+} from '@/components/pixel/pixel-icon.generated'
 
-import { GLOW } from '@/lib/os/palettes.generated'
-import { cn } from '@/lib/utils'
 import { parseMonthYear } from '@/lib/utils/format-date'
 import { hasUsableDemo, projectStack } from '@/lib/utils/project-meta'
 
@@ -64,16 +56,13 @@ interface GalleryThumbProps {
   item: GalleryItem
 }
 
-/** Secondary hero link: the source button and every related link. */
-const SECONDARY_LINK_CLASS =
-  'focus-ring bg-surf-0 border-rule-2 text-ink hover:bg-surf-soft inline-flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-semibold transition'
-
-const LINK_ICON: Record<ProjectLinkKind, LucideIcon> = {
-  blog: Newspaper,
-  docs: BookOpen,
-  npm: Package,
-  release: Tag,
-  other: LinkIcon,
+/** The glyph beside each related link's label. */
+const LINK_ICON: Record<ProjectLinkKind, PixelIconName> = {
+  blog: 'newspaper',
+  docs: 'book',
+  npm: 'package',
+  release: 'tag',
+  other: 'link',
 }
 
 export function ProjectSection({
@@ -83,12 +72,8 @@ export function ProjectSection({
 }: ProjectSectionProps) {
   const Heading = HEADING_TAG[titleLevel === 1 ? 2 : 3]
   return (
-    <section>
-      <Heading
-        className={cn(EYEBROW_CLASS, 'text-miku-ink mt-8 mb-3 font-bold')}
-      >
-        {title}
-      </Heading>
+    <section className="flex flex-col gap-3">
+      <Heading className="text-heading lamp-heading">{title}</Heading>
       {children}
     </section>
   )
@@ -102,95 +87,70 @@ export function ProjectHero({ project, titleLevel = 1 }: ProjectProps) {
     parseMonthYear(project.completedDate)?.label ?? project.completedDate
 
   return (
-    <section className="border-rule-2 bg-surf-soft relative mb-8 overflow-hidden rounded-2xl border p-6 md:p-8">
-      {/* A gradient glow (`orb`) in the project's accent, not a blurred disc. */}
-      <div
-        aria-hidden
-        className="orb pointer-events-none absolute -top-[172px] -right-[172px] size-[408px]"
-        style={glowStyle(accent, GLOW.detail)}
-      />
-      <div className="relative">
-        {/* Each badge lays its tint over the opaque card colour: on a narrow
-            screen the glow reaches under them, and a tint over a glow is not
-            a ground the text was made for. */}
-        <div className="mb-3 flex items-center gap-2">
-          {project.projectType && (
-            <StatusChip
-              tone="neutral"
-              size="md"
-              opaque
-              accent={accent}
-              className="rounded-full"
-            >
-              {project.projectType}
-            </StatusChip>
-          )}
-          {project.featured && (
-            <StatusChip
-              tone="featured"
-              size="md"
-              opaque
-              className="rounded-full"
-            />
-          )}
+    <section className="px-card @container flex flex-col gap-5 p-6">
+      <div className="flex flex-col items-start gap-5 @min-[30rem]:flex-row">
+        <ProjectAvatar slug={project.slug} title={project.title} scale={2} />
+        <div className="flex min-w-0 flex-col gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {project.projectType && (
+              <StatusChip tone="neutral" size="md" accent={accent}>
+                {project.projectType}
+              </StatusChip>
+            )}
+            {project.featured && <StatusChip tone="featured" size="md" />}
+            {project.status !== 'shipped' && (
+              <StatusChip tone={project.status} size="md" />
+            )}
+          </div>
+          <Title className="text-display lamp-heading break-words">
+            {project.title}
+          </Title>
+          <p className={PROSE_CLASS}>{project.summary}</p>
         </div>
+      </div>
 
-        <Title className="font-display text-ink text-4xl font-bold">
-          {project.title}
-        </Title>
-        <p className="font-body text-ink-2 mt-3 max-w-2xl text-lg">
-          {project.summary}
-        </p>
-
-        <div className="text-ink-3 mt-4 flex flex-wrap gap-4 font-mono text-xs">
-          <span className="inline-flex items-center gap-1.5">
-            <Clock aria-hidden className="size-3.5" strokeWidth={1.75} />
-            {project.duration}
+      <div className="text-label flex flex-wrap gap-6 text-(--meta)">
+        <span className="inline-flex items-center gap-2">
+          <PixelIcon name="clock" />
+          {project.duration}
+        </span>
+        {completed && (
+          <span className="inline-flex items-center gap-2">
+            <PixelIcon name="calendar" />
+            {completed}
           </span>
-          {completed && (
-            <span className="inline-flex items-center gap-1.5">
-              <Calendar aria-hidden className="size-3.5" strokeWidth={1.75} />
-              {completed}
-            </span>
-          )}
-          {project.status !== 'shipped' && (
-            <StatusChip tone={project.status} size="md" opaque />
-          )}
-        </div>
+        )}
+      </div>
 
-        <div className="mt-6 flex flex-wrap gap-2">
-          {hasUsableDemo(project.demoUrl) && (
-            <ExternalLink
-              href={project.demoUrl}
-              className="focus-ring bg-miku text-cloud hover:bg-miku-2 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
-            >
-              <ExternalLinkIcon aria-hidden className="size-4" />
-              demo
-            </ExternalLink>
-          )}
-          {project.githubUrl && (
-            <ExternalLink
-              href={project.githubUrl}
-              className={SECONDARY_LINK_CLASS}
-            >
-              <GithubIcon className="size-4" />
-              source
-            </ExternalLink>
-          )}
-          {project.links?.map((link) => {
-            const Icon = LINK_ICON[link.kind]
-            return (
-              <ExternalLink
-                key={link.url}
-                href={link.url}
-                className={SECONDARY_LINK_CLASS}
-              >
-                <Icon aria-hidden className="size-4" />
-                {link.label}
-              </ExternalLink>
-            )
-          })}
-        </div>
+      <div className="flex flex-wrap gap-3">
+        {hasUsableDemo(project.demoUrl) && (
+          <ExternalLink
+            href={project.demoUrl}
+            className={buttonVariants({ variant: 'primary' })}
+          >
+            <PixelIcon name="external" />
+            demo
+          </ExternalLink>
+        )}
+        {project.githubUrl && (
+          <ExternalLink
+            href={project.githubUrl}
+            className={buttonVariants({ variant: 'secondary' })}
+          >
+            <PixelIcon name="github" />
+            source
+          </ExternalLink>
+        )}
+        {project.links?.map((link) => (
+          <ExternalLink
+            key={link.url}
+            href={link.url}
+            className={buttonVariants({ variant: 'secondary' })}
+          >
+            <PixelIcon name={LINK_ICON[link.kind]} />
+            {link.label}
+          </ExternalLink>
+        ))}
       </div>
     </section>
   )
@@ -201,10 +161,7 @@ export function ProjectOverview({ project, titleLevel }: ProjectProps) {
   return (
     <ProjectSection title="overview" titleLevel={titleLevel}>
       {project.description.map((paragraph, i) => (
-        <p
-          key={i}
-          className="font-body text-ink-2 mb-3 max-w-2xl leading-relaxed"
-        >
+        <p key={i} className={PROSE_CLASS}>
           {paragraph}
         </p>
       ))}
@@ -216,15 +173,16 @@ export function ProjectFeatures({ project, titleLevel }: ProjectProps) {
   if (project.features.length === 0) return null
   return (
     <ProjectSection title="features" titleLevel={titleLevel}>
-      <ul className="flex flex-col gap-2">
+      <ul className="flex max-w-[66ch] flex-col gap-2">
         {project.features.map((feature) => (
           <li
             key={feature}
-            className="font-body text-ink-2 flex items-start gap-2"
+            className="text-prose flex items-start gap-3 text-(--ink)"
           >
-            <span aria-hidden className="text-miku-ink mt-0.5">
-              ✓
-            </span>
+            <PixelIcon
+              name="chevron-right"
+              className="mt-3 text-(--accent-primary-icon)"
+            />
             <span>{feature}</span>
           </li>
         ))}
@@ -234,26 +192,20 @@ export function ProjectFeatures({ project, titleLevel }: ProjectProps) {
 }
 
 export function ProjectTechStack({ project, titleLevel }: ProjectProps) {
-  const accent = accentFor(project.slug)
   const stack = projectStack(project)
   if (stack.length === 0) return null
   return (
     <ProjectSection title="tech stack" titleLevel={titleLevel}>
-      <div className="flex flex-wrap gap-1.5">
+      <ul className="flex flex-wrap gap-2">
         {stack.map((tech) => (
-          <span
+          <li
             key={tech}
-            className="rounded-full border px-2.5 py-1 font-mono text-xs"
-            style={{
-              borderColor: accentTint(accent, 25),
-              color: accentInk(accent),
-              backgroundColor: accentTint(accent, 6),
-            }}
+            className="os-night px-chip text-label px-2 text-(--ink)"
           >
             {tech}
-          </span>
+          </li>
         ))}
-      </div>
+      </ul>
     </ProjectSection>
   )
 }
@@ -268,14 +220,16 @@ export function ProjectGallery({
 }) {
   return (
     <ProjectSection title="gallery" titleLevel={titleLevel}>
-      <div className="mt-3 grid grid-cols-2 gap-2">{children}</div>
+      <div className="grid grid-cols-2 gap-3">{children}</div>
     </ProjectSection>
   )
 }
 
 /**
- * Screenshot and caption filling a `relative aspect-video` gallery cell. The
- * cell needs the `group` class for the hover zoom.
+ * Screenshot and caption filling a gallery cell (`GALLERY_CELL_CLASS`). The
+ * caption sits on a solid ground plate, one line, so it reads over any
+ * screenshot in both Lamp modes; the whole caption is in the tooltip and
+ * the lightbox.
  */
 export function GalleryThumb({ item }: GalleryThumbProps) {
   return (
@@ -285,17 +239,12 @@ export function GalleryThumb({ item }: GalleryThumbProps) {
         alt={item.alt}
         fill
         sizes="(min-width: 768px) 384px, 50vw"
-        className="object-cover transition-transform duration-200 ease-out group-hover:scale-105"
+        className="object-cover"
       />
-      {/* Fixed dark scrim, theme-independent, so the caption stays
-          readable over any screenshot in light and dark mode alike. The
-          caption is held to one line, which sits in the lower half of the
-          scrim: under it the scrim never drops below 60% black, 5.7:1 on a
-          white shot. The whole caption is in the tooltip and the lightbox. */}
       {item.caption && (
         <span
           title={item.caption}
-          className="pointer-events-none absolute inset-x-0 bottom-0 truncate bg-linear-to-t from-black/80 via-black/60 to-transparent px-2.5 pt-6 pb-2 text-left text-[11px] font-medium text-white"
+          className="text-label pointer-events-none absolute inset-x-0 bottom-0 truncate bg-(--ground) px-2 py-1 text-left text-(--ink)"
         >
           {item.caption}
         </span>
@@ -304,9 +253,12 @@ export function GalleryThumb({ item }: GalleryThumbProps) {
   )
 }
 
-/** Shared class of a gallery cell, whichever element it is. */
+/**
+ * Shared class of a gallery cell, whichever element it is: a night well
+ * as the screenshot's bezel, with the picture inside its rim.
+ */
 export const GALLERY_CELL_CLASS =
-  'group border-rule relative aspect-video overflow-hidden rounded-lg border'
+  'group os-night px-well relative block aspect-video overflow-hidden'
 
 /**
  * Everything in the detail view except the gallery, which is passed as
@@ -318,7 +270,7 @@ export function ProjectSections({
   children,
 }: ProjectSectionsProps) {
   return (
-    <div className="font-body max-w-3xl">
+    <div className="flex flex-col gap-8">
       <ProjectHero project={project} titleLevel={titleLevel} />
       <ProjectOverview project={project} titleLevel={titleLevel} />
       <ProjectFeatures project={project} titleLevel={titleLevel} />

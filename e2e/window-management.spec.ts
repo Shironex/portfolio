@@ -7,12 +7,14 @@ import {
   MOBILE_VIEWPORT,
   areaFor,
   launch,
+  location,
   mobileReady,
   mockFeeds,
   openDesktop,
   osWindow,
   osWindows,
   rectOf,
+  settled,
   skipBootSplash,
   taskbar,
   titleBar,
@@ -355,6 +357,9 @@ test.describe('session restore', () => {
       .poll(async () => (await zIndexOf(projects)) > (await zIndexOf(about)))
       .toBe(true)
     const projectsRect = await rectOf(projects)
+    // The address bar follows the top window once focus settles; a reload
+    // before that would reopen the window it still names, as a deep link.
+    await expect.poll(() => location(page)).toBe('/?open=projects')
 
     await page.reload()
 
@@ -470,5 +475,156 @@ test.describe('session restore', () => {
     await mobileReady(page)
 
     await expect(page.getByRole('dialog', { name: 'about.me' })).toHaveCount(0)
+  })
+})
+
+/**
+ * Where new windows open (SPEC 11, decisions 1, 2 and 13): at the CSS place
+ * and height they have at DPR 1 whatever the art pixel, ending 8 art px left
+ * of the panel column (narrowed no further than 240 art px, or moved left),
+ * at least 33 art px under the top of the desktop area (room for the pet
+ * seated), and Contact tall enough for its whole form, capped to the area.
+ */
+test.describe('new windows', () => {
+  /** The art pixel on this page, in css px. */
+  const artPixelOf = (page: Page) =>
+    page.evaluate(() =>
+      Number.parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue('--px')
+      )
+    )
+
+  /** Projects' default rect at DPR 1 (`APP_WINDOW_DEFAULTS`), in css px. */
+  const PROJECTS_AT_DPR_1 = { x: 120, width: 900, height: 620 }
+
+  /** The top of the desktop area and the pet's seated height, in art px. */
+  const AREA_TOP = 22
+  const HEADROOM = 33
+
+  /** The gap a new window keeps from the panels and its narrowest, in art px. */
+  const PANEL_GAP = 8
+  const MIN_WIDTH = 240
+
+  /** Every app, as its desktop icon and its window title name it. */
+  const APPS = [
+    ['Projects', 'projects.app'],
+    ['About', 'about.me'],
+    ['Monitor', 'monitor.sys'],
+    ['Contact', 'contact.app'],
+    ['Writing', 'writing.rss'],
+    ['Readme', 'readme.md'],
+  ] as const
+
+  for (const [label, viewport, dpr] of [
+    ['1440x900 at DPR 1', DESKTOP_VIEWPORT, 1],
+    ['1440x900 at DPR 1.25', DESKTOP_VIEWPORT, 1.25],
+    ['1440x900 at DPR 2', DESKTOP_VIEWPORT, 2],
+    ['1920x1080 at DPR 1.25', { width: 1920, height: 1080 }, 1.25],
+  ] as const) {
+    test.describe(label, () => {
+      test.use({ viewport, deviceScaleFactor: dpr })
+
+      test('every app opens left of the panel column, Projects at its DPR 1 place', async ({
+        page,
+      }) => {
+        await page.route('**/challenges.cloudflare.com/**', (r) => r.abort())
+        await openDesktop(page)
+        const px = await artPixelOf(page)
+        const featured = page.getByRole('region', { name: 'Featured work' })
+        const clearOf = (await rectOf(featured)).x - PANEL_GAP * px
+
+        for (const [name, title] of APPS) {
+          await page
+            .getByRole('button', { name: `Open ${name}`, exact: true })
+            .first()
+            .click()
+          const win = osWindow(page, title)
+          await expect(win).toBeVisible()
+          await settled(win)
+          const rect = await rectOf(win)
+          expect(rect.x + rect.width, title).toBeLessThanOrEqual(clearOf + 0.5)
+          expect(rect.width, title).toBeGreaterThanOrEqual(
+            Math.min(MIN_WIDTH * px, rect.width) - 0.5
+          )
+        }
+
+        // Contact is the one window an area this short caps (below).
+        for (const [, title] of APPS.filter(([, t]) => t !== 'contact.app')) {
+          const rect = await rectOf(osWindow(page, title))
+          expect(
+            Math.round(rect.y / px) - AREA_TOP,
+            title
+          ).toBeGreaterThanOrEqual(HEADROOM)
+        }
+
+        // Snapped to the art pixel: within one of the DPR 1 rect, and as
+        // wide as it is or as the room left of the panels.
+        const projects = await rectOf(osWindow(page, 'projects.app'))
+        const room = Math.floor((clearOf - projects.x) / px + 1e-6) * px
+        expect(Math.abs(projects.x - PROJECTS_AT_DPR_1.x)).toBeLessThanOrEqual(
+          px
+        )
+        expect(
+          Math.abs(projects.width - Math.min(PROJECTS_AT_DPR_1.width, room))
+        ).toBeLessThanOrEqual(px)
+        expect(
+          Math.abs(projects.height - PROJECTS_AT_DPR_1.height)
+        ).toBeLessThanOrEqual(px)
+      })
+    })
+  }
+
+  /** The Contact window's scrolling body. */
+  const contactBody = (win: Locator) => win.locator('.overflow-auto').first()
+
+  for (const [label, viewport, dpr] of [
+    ['1440x900 at DPR 1', DESKTOP_VIEWPORT, 1],
+    ['1440x900 at DPR 2', DESKTOP_VIEWPORT, 2],
+    ['1920x1080 at DPR 1.25', { width: 1920, height: 1080 }, 1.25],
+  ] as const) {
+    test.describe(label, () => {
+      test.use({ viewport, deviceScaleFactor: dpr })
+
+      test('Contact opens tall enough to show the whole form', async ({
+        page,
+      }) => {
+        await page.route('**/challenges.cloudflare.com/**', (r) => r.abort())
+        await openDesktop(page)
+        const contact = await launch(page, 'Contact', 'contact.app')
+        const send = contact.getByRole('button', { name: /send/i })
+        await expect(send).toBeVisible()
+        const body = contactBody(contact)
+        await expect
+          .poll(() => body.evaluate((el) => el.scrollHeight - el.clientHeight))
+          .toBeLessThanOrEqual(1)
+        const win = await rectOf(contact)
+        const button = await rectOf(send)
+        expect(button.y + button.height).toBeLessThanOrEqual(win.y + win.height)
+      })
+    })
+  }
+
+  test.describe('a short 1536x750 screen at DPR 1.25', () => {
+    test.use({
+      viewport: { width: 1536, height: 750 },
+      deviceScaleFactor: 1.25,
+    })
+
+    test('Contact is capped to the desktop area', async ({ page }) => {
+      await page.route('**/challenges.cloudflare.com/**', (r) => r.abort())
+      await openDesktop(page)
+      const contact = await launch(page, 'Contact', 'contact.app')
+      const px = await artPixelOf(page)
+      const rect = await rectOf(contact)
+      const area = {
+        top: AREA_TOP * px,
+        bottom:
+          Math.floor((750 - (AREA_TOP + 32) * px) / px) * px + AREA_TOP * px,
+      }
+      expect(Math.abs(rect.y - area.top)).toBeLessThanOrEqual(1)
+      expect(Math.abs(rect.y + rect.height - area.bottom)).toBeLessThanOrEqual(
+        1
+      )
+    })
   })
 })

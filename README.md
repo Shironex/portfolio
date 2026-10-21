@@ -42,7 +42,7 @@ This is my portfolio. Instead of a long scrolling page, it opens as a desktop: m
     <td width="50%"><img src="assets/showcase/projects.webp" alt="shirone.dev: Projects" /></td>
   </tr>
   <tr>
-    <td align="center"><sub>The desktop: who I am, a short shell transcript, featured projects and my GitHub activity.</sub></td>
+    <td align="center"><sub>The desktop: a pixel night city, who I am, a short shell transcript, featured projects and my GitHub activity.</sub></td>
     <td align="center"><sub>Projects: everything I have built, filterable by status.</sub></td>
   </tr>
   <tr>
@@ -66,29 +66,30 @@ This is my portfolio. Instead of a long scrolling page, it opens as a desktop: m
     <td width="50%"><img src="assets/showcase/readme.webp" alt="shirone.dev: Readme" /></td>
   </tr>
   <tr>
-    <td align="center"><sub>The command palette: open any app or project, switch the theme or the palette.</sub></td>
+    <td align="center"><sub>The command palette: open any app or project, turn the Lamp on, pick a sky or change a setting.</sub></td>
     <td align="center"><sub>Readme: a short welcome note and the keyboard shortcuts.</sub></td>
   </tr>
 </table>
 
 ### What's inside
 
-|                      |                                                                                                                 |
-| -------------------- | --------------------------------------------------------------------------------------------------------------- |
-| **Desktop shell**    | Menu bar, desktop icons, windows you can drag, resize, minimize and maximize, a taskbar and a start menu        |
-| **Command palette**  | Ctrl+K (Cmd+K on macOS) opens any app or project, switches the theme and the palette, and copies my email       |
-| **Keyboard windows** | On a focused title bar: arrow keys move the window, Shift+arrows resize it, Ctrl+W closes, Ctrl+M minimizes     |
-| **Themes**           | Light and dark mode and six colour palettes, applied before the first paint so there is no flash                |
-| **Mobile layout**    | Below 768px the desktop becomes a vertical feed with a bottom dock, and windows open as full-screen sheets      |
-| **Projects**         | Every project is a typed data file, filterable by status and searchable, with its own window and a gallery      |
-| **GitHub activity**  | A contribution heatmap from GitHub's GraphQL API, cached for six hours; it turns on when `GITHUB_TOKEN` is set  |
-| **Contact form**     | next-safe-action and Zod, Cloudflare Turnstile, a honeypot, a Redis rate limit, Resend email and a Discord ping |
-| **Boot splash**      | A short greeting once per tab, skippable, and skipped entirely when you prefer reduced motion                   |
-| **Fast first paint** | The hero text is server-rendered under the client shell, with a plain HTML fallback when JavaScript is off      |
-| **Security headers** | A Content Security Policy and the usual hardening headers, set in `src/proxy.ts`                                |
-| **Social images**    | Open Graph and Twitter images rendered by the app itself                                                        |
-| **Analytics**        | PostHog, loaded only once the browser is idle or you interact with the page                                     |
-| **End to end tests** | Playwright specs for the responsive layout and the theme toggle                                                 |
+|                      |                                                                                                                                                                                                    |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Desktop shell**    | Menu bar, desktop icons, windows you can drag, resize, minimize and maximize, a taskbar and a start menu                                                                                           |
+| **Pixel art**        | Window frames, icons, cursors, the night city wallpaper and two pets, drawn in Aseprite and always shown at a whole number of screen pixels per art pixel, so they stay crisp at 125% and 150% too |
+| **Command palette**  | Ctrl+K (Cmd+K on macOS) opens any app or project, turns the Lamp on, picks a sky and copies my email                                                                                               |
+| **Keyboard windows** | On a focused title bar: arrow keys move the window, Shift+arrows resize it, Ctrl+W closes, Ctrl+M minimizes                                                                                        |
+| **Themes**           | The Lamp turns window bodies into warm paper, and four skies (or a live one that follows the time in Warsaw) repaint the wallpaper, all applied before the first paint so there is no flash        |
+| **Mobile layout**    | Below 768px the desktop becomes a vertical feed with a bottom dock, and windows open as full-screen sheets                                                                                         |
+| **Projects**         | Every project is a typed data file, filterable by status and searchable, with its own window and a gallery                                                                                         |
+| **GitHub activity**  | A contribution heatmap from GitHub's GraphQL API, cached for six hours; it turns on when `GITHUB_TOKEN` is set                                                                                     |
+| **Contact form**     | next-safe-action and Zod, Cloudflare Turnstile, a honeypot, a Redis rate limit, Resend email and a Discord ping                                                                                    |
+| **Boot splash**      | A short greeting once per tab, skippable, and skipped entirely when you prefer reduced motion                                                                                                      |
+| **Fast first paint** | The hero text is server-rendered under the client shell, with a plain HTML fallback when JavaScript is off                                                                                         |
+| **Security headers** | A Content Security Policy and the usual hardening headers, set in `src/proxy.ts`                                                                                                                   |
+| **Social images**    | Pixel Open Graph and Twitter cards rendered by the app itself, on the same night scene                                                                                                             |
+| **Analytics**        | PostHog, loaded only once the browser is idle or you interact with the page                                                                                                                        |
+| **End to end tests** | Playwright specs for the layout, windows, pets, contrast and keyboard paths, plus a pixel crispness check on Chromium, WebKit and Firefox                                                          |
 
 ### Built with
 
@@ -96,7 +97,7 @@ This is my portfolio. Instead of a long scrolling page, it opens as a desktop: m
 | --------- | ------------------------------------------------------------------------------ |
 | Framework | Next.js 16 (App Router, Turbopack, Cache Components), React 19                 |
 | Language  | TypeScript 6                                                                   |
-| Styling   | Tailwind CSS 4, Radix UI primitives, Lucide icons                              |
+| Styling   | Tailwind CSS 4, Radix UI primitives, pixel art from Aseprite                   |
 | Forms     | React Hook Form, Zod 4, next-safe-action                                       |
 | Services  | Resend and React Email, Redis (ioredis), Cloudflare Turnstile, PostHog         |
 | Quality   | ESLint 10 with my `@noctcore` plugins, Prettier, Playwright, Husky, commitlint |
@@ -119,16 +120,37 @@ always-pass test keys, and Redis is only used for the contact form's rate limit,
 local production build, `docker compose up -d` starts Redis. Uncomment `GITHUB_TOKEN` and set it (a fine-grained token with read-only access to public
 repositories) to see the GitHub heatmap.
 
-| Command          | What it does                                    |
-| ---------------- | ----------------------------------------------- |
-| `pnpm dev`       | Dev server with Turbopack on port 3000          |
-| `pnpm dev:email` | React Email preview of the templates, port 3001 |
-| `pnpm build`     | Production build                                |
-| `pnpm start`     | Serve the production build                      |
-| `pnpm lint`      | ESLint                                          |
-| `pnpm typecheck` | TypeScript, no emit                             |
-| `pnpm format`    | Prettier over `src/`                            |
-| `pnpm test:e2e`  | Playwright end to end tests                     |
+| Command           | What it does                                                                   |
+| ----------------- | ------------------------------------------------------------------------------ |
+| `pnpm dev`        | Dev server with Turbopack on port 3000                                         |
+| `pnpm dev:email`  | React Email preview of the templates, port 3001                                |
+| `pnpm build`      | Production build                                                               |
+| `pnpm start`      | Serve the production build                                                     |
+| `pnpm lint`       | ESLint                                                                         |
+| `pnpm typecheck`  | TypeScript, no emit                                                            |
+| `pnpm format`     | Prettier over `src/`                                                           |
+| `pnpm test:e2e`   | Playwright end to end tests                                                    |
+| `pnpm test:pixel` | Unit tests of the pixel art scripts                                            |
+| `pnpm tokens`     | Writes the colour tokens; `tokens:check` fails on a stale file or a faint pair |
+
+### Pixel art
+
+The art lives in Aseprite files outside this repo, so a clone builds without Aseprite. What the site needs is exported
+into `src/assets/pixel/` and committed, and `pnpm lint` checks it.
+
+| Command               | What it does                                                                                                                                                                            |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm art:export`     | Exports every sheet from Aseprite, `--list` shows what it found, `--only <name>` exports one                                                                                            |
+| `pnpm art:<kind>`     | The generators (`chrome`, `glyphs`, `cursors`, `icons`, `project-icons`, `wallpaper`, `pets` and `sprites`) turn the exported sheets into the CSS, components and data the site imports |
+| `pnpm art:check`      | Checks every sheet: palette colours only, hard alpha, matching data, and the byte budgets                                                                                               |
+| `pnpm art:fresh`      | Fails if a generated file no longer matches its sheet                                                                                                                                   |
+| `pnpm fonts:subset`   | Subsets the pixel fonts to WOFF2 with [uv](https://docs.astral.sh/uv/), `--check` compares the bytes                                                                                    |
+| `pnpm generate:og`    | Copies the Open Graph card scenes and cuts the project icons into `src/app/_og/`, `--check` fails on a stale file                                                                       |
+| `pnpm generate:icons` | Writes the favicons and manifest icons from the README logo tile, `--check` fails on a stale file                                                                                       |
+
+`art:export` looks for Aseprite at `../aseprite/build/bin/aseprite`, then on `PATH`, and for the art in
+`../aseprite-demo/`. The flags and environment variables that change both are at the top of
+`scripts/pixel/export-art.mjs`, and `generate:og` takes `--og-dir` or `PIXEL_OG_DIR` the same way.
 
 ### Showcase images
 

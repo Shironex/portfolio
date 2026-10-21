@@ -1,0 +1,162 @@
+{
+  "frames": [
+    {
+      "filename": "glyphs-fixture 0.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 8
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 8
+      },
+      "sourceSize": {
+        "w": 24,
+        "h": 8
+      },
+      "duration": 100
+    },
+    {
+      "filename": "glyphs-fixture 1.aseprite",
+      "frame": {
+        "x": 24,
+        "y": 0,
+        "w": 24,
+        "h": 8
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 8
+      },
+      "sourceSize": {
+        "w": 24,
+        "h": 8
+      },
+      "duration": 100
+    },
+    {
+      "filename": "glyphs-fixture 2.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 8,
+        "w": 24,
+        "h": 8
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 8
+      },
+      "sourceSize": {
+        "w": 24,
+        "h": 8
+      },
+      "duration": 100
+    },
+    {
+      "filename": "glyphs-fixture 3.aseprite",
+      "frame": {
+        "x": 24,
+        "y": 8,
+        "w": 24,
+        "h": 8
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 8
+      },
+      "sourceSize": {
+        "w": 24,
+        "h": 8
+      },
+      "duration": 100
+    }
+  ],
+  "meta": {
+    "app": "https://www.aseprite.org/",
+    "image": "glyphs-fixture.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 48,
+      "h": 16
+    },
+    "scale": "1",
+    "frameTags": [
+      {
+        "name": "spinner",
+        "from": 0,
+        "to": 3,
+        "direction": "forward",
+        "color": "#000000ff"
+      }
+    ],
+    "layers": [
+      {
+        "name": "Layer 1",
+        "opacity": 255,
+        "blendMode": "normal"
+      }
+    ],
+    "slices": [
+      {
+        "name": "close",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "check",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 8,
+              "y": 0,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "spinner",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 16,
+              "y": 0,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

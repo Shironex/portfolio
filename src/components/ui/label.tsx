@@ -7,8 +7,9 @@ import { type VariantProps, cva } from 'class-variance-authority'
 
 import { cn } from '@/lib/utils'
 
+/** A field label: Pixeloid Bold at body size (SPEC 1.5, Contact). */
 const labelVariants = cva(
-  'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+  'text-title block text-(--ink) peer-disabled:cursor-not-allowed peer-disabled:text-(--meta)'
 )
 
 const Label = React.forwardRef<

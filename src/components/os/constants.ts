@@ -1,32 +1,20 @@
-import {
-  Activity,
-  BookOpen,
-  Diamond,
-  FolderKanban,
-  Mail,
-  PenLine,
-  UserRound,
-} from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
-
 import { countProjects } from '@/lib/utils/projects'
 
 import { projectsData } from '@/data/projects-data'
 
-import type { AppDescriptor, AppId, WindowId, WindowState } from './types'
+import type { AppDescriptor, AppId, WindowState } from './types'
 
 /*
- * Each app names an accent role rather than a colour, so the active palette
- * decides what it paints. Icons are from lucide-react (instead of single
- * Unicode glyphs) so they read as intentional instead of placeholder-y.
+ * Each app names an accent role rather than a colour, so the Lamp decides
+ * what it paints. Its icon is drawn by `AppIcon` (src/components/pixel).
  */
 export const APPS: AppDescriptor[] = [
-  { id: 'projects', name: 'Projects', icon: FolderKanban, accent: 'primary' },
-  { id: 'about', name: 'About', icon: UserRound, accent: 'bright' },
-  { id: 'skills', name: 'Monitor', icon: Activity, accent: 'deep' },
-  { id: 'contact', name: 'Contact', icon: Mail, accent: 'warm' },
-  { id: 'writing', name: 'Writing', icon: PenLine, accent: 'warm-2' },
-  { id: 'readme', name: 'Readme', icon: BookOpen, accent: 'bright' },
+  { id: 'projects', name: 'Projects', accent: 'primary' },
+  { id: 'about', name: 'About', accent: 'bright' },
+  { id: 'skills', name: 'Monitor', accent: 'deep' },
+  { id: 'contact', name: 'Contact', accent: 'warm' },
+  { id: 'writing', name: 'Writing', accent: 'warm-2' },
+  { id: 'readme', name: 'Readme', accent: 'bright' },
 ]
 
 export function isAppId(value: string): value is AppId {
@@ -39,43 +27,51 @@ export const COPY_LINK_LABEL = 'Copy link to this window'
 /** `aria-keyshortcuts` of every control that opens the command palette. */
 export const CMD_PALETTE_SHORTCUT = 'Control+K Meta+K'
 
-/** Height and top padding of a mobile top bar, status-bar inset included. */
+/**
+ * Height and top padding of the phone header, status-bar inset included:
+ * one hit target tall (22 art px, 44 css at DPR 1, 2 and 3), like the menu
+ * bar under a coarse pointer.
+ */
 export const MOBILE_BAR_CLASS =
-  'h-[calc(3rem+env(safe-area-inset-top))] pt-[env(safe-area-inset-top)]'
+  'h-[calc(var(--target)+env(safe-area-inset-top))] pt-[env(safe-area-inset-top)]'
 
-/** Side padding of mobile content: 1rem, or the safe-area inset when larger. */
+/**
+ * Where the phone feed starts: under the header and 8 art px clear of it.
+ * The server hero (`StaticHero`) starts there too, so hydration moves
+ * nothing.
+ */
+export const MOBILE_FEED_TOP_CLASS =
+  'pt-[calc(var(--target)+env(safe-area-inset-top)+8*var(--px))]'
+
+/** The same, under the `md` breakpoint only (the server hero serves both). */
+export const MOBILE_FEED_TOP_BELOW_MD_CLASS =
+  'max-md:pt-[calc(var(--target)+env(safe-area-inset-top)+8*var(--px))]'
+
+/**
+ * Side padding of phone content: 8 art px (16 css at DPR 1, 2 and 3), or
+ * the safe-area inset when larger.
+ */
 export const MOBILE_GUTTER_CLASS =
-  'pr-[max(1rem,env(safe-area-inset-right))] pl-[max(1rem,env(safe-area-inset-left))]'
+  'pr-[max(calc(8*var(--px)),env(safe-area-inset-right))] pl-[max(calc(8*var(--px)),env(safe-area-inset-left))]'
 
-/** Text link inside running copy. */
+/**
+ * Text link inside running copy: the link colour, a 1 art px underline 2 art
+ * px down, the heading colour on hover.
+ */
 export const INLINE_LINK_CLASS =
-  'focus-ring text-miku-2-ink rounded-sm underline underline-offset-2'
+  'focus-ring text-(--link) underline decoration-(length:--px) underline-offset-[calc(2*var(--px))] hover:text-(--heading)'
 
 /**
- * Small uppercase mono label over a section: the one eyebrow of the shell.
- * Callers add the colour and the spacing.
+ * Loading placeholder: the stepped dither of the skeleton tile, held by the
+ * automatic pauses and the Pause setting. Callers add the size.
  */
-export const EYEBROW_CLASS =
-  'font-mono text-[11px] font-normal tracking-eyebrow uppercase'
+export const SKELETON_BAR = 'px-tile-skeleton ambient-loop'
 
 /**
- * Small uppercase mono label of a badge or a legend, tighter than the eyebrow.
- * Callers add the colour.
+ * Long text: body size, about 66 characters a line (SPEC 2.3), in the face
+ * the Readable text setting swaps (`text-prose`).
  */
-export const LABEL_CLASS = 'font-mono text-[11px] tracking-label uppercase'
-
-/** Pulsing placeholder fill; callers add the size and radius. */
-export const SKELETON_BAR =
-  'bg-rule animate-pulse-slow motion-reduce:animate-none'
-
-/**
- * Lucide icon for a window's title bar: the app's own icon, or Diamond for
- * project windows. Keeps title bars in the same icon system as the taskbar,
- * start menu, and desktop instead of the old Unicode glyphs.
- */
-export function windowIconFor(id: WindowId): LucideIcon {
-  return APPS.find((app) => app.id === id)?.icon ?? Diamond
-}
+export const PROSE_CLASS = 'text-prose max-w-[66ch] text-(--ink)'
 
 /** What a window is called out loud: the app name or the project title. */
 export function windowNameFor(win: WindowState): string {
@@ -86,16 +82,90 @@ export function windowNameFor(win: WindowState): string {
   )
 }
 
-export const APP_WINDOW_DEFAULTS: Record<
-  AppId,
-  { title: string; icon: string; x: number; y: number; w: number; h: number }
-> = {
-  projects: { title: 'projects.app', icon: '▦', x: 120, y: 90, w: 900, h: 620 },
-  about: { title: 'about.me', icon: '◌', x: 180, y: 120, w: 820, h: 580 },
-  skills: { title: 'monitor.sys', icon: '▤', x: 220, y: 130, w: 780, h: 560 },
-  contact: { title: 'contact.app', icon: '✉', x: 260, y: 110, w: 820, h: 580 },
-  writing: { title: 'writing.rss', icon: '✎', x: 340, y: 100, w: 720, h: 600 },
-  readme: { title: 'readme.md', icon: '¶', x: 300, y: 150, w: 640, h: 500 },
+/**
+ * Names for the bodies of apps with nothing focusable inside (Monitor). Such
+ * a body is a Tab stop, a region with this name, so a keyboard can reach and
+ * scroll it in every engine: Chromium and Firefox make a scroller focusable
+ * by themselves, WebKit does not.
+ */
+const SCROLL_STOP_LABELS: Partial<Record<AppId, string>> = {
+  skills: 'Skills and tools',
+}
+
+/** The body's name when it is a Tab stop of its own (`SCROLL_STOP_LABELS`). */
+export function scrollStopLabelFor(win: WindowState): string | undefined {
+  if (win.project || !isAppId(win.id)) return undefined
+  return SCROLL_STOP_LABELS[win.id]
+}
+
+/**
+ * The focus ring of a body Tab stop, drawn inside its edge (navy, then the
+ * lamp), where the window frame cannot clip it.
+ */
+export const SCROLL_STOP_CLASS =
+  'focus-ring focus-visible:outline-offset-[calc(-2*var(--px))] focus-visible:[box-shadow:inset_0_0_0_var(--px)_var(--ground)]'
+
+/** Window body props for a Tab stop, or none when the app has its own. */
+export function scrollStopProps(label: string | undefined) {
+  return label
+    ? ({ tabIndex: 0, role: 'region', 'aria-label': label } as const)
+    : {}
+}
+
+/** Where each app window opens and how big, in art px (SPEC 2.4). */
+export interface AppWindowDefaults {
+  title: string
+  icon: string
+  x: number
+  y: number
+  w: number
+  h: number
+  /**
+   * The height is counted in art px at every DPR, not opened at its DPR 1
+   * CSS size like the rest of the rect: the content it must show whole is
+   * laid out in art px.
+   */
+  artHeight?: true
+  /**
+   * With `artHeight`: the height, in art px, when the window opens narrower
+   * than `w` art px (at DPR 1.25, or beside the panel column), where its
+   * content wraps to more lines.
+   */
+  narrowHeight?: number
+  /**
+   * The narrowest the window opens to clear the panel column, in art px at
+   * the DPR 1 size, where its content needs more than the shared minimum
+   * (`NEW_WINDOW_MIN_WIDTH`).
+   */
+  openMinWidth?: number
+}
+
+export const APP_WINDOW_DEFAULTS: Record<AppId, AppWindowDefaults> = {
+  projects: { title: 'projects.app', icon: '▦', x: 60, y: 45, w: 450, h: 310 },
+  about: { title: 'about.me', icon: '◌', x: 90, y: 60, w: 410, h: 290 },
+  skills: { title: 'monitor.sys', icon: '▤', x: 110, y: 65, w: 390, h: 280 },
+  // Tall enough for the whole form, captcha and Send included (decision 2
+  // of SPEC 11). At 410 art px wide (820 css) Send ends 327 art px down the
+  // window; a little narrower (a DPR 1.25 screen, or a width cut to clear
+  // the panel column) a line wraps and it ends at 341, so the window keeps
+  // the same 17 art px under it. The Turnstile widget is 65 css px at every
+  // DPR, so at 1.25 it ends 7 art px higher. It opens no narrower than 390
+  // (780 css): its body goes to two columns from a 44rem container, and
+  // under that the email and GitHub card drops below the form. Capped to
+  // the desktop area like every window.
+  contact: {
+    title: 'contact.app',
+    icon: '✉',
+    x: 130,
+    y: 55,
+    w: 410,
+    h: 344,
+    artHeight: true,
+    narrowHeight: 358,
+    openMinWidth: 390,
+  },
+  writing: { title: 'writing.rss', icon: '✎', x: 170, y: 50, w: 360, h: 300 },
+  readme: { title: 'readme.md', icon: '¶', x: 150, y: 75, w: 320, h: 250 },
 }
 
 /*

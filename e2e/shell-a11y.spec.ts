@@ -18,6 +18,7 @@ import {
   startMenu,
   taskbar,
   titleBar,
+  windowById,
 } from './helpers'
 
 /**
@@ -306,6 +307,49 @@ test.describe('mobile launcher', () => {
   })
 })
 
+test.describe('start menu', () => {
+  test.use({ viewport: DESKTOP_VIEWPORT })
+
+  test('opened from the keyboard, it puts focus on its search', async ({
+    page,
+  }) => {
+    await openDesktop(page)
+    const button = taskbar(page).getByRole('button', {
+      name: 'Open Start menu',
+    })
+    await button.focus()
+    await page.keyboard.press('Enter')
+    await expect(
+      startMenu(page).getByRole('button', { name: /search apps/i })
+    ).toBeFocused()
+    await page.keyboard.press('Escape')
+    await expect(button).toBeFocused()
+  })
+})
+
+test.describe('forced colours', () => {
+  test.use({ viewport: DESKTOP_VIEWPORT, forcedColors: 'active' })
+
+  test('the pixel frames give way to system colours', async ({ page }) => {
+    await page.goto('/?open=about')
+    const about = windowById(page, 'about')
+    const frames = [
+      about.locator('.px-window-focused'),
+      titleBar(about),
+      taskbar(page),
+    ]
+    for (const frame of frames) {
+      await expect(frame).toBeVisible()
+      const style = await frame.evaluate((el) => {
+        const s = getComputedStyle(el)
+        return { image: s.borderImageSource, width: s.borderTopWidth }
+      })
+      expect(style.image).toBe('none')
+      expect(style.width).not.toBe('0px')
+    }
+  })
+})
+
 test.describe('menubar', () => {
   test.use({ viewport: DESKTOP_VIEWPORT })
 
@@ -358,10 +402,12 @@ test.describe('menubar', () => {
     await expect(editMenu).toBeHidden()
     await expect(viewMenu.getByRole('menuitem').first()).toBeFocused()
 
-    // The palette row is one stop; Left/Right stay inside it.
+    // The sky row is one stop; Left/Right stay inside it.
     await page.keyboard.press('ArrowDown')
     const swatches = viewMenu.getByRole('menuitemradio')
-    await expect(viewMenu.locator('[aria-checked="true"]')).toBeFocused()
+    await expect(
+      viewMenu.locator('[role="menuitemradio"][aria-checked="true"]')
+    ).toBeFocused()
     await page.keyboard.press('ArrowRight')
     await expect(viewMenu).toBeVisible()
     expect(
@@ -371,6 +417,13 @@ test.describe('menubar', () => {
           document.activeElement?.getAttribute('aria-checked') === 'false'
       )
     ).toBe(true)
+    // Then the settings, each a checkbox item of its own.
+    await page.keyboard.press('ArrowDown')
+    await expect(
+      viewMenu.getByRole('menuitemcheckbox', { name: 'Pets' })
+    ).toBeFocused()
+    await page.keyboard.press('ArrowDown')
+    await page.keyboard.press('ArrowDown')
     await page.keyboard.press('ArrowDown')
     await expect(
       viewMenu.getByRole('menuitem', { name: 'Open about.me' })
@@ -426,6 +479,24 @@ test.describe('window focus', () => {
     await page.keyboard.press('Control+w')
     await expect(about).toBeHidden()
     await expect(icon).toBeFocused()
+  })
+
+  test("Monitor's body, with nothing to focus inside, is a named Tab stop", async ({
+    page,
+  }) => {
+    await openDesktop(page)
+    const monitor = await launch(page, 'Monitor', 'monitor.sys')
+    const body = monitor.getByRole('region', { name: 'Skills and tools' })
+    await expect(body).toHaveAttribute('tabindex', '0')
+
+    // Past the title bar's last control, and it scrolls from the keyboard.
+    await monitor.getByRole('button', { name: 'Close window' }).focus()
+    await page.keyboard.press('Tab')
+    await expect(body).toBeFocused()
+    await page.keyboard.press('PageDown')
+    await expect
+      .poll(() => body.evaluate((el) => el.scrollTop))
+      .toBeGreaterThan(0)
   })
 
   test('goes to the next window when the top one closes', async ({ page }) => {
@@ -645,6 +716,31 @@ test.describe('landmarks and headings', () => {
     await win.getByRole('button', { name: 'Close window' }).click()
     await expect(osWindows(page)).toHaveCount(0)
     await expectOneMainAndH1(page)
+  })
+
+  test('an open app window adds no second banner', async ({ page }) => {
+    for (const app of [
+      'projects',
+      'about',
+      'skills',
+      'contact',
+      'writing',
+      'readme',
+    ]) {
+      // The session keeps the windows opened before, so they pile up.
+      await page.goto(`/?open=${app}`)
+      await expect(windowById(page, app)).toBeVisible()
+      await expect(page.getByRole('banner')).toHaveCount(1)
+    }
+  })
+
+  test('the noscript card puts its text in a labelled region', async ({
+    request,
+  }) => {
+    const html = await (await request.get('/')).text()
+    const card = /<noscript>([\s\S]*?)<\/noscript>/.exec(html)?.[1] ?? ''
+    expect(card).toMatch(/<section[^>]*aria-labelledby="noscript-title"/)
+    expect(card).toMatch(/<h2[^>]*id="noscript-title"/)
   })
 
   test('the noscript card adds no second h1 to the home page', async ({

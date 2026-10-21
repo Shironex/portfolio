@@ -2,7 +2,7 @@
 
 import { type ReactNode, useCallback, useRef } from 'react'
 
-import { Link, X } from 'lucide-react'
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
 import { isEditable } from '@/lib/os/dom'
 import { cn } from '@/lib/utils'
@@ -10,15 +10,22 @@ import { cn } from '@/lib/utils'
 import { type EscapeLayer, useEscapeLayer } from '@/hooks/use-escape-layer'
 import { useFocusTrap } from '@/hooks/use-focus-trap'
 import { useScrollLock } from '@/hooks/use-scroll-lock'
+import '@/styles/mobile-chrome.css'
 
+import { ModalLiveRegion } from './announcer'
 import {
   COPY_LINK_LABEL,
-  MOBILE_BAR_CLASS,
-  MOBILE_GUTTER_CLASS,
+  SCROLL_STOP_CLASS,
+  scrollStopProps,
 } from './constants'
 
-const HEADER_BUTTON_CLASS =
-  'focus-ring text-ink-3 hover:bg-surf-0 hover:text-ink flex size-11 items-center justify-center rounded-md transition-colors'
+/**
+ * A glyph button of the title bar: a 22 art px target (44 css), the glyph
+ * one art px down while pressed, as in a window's controls. Night tokens:
+ * the bar is night chrome in both Lamp modes.
+ */
+const BAR_BUTTON_CLASS =
+  'focus-ring flex size-(--target) flex-none items-center justify-center text-(--ink) active:[&>svg]:translate-y-1'
 
 interface MobileSheetProps {
   title: string
@@ -26,23 +33,32 @@ interface MobileSheetProps {
   label?: string
   /** Name of the close button. */
   closeLabel?: string
-  /** Rendered in the header, typically a lucide icon element. */
+  /** The 16x16 icon at the start of the title bar. */
   icon?: ReactNode
   onClose: () => void
   /** Shows a copy-link button beside close when provided. */
   onCopyLink?: () => void
   /** What Escape counts this sheet as; the launcher sits above a window. */
   layer?: Extract<EscapeLayer, 'sheet' | 'launcher'>
+  /** Makes the body a named Tab stop, as on a window (`scrollStopLabelFor`). */
+  bodyLabel?: string
   children: ReactNode
 }
 
 /**
- * Full-screen slide-up sheet: the mobile replacement for the desktop
- * `<Window>`, and the app launcher. A modal layer: it traps focus, makes the
- * page behind inert, locks body scroll via a ref-counted helper so stacked
- * sheets don't fight over `overflow`, and closes on Esc (unless focus is in
- * a field, as with a window). It always sits on the one overlay layer, under
- * the command palette; a later sheet in the DOM covers an earlier one.
+ * Full-screen slide-up sheet: the phone's window, and the app launcher. In
+ * pixels (SPEC 1.2): a 24 art px title bar like a focused window's, with its
+ * icon and title and 22 art px glyph buttons but no grip, since a sheet does
+ * not move (SPEC 11), over a body that follows the Lamp like a window body.
+ * It comes up in four held steps.
+ *
+ * A modal layer: it traps focus, makes the page behind inert, locks body
+ * scroll via a ref-counted helper so stacked sheets don't fight over
+ * `overflow`, and closes on Esc (unless focus is in a field, as with a
+ * window). It always sits on the one overlay layer, under the command
+ * palette; a later sheet in the DOM covers an earlier one. What the shell
+ * says while it is open (a launcher switch) is read from its own live
+ * region, inside the dialog.
  */
 export function MobileSheet({
   title,
@@ -52,6 +68,7 @@ export function MobileSheet({
   onClose,
   onCopyLink,
   layer = 'sheet',
+  bodyLabel,
   children,
 }: MobileSheetProps) {
   const panelRef = useRef<HTMLDivElement>(null)
@@ -69,58 +86,58 @@ export function MobileSheet({
     <div
       ref={panelRef}
       // The panel takes focus itself when a deep link opens it; it fills the
-      // screen, so an outline around it says nothing.
-      className="bg-surf-solid text-ink animate-sheet-up z-overlay fixed inset-0 flex flex-col outline-none motion-reduce:animate-none"
+      // screen, so an outline around it says nothing. The ground shows only
+      // in the safe areas, round the bar and body.
+      className="animate-sheet-up z-overlay fixed inset-0 flex flex-col bg-(--ground) pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pl-[env(safe-area-inset-left)] outline-none motion-reduce:animate-none"
       role="dialog"
       aria-modal="true"
       aria-label={label}
     >
-      <div
-        className={cn(
-          'border-rule bg-surf-1 flex shrink-0 items-center justify-between gap-3 border-b',
-          MOBILE_BAR_CLASS,
-          MOBILE_GUTTER_CLASS
+      <div className="os-night px-titlebar-sheet flex h-24 shrink-0 items-center gap-3">
+        {icon && (
+          <span aria-hidden className="flex flex-none">
+            {icon}
+          </span>
         )}
-      >
-        <div className="flex items-center gap-2">
-          {icon && (
-            <span aria-hidden className="text-miku-2-icon">
-              {icon}
-            </span>
-          )}
-          <h2 className="text-ink-2 font-mono text-xs font-normal tracking-normal">
-            {title}
-          </h2>
-        </div>
-        <div className="-mr-1 flex items-center">
+        {/* Clipped across only, as in a window: a vertical clip would cut
+            the descenders of the title face. */}
+        <h2 className="text-title min-w-0 flex-1 overflow-x-clip text-ellipsis whitespace-nowrap text-(--ink-hi)">
+          {title}
+        </h2>
+        <div className="flex flex-none items-center">
           {onCopyLink && (
             <button
               type="button"
               onClick={onCopyLink}
               aria-label={COPY_LINK_LABEL}
-              className={HEADER_BUTTON_CLASS}
+              className={cn(BAR_BUTTON_CLASS, 'hover:bg-(--select)')}
             >
-              <Link aria-hidden size={16} />
+              <PixelIcon name="link" />
             </button>
           )}
+          {/* The cream glyph on the danger red is 4.18:1, as on a window. */}
           <button
             type="button"
             onClick={onClose}
             aria-label={closeLabel}
-            className={HEADER_BUTTON_CLASS}
+            className={cn(BAR_BUTTON_CLASS, 'hover:bg-(--danger)')}
           >
-            <X aria-hidden size={18} />
+            <PixelIcon name="close" />
           </button>
         </div>
       </div>
+      {/* Opaque, in the window body's colour, as a window's scroller is.
+          The sheet already clears the side insets. */}
       <div
+        {...scrollStopProps(bodyLabel)}
         className={cn(
-          'font-body text-ink flex-1 overflow-y-auto pt-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]',
-          MOBILE_GUTTER_CLASS
+          'font-body text-ink bg-surf-solid min-h-0 flex-1 overflow-y-auto px-8 pt-10 pb-[calc(12*var(--px)+env(safe-area-inset-bottom))]',
+          bodyLabel && SCROLL_STOP_CLASS
         )}
       >
         {children}
       </div>
+      <ModalLiveRegion />
     </div>
   )
 }

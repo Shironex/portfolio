@@ -13,9 +13,9 @@ interface ClockProps {
 }
 
 /**
- * Leaf clock: owns its own tick so siblings (menubar / taskbar chrome) stop
- * re-rendering each cadence. Memoized so upstream re-renders don't thrash it
- * either.
+ * Leaf clock in Departure Mono (`text-label`): owns its own tick so siblings
+ * (menubar / taskbar chrome) stop re-rendering each cadence. Memoized so
+ * upstream re-renders don't thrash it either.
  */
 function ClockImpl({ className, showDate = true }: ClockProps) {
   const now = useClock()
@@ -24,9 +24,9 @@ function ClockImpl({ className, showDate = true }: ClockProps) {
   // chrome doesn't jump when the real time lands a frame later.
   if (!now) {
     return (
-      <time className={cn('tabular-nums', className)}>
+      <time className={cn('text-label tabular-nums', className)}>
         <span className="invisible">00:00</span>
-        {showDate && <span className="invisible ml-2">Mon, Jan 00</span>}
+        {showDate && <span className="invisible ml-4">Mon, Jan 00</span>}
       </time>
     )
   }
@@ -48,13 +48,13 @@ function ClockImpl({ className, showDate = true }: ClockProps) {
     // itself is what gets read. The comma only exists for that reading.
     <time
       dateTime={now.toISOString()}
-      className={cn('tabular-nums', className)}
+      className={cn('text-label tabular-nums', className)}
     >
       <span>{time}</span>
       {date && (
         <>
           <span className="sr-only">, </span>
-          <span className="ml-2">{date}</span>
+          <span className="ml-4">{date}</span>
         </>
       )}
     </time>

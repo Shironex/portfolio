@@ -1,91 +1,86 @@
 #!/usr/bin/env node
 /**
- * Generate web favicons + manifest icons from the ShiroOS mascot.
+ * The favicons and manifest icons, from the README `icon-shironedev` tile
+ * (SPEC 1.1): every art px a square, scaled by a whole number with nearest
+ * neighbour, never resampled.
  *
- * Source : public/mascot.png (square PNG, transparent background ideal)
- * Output :
- *   - src/app/icon.png         512x512, Next.js App Router favicon
- *   - src/app/apple-icon.png   180x180, Apple touch icon
- *   - public/icon-192.png      192x192, PWA manifest icon
- *   - public/icon-512.png      512x512, PWA manifest maskable
- *   - public/favicon.ico       multi-res (16/32/48), legacy fallback
+ *   pnpm generate:icons            write them
+ *   pnpm generate:icons --check    fail if one is stale
  *
- * Patterned after the generate-icons scripts in the sibling Shiro-suite
- * projects (shiranami / moekoder). Web-specific: no .icns, no .ico past
- * 48px since browsers pick the PNGs first.
+ * Output:
+ *   src/app/favicon.ico          16 and 32, the 16 being the logo cut of the
+ *                                tile the menu bar shows, so a 16 px tab
+ *                                gets drawn pixels, not a halved 32
+ *   src/app/icon.png             32x32    the tile
+ *   src/app/apple-icon.png       180x180  the tile on 2 art px of ground, 5x
+ *   public/icon-192.png          192x192  the tile at 6x (manifest)
+ *   public/icon-512.png          512x512  the tile at 16x (manifest)
+ *   public/icon-maskable-512.png 512x512  the tile on 16 art px of ground, 8x,
+ *                                         inside a maskable icon's safe circle
+ *
+ * The tile and the logo come from the sheets `pnpm art:export` and the pixel
+ * generators keep in the repo. Uses sharp only, so it runs the same on macOS,
+ * Windows and Linux.
  */
-import sharp from 'sharp'
-import pngToIco from 'png-to-ico'
-import { writeFileSync, existsSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import pngToIco from 'png-to-ico'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const root = resolve(__dirname, '..')
-const source = resolve(root, 'public/mascot.png')
+import { stillPng } from './pixel/sheet.mjs'
 
-if (!existsSync(source)) {
-  console.error(`Source mascot not found at: ${source}`)
-  console.error(
-    'Drop a square PNG (1024x1024 or larger, transparent bg) there and retry.'
-  )
-  process.exit(1)
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
+const pixel = join(root, 'src/assets/pixel')
+const TILE = [join(pixel, 'project-icon-art/readme-icons.json'), 'shironedev']
+const LOGO = [join(pixel, 'icons/app-icons-16.json'), 'logo']
+
+/** The ground navy (`--ground`), behind an icon that must be opaque. */
+const GROUND = '#0b1420'
+
+/** Every file, as [path from the repo root, bytes]. */
+async function outputs() {
+  const tile = (options) => stillPng(...TILE, options)
+  const [small, icon] = await Promise.all([
+    stillPng(...LOGO),
+    tile({ scale: 1 }),
+  ])
+  return [
+    ['src/app/icon.png', icon],
+    [
+      'src/app/apple-icon.png',
+      await tile({ scale: 5, pad: 2, ground: GROUND }),
+    ],
+    ['public/icon-192.png', await tile({ scale: 6 })],
+    ['public/icon-512.png', await tile({ scale: 16 })],
+    [
+      'public/icon-maskable-512.png',
+      await tile({ scale: 8, pad: 16, ground: GROUND }),
+    ],
+    ['src/app/favicon.ico', await pngToIco([small, icon])],
+  ]
 }
 
-const pngOptions = {
-  compressionLevel: 9,
-  palette: true,
-  effort: 10,
-  quality: 82,
-}
-
-const outputs = [
-  { size: 512, path: 'src/app/icon.png', label: 'icon.png              (Next favicon)' },
-  {
-    size: 180,
-    path: 'src/app/apple-icon.png',
-    label: 'apple-icon.png        (iOS touch icon)',
-  },
-  { size: 192, path: 'public/icon-192.png', label: 'public/icon-192.png   (PWA)' },
-  { size: 512, path: 'public/icon-512.png', label: 'public/icon-512.png   (PWA maskable)' },
-]
-
-async function generate() {
-  console.log('Generating web icons from public/mascot.png...\n')
-
-  for (const { size, path, label } of outputs) {
-    await sharp(source)
-      .resize(size, size, {
-        fit: 'contain',
-        background: { r: 0, g: 0, b: 0, alpha: 0 },
-      })
-      .png(pngOptions)
-      .toFile(resolve(root, path))
-    console.log(`  ${label}  (${size}x${size})`)
+async function main(argv) {
+  const files = await outputs()
+  if (argv.includes('--check')) {
+    const stale = files.filter(([path, bytes]) => {
+      const file = join(root, path)
+      return !existsSync(file) || !readFileSync(file).equals(bytes)
+    })
+    for (const [path] of stale) {
+      console.error(`${path} is stale. Run: pnpm generate:icons`)
+    }
+    if (stale.length) process.exit(1)
+    console.log(`icons up to date: ${files.length} file(s)`)
+    return
   }
-
-  const icoSizes = [16, 32, 48]
-  const icoPngs = await Promise.all(
-    icoSizes.map((size) =>
-      sharp(source)
-        .resize(size, size, {
-          fit: 'contain',
-          background: { r: 0, g: 0, b: 0, alpha: 0 },
-        })
-        .png(pngOptions)
-        .toBuffer()
-    )
-  )
-  const icoBuffer = await pngToIco(icoPngs)
-  writeFileSync(resolve(root, 'public/favicon.ico'), icoBuffer)
-  console.log(
-    `  public/favicon.ico     (multi-res: ${icoSizes.join(', ')})`
-  )
-
-  console.log('\nDone.')
+  for (const [path, bytes] of files) {
+    writeFileSync(join(root, path), bytes)
+    console.log(`  ${path} (${bytes.length} bytes)`)
+  }
 }
 
-generate().catch((err) => {
-  console.error('Failed to generate icons:', err)
+main(process.argv.slice(2)).catch((error) => {
+  console.error('Failed to write the icons:', error.message)
   process.exit(1)
 })

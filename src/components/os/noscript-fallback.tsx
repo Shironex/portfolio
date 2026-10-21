@@ -1,3 +1,5 @@
+import { INLINE_LINK_CLASS } from '@/components/os/constants'
+
 import {
   AUTHOR_FULL_NAME,
   AUTHOR_NAME,
@@ -8,89 +10,61 @@ import {
 /**
  * Plain HTML fallback rendered inside `<noscript>` for clients without JS.
  * ShiroOS is a heavily stateful SPA. Without React the desktop can't boot,
- * so this surfaces the essentials (name, contact, GitHub) in a tiny card.
+ * so this surfaces the essentials (name, contact, GitHub) in one pixel
+ * window over a dither scrim: CSS only, the chrome needs no script.
  */
 export function NoscriptFallback() {
   return (
     <noscript>
-      <div
-        className="z-noscript"
-        style={{
-          position: 'fixed',
-          inset: 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          background: 'var(--color-sky-1)',
-          padding: '2rem',
-          fontFamily: 'system-ui, -apple-system, "Segoe UI", Geist, sans-serif',
-        }}
-      >
-        <div
-          style={{
-            maxWidth: 520,
-            padding: '2rem',
-            borderRadius: 16,
-            background: 'var(--color-surf-solid)',
-            border: '1px solid var(--color-rule-2)',
-            boxShadow: 'var(--shiro-elev-3)',
-          }}
-        >
-          {/* Not an `h1`: with no JavaScript the static hero under this card
-              is still in the document, and it has the page's one. */}
-          <h2
-            style={{
-              margin: 0,
-              fontSize: 24,
-              color: 'var(--color-ink)',
-              fontWeight: 700,
-            }}
+      <div className="z-noscript px-tile-shadow fixed inset-0 flex items-center justify-center overflow-y-auto p-4">
+        <div className="px-window-focused flex w-full max-w-[calc(260*var(--px))] flex-col">
+          <div
+            aria-hidden
+            className="os-night px-titlebar-focused flex h-16 items-center px-6"
           >
-            ShiroOS needs JavaScript
-          </h2>
-          <p
-            style={{
-              marginTop: 12,
-              color: 'var(--color-ink-2)',
-              fontSize: 14,
-              lineHeight: 1.6,
-            }}
+            <span className="text-title truncate text-(--ink-hi)">
+              noscript.txt
+            </span>
+          </div>
+          {/* A labelled region, so the card's text sits in a landmark. */}
+          <section
+            aria-labelledby="noscript-title"
+            className="flex flex-col gap-4 p-8"
           >
-            This portfolio is a tiny desktop: boot splash, draggable windows,
-            command palette. Enable JS to explore. In the meantime:
-          </p>
-          <ul
-            style={{
-              marginTop: 16,
-              paddingLeft: 20,
-              color: 'var(--color-ink-2)',
-              fontSize: 14,
-              lineHeight: 1.8,
-            }}
-          >
-            <li>
-              <strong>{AUTHOR_FULL_NAME}</strong> ({AUTHOR_NAME}), full-stack
-              developer, TypeScript + Rust
-            </li>
-            <li>
-              Remote from Poland (CET), open to full-time roles and contracts
-            </li>
-            <li>
-              Email:{' '}
-              <a
-                href={`mailto:${EMAIL_CONTACT}`}
-                style={{ color: 'var(--color-miku-ink)' }}
-              >
-                {EMAIL_CONTACT}
-              </a>
-            </li>
-            <li>
-              GitHub:{' '}
-              <a href={GITHUB_URL} style={{ color: 'var(--color-miku-ink)' }}>
-                {GITHUB_URL}
-              </a>
-            </li>
-          </ul>
+            {/* Not an `h1`: with no JavaScript the static hero under this
+                card is still in the document, and it has the page's one. */}
+            <h2 id="noscript-title" className="text-heading lamp-heading">
+              ShiroOS needs JavaScript
+            </h2>
+            <p className="text-body text-(--ink)">
+              This portfolio is a tiny desktop: boot splash, draggable windows,
+              command palette. Enable JS to explore. In the meantime:
+            </p>
+            <ul className="text-body flex flex-col gap-2 text-(--ink)">
+              <li>
+                <strong className="text-(--ink-hi)">{AUTHOR_FULL_NAME}</strong>{' '}
+                ({AUTHOR_NAME}), full-stack developer, TypeScript + Rust
+              </li>
+              <li>
+                Remote from Poland (CET), open to full-time roles and contracts
+              </li>
+              <li>
+                Email:{' '}
+                <a
+                  href={`mailto:${EMAIL_CONTACT}`}
+                  className={INLINE_LINK_CLASS}
+                >
+                  {EMAIL_CONTACT}
+                </a>
+              </li>
+              <li className="break-all">
+                GitHub:{' '}
+                <a href={GITHUB_URL} className={INLINE_LINK_CLASS}>
+                  {GITHUB_URL}
+                </a>
+              </li>
+            </ul>
+          </section>
         </div>
       </div>
     </noscript>

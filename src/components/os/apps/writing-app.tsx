@@ -2,18 +2,21 @@
  * writing.rss window: my latest blog posts, read from `/api/blog-posts`
  * (which fetches the blog's RSS feed server-side with a 6h `unstable_cache`).
  * Every post links out to the blog in a new tab.
+ *
+ * In pixels (SPEC 1.5): the README `writing` banner as the heading's
+ * picture, posts as rows of one card with their dates in Departure Mono,
+ * the mini-me typing over dither bars while the feed loads, and the alert
+ * glyph with a Retry button when it fails.
  */
 
 'use client'
 
-import { ArrowUpRight } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
-import {
-  EYEBROW_CLASS,
-  INLINE_LINK_CLASS,
-  SKELETON_BAR,
-} from '@/components/os/constants'
+import { PROSE_CLASS, SKELETON_BAR } from '@/components/os/constants'
 import { ExternalLink } from '@/components/os/external-link'
+import { MiniMe } from '@/components/pixel/mini-me'
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
 import {
   type BlogPost,
@@ -24,10 +27,15 @@ import { BLOG_URL } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import { SHORT_DATE, formatDate } from '@/lib/utils/format-date'
 
+import banners from '@/assets/pixel/banners/readme-headers.png'
 import { type ApiFeedState, useApiFeed } from '@/hooks/use-api-feed'
+import '@/styles/sprites/readme-headers.css'
 
-const SKELETON_ROWS = 4
+const SKELETON_ROWS = 3
 const BLOG_HOST = new URL(BLOG_URL).host
+
+/** The posts: one card 9-slice with dotted rules between the rows. */
+const LIST_CLASS = 'px-card flex flex-col p-1'
 
 /** Feed dates are UTC; formatting in UTC keeps the day the post was dated. */
 function describeDate(date: string) {
@@ -39,51 +47,67 @@ function describeDate(date: string) {
 
 function BlogLink({ children }: { children: React.ReactNode }) {
   return (
-    <ExternalLink href={BLOG_URL} className={INLINE_LINK_CLASS}>
+    <ExternalLink href={BLOG_URL} inline>
       {children}
     </ExternalLink>
   )
 }
 
-function PostSkeleton() {
+function Rule() {
+  return <span aria-hidden className="rule-dotted mx-2 block" />
+}
+
+function Loading() {
   return (
-    <li aria-hidden className="border-rule bg-surf-0 rounded-2xl border p-4">
-      <div className={cn(SKELETON_BAR, 'h-2.5 w-20 rounded')} />
-      <div className={cn(SKELETON_BAR, 'mt-3 h-4 w-3/4 rounded')} />
-      <div className={cn(SKELETON_BAR, 'mt-3 h-3 w-full rounded')} />
-      <div className={cn(SKELETON_BAR, 'mt-2 h-3 w-2/3 rounded')} />
-    </li>
+    <>
+      <p role="status" className="sr-only">
+        Loading posts
+      </p>
+      <div aria-hidden className="flex flex-col gap-3">
+        <MiniMe tag="type" play="loop" />
+        <div className={LIST_CLASS}>
+          {Array.from({ length: SKELETON_ROWS }, (_, i) => (
+            <div key={i} className="flex flex-col">
+              {i > 0 && <Rule />}
+              <div className="flex flex-col gap-2 p-2">
+                <div className={cn(SKELETON_BAR, 'h-4 w-24')} />
+                <div className={cn(SKELETON_BAR, 'h-6 w-3/4')} />
+                <div className={cn(SKELETON_BAR, 'h-5 w-full')} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   )
 }
 
-function PostRow({ post }: { post: BlogPost }) {
+function PostRow({ post, first }: { post: BlogPost; first: boolean }) {
   const date = describeDate(post.date)
   return (
-    <li>
+    <li className="flex flex-col">
+      {!first && <Rule />}
       <ExternalLink
         href={post.url}
-        className="focus-ring group border-rule bg-surf-0 hover:bg-surf-1 hover:border-miku/40 block rounded-2xl border p-4 transition-colors"
+        className="focus-ring group flex flex-col gap-1 p-2 hover:bg-(--select)"
       >
         {date && (
           <time
             dateTime={post.date}
-            className="text-ink-3 block font-mono text-[11px]"
+            className="text-label text-(--meta) group-hover:text-(--ink)"
           >
             {date}
           </time>
         )}
-        <span className="mt-1 flex items-start justify-between gap-3">
-          <span className="font-display text-ink text-base font-semibold">
-            {post.title}
-          </span>
-          <ArrowUpRight
-            aria-hidden
-            size={16}
-            className="text-ink-3 group-hover:text-miku-2-icon mt-1 shrink-0 transition-colors"
+        <span className="flex items-start justify-between gap-4">
+          <span className="text-title text-(--ink)">{post.title}</span>
+          <PixelIcon
+            name="external"
+            className="mt-1 text-(--meta) group-hover:text-(--heading)"
           />
         </span>
         {post.excerpt && (
-          <span className="text-ink-2 mt-1.5 line-clamp-3 block text-sm">
+          <span className="text-prose line-clamp-2 text-(--meta) group-hover:text-(--ink)">
             {post.excerpt}
           </span>
         )}
@@ -93,40 +117,41 @@ function PostRow({ post }: { post: BlogPost }) {
 }
 
 function PostList({ state }: { state: ApiFeedState<BlogPosts> }) {
-  if (state.kind === 'loading') {
+  if (state.kind === 'loading') return <Loading />
+
+  if (state.kind === 'error') {
     return (
-      <>
-        <p role="status" className="sr-only">
-          Loading posts
+      <div role="status" className="flex flex-col items-start gap-3">
+        <p className="text-prose flex items-start gap-2 text-(--ink)">
+          <PixelIcon name="alert" className="mt-3 text-(--error)" />
+          <span>
+            I couldn&apos;t load my posts right now. You can read them on{' '}
+            <BlogLink>{BLOG_HOST}</BlogLink>.
+          </span>
         </p>
-        <ul className="space-y-3">
-          {Array.from({ length: SKELETON_ROWS }, (_, i) => (
-            <PostSkeleton key={i} />
-          ))}
-        </ul>
-      </>
+        <Button type="button" variant="secondary" onClick={state.retry}>
+          Retry
+        </Button>
+      </div>
     )
   }
 
   if (state.kind !== 'ready') {
     return (
-      <p role="status" className="text-ink-3 font-mono text-[12px]">
-        couldn&apos;t load my posts right now · you can read them on{' '}
-        <BlogLink>{BLOG_HOST}</BlogLink>
+      <p role="status" className={PROSE_CLASS}>
+        You can read my posts on <BlogLink>{BLOG_HOST}</BlogLink>.
       </p>
     )
   }
 
   if (state.data.posts.length === 0) {
-    return (
-      <p className="text-ink-3 font-mono text-[12px]">nothing published yet</p>
-    )
+    return <p className={PROSE_CLASS}>Nothing published yet.</p>
   }
 
   return (
-    <ul className="space-y-3">
-      {state.data.posts.map((post) => (
-        <PostRow key={post.url} post={post} />
+    <ul className={LIST_CLASS}>
+      {state.data.posts.map((post, i) => (
+        <PostRow key={post.url} post={post} first={i === 0} />
       ))}
     </ul>
   )
@@ -136,17 +161,21 @@ export default function WritingApp() {
   const state = useApiFeed('/api/blog-posts', BlogPostsSchema)
 
   return (
-    <div className="font-body text-ink-2 max-w-[720px] text-[14px] leading-relaxed">
-      <div className={cn(EYEBROW_CLASS, 'text-miku-ink')}>Writing</div>
-      <h2 className="font-display text-ink text-3xl font-semibold">
-        Latest posts
-      </h2>
-      <p className="mt-1">
-        Field notes on things I build, from my blog at{' '}
-        <BlogLink>{BLOG_HOST}</BlogLink>.
-      </p>
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col items-start gap-3">
+        <span
+          aria-hidden
+          className="os-night px-readme-headers px-readme-headers-writing ambient-loop block max-w-full flex-none animate-(--px-loop)"
+          style={{ backgroundImage: `url(${banners.src})` }}
+        />
+        <h2 className="sr-only">Recent writing</h2>
+        <p className={PROSE_CLASS}>
+          Field notes on things I build, from my blog at{' '}
+          <BlogLink>{BLOG_HOST}</BlogLink>.
+        </p>
+      </div>
 
-      <div className="mt-5" aria-busy={state.kind === 'loading'}>
+      <div aria-busy={state.kind === 'loading'}>
         <PostList state={state} />
       </div>
     </div>

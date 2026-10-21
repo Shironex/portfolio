@@ -6,6 +6,7 @@ import type { WindowId } from '@/components/os/types'
 
 import { documentTitle } from '@/lib/metadata-config'
 import {
+  DEEP_LINK_WRITE_DEBOUNCE_MS,
   type DeepLinkTarget,
   deepLinkHref,
   initialDeepLinkTarget,
@@ -25,7 +26,9 @@ import type { OsWindowsApi } from './use-os-windows'
  * param. After that it mirrors the topmost window back into the address bar
  * with `history.replaceState`, so focus changes never add history entries:
  * `/projects/<slug>` for a project, `/?open=<app>` for an app, `/` once the
- * last window closes.
+ * last window closes. The write waits until the top window has held for
+ * {@link DEEP_LINK_WRITE_DEBOUNCE_MS}, so fast raising stays under WebKit's
+ * limit on history calls.
  *
  * The write can cross pathnames (`/` to `/projects/<slug>` and back) without
  * a navigation. Next wraps `replaceState` only to keep `usePathname` and
@@ -64,27 +67,34 @@ export function useDeepLink(
   }, [initialWindow, openApp, openProject])
 
   useEffect(() => {
+    const sync = () => {
+      if (topmostId === syncedId.current) return
+      syncedId.current = topmostId
+      const { pathname, search, hash } = window.location
+      const target = topmostId ? targetForWindow(topmostId) : null
+      const href = deepLinkHref(target, search)
+      // No navigation means no new metadata, so the tab title is kept in
+      // step with the path by hand.
+      document.title = documentTitle(
+        target?.kind === 'project'
+          ? findProjectBySlug(target.slug)?.title
+          : undefined
+      )
+      // Already there on a fresh load of a canonical link; a legacy
+      // `/?project=<slug>` link is rewritten to its route here.
+      if (href === pathname + search) return
+      window.history.replaceState(null, '', href + hash)
+    }
     if (pendingId.current !== null) {
       if (topmostId !== pendingId.current) return
       pendingId.current = null
-    } else if (topmostId === syncedId.current) {
+      // The load path is one change, so it is in step at once.
+      sync()
       return
     }
-    syncedId.current = topmostId
-    const { pathname, search, hash } = window.location
-    const target = topmostId ? targetForWindow(topmostId) : null
-    const href = deepLinkHref(target, search)
-    // No navigation means no new metadata, so the tab title is kept in step
-    // with the path by hand.
-    document.title = documentTitle(
-      target?.kind === 'project'
-        ? findProjectBySlug(target.slug)?.title
-        : undefined
-    )
-    // Already there on a fresh load of a canonical link; a legacy
-    // `/?project=<slug>` link is rewritten to its route here.
-    if (href === pathname + search) return
-    window.history.replaceState(null, '', href + hash)
+    // A newer top window, or an unmount, cancels the write still waiting.
+    const timer = window.setTimeout(sync, DEEP_LINK_WRITE_DEBOUNCE_MS)
+    return () => window.clearTimeout(timer)
   }, [topmostId])
 
   const copyLink = useCallback((id: WindowId) => {

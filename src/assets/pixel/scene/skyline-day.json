@@ -1,0 +1,39 @@
+{
+  "frames": [
+    {
+      "filename": "skyline-day",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 512,
+        "h": 114
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 512,
+        "h": 114
+      },
+      "sourceSize": {
+        "w": 512,
+        "h": 114
+      },
+      "duration": 100
+    }
+  ],
+  "meta": {
+    "app": "scripts/pixel/gen-wallpaper.mjs",
+    "image": "skyline-day.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 512,
+      "h": 114
+    },
+    "scale": "1",
+    "frameTags": [],
+    "layers": [],
+    "slices": []
+  }
+}

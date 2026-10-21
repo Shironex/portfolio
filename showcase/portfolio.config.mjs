@@ -17,9 +17,10 @@
 // showcase/fixtures/github-activity.json
 // https://shirone.dev/api/github-activity` and the same for
 // github-contributions and blog-posts), PostHog is blocked, and the kit
-// asks for reduced motion, which also skips the boot splash. The site keeps
-// its theme in localStorage, not prefers-color-scheme, so setup seeds it:
-// dark mode with the default teal palette.
+// asks for reduced motion, which also skips the boot splash, parks the pet
+// on the kerb and holds the wallpaper on its first frame. The site keeps its
+// Lamp and sky in localStorage, not prefers-color-scheme, so setup seeds
+// them: the Lamp off (night) under the Night sky, the defaults.
 import { defineConfig } from '@noctcore/showcase-kit'
 import { readFile } from 'node:fs/promises'
 
@@ -27,7 +28,7 @@ const ORIGIN = 'http://localhost:3210'
 // Local wall time, no zone: the menubar reads the same on any machine.
 const NOW = new Date('2026-09-26T10:30:00')
 const MODE = 'dark'
-const PALETTE = 'teal'
+const SKY = 'night'
 const READY = '[aria-label="Taskbar"]'
 
 /** Routes answered from showcase/fixtures/<name>.json. */
@@ -43,10 +44,12 @@ const fixtures = await Promise.all(
   }))
 )
 
-/** Wait until the terminal panel has typed its last line (it uses timers). */
+/**
+ * Wait until the shell has hydrated (the taskbar clock only gets a time
+ * then) and every face of the pixel type has loaded.
+ */
 async function settleDesktop(page) {
-  await page.locator(READY).waitFor({ state: 'attached' })
-  await page.getByText('▌').waitFor()
+  await page.locator(`${READY} time[datetime]`).waitFor()
   await page.evaluate(() =>
     Promise.all([...document.fonts].map((face) => face.load().catch(() => {})))
   )
@@ -54,11 +57,12 @@ async function settleDesktop(page) {
 
 /**
  * Start each shot from a fresh desktop, run its steps, then park the pointer
- * where it hovers nothing. The reload keeps shots independent of each other.
+ * where it hovers nothing. A fresh load of `/` keeps shots independent of
+ * each other: a reload would keep the last shot's `?open=` deep link.
  */
 function view(then) {
   return async (page) => {
-    await page.reload()
+    await page.goto(`${ORIGIN}/`)
     await settleDesktop(page)
     if (then) await then(page)
     await page.mouse.move(1439, 450)
@@ -117,11 +121,17 @@ export default defineConfig({
     // failure here should stop the run, not be swallowed.
     /* eslint-disable noctcore-react/no-unguarded-web-storage */
     await page.evaluate(
-      ([mode, palette]) => {
+      ([mode, sky]) => {
         localStorage.setItem('shiroos:theme', mode)
-        localStorage.setItem('shiroos:palette', palette)
+        localStorage.setItem('shiroos:sky', sky)
       },
-      [MODE, PALETTE]
+      [MODE, SKY]
+    )
+    // The tab remembers its open windows (`shiroos:windows`) and saves them
+    // as it unloads, so forget them as each load starts: otherwise one
+    // shot's windows, a maximized Contact among them, open in the next.
+    await context.addInitScript(() =>
+      sessionStorage.removeItem('shiroos:windows')
     )
     /* eslint-enable noctcore-react/no-unguarded-web-storage */
     await page.reload()
@@ -131,7 +141,7 @@ export default defineConfig({
       id: 'desktop',
       title: 'Desktop',
       caption:
-        'The desktop: who I am, a short shell transcript, featured projects and my GitHub activity.',
+        'The desktop: a pixel night city, who I am, a short shell transcript, featured projects and my GitHub activity.',
       nav: view(),
     },
     {
@@ -157,12 +167,16 @@ export default defineConfig({
         await win
           .getByRole('heading', { name: 'tech stack', exact: true })
           .evaluate((heading) => heading.scrollIntoView({ block: 'start' }))
-        // Gallery thumbnails load lazily; wait until each one has decoded.
-        await win
-          .locator('img')
-          .evaluateAll((images) =>
-            Promise.all(images.map((img) => img.decode().catch(() => {})))
+        // Gallery thumbnails load lazily, and a lazy image out of view never
+        // decodes, so load them all now and wait until each one has.
+        await win.locator('img').evaluateAll((images) =>
+          Promise.all(
+            images.map((img) => {
+              img.loading = 'eager'
+              return img.decode().catch(() => {})
+            })
           )
+        )
       }),
       delayMs: 500,
     },
@@ -195,7 +209,7 @@ export default defineConfig({
       id: 'palette',
       title: 'Command palette',
       caption:
-        'The command palette: open any app or project, switch the theme or the palette.',
+        'The command palette: open any app or project, turn the Lamp on, pick a sky or change a setting.',
       nav: view(async (page) => {
         // The taskbar button sits below the palette, so the pointer does not
         // leave a row highlighted.
@@ -217,10 +231,11 @@ export default defineConfig({
     style: 'window',
     theme: 'dark',
     title: '{name}',
+    // The README palette: the selection teal down to the ground navy.
     background: {
       type: 'gradient',
-      from: '#0f7c74',
-      to: '#0b1f1e',
+      from: '#1f5058',
+      to: '#0b1420',
       angle: 135,
     },
     padding: 72,
@@ -233,8 +248,10 @@ export default defineConfig({
     readme: 'assets/showcase/{id}.webp',
   },
   hero: {
-    tagline: 'My portfolio, built as a small desktop OS.',
-    logo: 'src/app/icon.png',
+    tagline: 'My portfolio, built as a small pixel desktop OS.',
+    // The README logo tile at 16x, nearest neighbour: the 32 px favicon
+    // would be scaled up soft.
+    logo: 'public/icon-512.png',
     shots: ['projects', 'project', 'desktop'],
     output: 'assets/showcase/hero.webp',
   },

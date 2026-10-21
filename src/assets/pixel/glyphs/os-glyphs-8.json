@@ -1,0 +1,769 @@
+{
+  "frames": [
+    {
+      "filename": "os-glyphs-8 0.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 64,
+        "h": 48
+      },
+      "duration": 100
+    },
+    {
+      "filename": "os-glyphs-8 1.aseprite",
+      "frame": {
+        "x": 64,
+        "y": 0,
+        "w": 64,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 64,
+        "h": 48
+      },
+      "duration": 100
+    },
+    {
+      "filename": "os-glyphs-8 2.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 48,
+        "w": 64,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 64,
+        "h": 48
+      },
+      "duration": 100
+    },
+    {
+      "filename": "os-glyphs-8 3.aseprite",
+      "frame": {
+        "x": 64,
+        "y": 48,
+        "w": 64,
+        "h": 48
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 64,
+        "h": 48
+      },
+      "sourceSize": {
+        "w": 64,
+        "h": 48
+      },
+      "duration": 100
+    }
+  ],
+  "meta": {
+    "app": "https://www.aseprite.org/",
+    "image": "os-glyphs-8.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 128,
+      "h": 96
+    },
+    "scale": "1",
+    "frameTags": [
+      {
+        "name": "spinner",
+        "from": 0,
+        "to": 3,
+        "direction": "forward",
+        "color": "#000000ff"
+      }
+    ],
+    "layers": [
+      {
+        "name": "glyphs",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "spinner",
+        "opacity": 255,
+        "blendMode": "normal"
+      }
+    ],
+    "slices": [
+      {
+        "name": "search",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "close",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 8,
+              "y": 0,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "minimize",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 16,
+              "y": 0,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "maximize",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 24,
+              "y": 0,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "restore",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 32,
+              "y": 0,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "link",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 40,
+              "y": 0,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "copy",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 48,
+              "y": 0,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "external",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 56,
+              "y": 0,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "arrow-left",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 0,
+              "y": 8,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "arrow-right",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 8,
+              "y": 8,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "arrow-up",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 16,
+              "y": 8,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "arrow-down",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 24,
+              "y": 8,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "chevron-left",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 32,
+              "y": 8,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "chevron-right",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 40,
+              "y": 8,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "chevron-down",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 48,
+              "y": 8,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "check",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 56,
+              "y": 8,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "alert",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 0,
+              "y": 16,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "home",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 8,
+              "y": 16,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "menu",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 16,
+              "y": 16,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "grid",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 24,
+              "y": 16,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "lamp-on",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 32,
+              "y": 16,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "lamp-off",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 40,
+              "y": 16,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "sky",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 48,
+              "y": 16,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "send",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 56,
+              "y": 16,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "mail",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 0,
+              "y": 24,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "pin",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 8,
+              "y": 24,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "clock",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 16,
+              "y": 24,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "calendar",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 24,
+              "y": 24,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "tag",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 32,
+              "y": 24,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "package",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 40,
+              "y": 24,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "newspaper",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 48,
+              "y": 24,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "book",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 56,
+              "y": 24,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "github",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 0,
+              "y": 32,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "note",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 8,
+              "y": 32,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "puzzle",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 16,
+              "y": 32,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "motorbike",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 24,
+              "y": 32,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "film",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 32,
+              "y": 32,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "diamond",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 40,
+              "y": 32,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "enter",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 48,
+              "y": 32,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "command",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 56,
+              "y": 32,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "pause",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 0,
+              "y": 40,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "play",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 8,
+              "y": 40,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "paw",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 16,
+              "y": 40,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "star",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 24,
+              "y": 40,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "dot",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 32,
+              "y": 40,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      },
+      {
+        "name": "spinner",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 40,
+              "y": 40,
+              "w": 8,
+              "h": 8
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

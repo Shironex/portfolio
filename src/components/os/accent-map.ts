@@ -1,16 +1,12 @@
-import type { CSSProperties } from 'react'
-
-import { TINT } from '@/lib/os/palettes.generated'
-
 /**
  * Accent roles, not colours.
  *
- * A ShiroOS surface names the role it means and the active palette decides the
- * hex, so switching palettes reaches app icons, project tiles and the command
- * palette without any of them knowing a colour exists. The six roles are
- * exactly what the palette table in `scripts/gen-palettes.mjs` defines; there
- * is deliberately no escape hatch for an arbitrary colour, because one would
- * be the colour that stops changing when the palette does.
+ * A ShiroOS surface names the role it means and the tokens decide the hex,
+ * so the Lamp reaches app icons, project tiles and the command palette
+ * without any of them knowing a colour exists. The six roles are exactly the
+ * `ROLES` table of `scripts/gen-tokens.mjs`; there is deliberately no escape
+ * hatch for an arbitrary colour, because one would be the colour that stops
+ * changing with the Lamp.
  */
 export const ACCENT_ROLES = [
   'primary',
@@ -25,31 +21,19 @@ export type AccentRole = (typeof ACCENT_ROLES)[number]
 
 /**
  * The three variables of a role: the accent itself, which is a fill, and its
- * two foregrounds. The generator derives `ink` to reach 4.5:1 and `icon` to
- * reach 3:1 on every surface and on the role's own tint, so text takes `ink`
- * and an icon takes `icon`; the fill is never a foreground. `neutral` is
- * plain ink: `ink-3` as a fill and as an icon, `ink-2` as text, which is what
- * still reads on a tint of `ink-3` (the generator gates both).
+ * two foregrounds (`--accent-<role>`, `-ink`, `-icon` in tokens.css). The
+ * gate checks `ink` at 4.5:1 and `icon` at 3:1 on every body and on the
+ * role's own tint, so text takes `ink` and an icon takes `icon`; the fill is
+ * never a foreground.
  */
-const ROLE_VAR: Record<
-  AccentRole,
-  { fill: string; ink: string; icon: string }
-> = {
-  primary: accentVars('--color-miku'),
-  deep: accentVars('--color-miku-2'),
-  bright: accentVars('--color-miku-3'),
-  warm: accentVars('--color-peach'),
-  'warm-2': accentVars('--color-peach-2'),
-  neutral: {
-    fill: '--shiro-ink-3',
-    ink: '--shiro-ink-2',
-    icon: '--shiro-ink-3',
-  },
-}
-
-function accentVars(fill: string) {
+function roleVars(role: AccentRole) {
+  const fill = `--accent-${role}`
   return { fill, ink: `${fill}-ink`, icon: `${fill}-icon` }
 }
+
+const ROLE_VAR = Object.fromEntries(
+  ACCENT_ROLES.map((role) => [role, roleVars(role)])
+) as Record<AccentRole, ReturnType<typeof roleVars>>
 
 /** Text colour of a role, for use in an inline `style`. */
 export function accentInk(role: AccentRole): string {
@@ -64,33 +48,11 @@ export function accentIcon(role: AccentRole): string {
 /**
  * Translucent fill of an accent. Replaces the `${hex}25` suffix trick, which
  * only worked while accents were literal hex strings. Behind a foreground of
- * the same role, `percent` stays within `TINT` (`palettes.generated.ts`), the
+ * the same role, `percent` stays within `TINT` (`tokens.generated.ts`), the
  * strengths the contrast gate ran with.
  */
 export function accentTint(role: AccentRole, percent: number): string {
   return `color-mix(in oklab, var(${ROLE_VAR[role].fill}) ${percent}%, transparent)`
-}
-
-/**
- * A tint as a `background-image`, to lay over an opaque `background-color`:
- * the fill of a badge that must not let a glow behind it through.
- */
-export function accentTintLayer(role: AccentRole, percent: number): string {
-  const tint = accentTint(role, percent)
-  return `linear-gradient(${tint}, ${tint})`
-}
-
-/** The tile behind an app icon: the role's tint with its icon colour on it. */
-export function accentTileStyle(role: AccentRole): CSSProperties {
-  return {
-    backgroundColor: accentTint(role, TINT.icon),
-    color: accentIcon(role),
-  }
-}
-
-/** Colour at the centre of an `orb` glow, at one of the `GLOW` strengths. */
-export function glowStyle(role: AccentRole, percent: number): CSSProperties {
-  return { '--orb-color': accentTint(role, percent) } as CSSProperties
 }
 
 /**

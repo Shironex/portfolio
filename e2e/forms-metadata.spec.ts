@@ -23,8 +23,8 @@ import {
  * both modes, and says so when the captcha is missing; what was typed
  * survives closing the window. The contribution heatmap is one image, not a
  * run of tab stops. The document head carries a canonical, `viewport-fit=cover`
- * and a theme colour that follows the site's own mode, and the 404 has a
- * title of its own.
+ * and a theme colour that is the ground navy whatever the Lamp says, and the
+ * 404 has a title of its own.
  *
  * Turnstile never runs here: its script is blocked, so the widget stays empty
  * and no token arrives. That is the "captcha not completed" state, without a
@@ -214,7 +214,7 @@ test('the desktop: the heatmap adds no tab stops, the head is complete', async (
   await expect(graph).toBeVisible()
 
   const stops = await graph.evaluate((el) => {
-    const cells = el.querySelectorAll('[class*="size-[11px]"]').length
+    const cells = el.querySelectorAll('[data-day]').length
     const focusable = [el, ...el.querySelectorAll('*')].filter(
       (node) => node instanceof HTMLElement && node.tabIndex >= 0
     ).length
@@ -234,30 +234,31 @@ test('the desktop: the heatmap adds no tab stops, the head is complete', async (
     /viewport-fit=cover/
   )
 
-  await expect(page.locator('html')).not.toHaveClass(/\bdark\b/)
+  // Night bodies are the default.
+  await expect(page.locator('html')).toHaveClass(/\bdark\b/)
   await expect(page.locator('meta[name="theme-color"]')).toHaveCount(1)
   await expectThemeColorIsGround(page)
 })
 
-test('the theme colour follows the stored mode and the toggle', async ({
-  page,
-}) => {
-  // The other direction: the OS asks for light, the site is set to dark.
-  await page.emulateMedia({ colorScheme: 'light' })
-  await useMode(page, 'dark')
+test('the theme colour stays the ground with the lamp on', async ({ page }) => {
+  // The OS asks for dark; the site is set to paper bodies, whose ground is
+  // still night.
+  await page.emulateMedia({ colorScheme: 'dark' })
+  await useMode(page, 'light')
   await openDesktop(page)
 
-  await expect(page.locator('html')).toHaveClass(/\bdark\b/)
+  await expect(page.locator('html')).not.toHaveClass(/\bdark\b/)
   await expectThemeColorIsGround(page)
-  const dark = (await themeColors(page)).ground
+  const paper = (await themeColors(page)).ground
+  expect(paper).toBe('rgb(11, 20, 32)')
 
   await page
     .getByRole('banner')
-    .getByRole('button', { name: 'Switch to light theme' })
+    .getByRole('button', { name: 'Turn the lamp off' })
     .click()
-  await expect(page.locator('html')).not.toHaveClass(/\bdark\b/)
-  await expect.poll(async () => (await themeColors(page)).ground).not.toBe(dark)
+  await expect(page.locator('html')).toHaveClass(/\bdark\b/)
   await expectThemeColorIsGround(page)
+  expect((await themeColors(page)).ground).toBe(paper)
 })
 
 test('the 404 has its own title and is not indexed', async ({ page }) => {
@@ -274,4 +275,121 @@ test('the 404 has its own title and is not indexed', async ({ page }) => {
   expect(robots.length).toBeGreaterThan(0)
   for (const content of robots) expect(content).toMatch(/^noindex/)
   await expect(page.locator('link[rel="canonical"]')).toHaveCount(0)
+})
+
+/** Width and height of a PNG, from its IHDR chunk. */
+function pngSize(body: Buffer) {
+  expect(body.subarray(1, 4).toString('latin1')).toBe('PNG')
+  return { width: body.readUInt32BE(16), height: body.readUInt32BE(20) }
+}
+
+/**
+ * The pixel Open Graph and Twitter cards (SPEC 1.1): the home page and a
+ * project page point at their own card, described by its own alt text, and
+ * each is a 1200x630 PNG (the 400x210 art at 3x).
+ */
+for (const [path, card, alt] of [
+  ['/', '/opengraph-image', /^Kacper Lachowicz, full-stack developer/],
+  [
+    '/projects/moekoder',
+    '/projects/moekoder/opengraph-image',
+    /^Moekoder\. Desktop hardsub tool for anime archivists: .+\.$/,
+  ],
+  // An archived project, whose card draws its letter on the bare tile.
+  [
+    '/projects/write-wiz',
+    '/projects/write-wiz/opengraph-image',
+    /^Write-Wiz\. Project management tool for small teams .+\.$/,
+  ],
+] as const) {
+  test(`${path} points og:image and twitter:image at its 1200x630 card`, async ({
+    page,
+    request,
+  }) => {
+    await skipBootSplash(page)
+    await page.goto(path)
+    const og = await page
+      .locator('meta[property="og:image"]')
+      .first()
+      .getAttribute('content')
+    const twitter = await page
+      .locator('meta[name="twitter:image"]')
+      .first()
+      .getAttribute('content')
+    expect(new URL(og!).pathname).toMatch(new RegExp(`^${card}`))
+    // The home card is shared by both; a project page has no Twitter card of
+    // its own, so it falls back to its Open Graph card.
+    const twitterCard = path === '/' ? '/twitter-image' : card
+    expect(new URL(twitter!).pathname).toMatch(new RegExp(`^${twitterCard}`))
+    await expect(
+      page.locator('meta[property="og:image:width"]')
+    ).toHaveAttribute('content', '1200')
+    // Each project's card is described by its title and lead sentence.
+    await expect(
+      page.locator('meta[property="og:image:alt"]').first()
+    ).toHaveAttribute('content', alt)
+
+    for (const url of [og!, twitter!]) {
+      const response = await request.get(new URL(url).pathname)
+      expect(response.status(), url).toBe(200)
+      expect(response.headers()['content-type']).toBe('image/png')
+      expect(pngSize(await response.body())).toEqual({
+        width: 1200,
+        height: 630,
+      })
+    }
+  })
+}
+
+/** The width of each image in an ICO directory (0 stands for 256). */
+function icoWidths(body: Buffer) {
+  expect(body.readUInt16LE(2)).toBe(1)
+  const count = body.readUInt16LE(4)
+  return Array.from({ length: count }, (_, i) => body[6 + i * 16] || 256)
+}
+
+/**
+ * The favicon, touch icon and manifest icons are the README logo tile at the
+ * sizes they claim (SPEC 1.1), and the manifest paints the ground navy. The
+ * ICO also holds a 16 px logo, so a 16 px tab gets drawn pixels.
+ */
+test('every icon is the size it claims', async ({ page, request }) => {
+  await skipBootSplash(page)
+  await page.goto('/')
+  const links = await page
+    .locator('link[rel="icon"], link[rel="apple-touch-icon"]')
+    .evaluateAll((tags) =>
+      tags.map((tag) => ({
+        href: tag.getAttribute('href')!,
+        sizes: tag.getAttribute('sizes')!,
+      }))
+    )
+  expect(links.map((l) => l.sizes).sort()).toEqual([
+    '180x180',
+    '32x32',
+    '32x32',
+  ])
+  const isIco = (l: { href: string }) => l.href.startsWith('/favicon.ico')
+  const ico = links.find(isIco)
+  const pngs = links.filter((l) => !isIco(l))
+  expect(ico, 'the linked favicon.ico').toBeDefined()
+  const icoBody = await (await request.get(ico!.href)).body()
+  expect(icoWidths(icoBody).sort((a, b) => a - b)).toEqual([16, 32])
+
+  const manifest = await (await request.get('/manifest.webmanifest')).json()
+  expect(manifest.theme_color).toBe('#0b1420')
+  expect(manifest.background_color).toBe('#0b1420')
+  const icons = [
+    ...pngs,
+    ...manifest.icons.map((icon: { src: string; sizes: string }) => ({
+      href: icon.src,
+      sizes: icon.sizes,
+    })),
+  ]
+  for (const { href, sizes } of icons) {
+    const response = await request.get(href)
+    expect(response.status(), href).toBe(200)
+    const { width, height } = pngSize(await response.body())
+    expect(`${width}x${height}`, href).toBe(sizes)
+  }
 })

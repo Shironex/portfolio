@@ -4,7 +4,8 @@ import { defineConfig, devices } from '@playwright/test'
  * Playwright config for ShiroOS portfolio.
  *
  * Boots the Next dev server (reusing an already-running one when present) and
- * drives it with Chromium. The suite is primarily a responsive-review harness:
+ * drives it with Chromium (the pixel crispness spec also with WebKit and
+ * Firefox). The suite is primarily a responsive-review harness:
  * it captures full-page screenshots across mobile and desktop viewports so the
  * desktop/mobile shell split can be eyeballed for bleed-through and layout
  * regressions.
@@ -28,6 +29,19 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+    },
+    // Crispness depends on how each engine rounds `--px` and the type sizes,
+    // so that spec also runs in the other two. Needs
+    // `pnpm exec playwright install webkit firefox` once.
+    {
+      name: 'webkit',
+      testMatch: /pixel-crisp\.spec\.ts/,
+      use: { ...devices['Desktop Safari'] },
+    },
+    {
+      name: 'firefox',
+      testMatch: /pixel-crisp\.spec\.ts/,
+      use: { ...devices['Desktop Firefox'] },
     },
   ],
   webServer: {

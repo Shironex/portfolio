@@ -23,6 +23,8 @@ import {
   undockRect,
   viewportSize,
 } from '@/lib/os/geometry'
+import { publishWindowDrag } from '@/lib/os/pets'
+import { snapToArt } from '@/lib/os/pixel'
 
 import { isPrimaryPress, pointOf, usePointerDrag } from './use-pointer-drag'
 
@@ -76,8 +78,15 @@ function writeRect(el: HTMLElement, rect: Rect, shown?: Rect) {
  * size back under the pointer. Two taps on the title bar toggle maximize,
  * whatever the pointer: `dblclick` is not dependable on touch.
  *
+ * A gesture moves the window in whole art px (the geometry helpers snap), so
+ * the chrome stays crisp while it moves, not only where it lands.
+ *
  * While a gesture moves the window the document is marked (`markGesture`),
  * which holds the decorative loops still.
+ *
+ * Each frame of a drag is published on the pet bus (`publishWindowDrag`) as
+ * the step the window took, so a pet standing on it rides along (SPEC 3.3);
+ * a cancelled drag publishes the step back.
  */
 export function useWindowDrag({
   win,
@@ -136,6 +145,20 @@ export function useWindowDrag({
     let position: Point | null = null
     let zone: SnapZone | null = null
     let dragging = false
+    // Where the window was drawn last, for the pet bus.
+    let last = { x: current.x, y: current.y, at: performance.now() }
+    const publishStep = (to: Point) => {
+      const at = performance.now()
+      if (to.x !== last.x || to.y !== last.y) {
+        publishWindowDrag({
+          id: win.id,
+          dx: to.x - last.x,
+          dy: to.y - last.y,
+          dt: at - last.at,
+        })
+      }
+      last = { ...to, at }
+    }
 
     startPointer(e, e.currentTarget, {
       onFrame: (point) => {
@@ -156,6 +179,7 @@ export function useWindowDrag({
         }
         position = clampWindowToViewport(point.x - dx, point.y - dy, viewport)
         el.style.transform = `translate3d(${position.x - base.x}px, ${position.y - base.y}px, 0)`
+        publishStep(position)
         const next = snapZoneAt(point, area)
         if (next === zone) return
         zone = next
@@ -166,6 +190,8 @@ export function useWindowDrag({
           el.style.willChange = ''
           el.style.transform = ''
           markGesture(false)
+          // A cancelled drag puts the window back where it started.
+          if (cancelled) publishStep(current)
         }
         if (loose) writeRect(el, rendered.current)
         const to = position
@@ -209,8 +235,9 @@ export function useWindowDrag({
     startPointer(e, e.currentTarget, {
       onFrame: (point) => {
         if (!patch) markGesture(true)
-        const dx = point.x - start.x
-        const dy = point.y - start.y
+        // Whole art px, so the edge the handle does not move stays put.
+        const dx = snapToArt(point.x - start.x)
+        const dy = snapToArt(point.y - start.y)
         patch = {}
         if (dir.includes('e')) patch.w = current.w + dx
         if (dir.includes('s')) patch.h = current.h + dy

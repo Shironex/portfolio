@@ -2,13 +2,23 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
+/**
+ * The field well (SPEC 2.4, Inputs): the `px-well` 9-slice, ground navy at
+ * night and cream on paper, its rim in `--error` while `aria-invalid`.
+ * Pixeloid at body size, meta placeholder, a caret in the heading colour
+ * (the lamp at night).
+ */
+export const FIELD_CLASS =
+  'focus-ring px-well text-body w-full min-w-0 px-3 text-(--ink) caret-(--heading) placeholder:text-(--meta) disabled:cursor-not-allowed disabled:text-(--meta)'
+
 const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(
   ({ className, type, ...props }, ref) => {
     return (
       <input
         type={type}
         className={cn(
-          'border-rule-2 bg-surf-0 text-ink file:text-ink placeholder:text-ink-4 focus-visible:border-miku focus-visible:ring-miku/40 shadow-elev-1 flex h-9 w-full rounded-md border px-3 py-1 text-base transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+          FIELD_CLASS,
+          'h-18 pointer-coarse:h-(--target)',
           className
         )}
         ref={ref}
