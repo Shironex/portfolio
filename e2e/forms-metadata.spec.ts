@@ -20,8 +20,8 @@ import {
  * Forms and document metadata.
  *
  * The contact form reports problems inline, in a colour that is readable in
- * both modes, and says so when the captcha is missing; what was typed
- * survives closing the window. The contribution heatmap is one image, not a
+ * both modes, and says so when the captcha is missing; an autofilled field
+ * keeps its ink, and what was typed survives closing the window. The contribution heatmap is one image, not a
  * run of tab stops. The document head carries a canonical, `viewport-fit=cover`
  * and a theme colour that is the ground navy whatever the Lamp says, and the
  * 404 has a title of its own.
@@ -146,6 +146,44 @@ test.describe('contact form', () => {
       expect(describedBy).toBeTruthy()
       for (const id of describedBy?.split(' ') ?? []) {
         await expect(page.locator(`[id="${id}"]`)).toHaveCount(1)
+      }
+    })
+  }
+
+  // A browser or password manager that fills Name and Email forces its own
+  // text colour with `!important`. CDP forces that state (this spec runs in
+  // the Chromium project only).
+  for (const mode of ['light', 'dark'] as const) {
+    test(`autofilled fields keep the ink in ${mode} mode`, async ({ page }) => {
+      await useMode(page, mode)
+      const win = await openContact(page)
+      await fillContact(win, DRAFT)
+
+      const cdp = await page.context().newCDPSession(page)
+      await cdp.send('DOM.enable')
+      await cdp.send('CSS.enable')
+      const { root } = await cdp.send('DOM.getDocument')
+      const { nodeIds } = await cdp.send('DOM.querySelectorAll', {
+        nodeId: root.nodeId,
+        selector: 'input[name="name"], input[name="email"]',
+      })
+      expect(nodeIds).toHaveLength(2)
+      for (const nodeId of nodeIds) {
+        await cdp.send('CSS.forcePseudoState', {
+          nodeId,
+          forcedPseudoClasses: ['autofill'],
+        })
+      }
+
+      const paint = (label: string) =>
+        win.getByRole('textbox', { name: label }).evaluate((el) => ({
+          autofill: el.matches(':autofill'),
+          fill: getComputedStyle(el).webkitTextFillColor,
+        }))
+      // The message is never autofilled: its ink is the one to match.
+      const ink = (await paint('Message')).fill
+      for (const label of ['Name', 'Email']) {
+        expect(await paint(label)).toEqual({ autofill: true, fill: ink })
       }
     })
   }
