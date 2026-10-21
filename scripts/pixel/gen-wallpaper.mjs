@@ -10,7 +10,7 @@
  *
  *   wallpaper        the atlas the canvas draws from: every piece of frame 0
  *                    where the document has it, plus the lights strips, the
- *                    twinkle frames of the stars and the faint full moon of
+ *                    twinkle frames of the stars and the faint moon of
  *                    dusk and dawn
  *   stars            the star tile stacked 8 rows high, each row shifted by
  *                    `rowShift`, for the static frame of the night sky
@@ -75,6 +75,12 @@ const BASE_PIECES = [
 
 export const STRIPS = ['far', 'mid', 'near']
 
+/**
+ * The moon of the fixed skies, as the mocks draw it (Live shows the real
+ * phase); the atlas also holds it in the faint colours of dusk and dawn.
+ */
+export const FIXED_MOON = 'moon_waxing_gibbous'
+
 /** Rows of star tiles in the static star column before it repeats. */
 export const STAR_ROWS = 8
 
@@ -137,12 +143,13 @@ function overlaps(a, b) {
 
 /**
  * Whether window `i` of a strip is lit in repetition `k` of the strip in the
- * first frame. Beacons and shops never switch; the rest start about two in
- * three lit, a different subset in odd and even repetitions.
+ * first frame. Beacons and shops never switch; of the rest six in seven
+ * start lit (the mocks light nearly every window), a different one dark in
+ * odd and even repetitions.
  */
 export function initiallyLit(window, i, k) {
   if (window.kind === 'beacon' || window.kind === 'shop') return true
-  return (i * 5 + (k % 2) * 3) % 7 < 5
+  return (i * 5 + (k % 2) * 3) % 7 !== 0
 }
 
 /** Where a strip window sits in a mirrored repetition. */
@@ -280,14 +287,14 @@ export function buildWallpaper(sheet, palette) {
     blit(atlas, read('star_bright', n), b[0], b[1])
     brightFrames.push(b)
   }
-  const moon = rect(pieces.moon_full.rect)
+  const moon = rect(pieces[FIXED_MOON].rect)
   const faintAt = [
     docW + 2 * (bright.w + 1) + 1,
     lightsY + starTile.h,
     moon.w,
     moon.h,
   ]
-  blit(atlas, read('moon_full', 0, palette.moon.faint), faintAt[0], faintAt[1])
+  blit(atlas, read(FIXED_MOON, 0, palette.moon.faint), faintAt[0], faintAt[1])
 
   // The static star column.
   const { rowShift } = palette.layout.stars
@@ -357,7 +364,7 @@ export function buildWallpaper(sheet, palette) {
       )
     ),
     ...lightsAt,
-    moon_full_faint: faintAt,
+    moon_faint: faintAt,
   }
   const sheets = {
     wallpaper: {
