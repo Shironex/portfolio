@@ -309,3 +309,27 @@
   border-image-source: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' shape-rendering='crispEdges'><path fill='%23e8e4dc' d='M1 0h14v1H1zM0 1h16v14H0zM1 15h14v1H1z'/><path fill='%230b1420' d='M1 0h14v1H1zM0 1h1v14H0zM15 1h1v14H15zM1 15h14v1H1z'/><path fill='%232e6e6e' d='M1 1h14v1H1zM1 2h1v12H1zM14 2h1v12H14zM1 14h14v1H1z'/></svg>");
   background-color: #e8e4dc;
 }
+
+@media (forced-colors: active) {
+  .px-button-primary,
+  .px-button-secondary,
+  .px-button-warm,
+  .px-card,
+  .px-chip,
+  .px-chip-ground,
+  .px-chip-warm,
+  .px-keycap,
+  .px-label-plate,
+  .px-panel,
+  .px-popover,
+  .px-taskbar,
+  .px-titlebar-focused,
+  .px-titlebar-unfocused,
+  .px-toast,
+  .px-tooltip,
+  .px-well,
+  .px-window-focused,
+  .px-window-unfocused {
+    border-image-source: none !important;
+  }
+}

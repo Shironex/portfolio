@@ -327,6 +327,29 @@ test.describe('start menu', () => {
   })
 })
 
+test.describe('forced colours', () => {
+  test.use({ viewport: DESKTOP_VIEWPORT, forcedColors: 'active' })
+
+  test('the pixel frames give way to system colours', async ({ page }) => {
+    await page.goto('/?open=about')
+    const about = windowById(page, 'about')
+    const frames = [
+      about.locator('.px-window-focused'),
+      titleBar(about),
+      taskbar(page),
+    ]
+    for (const frame of frames) {
+      await expect(frame).toBeVisible()
+      const style = await frame.evaluate((el) => {
+        const s = getComputedStyle(el)
+        return { image: s.borderImageSource, width: s.borderTopWidth }
+      })
+      expect(style.image).toBe('none')
+      expect(style.width).not.toBe('0px')
+    }
+  })
+})
+
 test.describe('menubar', () => {
   test.use({ viewport: DESKTOP_VIEWPORT })
 

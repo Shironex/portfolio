@@ -14,4 +14,10 @@
     background-color: #173a45;
     background-clip: padding-box;
   }
+
+  @media (forced-colors: active) {
+    .px-titlebar-sheet {
+      border-image-source: none !important;
+    }
+  }
 }

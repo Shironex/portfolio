@@ -320,6 +320,20 @@ function media(query, rules) {
   return `@media ${query} {\n${rules.join('\n').replace(/^(?=.)/gm, '  ')}\n}`
 }
 
+/**
+ * Forced colours (Windows high contrast and the like): every 9-slice gives
+ * way to system colours. Without its image the box is its drawn border in
+ * the forced CanvasText around its forced Canvas fill, so frames stay
+ * visible and a focus ring never sits on night art. `!important`, so no
+ * later image (a state, paper, the coarse title bars) brings one back. The
+ * longhand, because Lightning CSS empties a `border-image: none` shorthand.
+ */
+function forcedColoursCss(selectors) {
+  return media('(forced-colors: active)', [
+    rule(selectors.join(',\n'), ['border-image-source: none !important;']),
+  ])
+}
+
 /** CSS for one 9-slice piece, its paper copy and states. */
 function nineSliceCss(piece, selector, states = []) {
   const paperGrid = (g) => recolourGrid(g, piece.paperMap)
@@ -503,7 +517,14 @@ export function chromeCss(
   tiles.sort((a, b) => a.name.localeCompare(b.name))
 
   const header = generatedHeader(source)
-  const body = blocks.map((b) => b.css).join('\n\n')
+  const tileNames = new Set(tiles.map((t) => t.name))
+  const nineSlices = blocks
+    .filter((b) => !tileNames.has(b.name))
+    .map((b) => `.px-${b.name}`)
+  const body = [
+    ...blocks.map((b) => b.css),
+    ...(nineSlices.length ? [forcedColoursCss(nineSlices)] : []),
+  ].join('\n\n')
   // The border widths the rules use, once each, and the tiles.
   const widths = [...new Set(body.match(/(?<=var\(--px)\d+(?=\))/g))]
     .map(Number)
@@ -609,6 +630,8 @@ export function mobileChromeCss(
     const { lines } = nineSlice(drawn, tall.center, piece.repeat)
     blocks.push(rule(`.px-${copy.name}`, lines))
   }
+  const copies = (options.copies ?? []).map((c) => `.px-${c.name}`)
+  if (copies.length) blocks.push(forcedColoursCss(copies))
   const body = blocks.join('\n\n')
   const missing = [...widthsIn(body)].filter((n) => !known.has(n))
   if (missing.length) {

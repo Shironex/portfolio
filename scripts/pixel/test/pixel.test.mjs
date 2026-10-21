@@ -1001,6 +1001,16 @@ describe('gen-chrome', () => {
     assert.ok(out.includes(':root:not(.dark) .px-shadow-tile'))
   })
 
+  it('drops every 9-slice image under forced colours, tiles kept', async () => {
+    const out = await css()
+    const forced = out.split('@media (forced-colors: active) {')[1]
+    assert.ok(forced, 'a forced colours block')
+    const list = forced.split('{')[0]
+    assert.deepEqual(list.trim().split(/,\s+/), ['.px-button', '.px-window'])
+    assert.ok(!list.includes('tile'), 'a tile is a picture, not a frame')
+    assert.match(forced, /border-image-source: none !important;/)
+  })
+
   it('steps a tile through its frames', async () => {
     const out = await css()
     assert.match(out, /animation: px-skeleton-tile 400ms step-end infinite;/)
@@ -1151,6 +1161,10 @@ describe('gen-chrome', () => {
     }
     const out = mobileChromeCss(sheet, undefined, options)
     assert.match(out, /^@layer components \{\n {2}\.px-window-tall \{/m)
+    assert.match(
+      out,
+      /@media \(forced-colors: active\) \{\n {4}\.px-window-tall \{\n {6}border-image-source: none !important;/
+    )
     assert.match(out, /height='9'/)
     assert.ok(!out.includes(':root'), 'the widths come from pixel-chrome.css')
     assert.deepEqual([...widthsIn(out)], [2])
