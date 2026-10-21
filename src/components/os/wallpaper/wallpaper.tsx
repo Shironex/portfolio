@@ -26,7 +26,7 @@ export const DESKTOP_BARE_ATTRIBUTE = 'data-desktop-bare'
 export type WallpaperState = 'running' | 'paused'
 
 interface WallpaperProps {
-  /** Live sky: the moon shows its real phase instead of a full moon. */
+  /** Live sky: the moon shows its real phase instead of the fixed gibbous. */
   live: boolean
 }
 
