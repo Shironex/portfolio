@@ -789,6 +789,31 @@
 }
 
 /*
+ * The pixel buttons on a paper body (SPEC 2.4): a 1 art px navy outline,
+ * since their teal and warm fills are only 2.3:1 against paper. Four
+ * unblurred shadows trace the notched shape instead of a square box. Night
+ * bodies and night chrome (any `.os-night` ancestor) leave it out.
+ */
+:root:not(.dark)
+  :is(.px-button-primary, .px-button-secondary, .px-button-warm):not(
+    .os-night *
+  ) {
+  filter: drop-shadow(var(--px) 0 0 #13253a)
+    drop-shadow(calc(-1 * var(--px)) 0 0 #13253a)
+    drop-shadow(0 var(--px) 0 #13253a)
+    drop-shadow(0 calc(-1 * var(--px)) 0 #13253a);
+}
+
+/*
+ * Toasts move in four steps over 160ms, the UI transition ceiling (SPEC
+ * 2.8), instead of sonner's 400ms ease.
+ */
+[data-sonner-toaster] [data-sonner-toast] {
+  transition-duration: 160ms;
+  transition-timing-function: steps(4);
+}
+
+/*
  * Theme switch (`useTheme`): the default root transition, a plain opacity
  * cross-fade of two snapshots with no geometry in it, shortened from the
  * browser's 250ms and stepped in four frames.

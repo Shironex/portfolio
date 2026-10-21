@@ -15,6 +15,8 @@ import {
 
 import { Label } from '@/components/ui/label'
 
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
+
 import { cn } from '@/lib/utils'
 
 const Form = FormProvider
@@ -94,7 +96,11 @@ const FormItem = React.forwardRef<
 
   return (
     <FormItemContext.Provider value={value}>
-      <div ref={ref} className={cn('space-y-4', className)} {...props} />
+      <div
+        ref={ref}
+        className={cn('flex flex-col gap-2', className)}
+        {...props}
+      />
     </FormItemContext.Provider>
   )
 })
@@ -109,7 +115,7 @@ const FormLabel = React.forwardRef<
   return (
     <Label
       ref={ref}
-      className={cn(error && 'text-danger-ink', className)}
+      className={cn(error && 'text-(--error)', className)}
       htmlFor={formItemId}
       {...props}
     />
@@ -162,7 +168,7 @@ const FormDescription = React.forwardRef<
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn('text-muted-foreground text-[0.8rem]', className)}
+      className={cn('text-label text-(--meta)', className)}
       {...props}
     />
   )
@@ -180,14 +186,19 @@ const FormMessage = React.forwardRef<
     return null
   }
 
+  // The alert glyph sits on the first line, beside the words (SPEC 2.4).
   return (
     <p
       ref={ref}
       id={formMessageId}
-      className={cn('text-danger-ink text-[0.8rem] font-medium', className)}
+      className={cn(
+        'text-body flex items-start gap-2 text-(--error)',
+        className
+      )}
       {...props}
     >
-      {body}
+      <PixelIcon name="alert" className="mt-3" />
+      <span>{body}</span>
     </p>
   )
 })

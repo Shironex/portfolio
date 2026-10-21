@@ -2,16 +2,15 @@ import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 
+import { FIELD_CLASS } from './input'
+
 const Textarea = React.forwardRef<
   HTMLTextAreaElement,
   React.ComponentProps<'textarea'>
 >(({ className, ...props }, ref) => {
   return (
     <textarea
-      className={cn(
-        'border-rule-2 bg-surf-0 text-ink placeholder:text-ink-4 focus-visible:border-miku focus-visible:ring-miku/40 shadow-elev-1 flex min-h-30 w-full rounded-md border px-6 py-4 text-base transition-colors focus-visible:ring-2 focus-visible:outline-hidden disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
-        className
-      )}
+      className={cn(FIELD_CLASS, 'block min-h-60 resize-y py-2', className)}
       ref={ref}
       {...props}
     />
