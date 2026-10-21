@@ -53,24 +53,6 @@
   }
 }
 
-/* Hoisted outside @theme so Tailwind v4 doesn't tree-shake it when the
-   animation is applied via inline style / arbitrary value. */
-@keyframes spinSlow {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/*
- * The wallpaper of the chosen sky: hard bands from the bottom edge up, in art
- * px (`--sky-bands` in tokens.css, per `data-sky` on <html>). Phase 3 draws
- * the whole scene on a canvas over it; this stays as its static frame.
- */
-@utility sky-bands {
-  background-color: var(--ground);
-  background-image: var(--sky-bands);
-}
-
 /*
  * Type (SPEC 2.3). Five named styles; each sets face, size, line height and
  * weight, so it is the only text class an element needs. Sizes come from the
@@ -172,17 +154,6 @@
 }
 
 /*
- * Easings. `static` so the variables are emitted even though only the
- * animation tokens below read them.
- */
-@theme static {
-  /* ease-out-quart: calm deceleration, the curve of every enter and exit. */
-  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-  /* The mobile sheet: a touch more glide at the end of a long travel. */
-  --ease-sheet: cubic-bezier(0.2, 0.9, 0.3, 1);
-}
-
-/*
  * Aliases of token variables. `inline` so a utility carries the variable it
  * aliases (`bg-ground` is `var(--ground)`) and resolves it on the element:
  * an alias declared as a plain theme variable is computed once at `:root`,
@@ -236,18 +207,6 @@
   --color-border: var(--color-rule-2);
   --color-input: var(--color-rule-2);
   --color-ring: var(--color-miku);
-
-  /*
-   * Elevations, as shadow tokens: `shadow-elev-2` goes through Tailwind's
-   * shadow utility, so it stacks with a ring (`focus-visible:ring-2`) instead
-   * of being replaced by it. The values are hard offset shadows in art px on
-   * the ground navy, so a shadow colour utility (`shadow-miku/20`) has
-   * nothing to tint.
-   */
-  --shadow-elev-1: var(--shiro-elev-1);
-  --shadow-elev-2: var(--shiro-elev-2);
-  --shadow-elev-3: var(--shiro-elev-3);
-  --shadow-elev-4: var(--shiro-elev-4);
 }
 
 @theme {
@@ -343,21 +302,14 @@
    * a few held frames: `steps(n)` over a move of n art px lands each frame
    * on the grid, and `steps(1)` holds each keyframe of a loop until the
    * next, so a loop keeps its uneven timing. Nothing scales or rotates.
-   * Interaction feedback takes at most 160ms. The names are the ones the
-   * smooth versions had, so every consumer works unchanged.
+   * Interaction feedback takes at most 160ms.
    */
-  --animate-drift: drift 16s steps(12) infinite;
-  --animate-floaty: floaty 8s steps(8) infinite;
   --animate-blink: blink 1s steps(2) infinite;
   --animate-win-open: winOpen 0.16s steps(4);
   --animate-win-close: winClose 0.12s steps(4) forwards;
   --animate-sheet-up: sheetUp 0.16s steps(4);
   --animate-cp-in: cpIn 0.12s steps(4);
   --animate-menu-in: menuIn 0.08s steps(2);
-  --animate-pulse: pulse 1.6s steps(1, end) infinite;
-  --animate-pulse-slow: pulse 1.6s steps(1, end) infinite;
-  --animate-bob-note: bobNote 1.4s steps(1, end) infinite;
-  --animate-logo-pop: logoPop 0.4s steps(4);
   --animate-boot-out: bootOut 0.32s steps(4) 1.9s forwards;
   --animate-boot-open: bootOpen 0.28s steps(4);
   /*
@@ -389,63 +341,6 @@
   @keyframes bootScan {
     from {
       top: calc(50% - 3 * var(--px));
-    }
-  }
-
-  @keyframes logoPop {
-    from {
-      opacity: 0;
-      transform: translateY(calc(4 * var(--px)));
-    }
-  }
-
-  /* Four held frames of uneven length: rest, lift, top, settle. */
-  @keyframes bobNote {
-    0%,
-    100% {
-      transform: translateY(0);
-    }
-
-    30% {
-      transform: translateY(calc(-1 * var(--px)));
-    }
-
-    50% {
-      transform: translateY(calc(-3 * var(--px)));
-    }
-
-    80% {
-      transform: translateY(calc(-1 * var(--px)));
-    }
-  }
-
-  @keyframes drift {
-    0%,
-    100% {
-      transform: translate(0, 0);
-    }
-
-    25% {
-      transform: translate(calc(10 * var(--px)), calc(-9 * var(--px)));
-    }
-
-    50% {
-      transform: translate(calc(-5 * var(--px)), calc(-16 * var(--px)));
-    }
-
-    75% {
-      transform: translate(calc(-12 * var(--px)), calc(-6 * var(--px)));
-    }
-  }
-
-  @keyframes floaty {
-    0%,
-    100% {
-      transform: translate(0, 0);
-    }
-
-    50% {
-      transform: translate(calc(8 * var(--px)), calc(-8 * var(--px)));
     }
   }
 
@@ -516,23 +411,6 @@
     from {
       opacity: 0;
       transform: translateY(calc(-2 * var(--px)));
-    }
-  }
-
-  /* Loading: four held frames, dimming and back. */
-  @keyframes pulse {
-    0%,
-    100% {
-      opacity: 1;
-    }
-
-    25%,
-    75% {
-      opacity: 0.8;
-    }
-
-    50% {
-      opacity: 0.6;
     }
   }
 
