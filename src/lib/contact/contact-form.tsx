@@ -19,7 +19,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 
-import { MiniMe } from '@/components/pixel/mini-me'
 import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 import { PixelSpinner } from '@/components/pixel/pixel-spinner'
 
@@ -50,9 +49,14 @@ const SEND_FAILED = 'Something went wrong. Please try again.'
 export interface ContactFormProps {
   /** The Turnstile widget's theme: `dark` at night, `light` on paper. */
   theme?: 'light' | 'dark'
+  /** Called once the message has gone out (the app's mini-me waves). */
+  onSent?: () => void
 }
 
-export function ContactForm({ theme = 'light' }: ContactFormProps = {}) {
+export function ContactForm({
+  theme = 'light',
+  onSent,
+}: ContactFormProps = {}) {
   const draft = useContactDraft()
   const { save: saveDraft, clear: clearDraft } = draft
   const form = useForm<ContactFormValues>({
@@ -80,6 +84,7 @@ export function ContactForm({ theme = 'light' }: ContactFormProps = {}) {
       clearDraft()
       form.reset(EMPTY_DRAFT)
       setSent(true)
+      onSent?.()
       void capturePosthogEvent('contact_form_submitted')
     },
     onError: ({ error }) => {
@@ -115,7 +120,6 @@ export function ContactForm({ theme = 'light' }: ContactFormProps = {}) {
         tabIndex={-1}
         className="flex flex-col items-start gap-4 outline-none"
       >
-        <MiniMe tag="wave" play="once" />
         <p className="text-heading lamp-heading">Message sent</p>
         <p className="text-body max-w-[66ch] text-(--ink)">
           Thanks for reaching out. I will reply within 24 hours.

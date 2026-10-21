@@ -1,13 +1,14 @@
 /**
  * contact.app window: the real contact form (next-safe-action and
  * Turnstile, `@/lib/contact/contact-form`) and the ways to reach me, in
- * pixels (SPEC 1.5): field wells, the mini-me waving hello as it opens.
+ * pixels (SPEC 1.5): field wells, the mini-me waving hello as it opens and
+ * again when a message has gone out (the form confirms inline, no toast).
  */
 
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useId } from 'react'
+import { useCallback, useId, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 
@@ -90,11 +91,14 @@ function RowContent({ row }: { row: ReachRow }) {
 export default function ContactApp() {
   const { theme } = useTheme()
   const reachId = useId()
+  // Bumped when a message goes out: the mini-me remounts and waves again.
+  const [waves, setWaves] = useState(0)
+  const waveAgain = useCallback(() => setWaves((n) => n + 1), [])
 
   return (
     <div className="@container flex flex-col gap-8">
       <header className="flex items-end gap-4">
-        <MiniMe tag="wave" play="once" />
+        <MiniMe key={waves} tag="wave" play="once" />
         <div className="flex min-w-0 flex-col gap-1">
           <h2 className="text-display lamp-heading">Get in touch</h2>
           <p className="text-body max-w-[66ch] text-(--ink)">
@@ -104,8 +108,8 @@ export default function ContactApp() {
         </div>
       </header>
 
-      <div className="grid gap-8 @min-[44rem]:grid-cols-[minmax(0,1fr)_calc(150*var(--px))]">
-        <ContactForm theme={theme} />
+      <div className="grid grid-cols-1 gap-8 @min-[44rem]:grid-cols-[minmax(0,1fr)_calc(150*var(--px))]">
+        <ContactForm theme={theme} onSent={waveAgain} />
 
         <aside
           aria-labelledby={reachId}
