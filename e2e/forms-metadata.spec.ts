@@ -328,3 +328,38 @@ for (const [path, card] of [
     }
   })
 }
+
+/**
+ * The favicon, touch icon and manifest icons are the README logo tile at the
+ * sizes they claim (SPEC 1.1), and the manifest paints the ground navy.
+ */
+test('every icon is the size it claims', async ({ page, request }) => {
+  await skipBootSplash(page)
+  await page.goto('/')
+  const links = await page
+    .locator('link[rel="icon"], link[rel="apple-touch-icon"]')
+    .evaluateAll((tags) =>
+      tags.map((tag) => ({
+        href: tag.getAttribute('href')!,
+        sizes: tag.getAttribute('sizes')!,
+      }))
+    )
+  expect(links.map((l) => l.sizes).sort()).toEqual(['180x180', '32x32'])
+
+  const manifest = await (await request.get('/manifest.webmanifest')).json()
+  expect(manifest.theme_color).toBe('#0b1420')
+  expect(manifest.background_color).toBe('#0b1420')
+  const icons = [
+    ...links,
+    ...manifest.icons.map((icon: { src: string; sizes: string }) => ({
+      href: icon.src,
+      sizes: icon.sizes,
+    })),
+  ]
+  for (const { href, sizes } of icons) {
+    const response = await request.get(href)
+    expect(response.status(), href).toBe(200)
+    const { width, height } = pngSize(await response.body())
+    expect(`${width}x${height}`, href).toBe(sizes)
+  }
+})

@@ -9,10 +9,12 @@ export default function manifest(): MetadataRoute.Manifest {
     description: siteConfig.description,
     start_url: '/',
     display: 'standalone',
-    // The splash a fresh install paints: light is the default mode until the
-    // visitor picks another, and a manifest cannot follow that choice.
+    // The splash a fresh install paints: the ground navy the page shows in
+    // both Lamp modes, and the browser bar's colour (SPEC 2.2).
     background_color: siteConfig.ground,
     theme_color: siteConfig.themeColor,
+    // The README logo tile, nearest neighbour (`pnpm generate:icons`). The
+    // maskable one sits on the ground, inside the circle a mask keeps.
     icons: [
       {
         src: '/icon-192.png',
@@ -27,7 +29,7 @@ export default function manifest(): MetadataRoute.Manifest {
         purpose: 'any',
       },
       {
-        src: '/icon-512.png',
+        src: '/icon-maskable-512.png',
         sizes: '512x512',
         type: 'image/png',
         purpose: 'maskable',
