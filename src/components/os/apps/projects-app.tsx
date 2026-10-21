@@ -186,14 +186,14 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
           </div>
         </div>
       ) : (
-        <ul className="grid gap-3 @min-[40rem]:grid-cols-2">
+        <ul className="grid grid-cols-1 gap-3 @min-[40rem]:grid-cols-2">
           {shown.map((p) => (
             <li key={p.id} className="flex">
               <button
                 type="button"
                 onClick={() => onOpenProject(p)}
                 aria-label={`Open ${p.title}`}
-                className="focus-ring group px-card flex w-full items-start gap-4 p-3 text-left"
+                className="focus-ring group px-card flex w-full min-w-0 items-start gap-4 p-3 text-left"
               >
                 <ProjectAvatar slug={p.slug} title={p.title} />
                 <span className="flex min-w-0 flex-1 flex-col gap-1">
