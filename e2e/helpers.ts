@@ -21,8 +21,12 @@ const FIXTURE_DIR = join(process.cwd(), 'showcase', 'fixtures')
 export const DESKTOP_VIEWPORT = { width: 1440, height: 900 }
 export const MOBILE_VIEWPORT = { width: 390, height: 844 }
 
-/** Default rect of the About window, from `APP_WINDOW_DEFAULTS`. */
-export const ABOUT_RECT = { x: 180, y: 120, width: 820, height: 580 }
+/**
+ * Default rect of the About window on `DESKTOP_VIEWPORT`, from
+ * `APP_WINDOW_DEFAULTS`: 820 wide, narrowed to end 8 art px left of the
+ * panel column (980 css from the left at this width).
+ */
+export const ABOUT_RECT = { x: 180, y: 120, width: 784, height: 580 }
 
 /** Class of every decorative loop the shell can hold still. */
 export const AMBIENT_LOOP_CLASS = 'ambient-loop'

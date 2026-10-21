@@ -14,7 +14,8 @@
  *            drops the activity strip
  *   panels   the terminal and featured work, 224 wide at the right edge,
  *            from 1280 css px up (below that the hero has the desktop);
- *            the terminal drops under 344 art px (`low-desk`)
+ *            the terminal drops under 344 art px (`low-desk`); new
+ *            windows open left of them (`panelColumnLeft`)
  *
  * The space between the hero and the panels is wallpaper. On a desktop too
  * short for the whole hero even so, its proof lines drop from the last one
@@ -38,3 +39,25 @@ export const DESKTOP_PANELS_CLASS =
 
 /** The terminal's slot in the panel column. */
 export const DESKTOP_TERMINAL_CLASS = 'low-desk:hidden'
+
+/**
+ * The panel column in numbers, for script that keeps new windows off it
+ * (`lib/os/window-factory.ts`): its width and the content's right padding
+ * in art px, and the query it shows from (Tailwind's `xl`). They match
+ * `w-224`, `pr-6` and `max-xl:hidden` above; change them together.
+ */
+export const PANEL_COLUMN = {
+  width: 224,
+  rightPad: 6,
+  query: '(width >= 80rem)',
+} as const
+
+/**
+ * The left edge of the panel column in CSS px at art pixel `px`, or `null`
+ * where the column is hidden (under `xl`, or on the server).
+ */
+export function panelColumnLeft(px: number): number | null {
+  if (typeof window === 'undefined') return null
+  if (!window.matchMedia(PANEL_COLUMN.query).matches) return null
+  return window.innerWidth - (PANEL_COLUMN.width + PANEL_COLUMN.rightPad) * px
+}

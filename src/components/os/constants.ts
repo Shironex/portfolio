@@ -96,6 +96,18 @@ export interface AppWindowDefaults {
    * laid out in art px.
    */
   artHeight?: true
+  /**
+   * With `artHeight`: the height, in art px, when the window opens narrower
+   * than `w` art px (at DPR 1.25, or beside the panel column), where its
+   * content wraps to more lines.
+   */
+  narrowHeight?: number
+  /**
+   * The narrowest the window opens to clear the panel column, in art px at
+   * the DPR 1 size, where its content needs more than the shared minimum
+   * (`NEW_WINDOW_MIN_WIDTH`).
+   */
+  openMinWidth?: number
 }
 
 export const APP_WINDOW_DEFAULTS: Record<AppId, AppWindowDefaults> = {
@@ -103,9 +115,14 @@ export const APP_WINDOW_DEFAULTS: Record<AppId, AppWindowDefaults> = {
   about: { title: 'about.me', icon: '◌', x: 90, y: 60, w: 410, h: 290 },
   skills: { title: 'monitor.sys', icon: '▤', x: 110, y: 65, w: 390, h: 280 },
   // Tall enough for the whole form, captcha and Send included (decision 2
-  // of SPEC 11): its body is 314 art px tall at the DPR 1 width (410) and
-  // 321 at the narrower art width a DPR 1.25 screen gives it (342), plus 22
-  // of frame and title bar. Capped to the desktop area like every window.
+  // of SPEC 11). At 410 art px wide (820 css) Send ends 327 art px down the
+  // window; a little narrower (a DPR 1.25 screen, or a width cut to clear
+  // the panel column) a line wraps and it ends at 341, so the window keeps
+  // the same 17 art px under it. The Turnstile widget is 65 css px at every
+  // DPR, so at 1.25 it ends 7 art px higher. It opens no narrower than 390
+  // (780 css): its body goes to two columns from a 44rem container, and
+  // under that the email and GitHub card drops below the form. Capped to
+  // the desktop area like every window.
   contact: {
     title: 'contact.app',
     icon: '✉',
@@ -114,6 +131,8 @@ export const APP_WINDOW_DEFAULTS: Record<AppId, AppWindowDefaults> = {
     w: 410,
     h: 344,
     artHeight: true,
+    narrowHeight: 358,
+    openMinWidth: 390,
   },
   writing: { title: 'writing.rss', icon: '✎', x: 170, y: 50, w: 360, h: 300 },
   readme: { title: 'readme.md', icon: '¶', x: 150, y: 75, w: 320, h: 250 },

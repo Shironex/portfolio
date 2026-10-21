@@ -1,14 +1,26 @@
-import { APP_WINDOW_DEFAULTS } from '@/components/os/constants'
+import {
+  APP_WINDOW_DEFAULTS,
+  type AppWindowDefaults,
+} from '@/components/os/constants'
+import { panelColumnLeft } from '@/components/os/desktop-layout'
 import type { AppId, WindowId, WindowState } from '@/components/os/types'
 
 import { measureDesktopArea } from '@/lib/os/dom'
 import {
   CASCADE_OFFSET,
   NEW_WINDOW_HEADROOM,
+  NEW_WINDOW_MIN_WIDTH,
+  NEW_WINDOW_PANEL_GAP,
   type Rect,
   fitInArea,
 } from '@/lib/os/geometry'
-import { DEFAULT_ART_PIXEL, artPx, snapToArt } from '@/lib/os/pixel'
+import {
+  DEFAULT_ART_PIXEL,
+  artPixel,
+  artPx,
+  floorToArt,
+  snapToArt,
+} from '@/lib/os/pixel'
 
 import type { Project } from '@/types'
 
@@ -44,26 +56,54 @@ function openingPx(n: number): number {
 }
 
 /**
- * A new window's rect, in CSS px: its default at the DPR 1 size, no higher
- * than {@link NEW_WINDOW_HEADROOM} under the top of the desktop area, so the
- * pet can sit on it the moment it opens, and inside the area, which moves a
- * window up (or shrinks it) only where the area is too short for both. An
- * `artHeight` window keeps its height in art px (see `AppWindowDefaults`).
+ * A new window's rect, in CSS px, from its default (art px):
+ * - its DPR 1 size and place, at every DPR (decision 1 of SPEC 11);
+ * - clear of the desktop's panel column (decision 13): it ends
+ *   {@link NEW_WINDOW_PANEL_GAP} left of the column, narrowed as far as
+ *   {@link NEW_WINDOW_MIN_WIDTH} (or the app's `openMinWidth`), then moved
+ *   left, and only overlaps the column where even that does not fit;
+ * - no higher than {@link NEW_WINDOW_HEADROOM} under the top of the desktop
+ *   area, so the pet can sit on it the moment it opens;
+ * - inside the area, which moves a window up (or shrinks it) only where the
+ *   area is too short for both.
+ * An `artHeight` window keeps its height in art px, and takes its
+ * `narrowHeight` when it opens narrower than its default (see
+ * `AppWindowDefaults`).
  */
-function openingRect(
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-  artHeight = false
-): Rect {
+function openingRect({
+  x,
+  y,
+  w,
+  h,
+  artHeight,
+  narrowHeight,
+  openMinWidth = NEW_WINDOW_MIN_WIDTH,
+}: Omit<AppWindowDefaults, 'title' | 'icon'>): Rect {
+  const px = artPixel()
   const area = measureDesktopArea()
+  let left = openingPx(x)
+  let width = openingPx(w)
+
+  const panels = panelColumnLeft(px)
+  if (panels !== null) {
+    const right = panels - artPx(NEW_WINDOW_PANEL_GAP, px)
+    if (left + width > right) {
+      const narrowest = Math.min(width, openingPx(openMinWidth))
+      width = Math.max(narrowest, floorToArt(right - left, px))
+      if (left + width > right) {
+        left = Math.max(area.x, floorToArt(right - width, px))
+      }
+    }
+  }
+
+  const narrow = narrowHeight !== undefined && width < artPx(w, px)
+  const height = artHeight ? artPx(narrow ? narrowHeight : h, px) : openingPx(h)
   return fitInArea(
     {
-      x: openingPx(x),
-      y: Math.max(openingPx(y), area.y + artPx(NEW_WINDOW_HEADROOM)),
-      w: openingPx(w),
-      h: artHeight ? artPx(h) : openingPx(h),
+      x: left,
+      y: Math.max(openingPx(y), area.y + artPx(NEW_WINDOW_HEADROOM, px)),
+      w: width,
+      h: height,
     },
     area
   )
@@ -79,7 +119,7 @@ export function createAppWindow(appId: AppId, z: number): WindowState {
     id: appId,
     title: cfg.title,
     icon: cfg.icon,
-    ...openingRect(cfg.x, cfg.y, cfg.w, cfg.h, cfg.artHeight),
+    ...openingRect(cfg),
     z,
     minimized: false,
     maximized: false,
@@ -100,12 +140,11 @@ export function createProjectWindow(
     id: projectWindowId(project.slug),
     title: `${project.slug}.app`,
     icon: '◆',
-    ...openingRect(
-      step.baseX + openCount * step.stepX,
-      step.baseY + openCount * step.stepY,
-      PROJECT_WINDOW_SIZE.w,
-      PROJECT_WINDOW_SIZE.h
-    ),
+    ...openingRect({
+      x: step.baseX + openCount * step.stepX,
+      y: step.baseY + openCount * step.stepY,
+      ...PROJECT_WINDOW_SIZE,
+    }),
     z,
     minimized: false,
     maximized: false,

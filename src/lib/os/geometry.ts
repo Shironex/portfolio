@@ -44,6 +44,21 @@ export const MAXIMIZED_INSET = { top: 22, bottom: 32, side: 4 } as const
  */
 export const NEW_WINDOW_HEADROOM = 33
 
+/**
+ * Room a new window leaves between its right edge and the desktop's panel
+ * column, in art px: the gap between the hero and the panels.
+ */
+export const NEW_WINDOW_PANEL_GAP = 8
+
+/**
+ * The narrowest a new window opens to stay clear of the panel column, in
+ * art px at the DPR 1 size (480 css, so 200 art px at DPR 1.25), wider than
+ * a phone sheet, where every app already lays out (decision 13 of SPEC 11).
+ * An app can ask for more (`openMinWidth`). Where even that does not fit
+ * left of the panels, the window overlaps them.
+ */
+export const NEW_WINDOW_MIN_WIDTH = 240
+
 /** Cascade origin + per-window step for new project windows, in art px. */
 export const CASCADE_OFFSET = {
   baseX: 100,

@@ -13,6 +13,7 @@ import {
   osWindow,
   osWindows,
   rectOf,
+  settled,
   skipBootSplash,
   taskbar,
   titleBar,
@@ -474,10 +475,11 @@ test.describe('session restore', () => {
 })
 
 /**
- * Where new windows open (SPEC 11, decisions 1 and 2): at the CSS rect they
- * have at DPR 1 whatever the art pixel, at least 33 art px under the top of
- * the desktop area (room for the pet seated), and Contact tall enough for
- * its whole form, capped to the area.
+ * Where new windows open (SPEC 11, decisions 1, 2 and 13): at the CSS place
+ * and height they have at DPR 1 whatever the art pixel, ending 8 art px left
+ * of the panel column (narrowed no further than 240 art px, or moved left),
+ * at least 33 art px under the top of the desktop area (room for the pet
+ * seated), and Contact tall enough for its whole form, capped to the area.
  */
 test.describe('new windows', () => {
   /** The art pixel on this page, in css px. */
@@ -495,28 +497,75 @@ test.describe('new windows', () => {
   const AREA_TOP = 22
   const HEADROOM = 33
 
-  for (const dpr of [1, 1.25, 2]) {
-    test.describe(`at DPR ${dpr}`, () => {
-      test.use({ deviceScaleFactor: dpr })
+  /** The gap a new window keeps from the panels and its narrowest, in art px. */
+  const PANEL_GAP = 8
+  const MIN_WIDTH = 240
 
-      test('Projects opens at its DPR 1 size, with room above it for the pet', async ({
+  /** Every app, as its desktop icon and its window title name it. */
+  const APPS = [
+    ['Projects', 'projects.app'],
+    ['About', 'about.me'],
+    ['Monitor', 'monitor.sys'],
+    ['Contact', 'contact.app'],
+    ['Writing', 'writing.rss'],
+    ['Readme', 'readme.md'],
+  ] as const
+
+  for (const [label, viewport, dpr] of [
+    ['1440x900 at DPR 1', DESKTOP_VIEWPORT, 1],
+    ['1440x900 at DPR 1.25', DESKTOP_VIEWPORT, 1.25],
+    ['1440x900 at DPR 2', DESKTOP_VIEWPORT, 2],
+    ['1920x1080 at DPR 1.25', { width: 1920, height: 1080 }, 1.25],
+  ] as const) {
+    test.describe(label, () => {
+      test.use({ viewport, deviceScaleFactor: dpr })
+
+      test('every app opens left of the panel column, Projects at its DPR 1 place', async ({
         page,
       }) => {
+        await page.route('**/challenges.cloudflare.com/**', (r) => r.abort())
         await openDesktop(page)
-        const projects = await launch(page, 'Projects', 'projects.app')
         const px = await artPixelOf(page)
-        const rect = await rectOf(projects)
-        // Snapped to the art pixel: within one of the DPR 1 rect.
-        expect(Math.abs(rect.x - PROJECTS_AT_DPR_1.x)).toBeLessThanOrEqual(px)
-        expect(
-          Math.abs(rect.width - PROJECTS_AT_DPR_1.width)
-        ).toBeLessThanOrEqual(px)
-        expect(
-          Math.abs(rect.height - PROJECTS_AT_DPR_1.height)
-        ).toBeLessThanOrEqual(px)
-        expect(Math.round(rect.y / px) - AREA_TOP).toBeGreaterThanOrEqual(
-          HEADROOM
+        const featured = page.getByRole('region', { name: 'Featured work' })
+        const clearOf = (await rectOf(featured)).x - PANEL_GAP * px
+
+        for (const [name, title] of APPS) {
+          await page
+            .getByRole('button', { name: `Open ${name}`, exact: true })
+            .first()
+            .click()
+          const win = osWindow(page, title)
+          await expect(win).toBeVisible()
+          await settled(win)
+          const rect = await rectOf(win)
+          expect(rect.x + rect.width, title).toBeLessThanOrEqual(clearOf + 0.5)
+          expect(rect.width, title).toBeGreaterThanOrEqual(
+            Math.min(MIN_WIDTH * px, rect.width) - 0.5
+          )
+        }
+
+        // Contact is the one window an area this short caps (below).
+        for (const [, title] of APPS.filter(([, t]) => t !== 'contact.app')) {
+          const rect = await rectOf(osWindow(page, title))
+          expect(
+            Math.round(rect.y / px) - AREA_TOP,
+            title
+          ).toBeGreaterThanOrEqual(HEADROOM)
+        }
+
+        // Snapped to the art pixel: within one of the DPR 1 rect, and as
+        // wide as it is or as the room left of the panels.
+        const projects = await rectOf(osWindow(page, 'projects.app'))
+        const room = Math.floor((clearOf - projects.x) / px + 1e-6) * px
+        expect(Math.abs(projects.x - PROJECTS_AT_DPR_1.x)).toBeLessThanOrEqual(
+          px
         )
+        expect(
+          Math.abs(projects.width - Math.min(PROJECTS_AT_DPR_1.width, room))
+        ).toBeLessThanOrEqual(px)
+        expect(
+          Math.abs(projects.height - PROJECTS_AT_DPR_1.height)
+        ).toBeLessThanOrEqual(px)
       })
     })
   }
@@ -526,6 +575,7 @@ test.describe('new windows', () => {
 
   for (const [label, viewport, dpr] of [
     ['1440x900 at DPR 1', DESKTOP_VIEWPORT, 1],
+    ['1440x900 at DPR 2', DESKTOP_VIEWPORT, 2],
     ['1920x1080 at DPR 1.25', { width: 1920, height: 1080 }, 1.25],
   ] as const) {
     test.describe(label, () => {
