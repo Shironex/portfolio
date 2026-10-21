@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 
 import { AppIcon, ProjectGlyph } from '@/components/pixel/app-icon'
+import { PetOnLedge } from '@/components/pixel/pet-stills'
 import {
   PixelIcon,
   type PixelIconName,
@@ -380,6 +381,7 @@ export function CmdPalette({
           </div>
           {items.length === 0 && (
             <div className="text-label flex flex-col items-center gap-4 px-6 pt-2 pb-8 text-center text-(--meta)">
+              <PetOnLedge />
               <p>
                 No matches for &ldquo;{q}&rdquo;. Try &ldquo;about&rdquo;,
                 &ldquo;automaker&rdquo;, or any tech name.

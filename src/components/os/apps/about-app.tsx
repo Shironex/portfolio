@@ -1,18 +1,24 @@
+'use client'
+
 /**
  * about.me window, in pixels (SPEC 1.5): the README `hi` banner as the
- * heading's picture, the mascot as the portrait, long text at the readable
- * measure, the open source panel and the hobbies with their glyphs.
+ * heading's picture, the mascot as the portrait (the pet's first idle frame
+ * at 2x), long text at the readable measure, the open source panel and the
+ * hobbies with their glyphs; the motorbike is the mini-me on her parked bike.
+ * Opening it asks the desktop pet to wave (SPEC 3.2).
  */
-import type { ReactNode } from 'react'
+import { type ReactNode, useEffect } from 'react'
 
 import { accentIcon } from '@/components/os/accent-map'
 import type { AccentRole } from '@/components/os/accent-map'
 import { PROSE_CLASS } from '@/components/os/constants'
-import { MascotHead } from '@/components/pixel/mascot-head'
+import { PetStill, RideStill } from '@/components/pixel/pet-stills'
 import {
   PixelIcon,
   type PixelIconName,
 } from '@/components/pixel/pixel-icon.generated'
+
+import { requestPetWave } from '@/lib/os/pets'
 
 import banners from '@/assets/pixel/banners/readme-headers.png'
 import '@/styles/sprites/readme-headers.css'
@@ -24,6 +30,8 @@ interface Hobby {
   title: string
   desc: string
   accent: AccentRole
+  /** A picture in place of the glyph: the mini-me on her bike. */
+  ride?: boolean
 }
 
 const hobbies: Hobby[] = [
@@ -44,6 +52,7 @@ const hobbies: Hobby[] = [
     title: 'CFMoto 450 SSR',
     desc: "Saving up. One day she's mine.",
     accent: 'warm',
+    ride: true,
   },
   {
     icon: 'film',
@@ -68,13 +77,18 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 export default function AboutApp() {
+  useEffect(() => {
+    requestPetWave()
+  }, [])
+
   return (
     <div className="@container flex flex-col gap-8">
       <header className="flex flex-col items-start gap-5 @min-[30rem]:flex-row">
-        {/* The portrait: the mascot at 3x on a night plate. Her pet sheet
-            portrait replaces it with the pets (Phase 5). */}
-        <span className="os-night px-panel px-scale-3 block flex-none p-2">
-          <MascotHead pausesWithDesktop={false} />
+        {/* The portrait: the pet's first idle frame at 2x on a night plate. */}
+        <span className="os-night px-panel block flex-none p-2">
+          <span className="px-scale-2 block">
+            <PetStill pose="idle" />
+          </span>
         </span>
         <div className="flex min-w-0 flex-col items-start gap-3">
           <span
@@ -161,13 +175,19 @@ export default function AboutApp() {
         <ul className="grid grid-cols-1 gap-3 @min-[28rem]:grid-cols-2">
           {hobbies.map((h) => (
             <li key={h.title} className="px-card flex items-start gap-3 p-3">
-              <span
-                aria-hidden
-                className="os-night px-label-plate flex size-14 flex-none items-center justify-center"
-                style={{ color: accentIcon(h.accent) }}
-              >
-                <PixelIcon name={h.icon} />
-              </span>
+              {h.ride ? (
+                <span className="os-night px-label-plate block flex-none p-1">
+                  <RideStill />
+                </span>
+              ) : (
+                <span
+                  aria-hidden
+                  className="os-night px-label-plate flex size-14 flex-none items-center justify-center"
+                  style={{ color: accentIcon(h.accent) }}
+                >
+                  <PixelIcon name={h.icon} />
+                </span>
+              )}
               <span className="flex min-w-0 flex-col gap-1">
                 <span className="text-title text-(--ink)">{h.title}</span>
                 <span className="text-body text-(--meta)">{h.desc}</span>

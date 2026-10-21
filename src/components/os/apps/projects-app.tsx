@@ -18,7 +18,7 @@ import { Input } from '@/components/ui/input'
 
 import { ProjectAvatar } from '@/components/os/project-avatar'
 import { StatusChip } from '@/components/os/status-chip'
-import { MascotHead } from '@/components/pixel/mascot-head'
+import { PetOnLedge } from '@/components/pixel/pet-stills'
 import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
 import { cn } from '@/lib/utils'
@@ -152,9 +152,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
 
       {shown.length === 0 ? (
         <div className="flex flex-col items-center gap-4 py-12 text-center">
-          <span className="px-scale-3 block">
-            <MascotHead pausesWithDesktop={false} />
-          </span>
+          <PetOnLedge />
           <p className="text-body text-(--ink)">
             {q && filter !== 'all'
               ? `No ${filter} projects match “${q}”.`
