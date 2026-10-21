@@ -57,6 +57,14 @@ export function artPx(n: number, px = artPixel()): number {
   return tidy(n * px)
 }
 
+/**
+ * `n` art pixels as a CSS length that follows `--px`, for styles written on
+ * the server or before the art pixel is known.
+ */
+export function artLength(n: number): string {
+  return `calc(${n} * var(--px))`
+}
+
 /** A CSS length snapped to the nearest whole number of art pixels. */
 export function snapToArt(value: number, px = artPixel()): number {
   return tidy(Math.round(value / px) * px)

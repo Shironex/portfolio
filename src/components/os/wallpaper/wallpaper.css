@@ -3,7 +3,8 @@
  * the same frame 0 and then animates. Both are a whole number of art px tall
  * and wide, anchored top left, so the canvas (`ceil(size / --px)` art px)
  * and the static frame line up pixel for pixel. Sizes and positions come
- * from the generated scene data, set inline by `wallpaper-static.tsx`.
+ * from the generated scene data, set inline by `wallpaper-static.tsx`; the
+ * four skies' backgrounds come once per page from `wallpaper-skies.tsx`.
  */
 
 .wallpaper-static,
