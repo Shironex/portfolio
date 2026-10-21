@@ -141,6 +141,46 @@ export function tagFrames(tag) {
   }
 }
 
+/**
+ * One still of a sheet as a PNG: the first frame of the tag `name`, or the
+ * frame whose filename is `name`. `pad` art px of `ground` go round it (a
+ * ground also fills its transparent pixels), then it is scaled by the whole
+ * number `scale` with nearest neighbour, so every art px stays a square.
+ */
+export async function stillPng(jsonFile, name, options = {}) {
+  const { scale = 1, pad = 0, ground } = options
+  const data = readSheetJson(jsonFile)
+  const tag = data.meta.frameTags.find((t) => t.name === name)
+  const index = tag
+    ? tagFrames(tag)[0]
+    : data.frames.findIndex((f) => f.filename === name)
+  const frame = data.frames[index]
+  if (!frame) throw new Error(`${jsonFile}: no tag or frame named "${name}"`)
+  if (frame.trimmed) throw new Error(`${jsonFile}: frame "${name}" is trimmed`)
+  if (!Number.isInteger(scale) || scale < 1) {
+    throw new Error(`scale ${scale} is not a whole number`)
+  }
+  const { x, y, w, h } = frame.frame
+  const clear = { r: 0, g: 0, b: 0, alpha: 0 }
+  let cut = sharp(join(dirname(jsonFile), data.meta.image))
+    .extract({ left: x, top: y, width: w, height: h })
+    .extend({
+      top: pad,
+      bottom: pad,
+      left: pad,
+      right: pad,
+      background: ground ?? clear,
+    })
+  if (ground) cut = cut.flatten({ background: ground })
+  const art = await cut.png().toBuffer()
+  return sharp(art)
+    .resize((w + 2 * pad) * scale, (h + 2 * pad) * scale, {
+      kernel: 'nearest',
+    })
+    .png({ compressionLevel: 9 })
+    .toBuffer()
+}
+
 /** Parse slice user data written as `key=value` pairs (space or comma separated). */
 export function sliceOptions(slice) {
   const out = {}

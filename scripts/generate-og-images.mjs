@@ -1,84 +1,109 @@
 #!/usr/bin/env node
 /**
- * Generate the small thumbnails the per-project Open Graph cards embed.
+ * The pictures the Open Graph cards are drawn from (SPEC 1.1, og/OG.md).
  *
- * Source : the `image` of every project in src/data/projects/*.ts
- * Output : public/projects/og/<slug>.jpg   800x450, JPEG
+ *   pnpm generate:og              write src/app/_og/
+ *   pnpm generate:og --check      fail if a file there is stale
+ *   pnpm generate:og --og-dir <dir>   where the card bases are
+ *                                     (default ../aseprite-demo/og/export,
+ *                                     or PIXEL_OG_DIR)
  *
- * The card renderer cannot decode webp and has no use for a full-size
- * screenshot in a 400x225 slot, so each thumbnail gets a JPEG copy at twice
- * the slot size. Projects without an image are skipped and keep the text-only
- * card. Rerun after adding or changing a project thumbnail:
+ * Output, PNG, every art px a 3x3 square:
+ *   src/app/_og/home-base.png         the home card's scene, 1200x630
+ *   src/app/_og/project-base.png      the project card's scene, 1200x630
+ *   src/app/_og/icons/<slug>.png      each drawn project icon's still, 96x96
+ *   src/app/_og/icons/tile.png        the bare tile of a project with no icon
+ *   src/app/_og/icons/shironedev.png  the README logo tile, for the home card
  *
- *   pnpm generate:og
+ * The bases are the art's own 3x exports (the Aseprite CLI commands are in
+ * OG.md). The icons are cut from the sheets `pnpm art:export` and the pixel
+ * generators keep in the repo, never from the GIFs, whose palette decodes
+ * wrong. Rerun after a new project icon or a new base.
  *
  * Uses sharp only, so it runs the same on macOS, Windows and Linux.
  */
-import {
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  readdirSync,
-  statSync,
-} from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sharp from 'sharp'
 
+import { readSheetJson, stillPng } from './pixel/sheet.mjs'
+
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const dataDir = join(root, 'src/data/projects')
-const publicDir = join(root, 'public')
-const outDir = join(publicDir, 'projects/og')
+const outDir = join(root, 'src/app/_og')
+const pixel = join(root, 'src/assets/pixel')
 
-/** Twice the 400x225 slot on the card, for a crisp downscale. */
-const SIZE = { width: 800, height: 450 }
-/** Card surface colour, behind any transparent pixels. */
-const BACKGROUND = '#fdfaf0'
+/** One art px of a card is 3 image px (OG.md). */
+const SCALE = 3
+const CARD = { width: 400 * SCALE, height: 210 * SCALE }
 
-/** Top-level `slug` and `image` fields of a project data file. */
-function readProject(file) {
-  const source = readFileSync(join(dataDir, file), 'utf8')
-  const slug = /^ {2}slug: '([^']+)'/m.exec(source)?.[1]
-  const image = /^ {2}image: '([^']+)'/m.exec(source)?.[1]
-  return { file, slug, image }
+const PROJECT_ICONS = join(pixel, 'project-icons/project-icons-32.json')
+const README_ICONS = join(pixel, 'project-icon-art/readme-icons.json')
+
+function ogDir(argv) {
+  const i = argv.indexOf('--og-dir')
+  if (i > -1 && argv[i + 1]) return resolve(argv[i + 1])
+  // eslint-disable-next-line n/no-process-env -- a local tool's own config, not app env
+  const fromEnv = process.env.PIXEL_OG_DIR
+  return fromEnv
+    ? resolve(fromEnv)
+    : resolve(root, '..', 'aseprite-demo', 'og', 'export')
 }
 
-async function generate() {
-  mkdirSync(outDir, { recursive: true })
-  const projects = readdirSync(dataDir)
-    .filter((file) => file.endsWith('.ts'))
-    .map(readProject)
-
-  let failed = false
-  for (const { file, slug, image } of projects) {
-    if (!slug) {
-      console.error(`  ${file}: no slug found`)
-      failed = true
-      continue
-    }
-    if (!image) {
-      console.log(`  ${slug}: no image, text-only card`)
-      continue
-    }
-    const source = join(publicDir, image)
-    if (!existsSync(source)) {
-      console.error(`  ${slug}: ${image} is missing`)
-      failed = true
-      continue
-    }
-    const target = join(outDir, `${slug}.jpg`)
-    await sharp(source)
-      .resize({ ...SIZE, fit: 'cover', position: 'left top' })
-      .flatten({ background: BACKGROUND })
-      .jpeg({ quality: 82, mozjpeg: true })
-      .toFile(target)
-    const kb = Math.round(statSync(target).size / 1024)
-    console.log(`  ${slug}: projects/og/${slug}.jpg (${kb} KB)`)
+/** A card base, checked to be the card's size. */
+async function base(dir, name) {
+  const file = join(dir, `og-dev-${name}-base.png`)
+  if (!existsSync(file)) throw new Error(`${file} does not exist`)
+  const { width, height } = await sharp(file).metadata()
+  if (width !== CARD.width || height !== CARD.height) {
+    throw new Error(`${file} is ${width}x${height}, not 1200x630`)
   }
-  if (failed) process.exit(1)
+  return readFileSync(file)
 }
 
-generate().catch((err) => {
-  console.error('Failed to generate Open Graph thumbnails:', err)
+/** Every file to write, as [path under src/app/_og, bytes]. */
+async function outputs(argv) {
+  const dir = ogDir(argv)
+  const files = [
+    ['home-base.png', await base(dir, 'home')],
+    ['project-base.png', await base(dir, 'project')],
+    [
+      'icons/shironedev.png',
+      await stillPng(README_ICONS, 'shironedev', { scale: SCALE }),
+    ],
+  ]
+  for (const tag of readSheetJson(PROJECT_ICONS).meta.frameTags) {
+    files.push([
+      `icons/${tag.name}.png`,
+      await stillPng(PROJECT_ICONS, tag.name, { scale: SCALE }),
+    ])
+  }
+  return files
+}
+
+async function main(argv) {
+  const files = await outputs(argv)
+  if (argv.includes('--check')) {
+    const stale = files.filter(([name, bytes]) => {
+      const file = join(outDir, name)
+      return !existsSync(file) || !readFileSync(file).equals(bytes)
+    })
+    for (const [name] of stale) {
+      console.error(`src/app/_og/${name} is stale. Run: pnpm generate:og`)
+    }
+    if (stale.length) process.exit(1)
+    console.log(`og pictures up to date: ${files.length} file(s)`)
+    return
+  }
+  for (const [name, bytes] of files) {
+    const file = join(outDir, name)
+    mkdirSync(dirname(file), { recursive: true })
+    writeFileSync(file, bytes)
+    console.log(`  ${relative(root, file)} (${bytes.length} bytes)`)
+  }
+}
+
+main(process.argv.slice(2)).catch((error) => {
+  console.error('Failed to write the Open Graph pictures:', error.message)
   process.exit(1)
 })
