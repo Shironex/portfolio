@@ -128,9 +128,12 @@ export function StartMenu({
     []
   )
 
+  // Focus the search once the panel is placed: until then it is
+  // `invisible`, and a hidden button cannot take focus.
+  const placed = placement !== null
   useEffect(() => {
-    searchRef.current?.focus()
-  }, [])
+    if (placed) searchRef.current?.focus()
+  }, [placed])
 
   useEscapeLayer('start', onClose)
 

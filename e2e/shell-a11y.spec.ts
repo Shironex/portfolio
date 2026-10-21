@@ -307,6 +307,26 @@ test.describe('mobile launcher', () => {
   })
 })
 
+test.describe('start menu', () => {
+  test.use({ viewport: DESKTOP_VIEWPORT })
+
+  test('opened from the keyboard, it puts focus on its search', async ({
+    page,
+  }) => {
+    await openDesktop(page)
+    const button = taskbar(page).getByRole('button', {
+      name: 'Open Start menu',
+    })
+    await button.focus()
+    await page.keyboard.press('Enter')
+    await expect(
+      startMenu(page).getByRole('button', { name: /search apps/i })
+    ).toBeFocused()
+    await page.keyboard.press('Escape')
+    await expect(button).toBeFocused()
+  })
+})
+
 test.describe('menubar', () => {
   test.use({ viewport: DESKTOP_VIEWPORT })
 
