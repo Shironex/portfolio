@@ -273,6 +273,20 @@ for (const sky of SKIES) {
         await expect(start).toBeVisible()
         await settled(start)
         await walk('start menu', start, 'Pinned')
+        await page.keyboard.press('Escape')
+        await expect(start).toBeHidden()
+
+        // The View menu, with its three settings as checkbox items: the
+        // state glyph is measured with the text. Items styled alike count
+        // as one reading, kept at the worst, under the first item's text.
+        await page
+          .getByRole('menubar')
+          .getByRole('menuitem', { name: 'View', exact: true })
+          .click()
+        const view = page.getByRole('menu', { name: 'View' })
+        await expect(view).toBeVisible()
+        await settled(view)
+        await walk('view menu', view, 'Turn the lamp')
 
         expect(failures).toEqual([])
       })
