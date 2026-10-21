@@ -35,25 +35,32 @@ export const MOBILE_BAR_CLASS =
 export const MOBILE_GUTTER_CLASS =
   'pr-[max(1rem,env(safe-area-inset-right))] pl-[max(1rem,env(safe-area-inset-left))]'
 
-/** Text link inside running copy: a 1 art px underline, 2 art px down. */
+/**
+ * Text link inside running copy: the link colour, a 1 art px underline 2 art
+ * px down, the heading colour on hover.
+ */
 export const INLINE_LINK_CLASS =
-  'focus-ring text-miku-2-ink underline decoration-(length:--px) underline-offset-[calc(2*var(--px))]'
+  'focus-ring text-(--link) underline decoration-(length:--px) underline-offset-[calc(2*var(--px))] hover:text-(--heading)'
 
 /**
- * Small uppercase mono label over a section: the one eyebrow of the shell.
- * Callers add the colour and the spacing.
+ * Small uppercase label over a section (Departure Mono, `text-label`): the
+ * one eyebrow of the shell. Callers add the colour and the spacing.
  */
-export const EYEBROW_CLASS = 'font-mono text-[11px] font-normal uppercase'
+export const EYEBROW_CLASS = 'text-label uppercase'
 
 /**
- * Small uppercase mono label of a badge or a legend, tighter than the eyebrow.
- * Callers add the colour.
+ * Small uppercase label of a badge or a legend. Callers add the colour.
  */
-export const LABEL_CLASS = 'font-mono text-[11px] uppercase'
+export const LABEL_CLASS = 'text-label uppercase'
 
-/** Pulsing placeholder fill; callers add the size and radius. */
-export const SKELETON_BAR =
-  'bg-rule animate-pulse-slow motion-reduce:animate-none'
+/**
+ * Loading placeholder: the stepped dither of the skeleton tile, held by the
+ * automatic pauses and the Pause setting. Callers add the size.
+ */
+export const SKELETON_BAR = 'px-tile-skeleton ambient-loop'
+
+/** Long text: Pixeloid at body size, about 66 characters a line (SPEC 2.3). */
+export const PROSE_CLASS = 'text-body max-w-[66ch] text-(--ink)'
 
 /** What a window is called out loud: the app name or the project title. */
 export function windowNameFor(win: WindowState): string {
