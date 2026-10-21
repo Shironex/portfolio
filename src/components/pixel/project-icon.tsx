@@ -1,5 +1,7 @@
 import type { CSSProperties } from 'react'
 
+import { type AccentRole, accentInk } from '@/components/os/accent-map'
+
 import { cn } from '@/lib/utils'
 
 import sheet from '@/assets/pixel/project-icons/project-icons-32.png'
@@ -70,16 +72,21 @@ export function ProjectIcon({ slug, scale = 1, className }: ProjectIconProps) {
 interface ProjectTileProps {
   /** The letter on the tile, usually the project's first. */
   letter: string
+  /** The project's accent role: the letter takes its night ink. */
+  accent: AccentRole
   scale?: ProjectIconScale
   className?: string
 }
 
 /**
- * The bare navy tile the icons sit on, with a letter in the Lamp's warm
- * ink: the picture of a project with no drawn icon (decision 3). Decorative.
+ * The bare navy tile the icons sit on, with a letter in the ink of the
+ * project's accent: the picture of a project with no drawn icon (decision
+ * 3). The tile is night in both Lamp modes, so the letter takes the night
+ * ink (at least 4.5:1 on the navy). Decorative.
  */
 export function ProjectTile({
   letter,
+  accent,
   scale = 1,
   className,
 }: ProjectTileProps) {
@@ -89,9 +96,10 @@ export function ProjectTile({
       scale={scale}
       className={className}
       spriteClassName={cn(
-        'os-night flex items-center justify-center text-(--heading) uppercase',
+        'os-night flex items-center justify-center uppercase',
         scale === 2 ? 'text-display' : 'text-heading'
       )}
+      spriteStyle={{ color: accentInk(accent) }}
     >
       {letter}
     </TileSprite>
@@ -105,19 +113,21 @@ interface TileSpriteProps {
   className?: string
   /** Classes for the sprite itself. */
   spriteClassName?: string
+  /** Extra inline style for the sprite. */
+  spriteStyle?: CSSProperties
   children?: string
 }
 
 /**
- * One cell of the sheet. At scale 2 a wrapper doubles the art px it
- * inherits (`--px`, set inline on <html>) into `--px-2x`, and the sprite
- * takes that as its own `--px`: on one element the two would be a cycle.
+ * One cell of the sheet; at scale 2 inside a `px-scale-2` wrapper, which
+ * doubles the art px of the sprite (and of the letter's spacing).
  */
 function TileSprite({
   tag,
   scale,
   className,
   spriteClassName,
+  spriteStyle,
   children,
 }: TileSpriteProps) {
   const sprite = (
@@ -128,22 +138,17 @@ function TileSprite({
         'px-project-icons-32 block flex-none',
         `px-project-icons-32-${tag}`,
         tag !== 'tile' && HOVER_ONCE_CLASS,
-        scale === 2 && '[--px:var(--px-2x)]',
         scale === 1 && className,
         spriteClassName
       )}
-      style={{ backgroundImage: `url(${sheet.src})` }}
+      style={{ ...spriteStyle, backgroundImage: `url(${sheet.src})` }}
     >
       {children}
     </span>
   )
   if (scale === 1) return sprite
   return (
-    <span
-      aria-hidden
-      className={cn('block flex-none', className)}
-      style={{ '--px-2x': 'calc(2 * var(--px))' } as CSSProperties}
-    >
+    <span aria-hidden className={cn('px-scale-2 block flex-none', className)}>
       {sprite}
     </span>
   )

@@ -1,3 +1,4 @@
+import { accentFor } from '@/components/os/accent-map'
 import {
   ProjectIcon,
   type ProjectIconScale,
@@ -18,7 +19,8 @@ interface ProjectAvatarProps {
  * A project's picture across the OS (the Projects app, the featured panel,
  * the project window): its drawn 32x32 icon, which plays its tag once on
  * hover or focus of the control around it, or its first letter on the bare
- * tile (decision 3). Decorative: the name and description sit beside it.
+ * tile, in the ink of its accent (decision 3). Decorative: the name and
+ * description sit beside it.
  */
 export function ProjectAvatar({
   slug,
@@ -32,6 +34,7 @@ export function ProjectAvatar({
   return (
     <ProjectTile
       letter={title.slice(0, 1)}
+      accent={accentFor(slug)}
       scale={scale}
       className={className}
     />
