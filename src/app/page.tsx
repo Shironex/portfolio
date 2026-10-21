@@ -63,7 +63,10 @@ function StaticHero() {
         <div className={DESKTOP_ROW_CLASS}>
           <HeroPlateFrame
             animated={false}
-            className={cn(DESKTOP_HERO_CLASS, 'max-md:max-w-none')}
+            className={cn(
+              DESKTOP_HERO_CLASS,
+              'max-md:max-h-none max-md:max-w-none'
+            )}
           >
             {/* The strip as it loads, and the panels' room, so the hero is
                 the size and shape the shell's will be. */}
