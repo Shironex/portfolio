@@ -7,13 +7,15 @@
  * For every PNG under the folder:
  *   - it belongs to a source or a derived sheet in `art-manifest.mjs`
  *     (`<name>.png` or `<name>@<n>x.png`) and sits in its group folder
- *   - its JSON is next to it and agrees with it: `meta.size` is the PNG size,
+ *   - its JSON is next to it (a JSON a source names in `companions` is data,
+ *     not a sheet, and needs no PNG) and agrees with it: `meta.size` is the PNG size,
  *     every frame rectangle is inside the sheet, every frame has the same
  *     canvas, tags and slices stay inside the frames and the canvas
  *   - alpha is 0 or 255 only (pixel art has no soft edges)
  *   - every opaque pixel is a README palette colour, unless the source keeps
  *     its own palette (`ownPalette`) or is 1-bit (`oneBit`: one colour,
- *     whichever it is, since code recolours it)
+ *     whichever it is, since code recolours it); the wallpaper (`skyPalette`)
+ *     may also use the sky colours, for its clouds and its day skyline
  * and per budget set, the PNG bytes stay under SPEC 4.6; generated outputs
  * (chrome CSS, glyph component, sprite CSS) are held to their budgets when
  * they exist, and a sprite stylesheet with no budget of its own fails.
@@ -34,10 +36,11 @@ import {
 } from './art-manifest.mjs'
 import { flag, isMain } from './cli.mjs'
 import { ROOT } from './export-art.mjs'
-import { PALETTE_HEX, toHex } from './palette.mjs'
+import { PALETTE_HEX, SKY_COLOURS, toHex } from './palette.mjs'
 import { readSheetJson } from './sheet.mjs'
 
 const PALETTE = new Set(PALETTE_HEX)
+const SKY_PALETTE = new Set([...PALETTE_HEX, ...SKY_COLOURS])
 
 function walk(dir) {
   if (!existsSync(dir)) return []
@@ -106,8 +109,9 @@ export function sheetProblems(data, width, height) {
  */
 export async function pixelProblems(
   file,
-  { ownPalette = false, oneBit = false } = {}
+  { ownPalette = false, oneBit = false, skyPalette = false } = {}
 ) {
+  const allowed = skyPalette ? SKY_PALETTE : PALETTE
   const { data, info } = await sharp(file)
     .ensureAlpha()
     .raw()
@@ -131,7 +135,7 @@ export async function pixelProblems(
       continue
     }
     if (ownPalette) continue
-    if (!PALETTE.has(hex) && !offPalette.has(hex))
+    if (!allowed.has(hex) && !offPalette.has(hex))
       offPalette.set(hex, `${x},${y}`)
   }
   const out = []
@@ -168,7 +172,11 @@ export async function checkArt({
   const pngs = files.filter((f) => f.endsWith('.png'))
   const bytesByGroup = {}
 
+  const companions = new Set(
+    sources.flatMap((s) => (s.companions ?? []).map((c) => `${s.group}/${c}`))
+  )
   for (const json of files.filter((f) => f.endsWith('.json'))) {
+    if (companions.has(relative(dir, json).split(sep).join('/'))) continue
     if (!existsSync(json.replace(/\.json$/, '.png')))
       fail(json, 'no PNG next to this JSON')
   }

@@ -14,7 +14,11 @@
  * copies. `ownPalette` marks art that keeps its own colours (the mascot),
  * which the palette check skips. `oneBit` marks art drawn in one colour that
  * code recolours (the glyphs, drawn into `currentColor`): any one colour
- * passes, a second fails.
+ * passes, a second fails. `skyPalette` marks the wallpaper, whose clouds and
+ * day skyline may also use the sky colours (`SKY_COLOURS` in palette.mjs).
+ * `companions` are data files drawn up with the art
+ * (the wallpaper's sky bands, recolour maps and layout) that are copied next
+ * to the export as they are, for a generator to read.
  */
 export const ART_SOURCES = [
   { name: 'os-chrome', root: 'art', group: 'chrome' },
@@ -29,7 +33,14 @@ export const ART_SOURCES = [
   },
   { name: 'mascot-head', root: 'art', group: 'avatar', ownPalette: true },
   { name: 'os-boot', root: 'art', group: 'boot' },
-  { name: 'os-wallpaper', root: 'art', group: 'wallpaper', splitLayers: true },
+  {
+    name: 'os-wallpaper',
+    root: 'art',
+    group: 'wallpaper',
+    splitLayers: true,
+    skyPalette: true,
+    companions: ['wallpaper-palette.json'],
+  },
   { name: 'minime-ride', root: 'art', group: 'pets' },
   { name: 'os-cursors', root: 'art', group: 'cursors' },
   { name: 'os-neon-404', root: 'art', group: 'neon' },
@@ -55,25 +66,42 @@ export const ART_SOURCES = [
   },
 ]
 
+/** The skies the wallpaper paints (SPEC 2.2); Live resolves to one of them. */
+export const WALLPAPER_SKIES = ['night', 'dusk', 'dawn', 'day']
+
 /**
- * Sheets a generator cuts from an export (`gen-app-icons.mjs`), checked like
- * exports: `from` names the source they are cut from.
+ * Sheets a generator cuts from an export (`gen-app-icons.mjs`,
+ * `gen-wallpaper.mjs`), checked like exports: `from` names the source they
+ * are cut from. `canvas` marks art drawn by script (the wallpaper canvas and
+ * its static frame), which gets no sprite classes.
  */
 export const DERIVED_SHEETS = [
   { name: 'app-icons-32', group: 'icons', from: 'os-app-icons' },
   { name: 'app-icons-16', group: 'icons', from: 'os-app-icons' },
+  ...[
+    'wallpaper',
+    'stars',
+    ...WALLPAPER_SKIES.flatMap((sky) => [`skyline-${sky}`, `lamps-${sky}`]),
+  ].map((name) => ({
+    name,
+    group: 'scene',
+    from: 'os-wallpaper',
+    canvas: true,
+    skyPalette: true,
+  })),
 ]
 
 /**
  * Groups whose PNGs are only inputs to a generator and never ship: the
- * chrome, glyphs and cursors become CSS and TSX, the app icon export is cut
- * into the shipped sheets.
+ * chrome, glyphs and cursors become CSS and TSX, the app icon and wallpaper
+ * exports are cut into the shipped sheets.
  */
 export const GENERATOR_INPUT_GROUPS = [
   'chrome',
   'glyphs',
   'app-icons',
   'cursors',
+  'wallpaper',
 ]
 
 const KB = 1024
@@ -88,7 +116,7 @@ export const PNG_BUDGETS = [
     groups: ['icons', 'avatar', 'cursors'],
     bytes: 12 * KB,
   },
-  { label: 'wallpaper layers', groups: ['wallpaper'], bytes: 30 * KB },
+  { label: 'wallpaper layers', groups: ['scene'], bytes: 30 * KB },
   {
     label: 'project icons, banners, shelf',
     groups: ['project-icons', 'banners'],
@@ -114,5 +142,8 @@ export const GENERATED_BUDGETS = [
   { file: 'src/styles/pixel-cursors.css', bytes: 6 * KB },
   { file: `${SPRITE_CSS_DIR}/app-icons-16.css`, bytes: 2 * KB },
   { file: `${SPRITE_CSS_DIR}/app-icons-32.css`, bytes: 6 * KB },
+  { file: `${SPRITE_CSS_DIR}/mascot-head.css`, bytes: 2 * KB },
+  { file: `${SPRITE_CSS_DIR}/os-boot.css`, bytes: 3 * KB },
+  { file: `${SPRITE_CSS_DIR}/readme-headers.css`, bytes: 5 * KB },
   { file: `${SPRITE_CSS_DIR}/readme-icons.css`, bytes: 8 * KB },
 ]

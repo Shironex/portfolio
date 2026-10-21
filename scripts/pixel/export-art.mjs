@@ -20,7 +20,8 @@
  * Windows PC.
  *
  * Sources are only read: Aseprite runs in batch mode (`-b`) with no
- * `--save-as`, so a document open in the editor is never touched. A source
+ * `--save-as`, so a document open in the editor is never touched. A source's
+ * `companions` (data drawn up with the art) are copied next to its sheet. A source
  * that does not exist yet is skipped and reported, because the art is drawn
  * while the code lands.
  */
@@ -169,6 +170,21 @@ export async function exportEntry(entry, paths, { dryRun = false } = {}) {
     writeFileSync(jsonFile, normalizeSheetJson(readFileSync(jsonFile, 'utf8')))
     const size = await optimizePng(pngFile)
     written.push({ png: pngFile, json: jsonFile, ...size })
+  }
+  for (const name of entry.companions ?? []) {
+    const from = join(dirname(source), name)
+    if (dryRun) {
+      console.log(`copy ${from} -> ${join(outDir, name)}`)
+      continue
+    }
+    if (!existsSync(from)) {
+      throw new Error(`${entry.name}: companion ${name} is missing (${from})`)
+    }
+    const text = readFileSync(from, 'utf8')
+    writeFileSync(
+      join(outDir, name),
+      `${JSON.stringify(JSON.parse(text), null, 2)}\n`
+    )
   }
   return written
 }

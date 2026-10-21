@@ -1,0 +1,1123 @@
+{
+  "version": 2,
+  "skies": {
+    "night": {
+      "bands": [
+        {
+          "color": "#0b1420",
+          "rows": "fill"
+        },
+        {
+          "color": "#13253a",
+          "rows": 84
+        },
+        {
+          "color": "#13253a",
+          "rows": 12,
+          "mix": "#173a45"
+        },
+        {
+          "color": "#173a45",
+          "rows": 32
+        },
+        {
+          "color": "#1f5058",
+          "rows": 96
+        }
+      ],
+      "visible": {
+        "stars": true,
+        "moon": true,
+        "clouds": false,
+        "lights": true,
+        "cone": true,
+        "glow": true
+      },
+      "recolor": {}
+    },
+    "dusk": {
+      "bands": [
+        {
+          "color": "#201e3e",
+          "rows": "fill"
+        },
+        {
+          "color": "#62305c",
+          "rows": 34
+        },
+        {
+          "color": "#94584a",
+          "rows": 24
+        },
+        {
+          "color": "#b27868",
+          "rows": 18
+        },
+        {
+          "color": "#d89070",
+          "rows": 14
+        },
+        {
+          "color": "#f0a068",
+          "rows": 12
+        },
+        {
+          "color": "#f0c070",
+          "rows": 76
+        }
+      ],
+      "visible": {
+        "stars": false,
+        "moon": "faint",
+        "clouds": true,
+        "lights": true,
+        "cone": true,
+        "glow": false
+      },
+      "recolor": {
+        "far": {
+          "#173a45": "#82383a"
+        },
+        "mid": {
+          "#13253a": "#3b3040",
+          "#173a45": "#82383a",
+          "#0b1420": "#2a1a1c"
+        },
+        "near": {
+          "#0b1420": "#2a1a1c",
+          "#1f5058": "#4a2b25",
+          "#13253a": "#3b3040"
+        },
+        "clouds": {
+          "#8fb9de": "#5a5e8c",
+          "#d8fff2": "#c48470",
+          "#5f8fce": "#5a5e8c"
+        }
+      }
+    },
+    "dawn": {
+      "bands": [
+        {
+          "color": "#13253a",
+          "rows": "fill"
+        },
+        {
+          "color": "#13253a",
+          "rows": 8,
+          "mix": "#5a5e8c"
+        },
+        {
+          "color": "#5a5e8c",
+          "rows": 44
+        },
+        {
+          "color": "#9a88b4",
+          "rows": 22
+        },
+        {
+          "color": "#e2a684",
+          "rows": 16
+        },
+        {
+          "color": "#f0b890",
+          "rows": 12
+        },
+        {
+          "color": "#fff2c8",
+          "rows": 74
+        }
+      ],
+      "visible": {
+        "stars": false,
+        "moon": "faint",
+        "clouds": true,
+        "lights": true,
+        "cone": false,
+        "glow": false
+      },
+      "recolor": {
+        "far": {
+          "#173a45": "#b27868"
+        },
+        "mid": {
+          "#13253a": "#5a5e8c",
+          "#173a45": "#c48470",
+          "#0b1420": "#3b3040"
+        },
+        "near": {
+          "#0b1420": "#3b3040",
+          "#1f5058": "#5a5e8c",
+          "#13253a": "#13253a"
+        },
+        "clouds": {
+          "#8fb9de": "#5a5e8c",
+          "#d8fff2": "#c48470",
+          "#5f8fce": "#5a5e8c"
+        }
+      }
+    },
+    "day": {
+      "bands": [
+        {
+          "color": "#5f8fce",
+          "rows": "fill"
+        },
+        {
+          "color": "#8fb9de",
+          "rows": 120
+        },
+        {
+          "color": "#e8e4dc",
+          "rows": 84
+        }
+      ],
+      "visible": {
+        "stars": false,
+        "moon": false,
+        "clouds": true,
+        "lights": false,
+        "cone": false,
+        "glow": false
+      },
+      "recolor": {
+        "far": {
+          "#173a45": "#8fb9de"
+        },
+        "mid": {
+          "#13253a": "#9aa4a8",
+          "#0b1420": "#5a5e8c"
+        },
+        "near": {
+          "#0b1420": "#5a5e8c",
+          "#13253a": "#13253a",
+          "#1f5058": "#9aa4a8"
+        },
+        "lamp": {
+          "#f0c070": "#9aa4a8",
+          "#fff2c8": "#e8e4dc"
+        }
+      }
+    }
+  },
+  "moon": {
+    "faint": {
+      "#173a45": null,
+      "#fff2c8": "#9aa4a8",
+      "#e8e4dc": "#5a5e8c"
+    }
+  },
+  "layout": {
+    "road": {
+      "height": 24,
+      "liftRows": 0,
+      "fillBelow": "#3b3040"
+    },
+    "strips": {
+      "far": {
+        "x": 0,
+        "bottomAboveHorizon": 42,
+        "tile": "mirror"
+      },
+      "mid": {
+        "x": 0,
+        "bottomAboveHorizon": 18,
+        "tile": "mirror"
+      },
+      "near": {
+        "x": 0,
+        "bottomAboveHorizon": -4
+      }
+    },
+    "stars": {
+      "clearAboveHorizon": 160,
+      "rowShift": 53
+    },
+    "moon": {
+      "desktop": [
+        168,
+        26
+      ],
+      "mobile": [
+        34,
+        58
+      ]
+    },
+    "clouds": {
+      "desktop": [
+        {
+          "piece": "cloud_a",
+          "x": 120,
+          "y": 96
+        },
+        {
+          "piece": "cloud_b",
+          "x": 430,
+          "y": 64
+        },
+        {
+          "piece": "cloud_c",
+          "x": 560,
+          "y": 118
+        }
+      ],
+      "mobile": [
+        {
+          "piece": "cloud_a",
+          "x": 118,
+          "y": 66
+        },
+        {
+          "piece": "cloud_c",
+          "x": 40,
+          "y": 90
+        }
+      ]
+    },
+    "lamps": {
+      "x0": 52,
+      "spacing": 176,
+      "footBelowHorizon": 3,
+      "coneDx": -6,
+      "coneDy": 0
+    },
+    "parallax": {
+      "max": {
+        "stars": 0,
+        "moon": 0,
+        "clouds": 1,
+        "far": 2,
+        "mid": 3,
+        "near": 4,
+        "road": 4,
+        "glow": 0
+      }
+    },
+    "glow": {
+      "desktop": {
+        "dx": 0,
+        "dy": 0
+      },
+      "mobile": {
+        "dx": 40,
+        "dy": -24
+      },
+      "note": "anchored to the top-right corner of the canvas, under the menu bar or mobile header"
+    },
+    "drawOrder": [
+      "bands",
+      "glow",
+      "stars",
+      "moon",
+      "clouds",
+      "far",
+      "far_lights",
+      "mid",
+      "mid_lights",
+      "near",
+      "near_lights",
+      "road",
+      "lamp_cone",
+      "lamp"
+    ],
+    "brightStars": {
+      "desktop": [
+        [
+          52,
+          30,
+          0
+        ],
+        [
+          233,
+          92,
+          1
+        ],
+        [
+          338,
+          22,
+          2
+        ],
+        [
+          447,
+          141,
+          0
+        ],
+        [
+          560,
+          58,
+          1
+        ],
+        [
+          121,
+          188,
+          2
+        ],
+        [
+          640,
+          210,
+          0
+        ],
+        [
+          300,
+          236,
+          1
+        ]
+      ],
+      "mobile": [
+        [
+          20,
+          140,
+          1
+        ],
+        [
+          150,
+          170,
+          0
+        ],
+        [
+          96,
+          30,
+          2
+        ],
+        [
+          64,
+          214,
+          0
+        ]
+      ],
+      "note": "[x, y, phase]; draw star_bright frame ((tick + phase) mod 3) at x, y with the stars parallax"
+    }
+  },
+  "bandDither": [
+    0.5,
+    0.5
+  ],
+  "windows": {
+    "coords": "strip-local art px; the lit pixels live on the <strip>_lights layer, the unlit pane under them on the strip itself",
+    "far": [
+      {
+        "id": "win_far_01",
+        "x": 6,
+        "y": 34,
+        "w": 1,
+        "h": 1,
+        "color": "#2e6e6e",
+        "kind": "cool"
+      },
+      {
+        "id": "win_far_02",
+        "x": 13,
+        "y": 23,
+        "w": 1,
+        "h": 1,
+        "color": "#2e6e6e",
+        "kind": "cool"
+      },
+      {
+        "id": "win_far_03",
+        "x": 31,
+        "y": 20,
+        "w": 1,
+        "h": 1,
+        "color": "#2e6e6e",
+        "kind": "cool"
+      },
+      {
+        "id": "win_far_04",
+        "x": 42,
+        "y": 31,
+        "w": 1,
+        "h": 1,
+        "color": "#2e6e6e",
+        "kind": "cool"
+      },
+      {
+        "id": "win_far_05",
+        "x": 75,
+        "y": 24,
+        "w": 1,
+        "h": 1,
+        "color": "#2e6e6e",
+        "kind": "cool"
+      },
+      {
+        "id": "win_far_06",
+        "x": 86,
+        "y": 15,
+        "w": 1,
+        "h": 1,
+        "color": "#2e6e6e",
+        "kind": "cool"
+      },
+      {
+        "id": "win_far_07",
+        "x": 86,
+        "y": 19,
+        "w": 1,
+        "h": 1,
+        "color": "#2e6e6e",
+        "kind": "cool"
+      },
+      {
+        "id": "win_far_08",
+        "x": 118,
+        "y": 25,
+        "w": 1,
+        "h": 1,
+        "color": "#2e6e6e",
+        "kind": "cool"
+      },
+      {
+        "id": "win_far_09",
+        "x": 147,
+        "y": 18,
+        "w": 1,
+        "h": 1,
+        "color": "#2e6e6e",
+        "kind": "cool"
+      },
+      {
+        "id": "win_far_10",
+        "x": 154,
+        "y": 28,
+        "w": 1,
+        "h": 1,
+        "color": "#2e6e6e",
+        "kind": "cool"
+      },
+      {
+        "id": "win_far_11",
+        "x": 179,
+        "y": 22,
+        "w": 1,
+        "h": 1,
+        "color": "#2e6e6e",
+        "kind": "cool"
+      },
+      {
+        "id": "win_far_12",
+        "x": 211,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "color": "#2e6e6e",
+        "kind": "cool"
+      },
+      {
+        "id": "win_far_13",
+        "x": 213,
+        "y": 20,
+        "w": 1,
+        "h": 1,
+        "color": "#2e6e6e",
+        "kind": "cool"
+      },
+      {
+        "id": "win_far_14",
+        "x": 247,
+        "y": 28,
+        "w": 1,
+        "h": 1,
+        "color": "#2e6e6e",
+        "kind": "cool"
+      },
+      {
+        "id": "win_far_15",
+        "x": 77,
+        "y": 32,
+        "w": 1,
+        "h": 1,
+        "color": "#6e4030",
+        "kind": "warm"
+      },
+      {
+        "id": "win_far_16",
+        "x": 157,
+        "y": 31,
+        "w": 1,
+        "h": 1,
+        "color": "#6e4030",
+        "kind": "warm"
+      },
+      {
+        "id": "win_far_17",
+        "x": 233,
+        "y": 34,
+        "w": 1,
+        "h": 1,
+        "color": "#6e4030",
+        "kind": "warm"
+      },
+      {
+        "id": "beacon_far",
+        "x": 212,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "color": "#7a1e2a",
+        "kind": "beacon"
+      }
+    ],
+    "mid": [
+      {
+        "id": "win_mid_01",
+        "x": 30,
+        "y": 22,
+        "w": 1,
+        "h": 2,
+        "color": "#9a5f3c",
+        "kind": "warm"
+      },
+      {
+        "id": "win_mid_02",
+        "x": 27,
+        "y": 30,
+        "w": 1,
+        "h": 2,
+        "color": "#2e6e6e",
+        "kind": "cool"
+      },
+      {
+        "id": "win_mid_03",
+        "x": 27,
+        "y": 38,
+        "w": 1,
+        "h": 2,
+        "color": "#6e4030",
+        "kind": "warm"
+      },
+      {
+        "id": "win_mid_04",
+        "x": 61,
+        "y": 20,
+        "w": 1,
+        "h": 2,
+        "color": "#9a5f3c",
+        "kind": "warm"
+      },
+      {
+        "id": "win_mid_05",
+        "x": 61,
+        "y": 36,
+        "w": 1,
+        "h": 2,
+        "color": "#6e4030",
+        "kind": "warm"
+      },
+      {
+        "id": "win_mid_06",
+        "x": 94,
+        "y": 33,
+        "w": 2,
+        "h": 2,
+        "color": "#9a5f3c",
+        "kind": "warm"
+      },
+      {
+        "id": "win_mid_07",
+        "x": 94,
+        "y": 43,
+        "w": 2,
+        "h": 2,
+        "color": "#2e6e6e",
+        "kind": "cool"
+      },
+      {
+        "id": "win_mid_08",
+        "x": 141,
+        "y": 28,
+        "w": 1,
+        "h": 2,
+        "color": "#6e4030",
+        "kind": "warm"
+      },
+      {
+        "id": "win_mid_09",
+        "x": 144,
+        "y": 36,
+        "w": 1,
+        "h": 2,
+        "color": "#9a5f3c",
+        "kind": "warm"
+      },
+      {
+        "id": "win_mid_10",
+        "x": 173,
+        "y": 16,
+        "w": 1,
+        "h": 2,
+        "color": "#1f5058",
+        "kind": "cool"
+      },
+      {
+        "id": "win_mid_11",
+        "x": 176,
+        "y": 24,
+        "w": 1,
+        "h": 2,
+        "color": "#9a5f3c",
+        "kind": "warm"
+      },
+      {
+        "id": "win_mid_12",
+        "x": 179,
+        "y": 36,
+        "w": 1,
+        "h": 2,
+        "color": "#6e4030",
+        "kind": "warm"
+      },
+      {
+        "id": "win_mid_13",
+        "x": 210,
+        "y": 35,
+        "w": 2,
+        "h": 2,
+        "color": "#9a5f3c",
+        "kind": "warm"
+      },
+      {
+        "id": "win_mid_14",
+        "x": 253,
+        "y": 30,
+        "w": 1,
+        "h": 2,
+        "color": "#6e4030",
+        "kind": "warm"
+      },
+      {
+        "id": "win_mid_15",
+        "x": 244,
+        "y": 42,
+        "w": 1,
+        "h": 2,
+        "color": "#2e6e6e",
+        "kind": "cool"
+      }
+    ],
+    "near": [
+      {
+        "id": "win_near_01",
+        "x": 18,
+        "y": 44,
+        "w": 2,
+        "h": 3,
+        "color": "#c98a4a",
+        "kind": "warm"
+      },
+      {
+        "id": "win_near_02",
+        "x": 13,
+        "y": 56,
+        "w": 2,
+        "h": 3,
+        "color": "#9a5f3c",
+        "kind": "warm"
+      },
+      {
+        "id": "win_near_03",
+        "x": 41,
+        "y": 30,
+        "w": 2,
+        "h": 3,
+        "color": "#c98a4a",
+        "kind": "warm"
+      },
+      {
+        "id": "win_near_04",
+        "x": 37,
+        "y": 48,
+        "w": 2,
+        "h": 3,
+        "color": "#c98a4a",
+        "kind": "warm"
+      },
+      {
+        "id": "win_near_05",
+        "x": 41,
+        "y": 60,
+        "w": 2,
+        "h": 3,
+        "color": "#9a5f3c",
+        "kind": "warm"
+      },
+      {
+        "id": "win_near_06",
+        "x": 91,
+        "y": 28,
+        "w": 2,
+        "h": 3,
+        "color": "#c98a4a",
+        "kind": "warm"
+      },
+      {
+        "id": "win_near_07",
+        "x": 95,
+        "y": 40,
+        "w": 2,
+        "h": 3,
+        "color": "#9a5f3c",
+        "kind": "warm"
+      },
+      {
+        "id": "win_near_08",
+        "x": 95,
+        "y": 52,
+        "w": 2,
+        "h": 3,
+        "color": "#c98a4a",
+        "kind": "warm"
+      },
+      {
+        "id": "win_near_09",
+        "x": 124,
+        "y": 49,
+        "w": 3,
+        "h": 3,
+        "color": "#c98a4a",
+        "kind": "warm"
+      },
+      {
+        "id": "win_near_10",
+        "x": 157,
+        "y": 42,
+        "w": 2,
+        "h": 3,
+        "color": "#c98a4a",
+        "kind": "warm"
+      },
+      {
+        "id": "win_near_11",
+        "x": 203,
+        "y": 32,
+        "w": 2,
+        "h": 3,
+        "color": "#9a5f3c",
+        "kind": "warm"
+      },
+      {
+        "id": "win_near_12",
+        "x": 199,
+        "y": 50,
+        "w": 2,
+        "h": 3,
+        "color": "#c98a4a",
+        "kind": "warm"
+      },
+      {
+        "id": "win_near_13",
+        "x": 225,
+        "y": 56,
+        "w": 3,
+        "h": 3,
+        "color": "#c98a4a",
+        "kind": "warm"
+      },
+      {
+        "id": "win_near_14",
+        "x": 71,
+        "y": 53,
+        "w": 3,
+        "h": 3,
+        "color": "#9a5f3c",
+        "kind": "warm"
+      },
+      {
+        "id": "win_near_15",
+        "x": 249,
+        "y": 46,
+        "w": 2,
+        "h": 3,
+        "color": "#9a5f3c",
+        "kind": "warm"
+      },
+      {
+        "id": "shop_near",
+        "x": 56,
+        "y": 66,
+        "w": 14,
+        "h": 5,
+        "color": "#c98a4a",
+        "kind": "shop"
+      }
+    ]
+  },
+  "atlas": {
+    "file": "os-wallpaper.aseprite",
+    "size": [
+      256,
+      352
+    ],
+    "note": "every piece is also a slice of the same name; rect is [x, y, w, h] on its layer",
+    "pieces": {
+      "far": {
+        "layer": "far",
+        "rect": [
+          0,
+          0,
+          256,
+          48
+        ]
+      },
+      "far_lights": {
+        "layer": "far_lights",
+        "rect": [
+          0,
+          0,
+          256,
+          48
+        ]
+      },
+      "mid": {
+        "layer": "mid",
+        "rect": [
+          0,
+          48,
+          256,
+          64
+        ]
+      },
+      "mid_lights": {
+        "layer": "mid_lights",
+        "rect": [
+          0,
+          48,
+          256,
+          64
+        ]
+      },
+      "near": {
+        "layer": "near",
+        "rect": [
+          0,
+          112,
+          256,
+          80
+        ]
+      },
+      "near_lights": {
+        "layer": "near_lights",
+        "rect": [
+          0,
+          112,
+          256,
+          80
+        ]
+      },
+      "stars": {
+        "layer": "stars",
+        "rect": [
+          0,
+          192,
+          128,
+          96
+        ],
+        "frames": [
+          1,
+          2,
+          3
+        ]
+      },
+      "glow": {
+        "layer": "glow",
+        "rect": [
+          128,
+          192,
+          128,
+          128
+        ]
+      },
+      "cloud_a": {
+        "layer": "clouds",
+        "rect": [
+          0,
+          304,
+          48,
+          16
+        ]
+      },
+      "cloud_b": {
+        "layer": "clouds",
+        "rect": [
+          48,
+          304,
+          40,
+          10
+        ]
+      },
+      "cloud_c": {
+        "layer": "clouds",
+        "rect": [
+          88,
+          304,
+          28,
+          7
+        ]
+      },
+      "road": {
+        "layer": "road",
+        "rect": [
+          0,
+          320,
+          64,
+          24
+        ]
+      },
+      "lamp": {
+        "layer": "lamp",
+        "rect": [
+          64,
+          320,
+          8,
+          32
+        ],
+        "pivot": [
+          1,
+          31
+        ]
+      },
+      "lamp_cone": {
+        "layer": "lamp_cone",
+        "rect": [
+          72,
+          320,
+          24,
+          32
+        ]
+      },
+      "moon_new": {
+        "layer": "moon",
+        "rect": [
+          0,
+          288,
+          16,
+          16
+        ]
+      },
+      "moon_waxing_crescent": {
+        "layer": "moon",
+        "rect": [
+          16,
+          288,
+          16,
+          16
+        ]
+      },
+      "moon_first_quarter": {
+        "layer": "moon",
+        "rect": [
+          32,
+          288,
+          16,
+          16
+        ]
+      },
+      "moon_waxing_gibbous": {
+        "layer": "moon",
+        "rect": [
+          48,
+          288,
+          16,
+          16
+        ]
+      },
+      "moon_full": {
+        "layer": "moon",
+        "rect": [
+          64,
+          288,
+          16,
+          16
+        ]
+      },
+      "moon_waning_gibbous": {
+        "layer": "moon",
+        "rect": [
+          80,
+          288,
+          16,
+          16
+        ]
+      },
+      "moon_last_quarter": {
+        "layer": "moon",
+        "rect": [
+          96,
+          288,
+          16,
+          16
+        ]
+      },
+      "moon_waning_crescent": {
+        "layer": "moon",
+        "rect": [
+          112,
+          288,
+          16,
+          16
+        ]
+      },
+      "star_bright": {
+        "layer": "stars",
+        "rect": [
+          120,
+          308,
+          3,
+          3
+        ],
+        "frames": [
+          1,
+          2,
+          3
+        ],
+        "pivot": [
+          1,
+          1
+        ]
+      }
+    }
+  },
+  "frames": {
+    "twinkle": {
+      "tag": "twinkle",
+      "layer": "stars",
+      "durationsMs": [
+        220,
+        160,
+        290
+      ],
+      "pieces": [
+        "stars",
+        "star_bright"
+      ]
+    },
+    "windowSwitch": {
+      "everyMs": [
+        3000,
+        6000
+      ],
+      "note": "switch one or two entries of windows.* on or off at a time; light a different subset in each 256 px repetition to hide the period"
+    },
+    "cloudDrift": {
+      "stepPx": 1,
+      "note": "clouds drift 1 art px per step"
+    }
+  },
+  "notes": [
+    "All sprite pixels use the README portrait palette. The sky bands add three colours, listed in skyOnlyColors.",
+    "Sky bands are listed top to bottom; exactly one band per sky has rows \"fill\" and takes whatever height is left above the horizon (canvas height minus road height). A band with \"mix\" is a 1 px checkerboard of color and mix (color where (x + y) is even), used as an in-between step.",
+    "bandDither lists, for each transition row centred on a band join, the share of the lower colour drawn with a 4x4 Bayer matrix. It is 2 rows at 50 percent, as in SPEC 2.5, so the sky reads as a pixel gradient of thin steps. Uneven heights do the softening: thin bright bands near the horizon, one wide calm band on top.",
+    "recolor maps apply to the original pixel colours of a piece, all at once (not chained). A null target means transparent.",
+    "drawOrder is back to front. The glow sits behind the stars, moon and clouds so it never dithers over them.",
+    "Strips sit on the horizon: y = horizon - bottomAboveHorizon - piece height. far and mid tile mirrored (piece, flipped piece); near and road tile plainly; near must never be mirrored (rims are on the left side).",
+    "Lamps: x = x0 + n * spacing, foot at horizon + footBelowHorizon; the cone is drawn at (lamp x + coneDx, lamp y + coneDy), before the lamp.",
+    "Parallax max offsets are whole art px per layer; multiply by the eased pointer direction (-1..1) and round.",
+    "The corner glow is the night key light only (lamp light from just off screen); it is hidden in dusk, dawn and day so it never competes with a sunset.",
+    "Day: strips recolour to cool grey-blue and slate, lighter with distance (far #8fb9de, mid #9aa4a8, near #5a5e8c); window lights are off; the sky lightens to #e8e4dc haze at the horizon."
+  ],
+  "skyOnlyColors": {
+    "#201e3e": "deep violet-navy, top of the dusk sky",
+    "#62305c": "plum-magenta, first dusk step under the top",
+    "#9a88b4": "lilac, the dawn step between slate and peach",
+    "note": "Added for the procedural sky bands only (STYLE.md allows up to 3 additions). No sprite pixel uses them, so the .aseprite palette is unchanged."
+  }
+}

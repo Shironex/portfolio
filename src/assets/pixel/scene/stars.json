@@ -1,0 +1,39 @@
+{
+  "frames": [
+    {
+      "filename": "stars",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 768
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 128,
+        "h": 768
+      },
+      "sourceSize": {
+        "w": 128,
+        "h": 768
+      },
+      "duration": 100
+    }
+  ],
+  "meta": {
+    "app": "scripts/pixel/gen-wallpaper.mjs",
+    "image": "stars.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 128,
+      "h": 768
+    },
+    "scale": "1",
+    "frameTags": [],
+    "layers": [],
+    "slices": []
+  }
+}

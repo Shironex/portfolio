@@ -25,6 +25,14 @@ import { chromeCss, growGrid, sliceInsets } from '../gen-chrome.mjs'
 import { cursorsCss } from '../gen-cursors.mjs'
 import { glyphModuleSource, readGlyphs } from '../gen-glyphs.mjs'
 import { hasNamedFrames, sheetStylesheet, spriteCss } from '../gen-sprites.mjs'
+import {
+  initiallyLit,
+  lampTile,
+  mirroredX,
+  recolour,
+  skylineTile,
+  writeWallpaper,
+} from '../gen-wallpaper.mjs'
 import { PALETTE_HEX, PAPER_RECOLOUR, normalizeHex } from '../palette.mjs'
 import { optimizePng, samePixels } from '../png.mjs'
 import {
@@ -368,6 +376,30 @@ describe('check-art', () => {
       const result = await run(dir)
       assert.deepEqual(result.failures, [])
       assert.equal(result.files, 3)
+    } finally {
+      rmSync(dir, { recursive: true })
+    }
+  })
+
+  it('reads a companion JSON as data, and lets the wallpaper use sky colours', async () => {
+    const dir = await fixtureDir()
+    try {
+      writeFileSync(join(dir, 'fx', 'notes.json'), '{}')
+      const sky = [['#8fb9de', '#0b1420']]
+      await writePng(join(dir, 'fx', 'sky-fixture.png'), sky)
+      writeFileSync(
+        join(dir, 'fx', 'sky-fixture.json'),
+        JSON.stringify(sheetJson('sky-fixture', 2, 1))
+      )
+      const withSky = [
+        ...sources,
+        { name: 'sky-fixture', group: 'fx', companions: ['notes.json'] },
+      ]
+      const strict = (await run(dir, { sources: withSky })).failures.join('\n')
+      assert.doesNotMatch(strict, /notes\.json/)
+      assert.match(strict, /sky-fixture\.png: off-palette colour #8fb9de/)
+      withSky.at(-1).skyPalette = true
+      assert.deepEqual((await run(dir, { sources: withSky })).failures, [])
     } finally {
       rmSync(dir, { recursive: true })
     }
@@ -966,5 +998,80 @@ describe('gen-cursors', () => {
     const png = Buffer.from(/base64,([^"]+)"/.exec(grab)[1], 'base64')
     const { width, height } = await sharp(png).metadata()
     assert.deepEqual([width, height], [12, 12])
+  })
+})
+
+describe('gen-wallpaper', () => {
+  const layout = {
+    road: { height: 24 },
+    strips: {
+      far: { bottomAboveHorizon: 42 },
+      mid: { bottomAboveHorizon: 18 },
+      near: { bottomAboveHorizon: -4 },
+    },
+    lamps: { x0: 52, spacing: 176, footBelowHorizon: 3, coneDx: -6, coneDy: 0 },
+  }
+  const pieces = {
+    far: { rect: [0, 0, 256, 48] },
+    mid: { rect: [0, 48, 256, 64] },
+    near: { rect: [0, 112, 256, 80] },
+    lamp: { rect: [64, 320, 8, 32] },
+    lamp_cone: { rect: [72, 320, 24, 32] },
+  }
+
+  it('puts the static skyline from the far strip top to the canvas bottom', () => {
+    assert.deepEqual(skylineTile(layout, pieces), {
+      w: 512,
+      h: 114,
+      above: 90,
+      y: { far: 0, mid: 8, near: 14 },
+      road: 90,
+    })
+  })
+
+  it('places one lamp and its cone in a tile one spacing wide', () => {
+    assert.deepEqual(lampTile(layout, pieces), {
+      w: 176,
+      h: 32,
+      x: 46,
+      lamp: { x: 6, y: 0 },
+      cone: { x: 0, y: 0 },
+      bottom: 21,
+    })
+  })
+
+  it('recolours once, clears on null, and mirrors windows', () => {
+    const map = { '#000000': '#111111', '#111111': '#222222', '#333333': null }
+    assert.deepEqual(recolour([['#000000', '#111111', '#333333', null]], map), [
+      ['#111111', '#222222', null, null],
+    ])
+    assert.equal(mirroredX({ x: 0, w: 2 }, 256), 254)
+  })
+
+  it('keeps beacons and shops lit and varies the rest per repetition', () => {
+    assert.equal(initiallyLit({ kind: 'beacon' }, 3, 1), true)
+    assert.equal(initiallyLit({ kind: 'shop' }, 4, 0), true)
+    const pattern = (k) =>
+      Array.from({ length: 14 }, (_, i) => initiallyLit({ kind: 'warm' }, i, k))
+    assert.notDeepEqual(pattern(0), pattern(1))
+    assert.deepEqual(pattern(0), pattern(2))
+  })
+
+  it('has the committed scene up to date with the export', async () => {
+    const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..', '..')
+    const stale = await writeWallpaper(
+      join(root, 'src', 'assets', 'pixel', 'wallpaper'),
+      join(root, 'src', 'assets', 'pixel', 'scene'),
+      join(
+        root,
+        'src',
+        'components',
+        'os',
+        'wallpaper',
+        'scene-data.generated.ts'
+      ),
+      { check: true }
+    )
+    assert.deepEqual(stale, [])
   })
 })
