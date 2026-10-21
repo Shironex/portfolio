@@ -4,101 +4,109 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useMemo } from 'react'
 
-import { AlertTriangle, ArrowLeft, Home } from 'lucide-react'
+import { buttonVariants } from '@/components/ui/button'
 
 import { Kbd } from '@/components/os/kbd'
+import { WallpaperStatic } from '@/components/os/wallpaper/wallpaper-static'
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
+import neon from '@/assets/pixel/neon/os-neon-404.png'
 import { useHotkeys } from '@/hooks/use-hotkeys'
+import '@/styles/sprites/os-neon-404.css'
 
-/** The themed 404 window. Client-side: it reads the path and binds Escape. */
+/**
+ * The 404 window (SPEC 1.5), over the wallpaper's static frame: a pixel
+ * window whose heading is the neon "404" sign at 3x. The sign flickers on
+ * its drawn timing (3200, 90 and 150 ms) and holds its first frame under
+ * reduced motion and the Pause setting (`px-rest-paused`). Client-side: it
+ * reads the path and binds Escape.
+ */
 export function NotFoundScreen() {
   const router = useRouter()
   const pathname = usePathname()
+  const path = `.${pathname || '/unknown'}`
 
   useHotkeys(useMemo(() => ({ escape: () => router.push('/') }), [router]))
 
   return (
-    <main className="from-sky-0 via-sky-1 to-sky-2 font-body relative min-h-dvh overflow-hidden bg-linear-to-br">
-      <div className="relative flex min-h-dvh items-center justify-center px-8 py-24">
+    <main className="relative isolate min-h-dvh overflow-hidden bg-(--ground)">
+      <div aria-hidden className="absolute inset-0 -z-1 max-md:hidden">
+        <WallpaperStatic />
+      </div>
+      <div className="flex min-h-dvh items-center justify-center px-4 py-12">
         <div
           role="dialog"
           aria-labelledby="not-found-title"
           aria-describedby="not-found-desc"
-          className="border-rule-2 bg-surf-solid shadow-elev-3 motion-safe:animate-win-open w-full max-w-lg overflow-hidden rounded-2xl border"
+          className="px-window-focused motion-safe:animate-win-open flex w-full max-w-[calc(280*var(--px))] flex-col"
         >
-          <div className="border-rule bg-surf-soft flex items-center border-b">
-            <div className="flex flex-1 items-center gap-4 px-6 py-4">
-              <AlertTriangle
-                aria-hidden
-                className="text-peach-icon size-7"
-                strokeWidth={2}
-              />
-              <span className="text-ink font-mono text-xs font-bold">
-                error.sys - 404
-              </span>
-            </div>
+          <div className="os-night px-titlebar-focused flex h-16 items-center gap-3 pl-6 pointer-coarse:h-22">
+            <PixelIcon name="alert" className="text-(--lamp)" />
+            <span className="text-title flex-1 truncate text-(--ink-hi)">
+              error.sys · 404
+            </span>
             <Link
               href="/"
               aria-label="Close and return to desktop"
-              className="focus-ring text-ink-2 hover:bg-danger-fill hover:text-danger-fill-ink flex h-16 w-20 items-center justify-center text-xs transition-colors pointer-coarse:h-(--target) pointer-coarse:w-24"
+              className="focus-ring flex h-12 w-14 items-center justify-center text-(--ink) hover:bg-(--danger) pointer-coarse:size-(--target)"
             >
-              <span aria-hidden>✕</span>
+              <PixelIcon name="close" />
             </Link>
           </div>
 
-          <div className="px-12 py-12">
-            <h1
-              id="not-found-title"
-              className="font-display text-ink mb-2 text-5xl font-bold"
-            >
-              404
+          <div className="flex flex-col gap-6 p-8">
+            <h1 id="not-found-title" className="flex">
+              <span className="sr-only">404</span>
+              <span aria-hidden className="px-scale-3 block">
+                <span
+                  className="os-night px-os-neon-404 px-os-neon-404-flicker ambient-loop px-rest-paused block animate-(--px-loop)"
+                  style={{ backgroundImage: `url(${neon.src})` }}
+                />
+              </span>
             </h1>
-            <p id="not-found-desc" className="font-body text-ink-2 mb-12">
+            <p id="not-found-desc" className="text-body text-(--ink)">
               No such path in this filesystem.
             </p>
 
-            <div className="border-rule bg-surf-0 text-ink-2 mb-12 rounded-lg border px-6 py-6 font-mono text-xs">
+            <div className="os-night px-well text-label flex flex-col gap-1 px-4 pt-3 pb-4 text-(--ink)">
               <div className="break-all">
-                <span className="text-miku-2-ink font-bold">~/kacper</span>
-                <span aria-hidden className="text-miku-ink mx-3 font-bold">
+                <span className="text-(--link)">~/kacper</span>
+                <span aria-hidden className="mx-2 text-(--lamp)">
                   ❯
                 </span>
-                <span className="text-ink">cd .{pathname || '/unknown'}</span>
+                <span>cd {path}</span>
               </div>
-              <div className="text-peach-ink mt-2">
-                cd: no such file or directory: .{pathname || '/unknown'}
+              <div className="break-all text-(--error)">
+                cd: no such file or directory: {path}
               </div>
-              <div className="mt-4">
-                <span className="text-miku-2-ink font-bold">~/kacper</span>
-                <span aria-hidden className="text-miku-ink mx-3 font-bold">
+              <div>
+                <span className="text-(--link)">~/kacper</span>
+                <span aria-hidden className="mx-2 text-(--lamp)">
                   ❯
                 </span>
                 <span
                   aria-hidden
-                  className="text-miku-ink motion-safe:animate-blink ml-1"
+                  className="ambient-loop motion-safe:animate-blink text-(--lamp)"
                 >
                   ▌
                 </span>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4">
-              <Link
-                href="/"
-                className="focus-ring bg-miku text-cloud hover:bg-miku-2 inline-flex items-center gap-4 rounded-lg px-8 py-4 text-sm font-semibold transition-colors"
-              >
-                <Home aria-hidden className="size-8" />
+            <div className="flex flex-wrap items-center gap-3">
+              <Link href="/" className={buttonVariants({ variant: 'primary' })}>
+                <PixelIcon name="home" />
                 Back to desktop
               </Link>
               <button
                 type="button"
                 onClick={() => router.back()}
-                className="focus-ring border-rule-2 bg-surf-0 text-ink hover:bg-surf-1 inline-flex items-center gap-4 rounded-lg border px-8 py-4 text-sm font-semibold transition-colors"
+                className={buttonVariants({ variant: 'secondary' })}
               >
-                <ArrowLeft aria-hidden className="size-8" />
+                <PixelIcon name="arrow-left" />
                 Go back
               </button>
-              <span className="text-ink-4 ml-auto flex items-center gap-3 font-mono text-[11px] pointer-coarse:hidden">
+              <span className="text-label ml-auto flex items-center gap-2 text-(--meta) pointer-coarse:hidden">
                 <Kbd>Esc</Kbd>
                 <span>to return home</span>
               </span>

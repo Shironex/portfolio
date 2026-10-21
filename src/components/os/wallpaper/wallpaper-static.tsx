@@ -22,6 +22,9 @@ import {
   STATIC_TILES,
 } from './scene-data.generated'
 import { staticSkyRows } from './sky'
+// Its own rules: the 404 screen and the static project page show this frame
+// with no live wallpaper to bring them.
+import './wallpaper.css'
 
 /** `n` art px as a CSS length. */
 const art = (n: number) => `calc(${n} * var(--px))`
