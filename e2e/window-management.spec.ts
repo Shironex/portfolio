@@ -7,6 +7,7 @@ import {
   MOBILE_VIEWPORT,
   areaFor,
   launch,
+  location,
   mobileReady,
   mockFeeds,
   openDesktop,
@@ -356,6 +357,9 @@ test.describe('session restore', () => {
       .poll(async () => (await zIndexOf(projects)) > (await zIndexOf(about)))
       .toBe(true)
     const projectsRect = await rectOf(projects)
+    // The address bar follows the top window once focus settles; a reload
+    // before that would reopen the window it still names, as a deep link.
+    await expect.poll(() => location(page)).toBe('/?open=projects')
 
     await page.reload()
 
