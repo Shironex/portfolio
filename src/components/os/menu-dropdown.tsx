@@ -25,6 +25,11 @@ export interface MenuDropdownItem {
   icon?: ReactNode
   onClick: () => void
   disabled?: boolean
+  /**
+   * Makes the item a `menuitemcheckbox` (a View setting): the box glyph
+   * shows the state, ticked or empty, and `aria-checked` says it.
+   */
+  checked?: boolean
 }
 
 export interface MenuDropdownSection {
@@ -70,14 +75,34 @@ export const MENU_TRIGGER_ATTRIBUTE = 'data-menu-trigger'
 /** Role of a radio item inside a menu (a palette swatch). */
 export const MENU_RADIO_ROLE = 'menuitemradio'
 
+/** Role of a checkbox item inside a menu (a View setting). */
+export const MENU_CHECKBOX_ROLE = 'menuitemcheckbox'
+
 /** Role of the element that groups the radio items of one choice. */
 export const MENU_RADIO_GROUP_ROLE = 'group'
 
 /**
- * Stops of a menu for Up/Down: every enabled item, and for a radio group only
- * its checked item (Left/Right move inside the group).
+ * Stops of a menu for Up/Down: every enabled item and checkbox item, and for
+ * a radio group only its checked item (Left/Right move inside the group).
  */
-const MENU_STOP_SELECTOR = `[role="menuitem"]:not(:disabled), [role="${MENU_RADIO_ROLE}"][aria-checked="true"]`
+const MENU_STOP_SELECTOR = `:is([role="menuitem"], [role="${MENU_CHECKBOX_ROLE}"]):not(:disabled), [role="${MENU_RADIO_ROLE}"][aria-checked="true"]`
+
+/**
+ * The state of a checkbox item: a 10x10 art px box with a 1 art px frame in
+ * the row's ink, holding the lamp check while it is on. The frame is an
+ * inset box shadow, which stays one art px where a border would round.
+ */
+function CheckBox({ checked }: { checked: boolean }) {
+  return (
+    <span
+      aria-hidden
+      data-menu-check={checked ? 'on' : 'off'}
+      className="flex size-10 flex-none items-center justify-center shadow-[inset_0_0_0_var(--px)_currentColor]"
+    >
+      {checked && <PixelIcon name="check" className="text-(--heading)" />}
+    </span>
+  )
+}
 
 /** The step a Left/Right key asks for, or `null` for any other key. */
 function stepFromKey(key: string): MenuStep | null {
@@ -107,7 +132,9 @@ function menuStops(menu: HTMLElement | null): HTMLElement[] {
  * Rendered in place under the trigger; `z-menu` only has to clear the bar.
  * The popover 9-slice, night chrome like the bar: the active row is the
  * selection teal with a lamp `❯` in front, separators are dotted 1 art px
- * rules and shortcuts are keycaps.
+ * rules and shortcuts are keycaps. A checkbox item shows its state in a box
+ * glyph, never by colour alone, and activating it closes the menu like any
+ * item does (the announcer says the outcome).
  */
 export function MenuDropdown<Id extends string>({
   id,
@@ -282,7 +309,12 @@ export function MenuDropdown<Id extends string>({
                   <button
                     key={`${sectionIndex}-${itemIndex}-${item.label}`}
                     type="button"
-                    role="menuitem"
+                    role={
+                      item.checked === undefined
+                        ? 'menuitem'
+                        : MENU_CHECKBOX_ROLE
+                    }
+                    aria-checked={item.checked}
                     tabIndex={-1}
                     disabled={item.disabled}
                     aria-keyshortcuts={item.keyShortcuts}
@@ -299,6 +331,9 @@ export function MenuDropdown<Id extends string>({
                       name="chevron-right"
                       className="invisible text-(--heading) group-hover:visible group-focus-visible:visible group-disabled:invisible"
                     />
+                    {item.checked !== undefined && (
+                      <CheckBox checked={item.checked} />
+                    )}
                     {item.icon && (
                       <span aria-hidden className="flex text-(--meta)">
                         {item.icon}

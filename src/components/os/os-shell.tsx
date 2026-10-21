@@ -103,7 +103,8 @@ const BARE = { [DESKTOP_BARE_ATTRIBUTE]: '' }
  * layer does not go through this component at all (`AmbientPause`).
  *
  * The boot splash, cmd palette, and noscript fallback are shared across both
- * modes, and so is the live region that announces keyboard window snaps.
+ * modes, and so is the live region (`Announcer`) that says what has no
+ * visible text of its own: keyboard window snaps and the View settings.
  * Hotkeys stay bound in both (⌘K still works on tablets with a keyboard).
  *
  * `initialWindow` lets a server route boot the shell with a window already
@@ -210,62 +211,62 @@ export default function OsShell({ initialWindow }: OsShellProps) {
       }}
       className="text-ink from-sky-0 via-sky-1 to-sky-2 fixed inset-0 overflow-clip bg-linear-to-br"
     >
-      <AmbientPause rootRef={rootRef} covered={desktopCovered} />
-      {onProjectRoute && <NoscriptStaticPage />}
-      <Boot initialWindow={initialWindow} />
-      {showMobile && (
-        <div className="md:hidden">
-          <MobileShell
-            os={os}
-            onOpenCmd={openCmd}
-            onCopyLink={copyLink}
-            theme={theme}
-            onToggleTheme={toggleTheme}
-            sky={sky}
-            onSelectSky={setSky}
-            heroHeadingLevel={heroHeadingLevel}
-            overStaticLayer={onProjectRoute}
-          />
-        </div>
-      )}
-      {showDesktop && (
-        <div className="max-md:hidden">
-          <MenuBar
-            onOpenCmd={openCmd}
-            onLaunchApp={launchApp}
-            onCloseAll={os.closeAll}
-            theme={theme}
-            onToggleTheme={toggleTheme}
-            sky={sky}
-            onSelectSky={setSky}
-          />
+      <Announcer>
+        <AmbientPause rootRef={rootRef} covered={desktopCovered} />
+        {onProjectRoute && <NoscriptStaticPage />}
+        <Boot initialWindow={initialWindow} />
+        {showMobile && (
+          <div className="md:hidden">
+            <MobileShell
+              os={os}
+              onOpenCmd={openCmd}
+              onCopyLink={copyLink}
+              theme={theme}
+              onToggleTheme={toggleTheme}
+              sky={sky}
+              onSelectSky={setSky}
+              heroHeadingLevel={heroHeadingLevel}
+              overStaticLayer={onProjectRoute}
+            />
+          </div>
+        )}
+        {showDesktop && (
+          <div className="max-md:hidden">
+            <MenuBar
+              onOpenCmd={openCmd}
+              onLaunchApp={launchApp}
+              onCloseAll={os.closeAll}
+              theme={theme}
+              onToggleTheme={toggleTheme}
+              sky={sky}
+              onSelectSky={setSky}
+            />
 
-          <DesktopCanvas live={sky === 'live'}>
-            <ShellMain overStaticLayer={onProjectRoute}>
-              <DesktopIcons onLaunch={launchApp} />
+            <DesktopCanvas live={sky === 'live'}>
+              <ShellMain overStaticLayer={onProjectRoute}>
+                <DesktopIcons onLaunch={launchApp} />
 
-              <div {...BARE} className={DESKTOP_CONTENT_CLASS}>
-                <div {...BARE} className={DESKTOP_ROW_CLASS}>
-                  <HeroPlate
-                    onOpenCmd={openCmd}
-                    onOpenContact={openContact}
-                    headingLevel={heroHeadingLevel}
-                    className={DESKTOP_HERO_CLASS}
-                  />
-                  <div className={DESKTOP_PANELS_CLASS}>
-                    <div className={DESKTOP_TERMINAL_CLASS}>
-                      <TerminalPanel />
+                <div {...BARE} className={DESKTOP_CONTENT_CLASS}>
+                  <div {...BARE} className={DESKTOP_ROW_CLASS}>
+                    <HeroPlate
+                      onOpenCmd={openCmd}
+                      onOpenContact={openContact}
+                      headingLevel={heroHeadingLevel}
+                      className={DESKTOP_HERO_CLASS}
+                    />
+                    <div className={DESKTOP_PANELS_CLASS}>
+                      <div className={DESKTOP_TERMINAL_CLASS}>
+                        <TerminalPanel />
+                      </div>
+                      <FeaturedPanel onOpenProject={launchProject} />
                     </div>
-                    <FeaturedPanel onOpenProject={launchProject} />
                   </div>
                 </div>
-              </div>
-            </ShellMain>
-          </DesktopCanvas>
+              </ShellMain>
+            </DesktopCanvas>
 
-          <Announcer>
             {/* The windows layer. Zero-sized, so it never covers the desktop;
-                `isolate` keeps every window's z-index inside it. */}
+              `isolate` keeps every window's z-index inside it. */}
             <div className="z-windows absolute top-0 left-0 isolate size-0">
               {os.windows.map((w) => (
                 <Window
@@ -285,42 +286,42 @@ export default function OsShell({ initialWindow }: OsShellProps) {
                 />
               ))}
             </div>
-          </Announcer>
 
-          <Taskbar
-            openIds={stackIds.openIds}
-            minimizedIds={stackIds.minimizedIds}
-            topmostId={os.topmostId}
-            onLaunch={launchApp}
-            onActivate={activateWindow}
-            onOpenStart={openStart}
-            onOpenCmd={openCmd}
-          />
-
-          {startOpen && (
-            <StartMenu
-              onClose={closeStart}
+            <Taskbar
+              openIds={stackIds.openIds}
+              minimizedIds={stackIds.minimizedIds}
+              topmostId={os.topmostId}
               onLaunch={launchApp}
-              onOpenProject={launchProject}
+              onActivate={activateWindow}
+              onOpenStart={openStart}
               onOpenCmd={openCmd}
             />
-          )}
-        </div>
-      )}
 
-      {cmdOpen && (
-        <CmdPalette
-          onClose={closeCmd}
-          onLaunch={launchApp}
-          onOpenProject={launchProject}
-          theme={theme}
-          onToggleTheme={toggleTheme}
-          onCloseAll={os.closeAll}
-          onCopyLink={copyTopmostLink}
-          sky={sky}
-          onSelectSky={setSky}
-        />
-      )}
+            {startOpen && (
+              <StartMenu
+                onClose={closeStart}
+                onLaunch={launchApp}
+                onOpenProject={launchProject}
+                onOpenCmd={openCmd}
+              />
+            )}
+          </div>
+        )}
+
+        {cmdOpen && (
+          <CmdPalette
+            onClose={closeCmd}
+            onLaunch={launchApp}
+            onOpenProject={launchProject}
+            theme={theme}
+            onToggleTheme={toggleTheme}
+            onCloseAll={os.closeAll}
+            onCopyLink={copyTopmostLink}
+            sky={sky}
+            onSelectSky={setSky}
+          />
+        )}
+      </Announcer>
     </div>
   )
 }

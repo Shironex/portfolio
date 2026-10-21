@@ -361,7 +361,9 @@ test.describe('menubar', () => {
     // The sky row is one stop; Left/Right stay inside it.
     await page.keyboard.press('ArrowDown')
     const swatches = viewMenu.getByRole('menuitemradio')
-    await expect(viewMenu.locator('[aria-checked="true"]')).toBeFocused()
+    await expect(
+      viewMenu.locator('[role="menuitemradio"][aria-checked="true"]')
+    ).toBeFocused()
     await page.keyboard.press('ArrowRight')
     await expect(viewMenu).toBeVisible()
     expect(
@@ -371,6 +373,13 @@ test.describe('menubar', () => {
           document.activeElement?.getAttribute('aria-checked') === 'false'
       )
     ).toBe(true)
+    // Then the settings, each a checkbox item of its own.
+    await page.keyboard.press('ArrowDown')
+    await expect(
+      viewMenu.getByRole('menuitemcheckbox', { name: 'Pets' })
+    ).toBeFocused()
+    await page.keyboard.press('ArrowDown')
+    await page.keyboard.press('ArrowDown')
     await page.keyboard.press('ArrowDown')
     await expect(
       viewMenu.getByRole('menuitem', { name: 'Open about.me' })

@@ -11,6 +11,7 @@ import {
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
 import { SKIES, type SkyId } from '@/lib/os/appearance'
+import { PREF_COPY, PREF_IDS, type PrefId } from '@/lib/os/prefs'
 import { cn, onBackdropDismiss } from '@/lib/utils'
 import { copyToClipboard } from '@/lib/utils/copy-to-clipboard'
 import { pluralWord } from '@/lib/utils/plural'
@@ -18,6 +19,7 @@ import { pluralWord } from '@/lib/utils/plural'
 import { projectsData } from '@/data/projects-data'
 import { useEscapeLayer } from '@/hooks/use-escape-layer'
 import { useFocusTrap } from '@/hooks/use-focus-trap'
+import { type Prefs, usePrefs } from '@/hooks/use-prefs'
 import { type Theme, lampLabel } from '@/hooks/use-theme'
 import type { Project } from '@/types'
 
@@ -61,6 +63,15 @@ function actionIcon(name: PixelIconName, accent: AccentRole): ReactNode {
   )
 }
 
+/** The glyph and accent of a setting's action, by what it does next. */
+function prefIcon(id: PrefId, prefs: Prefs): ReactNode {
+  if (id === 'pets') return actionIcon('paw', 'bright')
+  if (id === 'motion') {
+    return actionIcon(prefs.motion ? 'play' : 'pause', 'primary')
+  }
+  return actionIcon('book', 'deep')
+}
+
 /**
  * A sky's 12x8 art px thumbnail in the 16x16 slot, so ⌘K previews every sky
  * at once. A 1 art px navy outline keeps the day sky off a paper row.
@@ -97,6 +108,7 @@ export function CmdPalette({
   const inputRef = useRef<HTMLInputElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const listId = useId()
+  const { prefs, toggle: togglePref } = usePrefs()
 
   useFocusTrap(panelRef, true)
   useEscapeLayer('palette', onClose)
@@ -168,6 +180,20 @@ export function CmdPalette({
         },
         search: 'close all windows clear desktop',
       },
+      // The View settings, each named by what it does now ("Hide pets").
+      ...PREF_IDS.map((id): PaletteItem => {
+        const label = PREF_COPY[id].action[prefs[id] ? 0 : 1]
+        return {
+          ic: prefIcon(id, prefs),
+          label,
+          hint: 'setting',
+          onClick: () => {
+            togglePref(id)
+            onClose()
+          },
+          search: `${label} ${PREF_COPY[id].search}`.toLowerCase(),
+        }
+      }),
     ]
 
     const skyItems: PaletteItem[] = SKIES.map((s) => ({
@@ -214,6 +240,8 @@ export function CmdPalette({
     onCopyLink,
     sky,
     onSelectSky,
+    prefs,
+    togglePref,
   ])
 
   useEffect(() => {

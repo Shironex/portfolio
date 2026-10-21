@@ -35,6 +35,22 @@ export const SKY_STORAGE_KEY = 'shiroos:sky'
 export const TEXT_STORAGE_KEY = 'shiroos:text'
 /** `paused`: every ambient loop holds still (`data-motion` on `<html>`). */
 export const MOTION_STORAGE_KEY = 'shiroos:motion'
+/** `hidden`: the desktop pets stay away (`data-pets` on `<html>`). */
+export const PETS_STORAGE_KEY = 'shiroos:pets'
+
+/**
+ * The settings kept as a flag on <html> (SPEC 2.3 and 3.6): while one is
+ * set, `data-<id>` holds its value and storage holds the same; otherwise
+ * both are absent. The boot script applies them before first paint and
+ * `prefs.ts` reads and changes them after.
+ */
+export const SETTING_FLAGS = {
+  text: { key: TEXT_STORAGE_KEY, value: 'readable' },
+  motion: { key: MOTION_STORAGE_KEY, value: 'paused' },
+  pets: { key: PETS_STORAGE_KEY, value: 'hidden' },
+} as const
+
+export type SettingId = keyof typeof SETTING_FLAGS
 
 export const DEFAULT_APPEARANCE: Appearance = {
   mode: 'dark',
@@ -139,8 +155,9 @@ export function applyAppearance(appearance: Appearance) {
  *     re-runs it and fires `shiroos:px` on window for `src/lib/os/pixel.ts`.
  *   - the Lamp (`dark` class, night by default, which is also the server
  *     render and the no-JavaScript page), the sky (`data-sky`; Live resolves
- *     to the part of the day in Warsaw), readable text (`data-text`) and
- *     paused motion (`data-motion`).
+ *     to the part of the day in Warsaw), readable text (`data-text`), paused
+ *     motion (`data-motion`) and hidden pets (`data-pets`); `prefs.ts` owns
+ *     the last three from then on.
  * A throwing localStorage (private mode, blocked cookies) leaves the night
  * defaults in place.
  */
@@ -158,8 +175,10 @@ export const APPEARANCE_BOOT_SCRIPT = [
   `if(localStorage.getItem(${JSON.stringify(MODE_STORAGE_KEY)})==='light')m='light';`,
   `var y=localStorage.getItem(${JSON.stringify(SKY_STORAGE_KEY)});`,
   `if(${JSON.stringify(SKY_IDS)}.indexOf(y)>-1)k=y;`,
-  `if(localStorage.getItem(${JSON.stringify(TEXT_STORAGE_KEY)})==='readable')r.dataset.text='readable';`,
-  `if(localStorage.getItem(${JSON.stringify(MOTION_STORAGE_KEY)})==='paused')r.dataset.motion='paused';`,
+  ...Object.entries(SETTING_FLAGS).map(
+    ([id, { key, value }]) =>
+      `if(localStorage.getItem(${JSON.stringify(key)})===${JSON.stringify(value)})r.dataset.${id}=${JSON.stringify(value)};`
+  ),
   '}catch(e){}',
   "r.classList.toggle('dark',m==='dark');",
   "if(k==='live'){var t;try{t=+new Intl.DateTimeFormat('en-GB',",

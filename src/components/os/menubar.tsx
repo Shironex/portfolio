@@ -7,9 +7,11 @@ import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
 import { EMAIL_CONTACT, GITHUB_URL } from '@/lib/constants'
 import type { SkyId } from '@/lib/os/appearance'
+import { PREF_COPY, PREF_IDS } from '@/lib/os/prefs'
 import { cn } from '@/lib/utils'
 import { copyToClipboard } from '@/lib/utils/copy-to-clipboard'
 
+import { usePrefs } from '@/hooks/use-prefs'
 import { type Theme, lampLabel } from '@/hooks/use-theme'
 
 import { Clock } from './clock'
@@ -55,6 +57,10 @@ interface MenuBarProps {
  * Left/Right move between the menus (wrapping) and, when a menu is open, open
  * the neighbour instead. The keys inside a menu are in `MenuDropdown`.
  *
+ * The View menu holds the Lamp, the sky and the three settings (Pets, Pause
+ * animations, Readable text) as checkbox items; the settings come from
+ * `usePrefs`, so the bar re-renders when one changes and the shell does not.
+ *
  * Memoized: the shell re-renders on every frame of a window drag, and none
  * of that reaches the bar.
  */
@@ -74,6 +80,7 @@ function MenuBarImpl({
   // The one menu in the tab order.
   const [rovingId, setRovingId] = useState<DropdownId>(MENU_IDS[0])
   const barRef = useRef<HTMLDivElement>(null)
+  const { prefs, toggle: togglePref } = usePrefs()
 
   // Closes only the menu that asks, so a menu losing focus to its neighbour
   // does not close the neighbour that just opened.
@@ -174,6 +181,15 @@ function MenuBarImpl({
     {
       divider: true,
       node: <SkyPicker value={sky} onSelect={onSelectSky} inMenu />,
+    },
+    {
+      // Pets, Pause animations, Readable text: checkbox items.
+      divider: true,
+      items: PREF_IDS.map((id) => ({
+        label: PREF_COPY[id].menu,
+        checked: prefs[id],
+        onClick: () => togglePref(id),
+      })),
     },
     {
       divider: true,
