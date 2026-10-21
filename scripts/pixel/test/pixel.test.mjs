@@ -24,6 +24,7 @@ import { appIconLayout, appIconSheetJson } from '../gen-app-icons.mjs'
 import { chromeCss, growGrid, sliceInsets } from '../gen-chrome.mjs'
 import { cursorsCss } from '../gen-cursors.mjs'
 import { glyphModuleSource, readGlyphs } from '../gen-glyphs.mjs'
+import { sheetData } from '../gen-pets.mjs'
 import {
   README_ICON_PROJECTS,
   TILE_TAG,
@@ -1235,5 +1236,41 @@ describe('gen-wallpaper', () => {
       { check: true }
     )
     assert.deepEqual(stale, [])
+  })
+})
+
+describe('gen-pets', () => {
+  it('keeps each tag as sheet corners and durations, in play order', () => {
+    const data = readSheetJson(fixture('sheet-fixture'))
+    data.meta.slices = [
+      {
+        name: 'pivot',
+        keys: [
+          {
+            frame: 0,
+            bounds: { x: 2, y: 3, w: 1, h: 1 },
+            pivot: { x: 0, y: 1 },
+          },
+        ],
+      },
+    ]
+    const out = sheetData(data, ['pivot'])
+    assert.deepEqual(out.frame, { w: 4, h: 4 })
+    // The slice pivot is a point: bounds plus pivot.
+    assert.deepEqual(out.pivot, { x: 2, y: 4 })
+    // blink: frames 0, 1, 2 at 100, 250, 150 ms.
+    assert.deepEqual(out.tags.blink.frames, [
+      [0, 0, 100],
+      [4, 0, 250],
+      [0, 4, 150],
+    ])
+    assert.equal(out.tags.blink.once, false)
+    // pulse plays pingpong over frames 2 and 3: two frames, no end repeated.
+    assert.equal(out.tags.pulse.frames.length, 2)
+  })
+
+  it('needs every slice the code reads', () => {
+    const data = readSheetJson(fixture('sheet-fixture'))
+    assert.throws(() => sheetData(data, ['hitbox']), /no "hitbox" slice/)
   })
 })

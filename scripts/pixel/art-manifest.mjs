@@ -156,7 +156,8 @@ export const SPRITE_CSS_DIR = 'src/styles/sprites'
  * Generated outputs and their raw-byte budgets (SPEC 4.6). The sprite loops
  * are one file per sheet, each loaded by the component that shows the sheet,
  * so each has a budget of its own; `check-art.mjs` fails a sprite file that
- * has none.
+ * has none. The pet's hand-written stylesheet and its generated sheet data
+ * load in the pet's late chunk and are held here too.
  */
 export const GENERATED_BUDGETS = [
   { file: 'src/styles/pixel-chrome.css', bytes: 24 * KB },
@@ -173,4 +174,9 @@ export const GENERATED_BUDGETS = [
   { file: `${SPRITE_CSS_DIR}/minime.css`, bytes: 3 * KB },
   { file: `${SPRITE_CSS_DIR}/mascot-pet.css`, bytes: 2 * KB },
   { file: `${SPRITE_CSS_DIR}/minime-ride.css`, bytes: 1 * KB },
+  { file: 'src/components/os/pets/pets.css', bytes: 2 * KB },
+  {
+    file: 'src/components/os/pets/sheet-data.generated.ts',
+    bytes: 4 * KB,
+  },
 ]
