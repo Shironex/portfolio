@@ -30,12 +30,14 @@ const ART_NAME: Record<AppId, string> = {
 /**
  * Plays the 32 px loop while the control around the icon (its `group`) is
  * hovered or focused from the keyboard, and rests on the still otherwise.
- * The reduced motion rule cuts it to the still. It is not an `ambient-loop`:
- * the user starts it (SPEC 3.6), and the Start menu, which pauses the
- * desktop's loops, shows these icons itself.
+ * The reduced motion rule and the Pause animations setting hold it on the
+ * still (`px-hover-loop` in globals.css, decision 2 of SPEC section 10). It
+ * is not an `ambient-loop`: the automatic pauses (the Start menu, a
+ * maximized window) leave it running, so the Start menu's own pinned icons
+ * still play.
  */
-const HOVER_LOOP_CLASS =
-  'group-hover:animate-(--px-loop) group-focus-visible:animate-(--px-loop)'
+export const HOVER_LOOP_CLASS =
+  'px-hover-loop group-hover:animate-(--px-loop) group-focus-visible:animate-(--px-loop)'
 
 interface AppIconProps {
   id: AppId

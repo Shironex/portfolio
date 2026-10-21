@@ -698,6 +698,16 @@
 }
 
 /*
+ * Loops the user starts by hovering or focusing (app and project icons)
+ * keep playing under the automatic pauses above, but the Pause animations
+ * setting holds them on their still, as reduced motion does (decision 2 of
+ * SPEC section 10). Unlayered, so it wins over the hover utility.
+ */
+[data-motion='paused'] .px-hover-loop {
+  animation: none;
+}
+
+/*
  * Theme switch (`useTheme`): the default root transition, a plain opacity
  * cross-fade of two snapshots with no geometry in it, shortened from the
  * browser's 250ms and stepped in four frames.
