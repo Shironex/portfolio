@@ -102,8 +102,3 @@ export function schedule(task: TickerTask, due?: number): TickerHandle {
     },
   }
 }
-
-/** What the ticker is doing: for the motion spec and the debug probe. */
-export function tickerState(): { tasks: number; waiting: boolean } {
-  return { tasks: entries.size, waiting: frame !== null || timer !== null }
-}

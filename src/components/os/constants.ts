@@ -62,17 +62,6 @@ export const INLINE_LINK_CLASS =
   'focus-ring text-(--link) underline decoration-(length:--px) underline-offset-[calc(2*var(--px))] hover:text-(--heading)'
 
 /**
- * Small uppercase label over a section (Departure Mono, `text-label`): the
- * one eyebrow of the shell. Callers add the colour and the spacing.
- */
-export const EYEBROW_CLASS = 'text-label uppercase'
-
-/**
- * Small uppercase label of a badge or a legend. Callers add the colour.
- */
-export const LABEL_CLASS = 'text-label uppercase'
-
-/**
  * Loading placeholder: the stepped dither of the skeleton tile, held by the
  * automatic pauses and the Pause setting. Callers add the size.
  */

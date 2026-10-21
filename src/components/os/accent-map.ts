@@ -1,7 +1,3 @@
-import type { CSSProperties } from 'react'
-
-import { TINT } from '@/lib/os/tokens.generated'
-
 /**
  * Accent roles, not colours.
  *
@@ -57,23 +53,6 @@ export function accentIcon(role: AccentRole): string {
  */
 export function accentTint(role: AccentRole, percent: number): string {
   return `color-mix(in oklab, var(${ROLE_VAR[role].fill}) ${percent}%, transparent)`
-}
-
-/**
- * A tint as a `background-image`, to lay over an opaque `background-color`:
- * the fill of a badge that must not let a glow behind it through.
- */
-export function accentTintLayer(role: AccentRole, percent: number): string {
-  const tint = accentTint(role, percent)
-  return `linear-gradient(${tint}, ${tint})`
-}
-
-/** The tile behind an app icon: the role's tint with its icon colour on it. */
-export function accentTileStyle(role: AccentRole): CSSProperties {
-  return {
-    backgroundColor: accentTint(role, TINT.icon),
-    color: accentIcon(role),
-  }
 }
 
 /**

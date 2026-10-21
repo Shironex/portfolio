@@ -68,13 +68,6 @@ export const PET_HITBOX: Record<PetTag, Box> = {
  */
 export const SIT_HALF_WIDTH = PET_FRAME.w / 2
 
-export interface PetFrame {
-  /** The frame's corner on the sheet, in art px. */
-  x: number
-  y: number
-  ms: number
-}
-
 /** The frames of a tag in the order they play. */
 export function petFrames(
   tag: PetTag
