@@ -6,6 +6,8 @@ import { cn } from '@/lib/utils'
 
 import sheet16 from '@/assets/pixel/icons/app-icons-16.png'
 import sheet32 from '@/assets/pixel/icons/app-icons-32.png'
+import '@/styles/sprites/app-icons-16.css'
+import '@/styles/sprites/app-icons-32.css'
 
 import { PixelIcon } from './pixel-icon.generated'
 
@@ -14,7 +16,7 @@ export type AppIconSize = 16 | 32
 
 /**
  * The name each app is drawn under in `os-app-icons.aseprite` (its slices
- * and tags, so its classes in pixel-sprites.css).
+ * and tags, so its classes in src/styles/sprites).
  */
 const ART_NAME: Record<AppId, string> = {
   projects: 'projects',

@@ -64,8 +64,17 @@ export const DERIVED_SHEETS = [
   { name: 'app-icons-16', group: 'icons', from: 'os-app-icons' },
 ]
 
-/** Groups whose PNGs are only inputs to a generator and never ship. */
-export const GENERATOR_INPUT_GROUPS = ['chrome', 'glyphs', 'app-icons']
+/**
+ * Groups whose PNGs are only inputs to a generator and never ship: the
+ * chrome, glyphs and cursors become CSS and TSX, the app icon export is cut
+ * into the shipped sheets.
+ */
+export const GENERATOR_INPUT_GROUPS = [
+  'chrome',
+  'glyphs',
+  'app-icons',
+  'cursors',
+]
 
 const KB = 1024
 
@@ -90,10 +99,20 @@ export const PNG_BUDGETS = [
   { label: '404 neon', groups: ['neon'], bytes: 8 * KB },
 ]
 
-/** Generated outputs and their raw-byte budgets (SPEC 4.6). */
+/** Where `gen-sprites.mjs` writes one stylesheet per sheet. */
+export const SPRITE_CSS_DIR = 'src/styles/sprites'
+
+/**
+ * Generated outputs and their raw-byte budgets (SPEC 4.6). The sprite loops
+ * are one file per sheet, each loaded by the component that shows the sheet,
+ * so each has a budget of its own; `check-art.mjs` fails a sprite file that
+ * has none.
+ */
 export const GENERATED_BUDGETS = [
   { file: 'src/styles/pixel-chrome.css', bytes: 24 * KB },
   { file: 'src/components/pixel/pixel-icon.generated.tsx', bytes: 16 * KB },
-  { file: 'src/styles/pixel-sprites.css', bytes: 12 * KB },
   { file: 'src/styles/pixel-cursors.css', bytes: 6 * KB },
+  { file: `${SPRITE_CSS_DIR}/app-icons-16.css`, bytes: 2 * KB },
+  { file: `${SPRITE_CSS_DIR}/app-icons-32.css`, bytes: 6 * KB },
+  { file: `${SPRITE_CSS_DIR}/readme-icons.css`, bytes: 8 * KB },
 ]

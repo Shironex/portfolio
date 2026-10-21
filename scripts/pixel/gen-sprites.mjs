@@ -2,19 +2,30 @@
  * Sprite sheet animation as CSS (SPEC 2.4): one `@keyframes` per Aseprite tag,
  * with the frame durations exactly as drawn (uneven timing is the point).
  *
- *   pnpm art:sprites            write src/styles/pixel-sprites.css
- *   pnpm art:sprites --check    fail if that file is stale
- *   node scripts/pixel/gen-sprites.mjs --in <dir|file.json>... --out <file.css>
+ *   pnpm art:sprites            write src/styles/sprites/<sheet>.css
+ *   pnpm art:sprites --check    fail if any of them is stale or orphaned
+ *   node scripts/pixel/gen-sprites.mjs --in <dir|file.json>... --out-dir <dir>
+ *
+ * One stylesheet per sheet, so a component imports the loops of the art it
+ * shows and nothing else: the boot sheet loads with the boot screen, the
+ * banners with the panel that shows them (decision 4 of SPEC section 10).
+ * Each file puts its rules in the `components` layer, under the utilities,
+ * as they were when one file was imported from globals.css.
  *
  * Reads every sheet JSON under src/assets/pixel, except the generator-only
- * groups (chrome, glyphs, the app icon export), the wallpaper (drawn on a
- * canvas) and the `@<n>x` copies. For a sheet `<sheet>` and a tag `<tag>` it
- * writes:
+ * groups (chrome, glyphs, the app icon and wallpaper exports), the shipped
+ * wallpaper (drawn on a canvas) and the `@<n>x` copies. For a sheet `<sheet>`
+ * and a tag `<tag>` it writes:
  *
  *   .px-<sheet>              element size and background size in art px
  *   .px-<sheet>-<tag>        rests on the tag's first frame, and names its
  *                            loop in `--px-loop`
  *   @keyframes px-<sheet>-<tag>
+ *
+ * A sheet with slices gets a class per slice, `.px-<sheet>-<slice>`, sized to
+ * the slice and resting on it in the first frame; a tag named like a slice
+ * animates that slice's rectangle instead of the whole frame (the boot
+ * sheet's `run` mark spins while its wordmark holds still).
  *
  * A sheet with no tags whose frames are named (`app-icons-16`: `projects`,
  * `logo`) gets a resting class per frame instead, `.px-<sheet>-<frame>`.
@@ -30,6 +41,7 @@
  */
 import {
   existsSync,
+  mkdirSync,
   readFileSync,
   readdirSync,
   statSync,
@@ -37,13 +49,17 @@ import {
 } from 'node:fs'
 import { basename, join, relative } from 'node:path'
 
-import { ART_SOURCES, GENERATOR_INPUT_GROUPS } from './art-manifest.mjs'
+import {
+  ART_SOURCES,
+  DERIVED_SHEETS,
+  GENERATOR_INPUT_GROUPS,
+} from './art-manifest.mjs'
 import { isMain } from './cli.mjs'
 import { ROOT } from './export-art.mjs'
-import { readSheetJson, tagFrames } from './sheet.mjs'
+import { readSheetJson, sliceKey, tagFrames } from './sheet.mjs'
 
 const DEFAULT_IN = join(ROOT, 'src', 'assets', 'pixel')
-const DEFAULT_OUT = join(ROOT, 'src', 'styles', 'pixel-sprites.css')
+export const SPRITES_DIR = join(ROOT, 'src', 'styles', 'sprites')
 
 /** `n` art px as CSS: `0` or `calc(n * var(--px))`. */
 export function artPx(n) {
@@ -75,8 +91,38 @@ export function hasNamedFrames(data) {
 }
 
 /**
- * CSS for one sheet: its tags, or its named frames when it has no tags.
- * `name` is the sheet's class stem.
+ * The loop of one tag: its resting class and its keyframes. `at(i)` is the
+ * background position that shows frame i.
+ */
+function loopCss(id, tag, data, at) {
+  const order = tagFrames(tag)
+  const total = order.reduce((sum, i) => sum + data.frames[i].duration, 0)
+  // No 0% and no 100%: the missing ends take the resting first frame,
+  // and `step-end` holds each frame to the next keyframe, the last one
+  // to the end of the loop.
+  const steps = []
+  let elapsed = order.length ? data.frames[order[0]].duration : 0
+  for (const i of order.slice(1)) {
+    steps.push(
+      `  ${percent((elapsed / total) * 100)} { background-position: ${at(i)}; }`
+    )
+    elapsed += data.frames[i].duration
+  }
+  return [
+    `/* ${tag.name}: frames ${order.join(', ')}, ${total}ms */`,
+    `.${id} {`,
+    `  background-position: ${at(order[0])};`,
+    `  --px-loop: ${id} ${total}ms step-end infinite;`,
+    '}',
+    `@keyframes ${id} {`,
+    ...steps,
+    '}',
+  ].join('\n')
+}
+
+/**
+ * CSS for one sheet: its slices, its tags, or its named frames when it has
+ * neither. `name` is the sheet's class stem.
  */
 export function spriteCss(name, data) {
   const { w, h } = data.frames[0].sourceSize
@@ -97,11 +143,40 @@ export function spriteCss(name, data) {
       '}',
     ].join('\n'),
   ]
-  const at = (i) => {
+  /** Position showing canvas point (dx, dy) of frame i at the element's corner. */
+  const at = (i, dx = 0, dy = 0) => {
     const { x, y } = data.frames[i].frame
-    return `${tightPx(-x)} ${tightPx(-y)}`
+    return `${tightPx(-(x + dx))} ${tightPx(-(y + dy))}`
   }
-  if (data.meta.frameTags.length === 0) {
+
+  const sliceNames = new Set()
+  for (const slice of data.meta.slices) {
+    const id = `px-${sheet}-${cssName(slice.name)}`
+    sliceNames.add(slice.name)
+    const { bounds } = sliceKey(slice, 0)
+    const size = [
+      `.${id} {`,
+      `  width: ${tightPx(bounds.w)};`,
+      `  height: ${tightPx(bounds.h)};`,
+      '}',
+    ].join('\n')
+    const tag = data.meta.frameTags.find((t) => t.name === slice.name)
+    if (!tag) {
+      blocks.push(
+        `${size.slice(0, -2)}\n  background-position: ${at(0, bounds.x, bounds.y)};\n}`
+      )
+      continue
+    }
+    blocks.push(size)
+    blocks.push(
+      loopCss(id, tag, data, (i) => {
+        const key = sliceKey(slice, i).bounds
+        return at(i, key.x, key.y)
+      })
+    )
+  }
+
+  if (data.meta.frameTags.length === 0 && sliceNames.size === 0) {
     for (const [i, frame] of data.frames.entries()) {
       blocks.push(
         `.px-${sheet}-${cssName(frame.filename)} { background-position: ${at(i)}; }`
@@ -110,32 +185,8 @@ export function spriteCss(name, data) {
     return blocks.join('\n\n')
   }
   for (const tag of data.meta.frameTags) {
-    const order = tagFrames(tag)
-    const total = order.reduce((sum, i) => sum + data.frames[i].duration, 0)
-    // No 0% and no 100%: the missing ends take the resting first frame,
-    // and `step-end` holds each frame to the next keyframe, the last one
-    // to the end of the loop.
-    const steps = []
-    let elapsed = order.length ? data.frames[order[0]].duration : 0
-    for (const i of order.slice(1)) {
-      steps.push(
-        `  ${percent((elapsed / total) * 100)} { background-position: ${at(i)}; }`
-      )
-      elapsed += data.frames[i].duration
-    }
-    const id = `px-${sheet}-${cssName(tag.name)}`
-    blocks.push(
-      [
-        `/* ${tag.name}: frames ${order.join(', ')}, ${total}ms */`,
-        `.${id} {`,
-        `  background-position: ${at(order[0])};`,
-        `  --px-loop: ${id} ${total}ms step-end infinite;`,
-        '}',
-        `@keyframes ${id} {`,
-        ...steps,
-        '}',
-      ].join('\n')
-    )
+    if (sliceNames.has(tag.name)) continue
+    blocks.push(loopCss(`px-${sheet}-${cssName(tag.name)}`, tag, data, at))
   }
   return blocks.join('\n\n')
 }
@@ -145,6 +196,7 @@ export function sheetFiles(inputs) {
   const skipGroups = new Set([
     ...GENERATOR_INPUT_GROUPS,
     ...ART_SOURCES.filter((s) => s.splitLayers).map((s) => s.group),
+    ...DERIVED_SHEETS.filter((s) => s.canvas).map((s) => s.group),
   ])
   const out = []
   const visit = (path, top) => {
@@ -162,27 +214,45 @@ export function sheetFiles(inputs) {
   return out
 }
 
-/** The whole stylesheet for `files`. */
-export function buildSpritesCss(files) {
-  const sections = []
-  for (const file of files) {
-    const data = readSheetJson(file)
-    if (data.meta.frameTags.length === 0 && !hasNamedFrames(data)) continue
-    const name = basename(file, '.json')
-    sections.push(
-      `/* ${relative(ROOT, file).split('\\').join('/')} */\n${spriteCss(name, data)}`
-    )
-  }
-  return [
+/** Whether a sheet has anything to show by class: tags, slices or named frames. */
+function animatable(data) {
+  return (
+    data.meta.frameTags.length > 0 ||
+    data.meta.slices.length > 0 ||
+    hasNamedFrames(data)
+  )
+}
+
+/**
+ * The stylesheet of one sheet JSON, as written: `{ name, css }`, where
+ * `name` is the file stem (`<name>.css`), or null when the sheet has nothing
+ * a class could show.
+ */
+export function sheetStylesheet(file) {
+  const data = readSheetJson(file)
+  if (!animatable(data)) return null
+  const name = basename(file, '.json')
+  const body = spriteCss(name, data)
+    .split('\n')
+    .map((line) => (line ? `  ${line}` : line))
+    .join('\n')
+  const css = [
     '/*',
-    ' * GENERATED by scripts/pixel/gen-sprites.mjs from the Aseprite sheet JSON in',
-    ' * src/assets/pixel. Do not edit by hand: re-export the art and run',
-    ' * `pnpm art:sprites`.',
+    ` * GENERATED by scripts/pixel/gen-sprites.mjs from ${relative(ROOT, file).split('\\').join('/')}.`,
+    ' * Do not edit by hand: re-export the art and run `pnpm art:sprites`.',
     ' */',
     '',
-    sections.join('\n\n'),
+    '@layer components {',
+    body,
+    '}',
     '',
   ].join('\n')
+  return { name, css }
+}
+
+/** The stylesheets for `files`, one per sheet that has something to show. */
+export function buildSpriteFiles(files) {
+  return files.map(sheetStylesheet).filter(Boolean)
 }
 
 function main(argv) {
@@ -190,25 +260,48 @@ function main(argv) {
   argv.forEach((arg, i) => {
     if (argv[i - 1] === '--in') inputs.push(arg)
   })
-  const outIndex = argv.indexOf('--out')
-  const out = outIndex > -1 ? argv[outIndex + 1] : DEFAULT_OUT
+  const outIndex = argv.indexOf('--out-dir')
+  const outDir = outIndex > -1 ? argv[outIndex + 1] : SPRITES_DIR
   const files = sheetFiles(inputs.length ? inputs : [DEFAULT_IN])
-  const css = buildSpritesCss(files)
-  const count = (css.match(/@keyframes /g) ?? []).length
+  const sheets = buildSpriteFiles(files)
+  const count = sheets.reduce(
+    (sum, s) => sum + (s.css.match(/@keyframes /g) ?? []).length,
+    0
+  )
+  const where = relative(ROOT, outDir).split('\\').join('/')
 
   if (argv.includes('--check')) {
-    if (!existsSync(out) || readFileSync(out, 'utf8') !== css) {
-      console.error(`${relative(ROOT, out)} is stale. Run: pnpm art:sprites`)
+    const stale = sheets
+      .filter(({ name, css }) => {
+        const file = join(outDir, `${name}.css`)
+        return !existsSync(file) || readFileSync(file, 'utf8') !== css
+      })
+      .map(({ name }) => `${name}.css`)
+    const wanted = new Set(sheets.map(({ name }) => `${name}.css`))
+    const orphans = existsSync(outDir)
+      ? readdirSync(outDir).filter((f) => f.endsWith('.css') && !wanted.has(f))
+      : []
+    if (stale.length || orphans.length) {
+      if (stale.length) console.error(`${where}: stale ${stale.join(', ')}`)
+      if (orphans.length) {
+        console.error(
+          `${where}: ${orphans.join(', ')} match no sheet; remove them`
+        )
+      }
+      console.error('Run: pnpm art:sprites')
       process.exit(1)
     }
     console.log(
-      `sprites up to date: ${files.length} sheet(s), ${count} loop(s)`
+      `sprites up to date: ${sheets.length} sheet(s), ${count} loop(s)`
     )
     return
   }
-  writeFileSync(out, css)
+  mkdirSync(outDir, { recursive: true })
+  for (const { name, css } of sheets) {
+    writeFileSync(join(outDir, `${name}.css`), css)
+  }
   console.log(
-    `wrote ${relative(ROOT, out)}: ${files.length} sheet(s), ${count} loop(s)`
+    `wrote ${where}: ${sheets.map((s) => `${s.name}.css`).join(', ')} (${count} loop(s))`
   )
 }
 

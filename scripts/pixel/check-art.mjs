@@ -16,7 +16,7 @@
  *     whichever it is, since code recolours it)
  * and per budget set, the PNG bytes stay under SPEC 4.6; generated outputs
  * (chrome CSS, glyph component, sprite CSS) are held to their budgets when
- * they exist.
+ * they exist, and a sprite stylesheet with no budget of its own fails.
  *
  * An empty folder fails unless `--allow-empty` is passed: a gate that
  * matches nothing must not read as a pass.
@@ -30,6 +30,7 @@ import {
   DERIVED_SHEETS,
   GENERATED_BUDGETS,
   PNG_BUDGETS,
+  SPRITE_CSS_DIR,
 } from './art-manifest.mjs'
 import { flag, isMain } from './cli.mjs'
 import { ROOT } from './export-art.mjs'
@@ -157,6 +158,7 @@ export async function checkArt({
   sources = [...ART_SOURCES, ...DERIVED_SHEETS],
   pngBudgets = PNG_BUDGETS,
   generatedBudgets = GENERATED_BUDGETS,
+  spriteDir = SPRITE_CSS_DIR,
   root = ROOT,
   allowEmpty = false,
 }) {
@@ -232,6 +234,19 @@ export async function checkArt({
       failures.push(
         `budget ${budget.file}: ${bytes} bytes, limit ${budget.bytes}`
       )
+    }
+  }
+
+  const budgeted = new Set(generatedBudgets.map((b) => b.file))
+  const sprites = join(root, spriteDir)
+  if (existsSync(sprites)) {
+    for (const name of readdirSync(sprites).filter((f) => f.endsWith('.css'))) {
+      const file = `${spriteDir}/${name}`
+      if (!budgeted.has(file)) {
+        failures.push(
+          `${file}: no budget; add one to GENERATED_BUDGETS in scripts/pixel/art-manifest.mjs`
+        )
+      }
     }
   }
 
