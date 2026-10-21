@@ -100,8 +100,7 @@ const PROJECT = {
  *
  * Not walked: hover, focus and pressed states (the hovered close button is
  * the one exception below), placeholders, disabled controls (the locked
- * submit button is measured on its own), the text selection colour, and the
- * mobile sheets of Monitor, Contact, Writing and Readme. Dusk and Dawn sit
+ * submit button is measured on its own), and the text selection colour. Dusk and Dawn sit
  * between the two skies the apps are walked in.
  */
 const WALK: ContrastWalk = {
@@ -305,14 +304,42 @@ for (const sky of SKIES) {
         }
 
         await walk('feed', page.locator('body'), "hi, I'm Kacper.")
+        await walk('header', page.getByRole('banner'), 'ShiroOS')
+        await walk(
+          'dock',
+          page.getByRole('navigation', { name: 'Dock' }),
+          'search'
+        )
+        // The closing card, with the mascot seated on it (still: reduced
+        // motion shows her first frame).
+        const mascot = page.locator('[data-cameo="mascot"]')
+        await expect(mascot).toBeVisible()
+        await walk(
+          'contact card',
+          mascot.locator('..'),
+          'Hiring, a contract, or an MVP to build'
+        )
 
         await mobileLauncher(page).click()
         const launcher = page.getByRole('dialog', { name: 'App launcher' })
         await expect(launcher).toBeVisible()
         await settled(launcher)
-        await walk('launcher', launcher, 'Elsewhere')
+        await walk('launcher', launcher, 'Settings')
 
-        for (const [name, title, line] of APPS.slice(0, 2)) {
+        // Every setting the other way round (the Lamp is the mode under
+        // test, so it stays), walked, then back.
+        const flipped = ['Pets', 'Pause animations', 'Readable text']
+        const flip = async () => {
+          for (const name of flipped) {
+            await launcher.getByRole('switch', { name, exact: true }).click()
+          }
+        }
+        await flip()
+        await settled(launcher)
+        await walk('launcher, settings flipped', launcher, 'Lamp')
+        await flip()
+
+        for (const [name, title, line] of APPS) {
           await launcher
             .getByRole('button', { name: `Open ${name}`, exact: true })
             .click()
