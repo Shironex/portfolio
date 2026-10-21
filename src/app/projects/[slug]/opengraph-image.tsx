@@ -1,6 +1,5 @@
 import { accentFor } from '@/components/os/accent-map'
 
-import { AUTHOR_FULL_NAME } from '@/lib/constants'
 import { OG_CONTENT_TYPE, OG_SIZE, projectCard } from '@/lib/og/og-card'
 import { STATUS_LABEL, summaryLead } from '@/lib/utils/project-meta'
 import {
@@ -15,11 +14,30 @@ import {
  * its title, type and status chips and the first sentence of its summary.
  */
 
-export const alt = `Project card from the portfolio of ${AUTHOR_FULL_NAME}`
-export const size = OG_SIZE
-export const contentType = OG_CONTENT_TYPE
-
 export const generateStaticParams = projectStaticParams
+
+/**
+ * One card per project, with its own alt text: the title and the lead
+ * sentence it shows, as two sentences, since a lead can hold a colon
+ * (decision 12 of SPEC 11). A static `alt` export would be the same for
+ * every project.
+ */
+export function generateImageMetadata({
+  params,
+}: {
+  params: { slug: string }
+}) {
+  const project = findProjectBySlug(params.slug)
+  if (!project) return []
+  return [
+    {
+      id: 'card',
+      alt: `${project.title}. ${summaryLead(project)}`,
+      size: OG_SIZE,
+      contentType: OG_CONTENT_TYPE,
+    },
+  ]
+}
 
 export default async function ProjectOpengraphImage({
   params,

@@ -285,14 +285,22 @@ function pngSize(body: Buffer) {
 
 /**
  * The pixel Open Graph and Twitter cards (SPEC 1.1): the home page and a
- * project page point at their own card, and each is a 1200x630 PNG (the
- * 400x210 art at 3x).
+ * project page point at their own card, described by its own alt text, and
+ * each is a 1200x630 PNG (the 400x210 art at 3x).
  */
-for (const [path, card] of [
-  ['/', '/opengraph-image'],
-  ['/projects/moekoder', '/projects/moekoder/opengraph-image'],
+for (const [path, card, alt] of [
+  ['/', '/opengraph-image', /^Kacper Lachowicz, full-stack developer/],
+  [
+    '/projects/moekoder',
+    '/projects/moekoder/opengraph-image',
+    /^Moekoder\. Desktop hardsub tool for anime archivists: .+\.$/,
+  ],
   // An archived project, whose card draws its letter on the bare tile.
-  ['/projects/write-wiz', '/projects/write-wiz/opengraph-image'],
+  [
+    '/projects/write-wiz',
+    '/projects/write-wiz/opengraph-image',
+    /^Write-Wiz\. Project management tool for small teams .+\.$/,
+  ],
 ] as const) {
   test(`${path} points og:image and twitter:image at its 1200x630 card`, async ({
     page,
@@ -316,6 +324,10 @@ for (const [path, card] of [
     await expect(
       page.locator('meta[property="og:image:width"]')
     ).toHaveAttribute('content', '1200')
+    // Each project's card is described by its title and lead sentence.
+    await expect(
+      page.locator('meta[property="og:image:alt"]').first()
+    ).toHaveAttribute('content', alt)
 
     for (const url of [og!, twitter!]) {
       const response = await request.get(new URL(url).pathname)
