@@ -1237,6 +1237,21 @@
     ],
     "slices": [
       {
+        "name": "hitbox",
+        "color": "#33ccffff",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 12,
+              "y": 4,
+              "w": 24,
+              "h": 44
+            }
+          }
+        ]
+      },
+      {
         "name": "pivot",
         "color": "#ff5577ff",
         "keys": [
@@ -1251,21 +1266,6 @@
             "pivot": {
               "x": 0,
               "y": 1
-            }
-          }
-        ]
-      },
-      {
-        "name": "hitbox",
-        "color": "#33ccffff",
-        "keys": [
-          {
-            "frame": 0,
-            "bounds": {
-              "x": 12,
-              "y": 4,
-              "w": 24,
-              "h": 44
             }
           }
         ]
