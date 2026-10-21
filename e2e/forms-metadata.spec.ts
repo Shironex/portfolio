@@ -329,9 +329,17 @@ for (const [path, card] of [
   })
 }
 
+/** The width of each image in an ICO directory (0 stands for 256). */
+function icoWidths(body: Buffer) {
+  expect(body.readUInt16LE(2)).toBe(1)
+  const count = body.readUInt16LE(4)
+  return Array.from({ length: count }, (_, i) => body[6 + i * 16] || 256)
+}
+
 /**
  * The favicon, touch icon and manifest icons are the README logo tile at the
- * sizes they claim (SPEC 1.1), and the manifest paints the ground navy.
+ * sizes they claim (SPEC 1.1), and the manifest paints the ground navy. The
+ * ICO also holds a 16 px logo, so a 16 px tab gets drawn pixels.
  */
 test('every icon is the size it claims', async ({ page, request }) => {
   await skipBootSplash(page)
@@ -344,13 +352,23 @@ test('every icon is the size it claims', async ({ page, request }) => {
         sizes: tag.getAttribute('sizes')!,
       }))
     )
-  expect(links.map((l) => l.sizes).sort()).toEqual(['180x180', '32x32'])
+  expect(links.map((l) => l.sizes).sort()).toEqual([
+    '180x180',
+    '32x32',
+    '32x32',
+  ])
+  const isIco = (l: { href: string }) => l.href.startsWith('/favicon.ico')
+  const ico = links.find(isIco)
+  const pngs = links.filter((l) => !isIco(l))
+  expect(ico, 'the linked favicon.ico').toBeDefined()
+  const icoBody = await (await request.get(ico!.href)).body()
+  expect(icoWidths(icoBody).sort((a, b) => a - b)).toEqual([16, 32])
 
   const manifest = await (await request.get('/manifest.webmanifest')).json()
   expect(manifest.theme_color).toBe('#0b1420')
   expect(manifest.background_color).toBe('#0b1420')
   const icons = [
-    ...links,
+    ...pngs,
     ...manifest.icons.map((icon: { src: string; sizes: string }) => ({
       href: icon.src,
       sizes: icon.sizes,
