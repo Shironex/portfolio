@@ -14,6 +14,9 @@ export const WINDOW_TITLE_BAR_ATTRIBUTE = 'data-window-title-bar'
 /** Marks a window's controls, so the pet keeps her seat clear of them. */
 export const WINDOW_CONTROLS_ATTRIBUTE = 'data-window-controls'
 
+/** Marks the taskbar, so the pet knows where it hides the road. */
+export const TASKBAR_ATTRIBUTE = 'data-taskbar'
+
 /**
  * Set on the shell root while the desktop is covered (see `AmbientPause`),
  * and on the document root while a window is dragged or resized: both hold

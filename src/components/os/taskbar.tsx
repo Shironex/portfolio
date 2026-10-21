@@ -5,6 +5,7 @@ import { memo } from 'react'
 import { AppIcon, AppLogo } from '@/components/pixel/app-icon'
 import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
+import { TASKBAR_ATTRIBUTE } from '@/lib/os/dom'
 import { cn } from '@/lib/utils'
 
 import { Clock } from './clock'
@@ -56,6 +57,7 @@ function TaskbarImpl({
     <div className="z-chrome pointer-events-none fixed bottom-[calc(4*var(--px)+env(safe-area-inset-bottom))] left-0 flex w-[round(down,100%,calc(2*var(--px)))] justify-center">
       <nav
         aria-label="Taskbar"
+        {...{ [TASKBAR_ATTRIBUTE]: '' }}
         // 262x28 art px: its parts and gaps, the 2 art px frame and 1 of
         // padding on each side; with the 4 art px under it, the 32 a
         // maximized window leaves free. Set, so a border width the browser

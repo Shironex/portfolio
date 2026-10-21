@@ -4,6 +4,7 @@ import type { WindowState } from '@/components/os/types'
 import {
   AMBIENT_ATTRIBUTE,
   AMBIENT_PAUSED,
+  TASKBAR_ATTRIBUTE,
   WINDOW_CONTROLS_ATTRIBUTE,
   WINDOW_ID_ATTRIBUTE,
   WINDOW_TITLE_BAR_ATTRIBUTE,
@@ -18,6 +19,7 @@ import {
 import { artPixel, onArtPixelChange } from '@/lib/os/pixel'
 import { type TickerHandle, schedule } from '@/lib/os/ticker'
 
+import { LAYOUT } from '../wallpaper/scene-data.generated'
 import {
   type Perch,
   type TitleBarMetrics,
@@ -35,6 +37,9 @@ import {
   decodePetSheet,
   framePosition,
 } from './pet-sheet'
+
+/** The lit kerb edge, this many rows into the wallpaper's road piece. */
+const KERB_ROW = 4
 
 /** The exit animation of a minimized window (`animate-win-close`), in ms. */
 const WINDOW_EXIT_MS = 120
@@ -287,7 +292,22 @@ export class PetController {
       if (panelHasRoom(rect, ceiling, panels)) perches.push(panelPerch(rect, i))
     })
     perches.push(floorPerch(width, floorY))
-    this.brain.setWorld(perches, windows, { width, floorY }, performance.now())
+    // The wallpaper rounds its rows up from the viewport and draws the road
+    // along the bottom; the taskbar floats over part of it.
+    const kerbY =
+      Math.ceil(window.innerHeight / px) - LAYOUT.road.height + KERB_ROW
+    const taskbar = document
+      .querySelector(`[${TASKBAR_ATTRIBUTE}]`)
+      ?.getBoundingClientRect()
+    const kerbHidden: (readonly [number, number])[] = taskbar
+      ? [[this.art(taskbar.left, px), this.art(taskbar.right, px)]]
+      : []
+    this.brain.setWorld(
+      perches,
+      windows,
+      { width, floorY, kerbY, kerbHidden },
+      performance.now()
+    )
     this.render()
     this.kick()
   }

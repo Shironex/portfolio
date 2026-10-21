@@ -70,6 +70,17 @@ const MIN_WALK = 16
 /** Where she sits still under reduced motion: in from the right end. */
 const STILL_FROM_RIGHT = 40
 
+/** The ground and where her still pose sits (art px). */
+export interface PetGround {
+  width: number
+  /** The floor: the top of the taskbar row. */
+  floorY: number
+  /** The kerb of the wallpaper's road, where the still pose sits. */
+  kerbY: number
+  /** Spans the taskbar hides the kerb in; there she sits on the floor. */
+  kerbHidden: readonly (readonly [number, number])[]
+}
+
 export type PetState =
   'out' | 'idle' | 'walk' | 'sit' | 'sleep' | 'drag' | 'fall' | 'land' | 'wave'
 
@@ -145,6 +156,8 @@ export class PetBrain {
   private perches: Perch[] = []
   private windows: WindowBox[] = []
   private floorY = 0
+  private kerbY = 0
+  private kerbHidden: PetGround['kerbHidden'] = []
   private width = 0
   private topZ = 0
   /** No motion: she holds a pose and moves only by teleporting. */
@@ -168,13 +181,15 @@ export class PetBrain {
   setWorld(
     perches: Perch[],
     windows: WindowBox[],
-    size: { width: number; floorY: number },
+    ground: PetGround,
     now: number
   ) {
     this.perches = perches
     this.windows = windows
-    this.width = size.width
-    this.floorY = size.floorY
+    this.width = ground.width
+    this.floorY = ground.floorY
+    this.kerbY = ground.kerbY
+    this.kerbHidden = ground.kerbHidden
     this.topZ = windows.reduce((z, w) => Math.max(z, w.z), 0)
     if (this.state === 'out') return
     const current = this.perch
@@ -664,12 +679,20 @@ export class PetBrain {
     this.hop(this.x, hit, now)
   }
 
-  /** Reduced motion: seated still on the floor, in from the right end. */
+  /**
+   * Reduced motion: seated still in from the right end, on the kerb of the
+   * road so her legs hang over something, or on the floor line where the
+   * taskbar hides the kerb.
+   */
   private placeStill(now: number) {
     const floor = this.floor()
     this.perch = floor
     this.x = clamp(floor.right - STILL_FROM_RIGHT, ...walkSpan(floor))
-    this.y = floor.y
+    const half = PET_FRAME.w / 2
+    const hidden = this.kerbHidden.some(
+      ([from, to]) => this.x + half > from && this.x - half < to
+    )
+    this.y = hidden ? floor.y : this.kerbY
     this.state = 'sit'
     this.tag = 'sit'
     this.frame = 0

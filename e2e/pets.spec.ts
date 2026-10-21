@@ -1,5 +1,6 @@
 import { type Locator, type Page, expect, test } from '@playwright/test'
 
+import { LAYOUT } from '../src/components/os/wallpaper/scene-data.generated'
 import { MAXIMIZED_INSET } from '../src/lib/os/geometry'
 import {
   DESKTOP_VIEWPORT,
@@ -28,6 +29,9 @@ const FLOOR = DESKTOP_VIEWPORT.height / ART_PX - MAXIMIZED_INSET.bottom
 const ON_FLOOR = FLOOR - FRAME
 /** Her seat line is 10 art px above her feet (PET.md). */
 const SEAT = 38
+/** The lit kerb of the wallpaper's road, 4 rows into the road piece. */
+const KERB =
+  Math.ceil(DESKTOP_VIEWPORT.height / ART_PX) - LAYOUT.road.height + 4
 
 /** States in which she is out and on a perch. */
 const OUT = /^(idle|walk|sit|sleep|wave|land)$/
@@ -315,15 +319,16 @@ test.describe('the desktop pet under reduced motion', () => {
   test.use({ reducedMotion: 'reduce' })
   test.slow()
 
-  test('sits still on the floor near the right end, with no ticks', async ({
+  test('sits still on the kerb near the right end, with no ticks', async ({
     page,
   }) => {
     await openDesktop(page)
     await waitForPet(page, /^sit$/)
     const still = await petView(page)
     expect(still?.tag).toBe('sit')
-    // Seated on the floor, 40 art px in from the right edge.
-    expect(still?.y).toBe(FLOOR - SEAT)
+    // Seated on the road's kerb (clear of the taskbar here), 40 art px in
+    // from the right edge.
+    expect(still?.y).toBe(KERB - SEAT)
     expect(still?.x).toBe(DESKTOP_VIEWPORT.width / ART_PX - 40 - FRAME / 2)
     const first = still?.frame
     await page.waitForTimeout(2500)
