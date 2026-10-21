@@ -47,16 +47,23 @@ function openingPx(n: number): number {
  * A new window's rect, in CSS px: its default at the DPR 1 size, no higher
  * than {@link NEW_WINDOW_HEADROOM} under the top of the desktop area, so the
  * pet can sit on it the moment it opens, and inside the area, which moves a
- * window up (or shrinks it) only where the area is too short for both.
+ * window up (or shrinks it) only where the area is too short for both. An
+ * `artHeight` window keeps its height in art px (see `AppWindowDefaults`).
  */
-function openingRect(x: number, y: number, w: number, h: number): Rect {
+function openingRect(
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  artHeight = false
+): Rect {
   const area = measureDesktopArea()
   return fitInArea(
     {
       x: openingPx(x),
       y: Math.max(openingPx(y), area.y + artPx(NEW_WINDOW_HEADROOM)),
       w: openingPx(w),
-      h: openingPx(h),
+      h: artHeight ? artPx(h) : openingPx(h),
     },
     area
   )
@@ -72,7 +79,7 @@ export function createAppWindow(appId: AppId, z: number): WindowState {
     id: appId,
     title: cfg.title,
     icon: cfg.icon,
-    ...openingRect(cfg.x, cfg.y, cfg.w, cfg.h),
+    ...openingRect(cfg.x, cfg.y, cfg.w, cfg.h, cfg.artHeight),
     z,
     minimized: false,
     maximized: false,

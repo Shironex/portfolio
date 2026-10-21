@@ -474,9 +474,10 @@ test.describe('session restore', () => {
 })
 
 /**
- * Where new windows open (SPEC 11, decision 1): at the CSS rect they have
- * at DPR 1 whatever the art pixel, at least 33 art px under the top of the
- * desktop area (room for the pet seated).
+ * Where new windows open (SPEC 11, decisions 1 and 2): at the CSS rect they
+ * have at DPR 1 whatever the art pixel, at least 33 art px under the top of
+ * the desktop area (room for the pet seated), and Contact tall enough for
+ * its whole form, capped to the area.
  */
 test.describe('new windows', () => {
   /** The art pixel on this page, in css px. */
@@ -519,4 +520,57 @@ test.describe('new windows', () => {
       })
     })
   }
+
+  /** The Contact window's scrolling body. */
+  const contactBody = (win: Locator) => win.locator('.overflow-auto').first()
+
+  for (const [label, viewport, dpr] of [
+    ['1440x900 at DPR 1', DESKTOP_VIEWPORT, 1],
+    ['1920x1080 at DPR 1.25', { width: 1920, height: 1080 }, 1.25],
+  ] as const) {
+    test.describe(label, () => {
+      test.use({ viewport, deviceScaleFactor: dpr })
+
+      test('Contact opens tall enough to show the whole form', async ({
+        page,
+      }) => {
+        await page.route('**/challenges.cloudflare.com/**', (r) => r.abort())
+        await openDesktop(page)
+        const contact = await launch(page, 'Contact', 'contact.app')
+        const send = contact.getByRole('button', { name: /send/i })
+        await expect(send).toBeVisible()
+        const body = contactBody(contact)
+        await expect
+          .poll(() => body.evaluate((el) => el.scrollHeight - el.clientHeight))
+          .toBeLessThanOrEqual(1)
+        const win = await rectOf(contact)
+        const button = await rectOf(send)
+        expect(button.y + button.height).toBeLessThanOrEqual(win.y + win.height)
+      })
+    })
+  }
+
+  test.describe('a short 1536x750 screen at DPR 1.25', () => {
+    test.use({
+      viewport: { width: 1536, height: 750 },
+      deviceScaleFactor: 1.25,
+    })
+
+    test('Contact is capped to the desktop area', async ({ page }) => {
+      await page.route('**/challenges.cloudflare.com/**', (r) => r.abort())
+      await openDesktop(page)
+      const contact = await launch(page, 'Contact', 'contact.app')
+      const px = await artPixelOf(page)
+      const rect = await rectOf(contact)
+      const area = {
+        top: AREA_TOP * px,
+        bottom:
+          Math.floor((750 - (AREA_TOP + 32) * px) / px) * px + AREA_TOP * px,
+      }
+      expect(Math.abs(rect.y - area.top)).toBeLessThanOrEqual(1)
+      expect(Math.abs(rect.y + rect.height - area.bottom)).toBeLessThanOrEqual(
+        1
+      )
+    })
+  })
 })

@@ -94,14 +94,38 @@ export function windowNameFor(win: WindowState): string {
 }
 
 /** Where each app window opens and how big, in art px (SPEC 2.4). */
-export const APP_WINDOW_DEFAULTS: Record<
-  AppId,
-  { title: string; icon: string; x: number; y: number; w: number; h: number }
-> = {
+export interface AppWindowDefaults {
+  title: string
+  icon: string
+  x: number
+  y: number
+  w: number
+  h: number
+  /**
+   * The height is counted in art px at every DPR, not opened at its DPR 1
+   * CSS size like the rest of the rect: the content it must show whole is
+   * laid out in art px.
+   */
+  artHeight?: true
+}
+
+export const APP_WINDOW_DEFAULTS: Record<AppId, AppWindowDefaults> = {
   projects: { title: 'projects.app', icon: '▦', x: 60, y: 45, w: 450, h: 310 },
   about: { title: 'about.me', icon: '◌', x: 90, y: 60, w: 410, h: 290 },
   skills: { title: 'monitor.sys', icon: '▤', x: 110, y: 65, w: 390, h: 280 },
-  contact: { title: 'contact.app', icon: '✉', x: 130, y: 55, w: 410, h: 290 },
+  // Tall enough for the whole form, captcha and Send included (decision 2
+  // of SPEC 11): its body is 314 art px tall at the DPR 1 width (410) and
+  // 321 at the narrower art width a DPR 1.25 screen gives it (342), plus 22
+  // of frame and title bar. Capped to the desktop area like every window.
+  contact: {
+    title: 'contact.app',
+    icon: '✉',
+    x: 130,
+    y: 55,
+    w: 410,
+    h: 344,
+    artHeight: true,
+  },
   writing: { title: 'writing.rss', icon: '✎', x: 170, y: 50, w: 360, h: 300 },
   readme: { title: 'readme.md', icon: '¶', x: 150, y: 75, w: 320, h: 250 },
 }
