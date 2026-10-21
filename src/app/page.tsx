@@ -18,6 +18,7 @@ import {
   DESKTOP_PANELS_CLASS,
   DESKTOP_ROW_CLASS,
 } from '@/components/os/desktop-layout'
+import { NoscriptFallback } from '@/components/os/noscript-fallback'
 import OsShell from '@/components/os/os-shell'
 import { WallpaperStatic } from '@/components/os/wallpaper/wallpaper-static'
 
@@ -92,6 +93,10 @@ export default function HomePage() {
   return (
     <>
       <StaticHero />
+      {/* Outside the boundary: the shell's server HTML streams into a
+          hidden chunk that only JavaScript reveals, so a card inside it
+          would never show to the visitor it is for. */}
+      <NoscriptFallback />
       <Suspense fallback={null}>
         <OsShell />
       </Suspense>

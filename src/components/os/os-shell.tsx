@@ -36,7 +36,6 @@ import {
 import { MenuBar } from './menubar'
 import { MobileShell } from './mobile-shell'
 import {
-  NoscriptFallback,
   NoscriptStaticPage,
   SHELL_READY_ATTRIBUTE,
   SHELL_ROOT_ATTRIBUTE,
@@ -212,7 +211,7 @@ export default function OsShell({ initialWindow }: OsShellProps) {
       className="text-ink from-sky-0 via-sky-1 to-sky-2 fixed inset-0 overflow-clip bg-linear-to-br"
     >
       <AmbientPause rootRef={rootRef} covered={desktopCovered} />
-      {onProjectRoute ? <NoscriptStaticPage /> : <NoscriptFallback />}
+      {onProjectRoute && <NoscriptStaticPage />}
       <Boot initialWindow={initialWindow} />
       {showMobile && (
         <div className="md:hidden">
