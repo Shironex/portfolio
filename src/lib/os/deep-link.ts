@@ -14,6 +14,14 @@ export const OPEN_PARAM = 'open'
 export const PROJECT_PARAM = 'project'
 
 /**
+ * Quiet time after the topmost window last changed before the URL follows
+ * it, so a burst of raises makes one write, and steady clicking at most
+ * four a second. WebKit throws past 100 `history.replaceState` calls in ten
+ * seconds, and Next's own write after ours throws with it.
+ */
+export const DEEP_LINK_WRITE_DEBOUNCE_MS = 250
+
+/**
  * A window the shell can be asked to open, either from the URL or from a
  * server route. Plain data, so it crosses the server/client boundary as a prop.
  */

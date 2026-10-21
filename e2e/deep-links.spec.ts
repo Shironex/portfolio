@@ -249,6 +249,54 @@ test.describe('desktop', () => {
     expect(await page.evaluate(() => window.history.length)).toBe(historyLength)
   })
 
+  test('a burst of raises writes the URL once, after focus settles', async ({
+    page,
+  }) => {
+    // Count every call that reaches the browser, Next's own included: WebKit
+    // throws past 100 in ten seconds.
+    await page.addInitScript(() => {
+      const native = History.prototype.replaceState
+      const counter = window as unknown as { replaceStateCalls: number }
+      counter.replaceStateCalls = 0
+      History.prototype.replaceState = function (...args) {
+        counter.replaceStateCalls += 1
+        return native.apply(this, args)
+      }
+    })
+    const calls = () =>
+      page.evaluate(
+        () =>
+          (window as unknown as { replaceStateCalls: number }).replaceStateCalls
+      )
+    await skipBootSplash(page)
+    await openDesktop(page)
+    await taskbar(page).getByRole('button', { name: 'Open Projects' }).click()
+    await taskbar(page).getByRole('button', { name: 'Open About' }).click()
+    await expect(osWindow(page, 'about.me')).toBeVisible()
+    await expect.poll(() => location(page)).toBe('/?open=about')
+    const before = await calls()
+
+    // 41 raises with a task between each, faster than any person: the two
+    // windows trade places and Projects ends on top.
+    const raised = await taskbar(page).evaluate(async (bar) => {
+      let count = 0
+      for (; count < 41; count += 1) {
+        const button = Array.from(bar.querySelectorAll('button')).find((b) =>
+          b.getAttribute('aria-label')?.endsWith('bring to front')
+        )
+        if (!button) break
+        button.click()
+        await new Promise((resolve) => setTimeout(resolve, 0))
+      }
+      return count
+    })
+    expect(raised).toBe(41)
+
+    await expect.poll(() => location(page)).toBe('/?open=projects')
+    // One write of ours, and at most one of Next's after it.
+    expect((await calls()) - before).toBeLessThanOrEqual(2)
+  })
+
   test('unknown app ids and project slugs are ignored', async ({ page }) => {
     await skipBootSplash(page)
     await openDesktop(page, '/?open=nope&project=missing')
