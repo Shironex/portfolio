@@ -11,25 +11,36 @@
  * `<name>.json` (json-array, tags, slices and layers listed, packed, never
  * trimmed). `splitLayers` sheets put each visible layer in its own frames;
  * their frame `filename` is `<layer>:<frame>`. `scales` adds `<name>@<n>x`
- * copies. `ownPalette` marks art that keeps its own colours (the mascot),
- * which the palette check skips. `oneBit` marks art drawn in one colour that
+ * copies. `ownPalette` marks art that keeps its own colours (the mascot, and
+ * the stack shelf, whose tool logos keep their brand colours), which the
+ * palette check skips. `oneBit` marks art drawn in one colour that
  * code recolours (the glyphs, drawn into `currentColor`): any one colour
  * passes, a second fails. `skyPalette` marks the wallpaper, whose clouds and
  * day skyline may also use the sky colours (`SKY_COLOURS` in palette.mjs).
  * `companions` are data files drawn up with the art
  * (the wallpaper's sky bands, recolour maps and layout) that are copied next
- * to the export as they are, for a generator to read.
+ * to the export as they are, for a generator to read. `layer` exports one
+ * layer alone and `frames` (`[from, to]`, 0-based) a range of frames, with no
+ * tags listed, since a tag can reach past the range (the project icon tile).
  */
 export const ART_SOURCES = [
   { name: 'os-chrome', root: 'art', group: 'chrome' },
   { name: 'os-glyphs-8', root: 'art', group: 'glyphs', oneBit: true },
   { name: 'os-app-icons', root: 'art', group: 'app-icons' },
-  { name: 'os-project-icons', root: 'art', group: 'project-icons' },
+  { name: 'os-project-icons', root: 'art', group: 'project-icon-art' },
+  {
+    name: 'os-project-tile',
+    root: 'art',
+    file: 'os-project-icons.aseprite',
+    group: 'project-icon-art',
+    layer: 'tile',
+    frames: [0, 0],
+  },
   {
     name: 'readme-icons',
     root: 'readme',
     file: 'icons.aseprite',
-    group: 'project-icons',
+    group: 'project-icon-art',
   },
   { name: 'mascot-head', root: 'art', group: 'avatar', ownPalette: true },
   { name: 'os-boot', root: 'art', group: 'boot' },
@@ -55,6 +66,7 @@ export const ART_SOURCES = [
     root: 'readme',
     file: 'stack-shelf.aseprite',
     group: 'banners',
+    ownPalette: true,
   },
   { name: 'minime', root: 'readme', file: 'minime.aseprite', group: 'pets' },
   {
@@ -71,13 +83,18 @@ export const WALLPAPER_SKIES = ['night', 'dusk', 'dawn', 'day']
 
 /**
  * Sheets a generator cuts from an export (`gen-app-icons.mjs`,
- * `gen-wallpaper.mjs`), checked like exports: `from` names the source they
- * are cut from. `canvas` marks art drawn by script (the wallpaper canvas and
- * its static frame), which gets no sprite classes.
+ * `gen-project-icons.mjs`, `gen-wallpaper.mjs`), checked like exports: `from`
+ * names the source they are cut from. `canvas` marks art drawn by script (the
+ * wallpaper canvas and its static frame), which gets no sprite classes.
  */
 export const DERIVED_SHEETS = [
   { name: 'app-icons-32', group: 'icons', from: 'os-app-icons' },
   { name: 'app-icons-16', group: 'icons', from: 'os-app-icons' },
+  {
+    name: 'project-icons-32',
+    group: 'project-icons',
+    from: 'os-project-icons',
+  },
   ...[
     'wallpaper',
     'stars',
@@ -93,13 +110,14 @@ export const DERIVED_SHEETS = [
 
 /**
  * Groups whose PNGs are only inputs to a generator and never ship: the
- * chrome, glyphs and cursors become CSS and TSX, the app icon and wallpaper
- * exports are cut into the shipped sheets.
+ * chrome, glyphs and cursors become CSS and TSX, the app icon, project icon
+ * and wallpaper exports are cut into the shipped sheets.
  */
 export const GENERATOR_INPUT_GROUPS = [
   'chrome',
   'glyphs',
   'app-icons',
+  'project-icon-art',
   'cursors',
   'wallpaper',
 ]
@@ -145,5 +163,8 @@ export const GENERATED_BUDGETS = [
   { file: `${SPRITE_CSS_DIR}/mascot-head.css`, bytes: 2 * KB },
   { file: `${SPRITE_CSS_DIR}/os-boot.css`, bytes: 3 * KB },
   { file: `${SPRITE_CSS_DIR}/readme-headers.css`, bytes: 5 * KB },
-  { file: `${SPRITE_CSS_DIR}/readme-icons.css`, bytes: 8 * KB },
+  { file: `${SPRITE_CSS_DIR}/project-icons-32.css`, bytes: 12 * KB },
+  { file: `${SPRITE_CSS_DIR}/os-neon-404.css`, bytes: 1 * KB },
+  { file: `${SPRITE_CSS_DIR}/stack-shelf.css`, bytes: 2 * KB },
+  { file: `${SPRITE_CSS_DIR}/minime.css`, bytes: 3 * KB },
 ]

@@ -8,7 +8,6 @@
 
 import { Fragment, useMemo, useState } from 'react'
 
-import { accentFor } from '@/components/os/accent-map'
 import { ProjectAvatar } from '@/components/os/project-avatar'
 import { StatusChip } from '@/components/os/status-chip'
 
@@ -157,7 +156,6 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
           </div>
         ) : (
           shown.map((p) => {
-            const accent = accentFor(p.slug)
             return (
               <button
                 key={p.id}
@@ -167,9 +165,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                 className="focus-ring group border-rule-2 bg-surf-solid hover:border-miku/40 hover:shadow-elev-2 relative rounded-xl border p-8 text-left transition-[translate,border-color,box-shadow] duration-150 hover:-translate-y-1"
               >
                 <div className="flex items-start gap-6">
-                  <ProjectAvatar accent={accent} className="shrink-0">
-                    {p.title[0]}
-                  </ProjectAvatar>
+                  <ProjectAvatar slug={p.slug} title={p.title} />
                   <div className="min-w-0 flex-1">
                     <div className="font-display text-ink flex items-center gap-3 text-sm">
                       <span className="truncate">{p.title}</span>

@@ -1,59 +1,39 @@
-import type { ReactNode } from 'react'
-
-import { TINT } from '@/lib/os/tokens.generated'
-import { cn } from '@/lib/utils'
-
-import { type AccentRole, accentInk, accentTint } from './accent-map'
-
-type AvatarSize = 10 | 8
+import {
+  ProjectIcon,
+  type ProjectIconScale,
+  ProjectTile,
+  hasProjectIcon,
+} from '@/components/pixel/project-icon'
 
 interface ProjectAvatarProps {
-  /** Accent role (e.g. from `accentFor(slug)`). */
-  accent: AccentRole
-  /** Tile dimension: maps to Tailwind `size-20` / `size-16`. */
-  size?: AvatarSize
-  /** Opacity of the accent behind the glyph, as a percentage. */
-  tint?: number
-  /** Tile contents: typically the project's first letter. */
-  children: ReactNode
-  /** Hide from the accessibility tree (the parent button labels itself). */
-  hidden?: boolean
-  /** Extra classes (e.g. `shrink-0`) layered onto the variant base. */
+  slug: string
+  /** The project's name; its first letter goes on the tile of an icon-less project. */
+  title: string
+  /** 2 for the project window's hero (64 art px). */
+  scale?: ProjectIconScale
   className?: string
 }
 
-const SIZE_CLASS: Record<AvatarSize, string> = {
-  10: 'size-20 text-lg',
-  8: 'size-16 text-sm',
-}
-
 /**
- * Accent-tinted square tile used across the OS surfaces to represent a
- * project (projects grid, featured panel, start-menu recents). Size and
- * tint are variant props so each call site keeps its exact pixels.
+ * A project's picture across the OS (the Projects app, the featured panel,
+ * the project window): its drawn 32x32 icon, which plays its tag once on
+ * hover or focus of the control around it, or its first letter on the bare
+ * tile (decision 3). Decorative: the name and description sit beside it.
  */
 export function ProjectAvatar({
-  accent,
-  size = 10,
-  tint = TINT.icon,
-  children,
-  hidden,
+  slug,
+  title,
+  scale = 1,
   className,
 }: ProjectAvatarProps) {
+  if (hasProjectIcon(slug)) {
+    return <ProjectIcon slug={slug} scale={scale} className={className} />
+  }
   return (
-    <span
-      aria-hidden={hidden || undefined}
-      className={cn(
-        'font-display flex items-center justify-center rounded-lg font-bold',
-        SIZE_CLASS[size],
-        className
-      )}
-      style={{
-        backgroundColor: accentTint(accent, tint),
-        color: accentInk(accent),
-      }}
-    >
-      {children}
-    </span>
+    <ProjectTile
+      letter={title.slice(0, 1)}
+      scale={scale}
+      className={className}
+    />
   )
 }

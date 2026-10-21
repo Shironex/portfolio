@@ -96,13 +96,17 @@ export function sourcePath(entry, roots) {
 /**
  * Aseprite arguments for one sheet. Run with `cwd` set to the output folder:
  * the names are relative so `meta.image` in the JSON is a bare file name.
- * Options that change how the file is opened (`--split-layers`) come before
- * it; `--scale` resizes what was opened, so it comes after.
+ * Options that change how the file is opened (`--split-layers`, `--layer`,
+ * `--frame-range`) come before it; `--scale` resizes what was opened, so it
+ * comes after. A frame range lists no tags: Aseprite keeps every tag of the
+ * document, and one that reaches past the range fails the art check.
  */
 export function sheetArgs(entry, source, scale = 1) {
   const base = scale === 1 ? entry.name : `${entry.name}@${scale}x`
   const args = ['-b']
   if (entry.splitLayers) args.push('--split-layers')
+  if (entry.layer) args.push('--layer', entry.layer)
+  if (entry.frames) args.push('--frame-range', entry.frames.join(','))
   args.push(source)
   if (scale !== 1) args.push('--scale', String(scale))
   args.push(
@@ -113,11 +117,10 @@ export function sheetArgs(entry, source, scale = 1) {
     '--format',
     'json-array',
     '--sheet-type',
-    'packed',
-    '--list-tags',
-    '--list-slices',
-    '--list-layers'
+    'packed'
   )
+  if (!entry.frames) args.push('--list-tags')
+  args.push('--list-slices', '--list-layers')
   if (entry.splitLayers) args.push('--filename-format', '{layer}:{frame}')
   return { args, png: `${base}.png`, json: `${base}.json` }
 }

@@ -24,6 +24,11 @@ import { appIconLayout, appIconSheetJson } from '../gen-app-icons.mjs'
 import { chromeCss, growGrid, sliceInsets } from '../gen-chrome.mjs'
 import { cursorsCss } from '../gen-cursors.mjs'
 import { glyphModuleSource, readGlyphs } from '../gen-glyphs.mjs'
+import {
+  README_ICON_PROJECTS,
+  TILE_TAG,
+  projectIconLayout,
+} from '../gen-project-icons.mjs'
 import { hasNamedFrames, sheetStylesheet, spriteCss } from '../gen-sprites.mjs'
 import {
   initiallyLit,
@@ -722,6 +727,116 @@ describe('gen-app-icons', () => {
     const sheet = iconExport()
     sheet.data.meta.slices.shift()
     assert.throws(() => appIconLayout(sheet), /no slice "app-a-32"/)
+  })
+})
+
+describe('gen-project-icons', () => {
+  const frame = (w, h, duration) => ({
+    frame: { x: 0, y: 0, w, h },
+    spriteSourceSize: { x: 0, y: 0, w, h },
+    sourceSize: { w, h },
+    duration,
+  })
+  const slice = (name, x) => ({
+    name,
+    keys: [{ frame: 0, bounds: { x, y: 0, w: 32, h: 32 } }],
+  })
+  /** Two OS icons (`a`: frames 0 and 1, `b`: frame 2), every README icon, a tile. */
+  function exportsFixture() {
+    const readmeTags = Object.keys(README_ICON_PROJECTS)
+    return {
+      os: {
+        json: 'os.json',
+        data: {
+          frames: [frame(64, 32, 240), frame(64, 32, 90), frame(64, 32, 300)],
+          meta: {
+            frameTags: [
+              { name: 'a', from: 0, to: 1, direction: 'forward' },
+              { name: 'b', from: 2, to: 2, direction: 'forward' },
+            ],
+            slices: [slice('project-a', 0), slice('project-b', 32)],
+          },
+        },
+      },
+      readme: {
+        json: 'readme.json',
+        data: {
+          frames: [
+            ...readmeTags.map(() => frame(32, 32, 120)),
+            frame(32, 32, 80),
+          ],
+          meta: {
+            frameTags: [
+              ...readmeTags.map((name, i) => ({
+                name,
+                from: i,
+                to: i,
+                direction: 'forward',
+              })),
+              {
+                name: 'shironedev',
+                from: readmeTags.length,
+                to: readmeTags.length,
+                direction: 'forward',
+              },
+            ],
+            slices: [],
+          },
+        },
+      },
+      tile: {
+        json: 'tile.json',
+        data: {
+          frames: [frame(64, 32, 240)],
+          meta: { frameTags: [], slices: [slice('project-a', 0)] },
+        },
+      },
+    }
+  }
+
+  it('keeps one row per icon, named by slug, with the timing as drawn', () => {
+    const layout = projectIconLayout(exportsFixture())
+    const names = layout.tags.map((t) => t.name)
+    assert.deepEqual(names, [
+      'a',
+      'b',
+      ...Object.values(README_ICON_PROJECTS),
+      TILE_TAG,
+    ])
+    assert.equal(names.includes('shironedev'), false)
+    assert.equal(layout.w, 64)
+    assert.equal(layout.h, names.length * 32)
+    assert.deepEqual(
+      layout.cells
+        .slice(0, 3)
+        .map((c) => [c.from, c.bounds.x, c.x, c.y, c.duration]),
+      [
+        [0, 0, 0, 0, 240],
+        [1, 0, 32, 0, 90],
+        [2, 32, 0, 32, 300],
+      ]
+    )
+    assert.deepEqual(layout.tags.at(-1), {
+      name: TILE_TAG,
+      from: layout.cells.length - 1,
+      to: layout.cells.length - 1,
+      direction: 'forward',
+    })
+  })
+
+  it('reads every cell from the export it was drawn in', () => {
+    const sheets = exportsFixture()
+    const layout = projectIconLayout(sheets)
+    assert.equal(layout.cells[0].sheet, sheets.os)
+    assert.equal(layout.cells[2].sheet, sheets.os)
+    assert.equal(layout.cells[3].sheet, sheets.readme)
+    assert.equal(layout.cells.at(-1).sheet, sheets.tile)
+  })
+
+  it('fails on a README icon that is missing', () => {
+    const sheets = exportsFixture()
+    sheets.readme.data.meta.frameTags.shift()
+    assert.throws(() => projectIconLayout(sheets), /no tag "automaker"/)
   })
 })
 

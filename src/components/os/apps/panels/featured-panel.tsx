@@ -2,11 +2,9 @@
 
 import { memo, useId } from 'react'
 
-import { accentFor } from '@/components/os/accent-map'
 import { ProjectAvatar } from '@/components/os/project-avatar'
 import { StatusChip } from '@/components/os/status-chip'
 import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
-import { ProjectIcon, hasProjectIcon } from '@/components/pixel/project-icon'
 
 import { getPinnedProjects } from '@/lib/utils/projects'
 
@@ -23,7 +21,7 @@ import type { Project } from '@/types'
  * Pins the top featured projects first, then fills remaining slots with
  * in-progress work (so active efforts like ShiroAni and Shiranami surface
  * alongside shipped favorites). Each row shows the project's 32x32 icon
- * (its loop plays on hover and focus) or its letter tile, and opens the
+ * (its tag plays once on hover and focus) or its letter tile, and opens the
  * project through `onOpenProject`.
  */
 const MAX_PINNED = 4
@@ -60,44 +58,35 @@ function FeaturedPanelImpl({ onOpenProject }: FeaturedPanelProps) {
       </div>
 
       <ul className="flex flex-col gap-1">
-        {pinned.map((p) => {
-          const accent = accentFor(p.slug)
-          return (
-            <li key={p.slug}>
-              <button
-                type="button"
-                onClick={() => onOpenProject(p)}
-                aria-label={`Open ${p.title}`}
-                className="focus-ring group flex w-full items-center gap-3 p-1 text-left hover:bg-(--select)"
-              >
-                {hasProjectIcon(p.slug) ? (
-                  <ProjectIcon slug={p.slug} />
-                ) : (
-                  <ProjectAvatar accent={accent} hidden className="shrink-0">
-                    {p.title[0]}
-                  </ProjectAvatar>
-                )}
-                <span className="min-w-0 flex-1">
-                  <span className="flex items-center gap-2">
-                    <span className="text-title truncate text-(--ink)">
-                      {p.title}
-                    </span>
-                    <StatusChip tone="neutral">
-                      {p.projectType ?? 'project'}
-                    </StatusChip>
+        {pinned.map((p) => (
+          <li key={p.slug}>
+            <button
+              type="button"
+              onClick={() => onOpenProject(p)}
+              aria-label={`Open ${p.title}`}
+              className="focus-ring group flex w-full items-center gap-3 p-1 text-left hover:bg-(--select)"
+            >
+              <ProjectAvatar slug={p.slug} title={p.title} />
+              <span className="min-w-0 flex-1">
+                <span className="flex items-center gap-2">
+                  <span className="text-title truncate text-(--ink)">
+                    {p.title}
                   </span>
-                  <span className="text-body block truncate text-(--meta)">
-                    {p.summary}
-                  </span>
+                  <StatusChip tone="neutral">
+                    {p.projectType ?? 'project'}
+                  </StatusChip>
                 </span>
-                <PixelIcon
-                  name="arrow-right"
-                  className="text-(--meta) group-hover:text-(--accent-warm-icon) group-focus-visible:text-(--accent-warm-icon)"
-                />
-              </button>
-            </li>
-          )
-        })}
+                <span className="text-body block truncate text-(--meta)">
+                  {p.summary}
+                </span>
+              </span>
+              <PixelIcon
+                name="arrow-right"
+                className="text-(--meta) group-hover:text-(--accent-warm-icon) group-focus-visible:text-(--accent-warm-icon)"
+              />
+            </button>
+          </li>
+        ))}
       </ul>
     </section>
   )

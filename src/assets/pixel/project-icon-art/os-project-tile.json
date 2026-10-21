@@ -1,0 +1,135 @@
+{
+  "frames": [
+    {
+      "filename": "os-project-icons (tile).aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 32
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 192,
+        "h": 32
+      },
+      "sourceSize": {
+        "w": 192,
+        "h": 32
+      },
+      "duration": 240
+    }
+  ],
+  "meta": {
+    "app": "https://www.aseprite.org/",
+    "image": "os-project-tile.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 192,
+      "h": 32
+    },
+    "scale": "1",
+    "layers": [
+      {
+        "name": "tile",
+        "opacity": 255,
+        "blendMode": "normal"
+      }
+    ],
+    "slices": [
+      {
+        "name": "project-moekoder",
+        "color": "#2e6e6eff",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 0,
+              "y": 0,
+              "w": 32,
+              "h": 32
+            }
+          }
+        ]
+      },
+      {
+        "name": "project-rumi",
+        "color": "#c98a4aff",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 32,
+              "y": 0,
+              "w": 32,
+              "h": 32
+            }
+          }
+        ]
+      },
+      {
+        "name": "project-nysia",
+        "color": "#2e6e6eff",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 64,
+              "y": 0,
+              "w": 32,
+              "h": 32
+            }
+          }
+        ]
+      },
+      {
+        "name": "project-matmajka",
+        "color": "#8fe0cfff",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 96,
+              "y": 0,
+              "w": 32,
+              "h": 32
+            }
+          }
+        ]
+      },
+      {
+        "name": "project-shirone-blog",
+        "color": "#8fe0cfff",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 128,
+              "y": 0,
+              "w": 32,
+              "h": 32
+            }
+          }
+        ]
+      },
+      {
+        "name": "project-sudeko",
+        "color": "#2e6e6eff",
+        "keys": [
+          {
+            "frame": 0,
+            "bounds": {
+              "x": 160,
+              "y": 0,
+              "w": 32,
+              "h": 32
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

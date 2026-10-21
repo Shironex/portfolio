@@ -54,8 +54,13 @@ function sliceNamed(sheet, name) {
   return slice
 }
 
-/** A cell to copy: canvas `bounds` of source frame `from`, at `x, y` out. */
-function cell(from, bounds, x, y, duration, filename) {
+/**
+ * A cell to copy: canvas `bounds` of source frame `from`, at `x, y` out.
+ * A cell may name the `sheet` it comes from, when a layout draws on more
+ * than one export (the project icons); otherwise it reads the one passed to
+ * `sheetPixels`.
+ */
+export function cell(from, bounds, x, y, duration, filename) {
   return { from, bounds, x, y, duration, filename }
 }
 
@@ -116,13 +121,13 @@ export function appIconLayout(sheet) {
 }
 
 /** RGBA pixels of one laid-out sheet. */
-function sheetPixels(sheet, layout) {
+export function sheetPixels(sheet, layout) {
   const raw = Buffer.alloc(layout.w * layout.h * 4)
   for (const c of layout.cells) {
     for (let y = 0; y < c.bounds.h; y++) {
       for (let x = 0; x < c.bounds.w; x++) {
         raw.set(
-          pixelAt(sheet, c.from, c.bounds.x + x, c.bounds.y + y),
+          pixelAt(c.sheet ?? sheet, c.from, c.bounds.x + x, c.bounds.y + y),
           ((c.y + y) * layout.w + c.x + x) * 4
         )
       }
@@ -131,8 +136,15 @@ function sheetPixels(sheet, layout) {
   return raw
 }
 
-/** The sheet JSON, in the shape Aseprite writes, as committed text. */
-export function appIconSheetJson(stem, layout) {
+/**
+ * The sheet JSON, in the shape Aseprite writes, as committed text. `app`
+ * names the generator in `meta.app`.
+ */
+export function appIconSheetJson(
+  stem,
+  layout,
+  app = 'scripts/pixel/gen-app-icons.mjs'
+) {
   const data = {
     frames: layout.cells.map((c) => ({
       filename: c.filename,
@@ -144,7 +156,7 @@ export function appIconSheetJson(stem, layout) {
       duration: c.duration,
     })),
     meta: {
-      app: 'scripts/pixel/gen-app-icons.mjs',
+      app,
       image: `${stem}.png`,
       format: 'RGBA8888',
       size: { w: layout.w, h: layout.h },
@@ -166,6 +178,43 @@ async function decoded(file) {
 }
 
 /**
+ * Write one laid-out sheet as `<stem>.png` and `<stem>.json` in `outDir`, or
+ * with `check` compare it with what is there. Returns whether it was stale
+ * (or written).
+ */
+export async function writeCutSheet(
+  { stem, layout, sheet, app },
+  outDir,
+  { check = false } = {}
+) {
+  const pixels = sheetPixels(sheet, layout)
+  const json = appIconSheetJson(stem, layout, app)
+  const pngFile = join(outDir, `${stem}.png`)
+  const jsonFile = join(outDir, `${stem}.json`)
+  if (check) {
+    const fresh =
+      existsSync(pngFile) &&
+      existsSync(jsonFile) &&
+      readFileSync(jsonFile, 'utf8') === json &&
+      samePixels(await decoded(pngFile), {
+        data: pixels,
+        width: layout.w,
+        height: layout.h,
+      })
+    return !fresh
+  }
+  mkdirSync(outDir, { recursive: true })
+  await sharp(pixels, {
+    raw: { width: layout.w, height: layout.h, channels: 4 },
+  })
+    .png()
+    .toFile(pngFile)
+  await optimizePng(pngFile)
+  writeFileSync(jsonFile, json)
+  return true
+}
+
+/**
  * Write both sheets into `outDir`, or with `check` compare them with what is
  * there. Returns the stale or written file names.
  */
@@ -175,32 +224,9 @@ export async function writeAppIcons(input, outDir, { check = false } = {}) {
   const touched = []
   for (const [key, stem] of Object.entries(APP_ICON_SHEETS)) {
     const layout = layouts[key]
-    const pixels = sheetPixels(sheet, layout)
-    const json = appIconSheetJson(stem, layout)
-    const pngFile = join(outDir, `${stem}.png`)
-    const jsonFile = join(outDir, `${stem}.json`)
-    if (check) {
-      const fresh =
-        existsSync(pngFile) &&
-        existsSync(jsonFile) &&
-        readFileSync(jsonFile, 'utf8') === json &&
-        samePixels(await decoded(pngFile), {
-          data: pixels,
-          width: layout.w,
-          height: layout.h,
-        })
-      if (!fresh) touched.push(stem)
-      continue
+    if (await writeCutSheet({ stem, layout, sheet }, outDir, { check })) {
+      touched.push(stem)
     }
-    mkdirSync(outDir, { recursive: true })
-    await sharp(pixels, {
-      raw: { width: layout.w, height: layout.h, channels: 4 },
-    })
-      .png()
-      .toFile(pngFile)
-    await optimizePng(pngFile)
-    writeFileSync(jsonFile, json)
-    touched.push(stem)
   }
   return touched
 }
