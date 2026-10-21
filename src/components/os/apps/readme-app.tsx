@@ -37,9 +37,20 @@ function Name({ children }: { children: ReactNode }) {
 }
 
 /**
+ * The same window shows on the desktop and as a phone sheet (under the `md`
+ * breakpoint, where the phone shell takes over), so the copy that names a
+ * way to get around comes in both wordings (decision 5 of SPEC 11): clicks,
+ * ⌘K and arrow keys on the desktop, the dock, the launcher and taps on a
+ * phone. The other one is `display: none`, out of the accessibility tree.
+ */
+const DESKTOP_ONLY = 'max-md:hidden'
+const PHONE_ONLY = 'md:hidden'
+
+/**
  * readme.md window: short welcome note for ShiroOS. In pixels (SPEC 1.5):
  * the README `hi` banner over the welcome heading, the boot screen's kana
- * on a night plate, keycaps for every shortcut.
+ * on a night plate, keycaps for every shortcut. On a phone the ways to get
+ * around are the phone's (see `PHONE_ONLY`).
  */
 export default function ReadmeApp() {
   return (
@@ -66,13 +77,21 @@ export default function ReadmeApp() {
         </p>
       </header>
 
-      <p className={PROSE_CLASS}>
+      <p className={`${PROSE_CLASS} ${DESKTOP_ONLY}`}>
         This is my portfolio, reimagined as a small desktop. Click the icons on
         the side to open apps, or press <Kbd>⌘K</Kbd> for the command palette.
+      </p>
+      <p className={`${PROSE_CLASS} ${PHONE_ONLY}`}>
+        This is my portfolio, reimagined as a small desktop. On a phone it folds
+        into one feed, with a dock at the bottom: tap an app there and it opens
+        as a sheet like this one.
       </p>
 
       <section className="flex flex-col gap-3">
         <h3 className="text-heading lamp-heading">What&apos;s inside</h3>
+        <p className={`text-prose text-(--meta) ${PHONE_ONLY}`}>
+          The dock holds them in this order, from the left:
+        </p>
         <List
           items={[
             <>
@@ -97,7 +116,7 @@ export default function ReadmeApp() {
         />
       </section>
 
-      <section className="flex flex-col gap-3">
+      <section className={`flex flex-col gap-3 ${DESKTOP_ONLY}`}>
         <h3 className="text-heading lamp-heading">Shortcuts</h3>
         <List
           items={[
@@ -117,6 +136,36 @@ export default function ReadmeApp() {
               restores. Dragging a window to a screen edge does the same.
             </>,
             <>Double-click a title bar: maximize or restore the window.</>,
+          ]}
+        />
+      </section>
+
+      <section className={`flex flex-col gap-3 ${PHONE_ONLY}`}>
+        <h3 className="text-heading lamp-heading">Shortcuts</h3>
+        <List
+          items={[
+            <>
+              <Name>Dock</Name>: tap an app to open it. A small gold mark under
+              its icon means it is open.
+            </>,
+            <>
+              <Name>Search</Name>: the first button in the dock finds any app or
+              project by name.
+            </>,
+            <>
+              <Name>Launcher</Name>: the menu button at the top right. Every
+              app, plus my settings: the Lamp, the pets, pausing animations,
+              readable text and the sky.
+            </>,
+            <>
+              <Name>Lamp</Name>: the bulb at the top switches the pages between
+              night and paper.
+            </>,
+            <>
+              <Name>Sheets</Name>: the close button at the top right of a sheet
+              takes you back to the feed. The link button beside it copies a
+              link straight to that app.
+            </>,
           ]}
         />
       </section>

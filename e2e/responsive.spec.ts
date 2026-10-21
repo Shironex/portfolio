@@ -296,6 +296,45 @@ test.describe('phone, 390x844', () => {
   })
 })
 
+test.describe('the Readme wording', () => {
+  /** Lines only one of the two wordings has (SPEC 11, decision 5). */
+  const DESKTOP_LINE = 'Click the icons on the side'
+  const PHONE_LINE = 'tap an app there'
+
+  test.describe('on a phone', () => {
+    test.use(PHONE)
+
+    test('speaks of the dock, the launcher and taps, not clicks and keys', async ({
+      page,
+    }) => {
+      await openMobile(page)
+      await dock(page)
+        .getByRole('button', { name: 'Open Readme', exact: true })
+        .click()
+      const readme = sheet(page, 'readme.md')
+      await expect(readme).toBeVisible()
+      await expect(readme.getByText(PHONE_LINE)).toBeVisible()
+      await expect(readme.getByText('Launcher', { exact: true })).toBeVisible()
+      await expect(readme.getByText(DESKTOP_LINE)).toBeHidden()
+      // No keycap and no title bar keys on a phone.
+      await expect(readme.locator('kbd').filter({ visible: true })).toHaveCount(
+        0
+      )
+      for (const line of await readme.getByText(/arrow/i).all()) {
+        await expect(line).toBeHidden()
+      }
+    })
+  })
+
+  test('on the desktop it keeps the clicks and the keys', async ({ page }) => {
+    await page.goto('/?open=readme')
+    await desktopReady(page)
+    const readme = osWindow(page, 'readme.md')
+    await expect(readme.getByText(DESKTOP_LINE)).toBeVisible()
+    await expect(readme.getByText(PHONE_LINE)).toBeHidden()
+  })
+})
+
 test.describe('reflow at 320 css', () => {
   test.use({ ...PHONE, viewport: { width: 320, height: 640 } })
 
