@@ -1,0 +1,102 @@
+{
+  "frames": [
+    {
+      "filename": "os-neon-404 0.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 20
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 20
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 20
+      },
+      "duration": 3200
+    },
+    {
+      "filename": "os-neon-404 1.aseprite",
+      "frame": {
+        "x": 48,
+        "y": 0,
+        "w": 48,
+        "h": 20
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 20
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 20
+      },
+      "duration": 90
+    },
+    {
+      "filename": "os-neon-404 2.aseprite",
+      "frame": {
+        "x": 0,
+        "y": 20,
+        "w": 48,
+        "h": 20
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 48,
+        "h": 20
+      },
+      "sourceSize": {
+        "w": 48,
+        "h": 20
+      },
+      "duration": 150
+    }
+  ],
+  "meta": {
+    "app": "https://www.aseprite.org/",
+    "image": "os-neon-404.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 96,
+      "h": 40
+    },
+    "scale": "1",
+    "frameTags": [
+      {
+        "name": "flicker",
+        "from": 0,
+        "to": 2,
+        "direction": "forward",
+        "color": "#000000ff"
+      }
+    ],
+    "layers": [
+      {
+        "name": "panel",
+        "opacity": 255,
+        "blendMode": "normal"
+      },
+      {
+        "name": "neon",
+        "opacity": 255,
+        "blendMode": "normal"
+      }
+    ],
+    "slices": []
+  }
+}
