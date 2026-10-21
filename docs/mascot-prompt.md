@@ -49,7 +49,7 @@ Adapted from the ShiroAni chibi-vampire-neko prompt library. Single-pose version
 
 > chibi anime girl character, 2-head-tall proportions with oversized head and tiny body, long flowing teal-green hair with twin tails tied with pink polka-dot ribbons, small headphones resting around her neck, teal star hair clips, bright teal-cyan eyes with gentle cheerful expression, small open smile, wearing a cream white top with pink star pattern, lavender cardigan draped over shoulders, pink high-top sneakers with teal and white accents, pale cream skin with soft pink blush marks on cheeks
 
-## Pose — Idle / gentle wave (`mascot.png`)
+## Pose: idle, gentle wave ([`mascot.png`](mascot.png))
 
 ```
 A hand-drawn outline digital illustration of a chibi anime girl character,
@@ -74,7 +74,7 @@ composition, transparent background.
 4. Paste the pose prompt above
 5. Generate 4+ images
 6. Pick the best match; remove background with the scissors tool if the transparent-bg prompt didn't take
-7. Export as PNG, save to `public/mascot.png`
+7. Export as PNG, save to `docs/mascot.png` (kept beside this prompt as the reference; the site no longer serves it)
 
 ## Transparency Tips
 
