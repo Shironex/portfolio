@@ -1,93 +1,127 @@
-import Image from 'next/image'
+import type { ReactNode } from 'react'
 
-import { INLINE_LINK_CLASS } from '@/components/os/constants'
+import { INLINE_LINK_CLASS, PROSE_CLASS } from '@/components/os/constants'
 import { Kbd } from '@/components/os/kbd'
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
 import { GITHUB_URL } from '@/lib/constants'
 import { countProjects } from '@/lib/utils/projects'
 
+import banners from '@/assets/pixel/banners/readme-headers.png'
+import bootSheet from '@/assets/pixel/boot/os-boot.png'
 import { projectsData } from '@/data/projects-data'
+import '@/styles/sprites/os-boot.css'
+import '@/styles/sprites/readme-headers.css'
 
 const projectCount = countProjects(projectsData).total
 
+/** A list of the Readme: pixel chevrons for bullets, at the measure. */
+function List({ items }: { items: ReactNode[] }) {
+  return (
+    <ul className="flex max-w-[66ch] flex-col gap-2">
+      {items.map((item, i) => (
+        <li key={i} className="text-body flex items-start gap-3 text-(--ink)">
+          <PixelIcon
+            name="chevron-right"
+            className="mt-3 text-(--accent-primary-icon)"
+          />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+function Name({ children }: { children: ReactNode }) {
+  return <strong className="font-bold text-(--ink-hi)">{children}</strong>
+}
+
 /**
- * readme.md window: short welcome note for ShiroOS.
+ * readme.md window: short welcome note for ShiroOS. In pixels (SPEC 1.5):
+ * the README `hi` banner over the welcome heading, the boot screen's kana
+ * on a night plate, keycaps for every shortcut.
  */
 export default function ReadmeApp() {
   return (
-    <div className="font-body text-ink-2 max-w-360 text-[14px] leading-relaxed">
-      <div className="mb-8 flex items-center gap-8">
-        <Image
-          src="/mascot.png"
-          alt=""
-          width={80}
-          height={80}
-          className="border-rule-2 bg-miku/10 shadow-elev-1 size-32 shrink-0 rounded-full border object-cover object-top"
+    <div className="flex flex-col gap-8">
+      <header className="flex flex-col items-start gap-3">
+        <span
+          aria-hidden
+          className="os-night px-readme-headers px-readme-headers-hi ambient-loop block flex-none animate-(--px-loop)"
+          style={{ backgroundImage: `url(${banners.src})` }}
         />
-        <div>
-          <h2 className="font-display text-ink text-3xl font-semibold">
-            Welcome to ShiroOS
-          </h2>
-          <p className="text-ink-4 mt-1 font-mono text-[11px]">
-            シロOS · portfolio build
-          </p>
-        </div>
-      </div>
+        <h2 className="text-display lamp-heading">Welcome to ShiroOS</h2>
+        <p className="flex items-center gap-3">
+          <span
+            role="img"
+            aria-label="シロOS"
+            className="os-night px-label-plate block flex-none p-1"
+          >
+            <span
+              className="px-os-boot px-os-boot-kana block"
+              style={{ backgroundImage: `url(${bootSheet.src})` }}
+            />
+          </span>
+          <span className="text-label text-(--meta)">portfolio build</span>
+        </p>
+      </header>
 
-      <p>
+      <p className={PROSE_CLASS}>
         This is my portfolio, reimagined as a small desktop. Click the icons on
         the side to open apps, or press <Kbd>⌘K</Kbd> for the command palette.
       </p>
 
-      <h3 className="font-display text-ink mt-14 mb-4 text-lg font-semibold">
-        What&apos;s inside
-      </h3>
-      <ul className="list-disc space-y-2 pl-10">
-        <li>
-          <span className="text-ink font-semibold">Projects</span>:{' '}
-          {projectCount} things I made, filterable by status.
-        </li>
-        <li>
-          <span className="text-ink font-semibold">About</span>: who I am, what
-          I work on, and what I do outside the editor.
-        </li>
-        <li>
-          <span className="text-ink font-semibold">Monitor</span>: skills and
-          tools I use daily.
-        </li>
-        <li>
-          <span className="text-ink font-semibold">Contact</span>: a form, plus
-          my email and GitHub.
-        </li>
-        <li>
-          <span className="text-ink font-semibold">Writing</span>: the latest
-          posts from my blog, where I write up what I build and what broke.
-        </li>
-      </ul>
+      <section className="flex flex-col gap-3">
+        <h3 className="text-heading lamp-heading">What&apos;s inside</h3>
+        <List
+          items={[
+            <>
+              <Name>Projects</Name>: {projectCount} things I made, filterable by
+              status.
+            </>,
+            <>
+              <Name>About</Name>: who I am, what I work on, and what I do
+              outside the editor.
+            </>,
+            <>
+              <Name>Monitor</Name>: skills and tools I use daily.
+            </>,
+            <>
+              <Name>Contact</Name>: a form, plus my email and GitHub.
+            </>,
+            <>
+              <Name>Writing</Name>: the latest posts from my blog, where I write
+              up what I build and what broke.
+            </>,
+          ]}
+        />
+      </section>
 
-      <h3 className="font-display text-ink mt-14 mb-4 text-lg font-semibold">
-        Shortcuts
-      </h3>
-      <ul className="list-disc space-y-2 pl-10">
-        <li>
-          <Kbd>⌘K</Kbd>: command palette
-        </li>
-        <li>
-          <Kbd>Esc</Kbd>: close the focused window
-        </li>
-        <li>
-          Arrow keys on a focused title bar: move the window. <Kbd>Shift</Kbd> +
-          arrows to resize.
-        </li>
-        <li>
-          <Kbd>Ctrl</Kbd> + <Kbd>Alt</Kbd> + arrows on a focused title bar: left
-          or right snaps the window to that half, up maximizes, down restores.
-          Dragging a window to a screen edge does the same.
-        </li>
-        <li>Double-click a title bar: maximize or restore the window.</li>
-      </ul>
+      <section className="flex flex-col gap-3">
+        <h3 className="text-heading lamp-heading">Shortcuts</h3>
+        <List
+          items={[
+            <>
+              <Kbd>⌘K</Kbd>: command palette
+            </>,
+            <>
+              <Kbd>Esc</Kbd>: close the focused window
+            </>,
+            <>
+              Arrow keys on a focused title bar: move the window.{' '}
+              <Kbd>Shift</Kbd> + arrows to resize.
+            </>,
+            <>
+              <Kbd>Ctrl</Kbd> + <Kbd>Alt</Kbd> + arrows on a focused title bar:
+              left or right snaps the window to that half, up maximizes, down
+              restores. Dragging a window to a screen edge does the same.
+            </>,
+            <>Double-click a title bar: maximize or restore the window.</>,
+          ]}
+        />
+      </section>
 
-      <p className="text-ink-3 mt-16 text-sm">
+      <p className="text-body max-w-[66ch] text-(--meta)">
         Built with Next.js 16 and Tailwind v4. Source is on{' '}
         <a
           href={GITHUB_URL}
