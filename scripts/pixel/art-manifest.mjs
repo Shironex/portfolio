@@ -161,6 +161,8 @@ export const SPRITE_CSS_DIR = 'src/styles/sprites'
  */
 export const GENERATED_BUDGETS = [
   { file: 'src/styles/pixel-chrome.css', bytes: 24 * KB },
+  // The phone shell's own chrome (the sheet title bar), loaded by the shell.
+  { file: 'src/styles/mobile-chrome.css', bytes: 2 * KB },
   { file: 'src/components/pixel/pixel-icon.generated.tsx', bytes: 16 * KB },
   { file: 'src/styles/pixel-cursors.css', bytes: 6 * KB },
   { file: `${SPRITE_CSS_DIR}/app-icons-16.css`, bytes: 2 * KB },

@@ -21,7 +21,13 @@ import sharp from 'sharp'
 import { checkArt, sheetProblems } from '../check-art.mjs'
 import { normalizeSheetJson, resolvePaths, sheetArgs } from '../export-art.mjs'
 import { appIconLayout, appIconSheetJson } from '../gen-app-icons.mjs'
-import { chromeCss, growGrid, sliceInsets } from '../gen-chrome.mjs'
+import {
+  chromeCss,
+  growGrid,
+  mobileChromeCss,
+  sliceInsets,
+  widthsIn,
+} from '../gen-chrome.mjs'
 import { cursorsCss } from '../gen-cursors.mjs'
 import { glyphModuleSource, readGlyphs } from '../gen-glyphs.mjs'
 import { sheetData } from '../gen-pets.mjs'
@@ -1099,6 +1105,29 @@ describe('gen-chrome', () => {
     // Three rows more: one above (the floor of half) and two below.
     assert.equal(grown.grid.map((row) => row[0]).join(''), 'taamzzzb')
     assert.deepEqual(grown.center, { x: 0, y: 1, w: 1, h: 6 })
+  })
+
+  it('writes the phone pieces as grown copies in the components layer', async () => {
+    const sheet = await loadSheet(fixture('chrome-fixture'))
+    const options = {
+      copies: [{ name: 'window-tall', from: 'window', height: 9 }],
+    }
+    const out = mobileChromeCss(sheet, undefined, options)
+    assert.match(out, /^@layer components \{\n {2}\.px-window-tall \{/m)
+    assert.match(out, /height='9'/)
+    assert.ok(!out.includes(':root'), 'the widths come from pixel-chrome.css')
+    assert.deepEqual([...widthsIn(out)], [2])
+    assert.throws(
+      () => mobileChromeCss(sheet, undefined, options, new Set([1])),
+      /needs --px2/
+    )
+    assert.throws(
+      () =>
+        mobileChromeCss(sheet, undefined, {
+          copies: [{ name: 'x', from: 'nothing' }],
+        }),
+      /no 9-slice "nothing"/
+    )
   })
 
   it('refuses a 9-slice that changes across frames', async () => {
