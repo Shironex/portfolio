@@ -13,7 +13,11 @@ import { useScrollLock } from '@/hooks/use-scroll-lock'
 import '@/styles/mobile-chrome.css'
 
 import { ModalLiveRegion } from './announcer'
-import { COPY_LINK_LABEL } from './constants'
+import {
+  COPY_LINK_LABEL,
+  SCROLL_STOP_CLASS,
+  scrollStopProps,
+} from './constants'
 
 /**
  * A glyph button of the title bar: a 22 art px target (44 css), the glyph
@@ -36,6 +40,8 @@ interface MobileSheetProps {
   onCopyLink?: () => void
   /** What Escape counts this sheet as; the launcher sits above a window. */
   layer?: Extract<EscapeLayer, 'sheet' | 'launcher'>
+  /** Makes the body a named Tab stop, as on a window (`scrollStopLabelFor`). */
+  bodyLabel?: string
   children: ReactNode
 }
 
@@ -62,6 +68,7 @@ export function MobileSheet({
   onClose,
   onCopyLink,
   layer = 'sheet',
+  bodyLabel,
   children,
 }: MobileSheetProps) {
   const panelRef = useRef<HTMLDivElement>(null)
@@ -121,7 +128,13 @@ export function MobileSheet({
       </div>
       {/* Opaque, in the window body's colour, as a window's scroller is.
           The sheet already clears the side insets. */}
-      <div className="font-body text-ink bg-surf-solid min-h-0 flex-1 overflow-y-auto px-8 pt-10 pb-[calc(12*var(--px)+env(safe-area-inset-bottom))]">
+      <div
+        {...scrollStopProps(bodyLabel)}
+        className={cn(
+          'font-body text-ink bg-surf-solid min-h-0 flex-1 overflow-y-auto px-8 pt-10 pb-[calc(12*var(--px)+env(safe-area-inset-bottom))]',
+          bodyLabel && SCROLL_STOP_CLASS
+        )}
+      >
         {children}
       </div>
       <ModalLiveRegion />

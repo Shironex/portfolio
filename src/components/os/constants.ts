@@ -82,6 +82,36 @@ export function windowNameFor(win: WindowState): string {
   )
 }
 
+/**
+ * Names for the bodies of apps with nothing focusable inside (Monitor). Such
+ * a body is a Tab stop, a region with this name, so a keyboard can reach and
+ * scroll it in every engine: Chromium and Firefox make a scroller focusable
+ * by themselves, WebKit does not.
+ */
+const SCROLL_STOP_LABELS: Partial<Record<AppId, string>> = {
+  skills: 'Skills and tools',
+}
+
+/** The body's name when it is a Tab stop of its own (`SCROLL_STOP_LABELS`). */
+export function scrollStopLabelFor(win: WindowState): string | undefined {
+  if (win.project || !isAppId(win.id)) return undefined
+  return SCROLL_STOP_LABELS[win.id]
+}
+
+/**
+ * The focus ring of a body Tab stop, drawn inside its edge (navy, then the
+ * lamp), where the window frame cannot clip it.
+ */
+export const SCROLL_STOP_CLASS =
+  'focus-ring focus-visible:outline-offset-[calc(-2*var(--px))] focus-visible:[box-shadow:inset_0_0_0_var(--px)_var(--ground)]'
+
+/** Window body props for a Tab stop, or none when the app has its own. */
+export function scrollStopProps(label: string | undefined) {
+  return label
+    ? ({ tabIndex: 0, role: 'region', 'aria-label': label } as const)
+    : {}
+}
+
 /** Where each app window opens and how big, in art px (SPEC 2.4). */
 export interface AppWindowDefaults {
   title: string

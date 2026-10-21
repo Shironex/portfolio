@@ -25,6 +25,7 @@ import {
   MOBILE_FEED_TOP_CLASS,
   MOBILE_GUTTER_CLASS,
   PROSE_CLASS,
+  scrollStopLabelFor,
 } from './constants'
 import { MobileLauncher } from './mobile-launcher'
 import { MobileSheet } from './mobile-sheet'
@@ -200,6 +201,7 @@ export function MobileShell({
           icon={<WindowIcon win={topSheet} />}
           onClose={closeTopSheet}
           onCopyLink={() => onCopyLink(topSheet.id)}
+          bodyLabel={scrollStopLabelFor(topSheet)}
         >
           <AppBody
             id={topSheet.id}

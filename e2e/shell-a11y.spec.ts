@@ -481,6 +481,24 @@ test.describe('window focus', () => {
     await expect(icon).toBeFocused()
   })
 
+  test("Monitor's body, with nothing to focus inside, is a named Tab stop", async ({
+    page,
+  }) => {
+    await openDesktop(page)
+    const monitor = await launch(page, 'Monitor', 'monitor.sys')
+    const body = monitor.getByRole('region', { name: 'Skills and tools' })
+    await expect(body).toHaveAttribute('tabindex', '0')
+
+    // Past the title bar's last control, and it scrolls from the keyboard.
+    await monitor.getByRole('button', { name: 'Close window' }).focus()
+    await page.keyboard.press('Tab')
+    await expect(body).toBeFocused()
+    await page.keyboard.press('PageDown')
+    await expect
+      .poll(() => body.evaluate((el) => el.scrollTop))
+      .toBeGreaterThan(0)
+  })
+
   test('goes to the next window when the top one closes', async ({ page }) => {
     await openDesktop(page)
     const projects = await launch(page, 'Projects', 'projects.app')

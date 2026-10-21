@@ -22,7 +22,12 @@ import type { Project } from '@/types'
 
 import { useAnnounce } from './announcer'
 import { AppBody } from './app-registry'
-import { windowNameFor } from './constants'
+import {
+  SCROLL_STOP_CLASS,
+  scrollStopLabelFor,
+  scrollStopProps,
+  windowNameFor,
+} from './constants'
 import type { WindowId, WindowState } from './types'
 
 interface WindowProps {
@@ -141,6 +146,7 @@ function WindowImpl({
   onOpenProject,
 }: WindowProps) {
   const shortcutHintId = useId()
+  const bodyLabel = scrollStopLabelFor(win)
   const say = useAnnounce()
   const rootRef = useRef<HTMLDivElement | null>(null)
   const reducedMotion = useReducedMotion()
@@ -361,8 +367,15 @@ function WindowImpl({
             it (threaded scrolling keeps LCD text only on an opaque scroller
             at DPR 1). Contained: layout and paint inside an app never reach
             past the scroller, which clips at the same box anyway (the
-            lightbox and toasts are portals). */}
-          <div className="font-body text-ink bg-surf-solid min-h-0 flex-1 overflow-auto px-12 pt-12 pb-6 contain-layout contain-paint contain-style">
+            lightbox and toasts are portals). An app with nothing to focus
+            makes it a Tab stop (`scrollStopLabelFor`). */}
+          <div
+            {...scrollStopProps(bodyLabel)}
+            className={cn(
+              'font-body text-ink bg-surf-solid min-h-0 flex-1 overflow-auto px-12 pt-12 pb-6 contain-layout contain-paint contain-style',
+              bodyLabel && SCROLL_STOP_CLASS
+            )}
+          >
             <AppBody
               id={win.id}
               project={win.project}
