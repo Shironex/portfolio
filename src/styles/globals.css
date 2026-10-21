@@ -129,6 +129,26 @@
   );
 }
 
+/*
+ * Sprites drawn at 2 or 3 device-whole art px per art px (the project hero
+ * icon, the 404 sign, the empty state mascot). The wrapper turns the `--px`
+ * it inherits into `--px-scaled` and its children take that as their own
+ * `--px`: set on one element the two would be a cycle.
+ */
+@utility px-scale-2 {
+  --px-scaled: calc(2 * var(--px));
+  & > * {
+    --px: var(--px-scaled);
+  }
+}
+
+@utility px-scale-3 {
+  --px-scaled: calc(3 * var(--px));
+  & > * {
+    --px: var(--px-scaled);
+  }
+}
+
 /* Lamp lettering with its 1 art px shadow, the README header treatment. */
 @utility lamp-heading {
   color: var(--heading);
@@ -759,9 +779,12 @@
  * Loops the user starts by hovering or focusing (app and project icons)
  * keep playing under the automatic pauses above, but the Pause animations
  * setting holds them on their still, as reduced motion does (decision 2 of
- * SPEC section 10). Unlayered, so it wins over the hover utility.
+ * SPEC section 10). `px-rest-paused` does the same for a sprite that plays
+ * on its own but must show its first frame under Pause, not whichever frame
+ * the pause caught (the 404 sign's flicker, the mini-me's wave on open).
+ * Unlayered, so it wins over the hover utility.
  */
-[data-motion='paused'] .px-hover-loop {
+[data-motion='paused'] :is(.px-hover-loop, .px-rest-paused) {
   animation: none;
 }
 
