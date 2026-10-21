@@ -122,7 +122,7 @@ export function SkyPicker({ value, onSelect, inMenu }: SkyPickerProps) {
           {value === sky.id && (
             <span
               aria-hidden
-              className="absolute bottom-0 left-8 h-1 w-2 bg-(--lamp)"
+              className="absolute bottom-0 left-1/2 -ml-1 h-1 w-2 bg-(--lamp)"
             />
           )}
         </button>
