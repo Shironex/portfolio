@@ -1,11 +1,12 @@
 /**
  * Window chrome as CSS border-image (SPEC 2.4, 9-slice pipeline).
  *
- *   pnpm art:chrome            write src/styles/pixel-chrome.css and
+ *   pnpm art:chrome            write src/styles/pixel-chrome.css,
+ *                              src/styles/coarse-chrome.css and
  *                              src/styles/mobile-chrome.css
- *   pnpm art:chrome --check    fail if either file is stale
+ *   pnpm art:chrome --check    fail if any of them is stale
  *   node scripts/pixel/gen-chrome.mjs --in <sheet.json> --out <file.css>
- *     [--mobile-out <file.css>]
+ *     [--coarse-out <file.css>] [--mobile-out <file.css>]
  *
  * Atlas contract (os-chrome.aseprite, exported by `pnpm art:export`):
  *   - one slice per piece, named in kebab case; the class is `.px-<name>`
@@ -39,10 +40,6 @@
  *
  * Code adds what the atlas does not draw (`CHROME_OPTIONS`):
  *   - variants: a slice recoloured, as its own class (chip tones)
- *   - grown slices: a slice redrawn taller by repeating its first and last
- *     centre row, swapped in under a media query. The title bar keeps its
- *     grip in the left cap, so it only maps 1:1 at its drawn height; the
- *     coarse pointer bar is 22 art px, with flat rows above and below.
  *   - paper colours of one body on top of `PAPER_RECOLOUR` (the well's
  *     ground fill, which is not a body colour anywhere else)
  *   - states: a 9-slice recoloured under an attribute selector, in night and
@@ -52,12 +49,23 @@
  * a data URI (CSP allows `data:` images), so there is no request and no
  * resampling blur.
  *
- * A second stylesheet, `src/styles/mobile-chrome.css`, holds the chrome only
- * the phone shell draws (`MOBILE_CHROME_OPTIONS`), so the desktop budget
- * stays where it is and the phone pieces load with the shell that imports
- * them: copies of a slice under a new class, grown to another height (the
- * sheet title bar, 24 art px). It reads the border width variables of the
- * main stylesheet, which every page loads.
+ * Grown slices: a slice redrawn taller by repeating its first and last
+ * centre row (`growGrid`), so what is drawn between them (the title bar's
+ * grip) keeps its size and lands in the middle, with flat rows above and
+ * below. The title bar only maps 1:1 at its drawn height of 16 rows.
+ *
+ * Two more stylesheets keep the main budget where it is:
+ *   - `src/styles/coarse-chrome.css` (`COARSE_CHROME_OPTIONS`): the title
+ *     bars grown to 24 art px, swapped in under a coarse pointer, so a window
+ *     control is 44 css or more at every DPR (45.7 at 2.625). globals.css
+ *     imports it after the main stylesheet, whose rules it overrides.
+ *   - `src/styles/mobile-chrome.css` (`MOBILE_CHROME_OPTIONS`): the chrome
+ *     only the phone shell draws, loaded with the sheet that imports it:
+ *     copies of a slice under a new class, grown to another height (the
+ *     sheet title bar, 24 art px).
+ *
+ * Both read the border width variables of the main stylesheet, which every
+ * page loads; neither may need one it does not declare.
  */
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { join, relative } from 'node:path'
@@ -78,6 +86,7 @@ const DEFAULT_IN = join(
   'os-chrome.json'
 )
 const DEFAULT_OUT = join(ROOT, 'src', 'styles', 'pixel-chrome.css')
+const COARSE_OUT = join(ROOT, 'src', 'styles', 'coarse-chrome.css')
 const MOBILE_OUT = join(ROOT, 'src', 'styles', 'mobile-chrome.css')
 const REPEATS = new Set(['stretch', 'round', 'space', 'repeat'])
 const STATES = ['rest', 'hover', 'pressed']
@@ -94,7 +103,7 @@ const ENABLED = ":not(:disabled, [aria-disabled='true'])"
 
 /**
  * What code adds to `os-chrome.aseprite` (see the header): its bodies, the
- * chip tones and the coarse pointer title bars.
+ * chip tones, the well's paper fill and its invalid state.
  */
 export const CHROME_OPTIONS = {
   paper: [
@@ -111,10 +120,6 @@ export const CHROME_OPTIONS = {
     // Archived: meta grey on the ground, 7.27:1.
     { name: 'chip-ground', from: 'chip', recolour: { '#1f5058': '#0b1420' } },
   ],
-  grow: [
-    { slice: 'titlebar-focused', height: 22, media: '(pointer: coarse)' },
-    { slice: 'titlebar-unfocused', height: 22, media: '(pointer: coarse)' },
-  ],
   // The field well on paper: cream fill (`--surf-raised`, 13.88:1 under the
   // ink), the rim teal through PAPER_RECOLOUR (5.26:1 as a boundary).
   paperRecolour: { well: { '#0b1420': '#fff2c8' } },
@@ -126,6 +131,19 @@ export const CHROME_OPTIONS = {
       selector: "[aria-invalid='true']",
       recolour: { '#4fa3a0': '#f0a068' },
     },
+  ],
+}
+
+/**
+ * The coarse pointer title bars (`coarse-chrome.css`): 24 art px, so the
+ * window controls that fill them are 44 css or more at every DPR (SPEC 4.4
+ * and 11). The grip keeps its drawn size in the middle of the left cap.
+ */
+export const COARSE_CHROME_OPTIONS = {
+  media: '(pointer: coarse)',
+  grow: [
+    { slice: 'titlebar-focused', height: 24 },
+    { slice: 'titlebar-unfocused', height: 24 },
   ],
 }
 
@@ -284,8 +302,8 @@ function media(query, rules) {
   return `@media ${query} {\n${rules.join('\n').replace(/^(?=.)/gm, '  ')}\n}`
 }
 
-/** CSS for one 9-slice piece, its paper copy, states and grown copies. */
-function nineSliceCss(piece, selector, grows, states = []) {
+/** CSS for one 9-slice piece, its paper copy and states. */
+function nineSliceCss(piece, selector, states = []) {
   const paperGrid = (g) => recolourGrid(g, piece.paperMap)
   const { grid } = piece.frames[0]
   const night = nineSlice(grid, piece.center, piece.repeat)
@@ -311,18 +329,6 @@ function nineSliceCss(piece, selector, grows, states = []) {
         ])
       )
     }
-  }
-  for (const grow of grows) {
-    const tall = growGrid(grid, piece.center, grow.height)
-    const blocks = [rule(selector, [`border-image-source: ${url(tall.grid)};`])]
-    if (hasPaper) {
-      blocks.push(
-        rule(paperSelector, [
-          `border-image-source: ${url(paperGrid(tall.grid))};`,
-        ])
-      )
-    }
-    rules.push(media(grow.media, blocks))
   }
   return rules.join('\n')
 }
@@ -440,13 +446,6 @@ export function chromeCss(
       throw new Error(`state "${state.selector}": no 9-slice "${state.slice}"`)
     states.set(state.slice, [...(states.get(state.slice) ?? []), state])
   }
-  const grows = new Map()
-  for (const grow of options.grow ?? []) {
-    const piece = pieces.get(grow.slice)
-    if (!piece?.center)
-      throw new Error(`grow "${grow.slice}": no 9-slice of that name`)
-    grows.set(grow.slice, [...(grows.get(grow.slice) ?? []), grow])
-  }
 
   // Controls: every `<base>-rest` with its other states.
   const families = new Map()
@@ -475,12 +474,7 @@ export function chromeCss(
     if (piece.center) {
       blocks.push({
         name: piece.name,
-        css: nineSliceCss(
-          piece,
-          `.px-${piece.name}`,
-          grows.get(piece.name) ?? [],
-          states.get(piece.name)
-        ),
+        css: nineSliceCss(piece, `.px-${piece.name}`, states.get(piece.name)),
       })
     } else {
       tiles.push(piece)
@@ -490,13 +484,7 @@ export function chromeCss(
   blocks.sort((a, b) => a.name.localeCompare(b.name))
   tiles.sort((a, b) => a.name.localeCompare(b.name))
 
-  const header = [
-    '/*',
-    ` * GENERATED by scripts/pixel/gen-chrome.mjs from ${source}.`,
-    ' * Do not edit by hand: re-export the chrome atlas and run `pnpm art:chrome`.',
-    ' */',
-    '',
-  ]
+  const header = generatedHeader(source)
   const body = blocks.map((b) => b.css).join('\n\n')
   // The border widths the rules use, once each, and the tiles.
   const widths = [...new Set(body.match(/(?<=var\(--px)\d+(?=\))/g))]
@@ -518,6 +506,60 @@ export function widthsIn(css) {
   return new Set(
     [...css.matchAll(/(?<=var\(--px)\d+(?=\))/g)].map((m) => Number(m[0]))
   )
+}
+
+/** The two-line header of a generated stylesheet, plus any more lines. */
+function generatedHeader(source, ...more) {
+  return [
+    '/*',
+    ` * GENERATED by scripts/pixel/gen-chrome.mjs from ${source}.`,
+    ' * Do not edit by hand: re-export the chrome atlas and run `pnpm art:chrome`.',
+    ...more.map((line) => ` * ${line}`),
+    ' */',
+    '',
+  ]
+}
+
+/**
+ * The coarse pointer stylesheet: each grown slice swaps in its taller image
+ * (night, and paper for a body) under one media query. The border widths
+ * stay the drawn ones, since growing only adds centre rows, so this file
+ * needs no `--px<n>` of its own. It must load after `pixel-chrome.css`.
+ */
+export function coarseChromeCss(
+  sheet,
+  source = 'src/assets/pixel/chrome/os-chrome.json',
+  options = COARSE_CHROME_OPTIONS,
+  base = CHROME_OPTIONS
+) {
+  const paperNames = new Set(base.paper ?? [])
+  const blocks = []
+  for (const grow of options.grow ?? []) {
+    const slice = sheet.data.meta.slices.find((s) => s.name === grow.slice)
+    const piece =
+      slice && slicePiece(sheet, slice, paperNames, base.paperRecolour ?? {})
+    if (!piece?.center)
+      throw new Error(`grow "${grow.slice}": no 9-slice of that name`)
+    const tall = growGrid(piece.frames[0].grid, piece.center, grow.height)
+    const selector = `.px-${piece.name}`
+    blocks.push(rule(selector, [`border-image-source: ${url(tall.grid)};`]))
+    const paper = recolourGrid(tall.grid, piece.paperMap)
+    if (piece.paper && !same(paper, tall.grid)) {
+      blocks.push(
+        rule(`${PAPER_SCOPE} ${selector}${OUTSIDE_NIGHT}`, [
+          `border-image-source: ${url(paper)};`,
+        ])
+      )
+    }
+  }
+  return [
+    ...generatedHeader(
+      source,
+      'globals.css imports it after pixel-chrome.css.'
+    ),
+    media(options.media, blocks),
+    '',
+  ].join('\n')
 }
 
 /**
@@ -553,12 +595,10 @@ export function mobileChromeCss(
     )
   }
   return [
-    '/*',
-    ` * GENERATED by scripts/pixel/gen-chrome.mjs from ${source}.`,
-    ' * Do not edit by hand: re-export the chrome atlas and run `pnpm art:chrome`.',
-    ' * The phone shell imports it (`mobile-shell.tsx`).',
-    ' */',
-    '',
+    ...generatedHeader(
+      source,
+      'The phone sheet imports it (`mobile-sheet.tsx`).'
+    ),
     '@layer components {',
     body.replace(/^(?=.)/gm, '  '),
     '}',
@@ -579,6 +619,7 @@ async function main(argv) {
     )
     process.exit(1)
   }
+  const coarseOut = at('--coarse-out', COARSE_OUT)
   const mobileOut = at('--mobile-out', MOBILE_OUT)
   const sheet = await loadSheet(input)
   const source = relative(ROOT, input).split('\\').join('/')
@@ -589,9 +630,11 @@ async function main(argv) {
     MOBILE_CHROME_OPTIONS,
     widthsIn(css)
   )
+  const coarse = coarseChromeCss(sheet, source)
   const count = sheet.data.meta.slices.length
   const outputs = [
     [out, css],
+    [coarseOut, coarse],
     [mobileOut, mobile],
   ]
   if (argv.includes('--check')) {

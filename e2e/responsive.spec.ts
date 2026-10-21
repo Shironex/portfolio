@@ -396,7 +396,8 @@ test.describe('coarse pointer at desktop width, 820x1180', () => {
     await expect(win).toBeVisible()
     await settled(win)
 
-    expect((await boxOf(titleBar(win))).height).toBe(TARGET)
+    // 24 art px (SPEC 11), 48 css at DPR 1.
+    expect((await boxOf(titleBar(win))).height).toBe(48)
     for (const name of [
       'Copy link to this window',
       'Minimize window',
@@ -412,5 +413,49 @@ test.describe('coarse pointer at desktop width, 820x1180', () => {
       .filter({ has: page.getByRole('menubar') })
     expect(await smallTargets(menuBar)).toEqual([])
     expect(await smallTargets(taskbar(page))).toEqual([])
+  })
+})
+
+test.describe('coarse pointer at DPR 2.625, 820x1180', () => {
+  test.use({
+    viewport: { width: 820, height: 1180 },
+    deviceScaleFactor: 2.625,
+    ...TOUCH,
+  })
+
+  test('the title bar is 24 art px and every window control 44 css', async ({
+    page,
+  }) => {
+    await page.goto('/?open=projects')
+    await desktopReady(page)
+    const win = osWindow(page, 'projects.app')
+    await expect(win).toBeVisible()
+    await settled(win)
+
+    // An art px is 1.905 css here: 22 art px would be 41.9.
+    const px = await page.evaluate(() =>
+      parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue('--px')
+      )
+    )
+    expect(px).toBeCloseTo(1.905, 2)
+    const bar = titleBar(win)
+    expect((await boxOf(bar)).height).toBeCloseTo(24 * px, 1)
+    // The coarse slice is the one drawn: 24 rows, not the 16 of a mouse.
+    const source = await bar.evaluate(
+      (el) => getComputedStyle(el).borderImageSource
+    )
+    expect(source).toContain("height='24'")
+    expect(await smallTargets(bar)).toEqual([])
+    for (const name of [
+      'Copy link to this window',
+      'Minimize window',
+      'Toggle maximize window',
+      'Close window',
+    ]) {
+      const box = await boxOf(bar.getByRole('button', { name }))
+      expect(box.width, name).toBeGreaterThanOrEqual(TARGET)
+      expect(box.height, name).toBeGreaterThanOrEqual(TARGET)
+    }
   })
 })

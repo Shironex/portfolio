@@ -23,13 +23,13 @@ interface WindowControlsProps {
 
 /**
  * A control cell (SPEC 2.4, Window controls): an 8x8 glyph in a 14x12 art px
- * cell, 22x22 under a coarse pointer, nudged 1 art px up into the title bar
- * so it spans its whole height. Pressed, the glyph moves down 1 art px. The
+ * cell, 24x24 under a coarse pointer (44 css or more at every DPR, 45.7 at
+ * 2.625), nudged 1 art px up into the title bar so it spans its whole height. Pressed, the glyph moves down 1 art px. The
  * title bar is night chrome in both Lamp modes, so the colours are its
  * night tokens.
  */
 const CONTROL_CLASS =
-  'focus-ring flex h-12 w-14 flex-none items-center justify-center text-(--ink) active:[&>svg]:translate-y-1 pointer-coarse:-my-1 pointer-coarse:size-22'
+  'focus-ring flex h-12 w-14 flex-none items-center justify-center text-(--ink) active:[&>svg]:translate-y-1 pointer-coarse:-my-1 pointer-coarse:size-24'
 
 /** Hover fills: the selection teal, and the danger red behind close. */
 const HOVER_CLASS = 'hover:bg-(--select)'

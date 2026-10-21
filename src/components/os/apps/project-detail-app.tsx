@@ -149,7 +149,7 @@ function GalleryLightbox({
         aria-label={item.alt}
         className="animate-cp-in os-night px-window-focused relative flex max-h-full flex-col motion-reduce:animate-none"
       >
-        <div className="px-titlebar-focused flex h-16 items-center gap-3 pr-1 pl-6 pointer-coarse:h-22">
+        <div className="px-titlebar-focused flex h-16 items-center gap-3 pr-1 pl-6 pointer-coarse:h-24">
           <span className="text-title flex-1 truncate text-(--ink-hi)">
             gallery
           </span>

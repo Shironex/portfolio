@@ -231,11 +231,6 @@
   background-color: #173a45;
   background-clip: padding-box;
 }
-@media (pointer: coarse) {
-  .px-titlebar-focused {
-    border-image-source: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='22' viewBox='0 0 16 22' shape-rendering='crispEdges'><path fill='%23173a45' d='M0 0h16v22H0z'/><path fill='%230b1420' d='M3 8h1v1H3zM5 8h1v1H5zM3 11h1v1H3zM5 11h1v1H5zM3 14h1v1H3zM5 14h1v1H5zM0 21h16v1H0z'/><path fill='%232e6e6e' d='M0 0h16v1H0z'/><path fill='%23f0c070' d='M3 7h1v1H3zM5 7h1v1H5zM3 10h1v1H3zM5 10h1v1H5zM3 13h1v1H3zM5 13h1v1H5z'/></svg>");
-  }
-}
 
 .px-titlebar-unfocused {
   border-style: solid;
@@ -245,11 +240,6 @@
   border-image-slice: 1 2 1 8 fill;
   background-color: #13253a;
   background-clip: padding-box;
-}
-@media (pointer: coarse) {
-  .px-titlebar-unfocused {
-    border-image-source: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='22' viewBox='0 0 16 22' shape-rendering='crispEdges'><path fill='%2313253a' d='M0 0h16v22H0z'/><path fill='%230b1420' d='M0 21h16v1H0z'/><path fill='%23173a45' d='M0 0h16v1H0z'/></svg>");
-  }
 }
 
 .px-toast {

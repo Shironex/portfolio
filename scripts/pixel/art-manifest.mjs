@@ -161,6 +161,8 @@ export const SPRITE_CSS_DIR = 'src/styles/sprites'
  */
 export const GENERATED_BUDGETS = [
   { file: 'src/styles/pixel-chrome.css', bytes: 24 * KB },
+  // The title bars grown for a coarse pointer, after the main chrome.
+  { file: 'src/styles/coarse-chrome.css', bytes: 2 * KB },
   // The phone shell's own chrome (the sheet title bar), loaded by the shell.
   { file: 'src/styles/mobile-chrome.css', bytes: 2 * KB },
   { file: 'src/components/pixel/pixel-icon.generated.tsx', bytes: 16 * KB },

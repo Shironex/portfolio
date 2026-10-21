@@ -328,7 +328,7 @@ function WindowImpl({
             // `touch-none`: a finger on the title bar drags the window, it
             // does not scroll or zoom the page.
             className={cn(
-              'os-night focus-ring px-cursor-grab flex h-16 flex-none touch-none items-center gap-3 select-none pointer-coarse:h-22',
+              'os-night focus-ring px-cursor-grab flex h-16 flex-none touch-none items-center gap-3 select-none pointer-coarse:h-24',
               isFocused ? 'px-titlebar-focused' : 'px-titlebar-unfocused'
             )}
           >

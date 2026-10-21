@@ -40,7 +40,7 @@ export function NotFoundScreen() {
           aria-describedby="not-found-desc"
           className="px-window-focused motion-safe:animate-win-open flex w-full max-w-[calc(280*var(--px))] flex-col"
         >
-          <div className="os-night px-titlebar-focused flex h-16 items-center gap-3 pl-6 pointer-coarse:h-22">
+          <div className="os-night px-titlebar-focused flex h-16 items-center gap-3 pl-6 pointer-coarse:h-24">
             <PixelIcon name="alert" className="text-(--lamp)" />
             <span className="text-title flex-1 truncate text-(--ink-hi)">
               error.sys · 404

@@ -23,6 +23,7 @@ import { normalizeSheetJson, resolvePaths, sheetArgs } from '../export-art.mjs'
 import { appIconLayout, appIconSheetJson } from '../gen-app-icons.mjs'
 import {
   chromeCss,
+  coarseChromeCss,
   growGrid,
   mobileChromeCss,
   sliceInsets,
@@ -1047,7 +1048,7 @@ describe('gen-chrome', () => {
     )
   })
 
-  it('adds recoloured variants and grown slices', async () => {
+  it('adds recoloured variants', async () => {
     const out = await css({
       paper: ['window'],
       variants: [
@@ -1057,7 +1058,6 @@ describe('gen-chrome', () => {
           recolour: { '#13253a': '#4a2b25' },
         },
       ],
-      grow: [{ slice: 'window', height: 9, media: '(pointer: coarse)' }],
     })
     const warm = out.split('.px-window-warm {')[1].split('}')[0]
     assert.match(warm, /background-color: #4a2b25;/)
@@ -1065,12 +1065,35 @@ describe('gen-chrome', () => {
       !out.includes(':root:not(.dark) .px-window-warm'),
       'a variant of a body is not a body'
     )
-    const coarse = out.split('@media (pointer: coarse) {')[1].split('\n}')[0]
+    assert.ok(!out.includes('@media (pointer: coarse)'), 'no grown slices')
+  })
+
+  it('writes the grown slices on their own, under one media query', async () => {
+    const sheet = await loadSheet(fixture('chrome-fixture'))
+    const options = {
+      media: '(pointer: coarse)',
+      grow: [{ slice: 'window', height: 9 }],
+    }
+    const out = coarseChromeCss(sheet, undefined, options, {
+      paper: ['window'],
+    })
+    assert.match(out, /^@media \(pointer: coarse\) \{\n {2}\.px-window \{/m)
     assert.match(
-      coarse,
+      out,
       /\.px-window \{\n {4}border-image-source: url\("data:image\/svg\+xml,<svg [^"]*height='9'/
     )
-    assert.match(coarse, /:root:not\(\.dark\) \.px-window:not/)
+    assert.match(out, /:root:not\(\.dark\) \.px-window:not/)
+    assert.deepEqual([...widthsIn(out)], [], 'the drawn widths stay')
+    const night = coarseChromeCss(sheet, undefined, options, { paper: [] })
+    assert.ok(!night.includes(':root:not(.dark)'), 'chrome has no paper copy')
+    assert.throws(
+      () =>
+        coarseChromeCss(sheet, undefined, {
+          media: 'all',
+          grow: [{ slice: 'nothing', height: 9 }],
+        }),
+      /grow "nothing": no 9-slice/
+    )
   })
 
   it('adds paper colours of one body and recoloured states', async () => {
