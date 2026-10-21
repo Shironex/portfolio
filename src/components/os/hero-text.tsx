@@ -1,3 +1,5 @@
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
+
 import type { HeadingLevel } from './types'
 
 const HERO_COPY = {
@@ -21,38 +23,38 @@ interface HeroTextProps {
 }
 
 /**
- * Text block of the hero: role line, headline, availability and proof
- * points. Rendered by both the server StaticHero and the client HeroPlate
- * so the first paint matches the hydrated desktop.
+ * Text block of the hero (SPEC 1.4): the role line in meta grey, the
+ * headline in lamp lettering (`text-display`, 36px on the desktop) with its
+ * 1 art px shadow, and the availability and proof points in `text-body`
+ * with a pixel chevron. Rendered by both the server StaticHero and the
+ * client HeroPlate so the first paint matches the hydrated desktop.
  */
 export function HeroText({ headingLevel = 1 }: HeroTextProps) {
   const Heading = headingLevel === 1 ? 'h1' : 'h2'
   return (
     <>
-      {/* `ink-2`: on a phone this line runs through the centre of the glow. */}
-      <div className="text-ink-2 relative mb-6 font-mono text-[11px]">
-        {HERO_COPY.eyebrow}
-      </div>
+      <p className="text-label text-(--meta)">{HERO_COPY.eyebrow}</p>
 
-      {/* On desktop the size also tracks viewport height, so short laptop
-          screens keep the headline to three lines. */}
-      <Heading className="font-display text-ink relative text-[clamp(32px,8vw,44px)] leading-[1.05] font-bold md:text-[clamp(34px,min(3.2vw,5.6vh),54px)]">
+      <Heading className="text-display lamp-heading mt-4">
         {HERO_COPY.greeting}
         <br />I build typed{' '}
         <span className="whitespace-nowrap">full-stack</span> systems and
         desktop apps.
       </Heading>
 
-      <p className="font-body text-ink-2 relative mt-6 max-w-xl text-[15px] leading-relaxed">
-        {HERO_COPY.availability}
-      </p>
+      <p className="text-body mt-5 text-(--ink)">{HERO_COPY.availability}</p>
 
-      <ul className="font-body text-ink-3 relative mt-6 flex max-w-xl flex-col gap-2 text-[13px] leading-snug">
+      {/* A column that wraps: on a desktop too short for the whole hero the
+          list is squeezed, and the lines that do not fit wrap into a
+          second column out of sight, whole, from the last one up. */}
+      <ul className="text-body mt-4 flex min-h-0 flex-col flex-wrap gap-2 overflow-hidden text-(--meta)">
         {HERO_COPY.proof.map((line) => (
-          <li key={line} className="flex gap-4">
-            <span aria-hidden className="text-miku-ink">
-              ›
-            </span>
+          <li key={line} className="flex w-full gap-3">
+            <PixelIcon
+              name="chevron-right"
+              aria-hidden
+              className="mt-3 flex-none text-(--lamp)"
+            />
             <span>{line}</span>
           </li>
         ))}

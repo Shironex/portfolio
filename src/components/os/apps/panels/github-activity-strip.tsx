@@ -1,67 +1,48 @@
 'use client'
 
-import {
-  type CSSProperties,
-  type MouseEvent,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { type MouseEvent, useMemo, useRef, useState } from 'react'
 
-import {
-  EYEBROW_CLASS,
-  INLINE_LINK_CLASS,
-  LABEL_CLASS,
-  SKELETON_BAR,
-} from '@/components/os/constants'
 import { ExternalLink } from '@/components/os/external-link'
+import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
 import { GITHUB_URL } from '@/lib/constants'
 import {
   type ContributionDay,
   GithubActivitySchema,
 } from '@/lib/github/activity-schema'
-import { cn } from '@/lib/utils'
 import { formatDate } from '@/lib/utils/format-date'
 import { pluralWord } from '@/lib/utils/plural'
 
 import { useApiFeed } from '@/hooks/use-api-feed'
 
+import {
+  ACTIVITY_STRIP_CLASS,
+  ActivityHeader,
+  ActivitySkeleton,
+  CELL_STYLE,
+  DAYS_PER_WEEK,
+  GRID_SIZE,
+  WEEKS_SHOWN,
+} from './github-activity-frame'
+
 type Day = ContributionDay
 
-const LEVEL_BG: Record<Day['level'], string> = {
-  0: 'bg-rule',
-  1: 'bg-miku/25',
-  2: 'bg-miku/50',
-  3: 'bg-miku/75',
-  4: 'bg-miku',
+/**
+ * The levels as lit building windows (SPEC 1.4): dark, then warm from a
+ * faint brown to the lamp. Art colours on the night well in both Lamp modes.
+ */
+const LEVEL_COLOUR: Record<Day['level'], string> = {
+  0: '#13253a',
+  1: '#4a2b25',
+  2: '#6e4030',
+  3: '#c98a4a',
+  4: '#f0c070',
 }
 
-const WEEKS_SHOWN = 26
-const DAYS_PER_WEEK = 7
 const DAYS_SHOWN = WEEKS_SHOWN * DAYS_PER_WEEK
-
-/** Cell edge and gap in px; keep in step with `size-[11px]` and `gap-[2px]`. */
-const CELL = 11
-const GAP = 2
-const PITCH = CELL + GAP
 
 /** Attribute a cell carries its index into the shown days in. */
 const DAY_INDEX_ATTRIBUTE = 'data-day'
-
-const cellMask = (direction: string) =>
-  `repeating-linear-gradient(${direction}, black 0 ${CELL}px, transparent ${CELL}px ${PITCH}px)`
-
-/**
- * The loading grid as one block the size of the real one: a fill, masked
- * down to cells by two crossed gradients.
- */
-const SKELETON_STYLE: CSSProperties = {
-  width: WEEKS_SHOWN * PITCH - GAP,
-  height: DAYS_PER_WEEK * PITCH - GAP,
-  maskImage: `${cellMask('to right')}, ${cellMask('to bottom')}`,
-  maskComposite: 'intersect',
-}
 
 function describeDay(d: Day) {
   const count = d.count === 0 ? 'No' : d.count.toLocaleString()
@@ -76,7 +57,9 @@ function describeDay(d: Day) {
 
 interface HoverState {
   day: Day
-  x: number
+  /** The cell's edge the tooltip lines up with, from the strip's left or right. */
+  left?: number
+  right?: number
   y: number
 }
 
@@ -112,14 +95,14 @@ export function GithubActivityStrip() {
       weeks.push(days.slice(i, i + DAYS_PER_WEEK))
     }
     return (
-      <div key="grid" className="flex gap-[2px]">
+      <div key="grid" className="flex gap-1" style={GRID_SIZE}>
         {weeks.map((week, w) => (
-          <div key={week[0].date} className="flex flex-col gap-[2px]">
+          <div key={week[0].date} className="flex flex-col gap-1">
             {week.map((d, i) => (
               <div
                 key={d.date}
                 {...{ [DAY_INDEX_ATTRIBUTE]: w * DAYS_PER_WEEK + i }}
-                className={cn('size-[11px] rounded-[2px]', LEVEL_BG[d.level])}
+                style={{ ...CELL_STYLE, background: LEVEL_COLOUR[d.level] }}
               />
             ))}
           </div>
@@ -142,78 +125,83 @@ export function GithubActivityStrip() {
       handleLeave()
       return
     }
-    const containerRect = container.getBoundingClientRect()
+    const box = container.getBoundingClientRect()
     const rect = cell.getBoundingClientRect()
-    setHover({
-      day,
-      x: rect.left + rect.width / 2 - containerRect.left,
-      y: rect.top - containerRect.top,
-    })
+    // Lined up with the cell's edge on the side with room, never centred on
+    // it: half a tooltip is not a whole number of art px.
+    const fromLeft = rect.left - box.left
+    setHover(
+      fromLeft < box.width / 2
+        ? { day, left: fromLeft, y: rect.top - box.top }
+        : { day, right: box.right - rect.right, y: rect.top - box.top }
+    )
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="border-rule bg-surf-0 relative mt-8 rounded-2xl border p-6"
-    >
-      <div className="mb-4 flex items-center justify-between gap-6">
-        <div className="min-w-0">
-          <div className={cn(EYEBROW_CLASS, 'text-miku-ink')}>Activity</div>
-          <div className="font-display text-ink text-sm font-bold tabular-nums">
-            {total !== null
-              ? `${total.toLocaleString()} contributions`
-              : 'recent contributions'}
-          </div>
-        </div>
-        <div className="text-ink-4 font-mono text-xs">last 6 months</div>
-      </div>
+    <div ref={containerRef} className={ACTIVITY_STRIP_CLASS}>
+      <ActivityHeader total={total} />
 
       {state.kind === 'unconfigured' ? (
-        <div className="text-ink-3 font-mono text-[11px]">
-          github widget · set{' '}
-          <code className="bg-surf-1 text-ink-2 rounded px-2 py-1">
-            GITHUB_TOKEN
-          </code>{' '}
-          to enable
+        <div className="text-label flex items-end gap-3 text-(--meta)">
+          {/* A dark building with one lamp window (SPEC 2.7). */}
+          <span
+            aria-hidden
+            className="relative block h-14 w-9 flex-none bg-(--surf-raised)"
+          >
+            <span className="absolute top-3 left-5 block h-3 w-2 bg-(--lamp)" />
+          </span>
+          <span>
+            github widget · set{' '}
+            <code className="text-(--ink)">GITHUB_TOKEN</code> to enable
+          </span>
         </div>
       ) : state.kind === 'error' ? (
-        <div className="text-ink-3 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[11px]">
+        <div className="text-label flex flex-wrap items-center gap-x-3 gap-y-2 text-(--error)">
+          <PixelIcon name="alert" />
           <span>couldn&apos;t reach github</span>
-          <span aria-hidden>·</span>
           <button
             type="button"
             onClick={state.retry}
-            className={INLINE_LINK_CLASS}
+            className="focus-ring px-button-secondary text-label h-12 px-3 text-(--ink)"
           >
-            retry
+            Retry
           </button>
-          <span aria-hidden>·</span>
           <ExternalLink href={GITHUB_URL} inline>
             view my profile
           </ExternalLink>
         </div>
       ) : (
-        <div
-          role="img"
-          aria-label={
-            total !== null
-              ? `${total.toLocaleString()} contributions in the last 6 months`
-              : 'GitHub contribution graph'
-          }
-          onMouseOver={handleOver}
-          onMouseLeave={handleLeave}
-          className="relative overflow-x-auto"
-        >
-          {/* Keyed apart: reusing the skeleton's node for the grid counts
-              as that node moving, a layout shift scored from the top of
-              the page. */}
-          {grid ?? (
-            <div
-              key="skeleton"
-              aria-hidden
-              className={SKELETON_BAR}
-              style={SKELETON_STYLE}
-            />
+        // The legend sits right of the grid, where there is room, so the
+        // loaded strip is as tall as the loading one.
+        <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-3">
+          <div
+            role="img"
+            aria-label={
+              total !== null
+                ? `${total.toLocaleString()} contributions in the last 6 months`
+                : 'GitHub contribution graph'
+            }
+            onMouseOver={handleOver}
+            onMouseLeave={handleLeave}
+            className="relative min-w-0 overflow-x-auto"
+          >
+            {/* Keyed apart: reusing the skeleton's node for the grid counts
+                as that node moving, a layout shift scored from the top of
+                the page. */}
+            {grid ?? <ActivitySkeleton key="skeleton" />}
+          </div>
+          {state.kind === 'ready' && (
+            <div className="text-label flex flex-none items-center gap-1 text-(--meta)">
+              <span className="mr-2">less</span>
+              {([0, 1, 2, 3, 4] as const).map((level) => (
+                <span
+                  key={level}
+                  aria-hidden
+                  style={{ ...CELL_STYLE, background: LEVEL_COLOUR[level] }}
+                />
+              ))}
+              <span className="ml-2">more</span>
+            </div>
           )}
         </div>
       )}
@@ -221,24 +209,10 @@ export function GithubActivityStrip() {
       {hover && (
         <div
           aria-hidden
-          className="border-rule-2 bg-surf-solid text-ink shadow-elev-2 animate-fade-in pointer-events-none absolute z-20 -translate-x-1/2 -translate-y-full rounded-md border px-4 py-2 font-mono text-xs motion-reduce:animate-none"
-          style={{ left: hover.x, top: hover.y - 6 }}
+          className="px-tooltip text-label pointer-events-none absolute z-20 -translate-y-full px-2 text-(--ink)"
+          style={{ left: hover.left, right: hover.right, top: hover.y }}
         >
           {describeDay(hover.day)}
-        </div>
-      )}
-
-      {state.kind === 'ready' && (
-        <div
-          className={cn(LABEL_CLASS, 'text-ink-4 mt-4 flex items-center gap-3')}
-        >
-          <span>less</span>
-          <span aria-hidden className="bg-rule size-4 rounded-[2px]" />
-          <span aria-hidden className="bg-miku/25 size-4 rounded-[2px]" />
-          <span aria-hidden className="bg-miku/50 size-4 rounded-[2px]" />
-          <span aria-hidden className="bg-miku/75 size-4 rounded-[2px]" />
-          <span aria-hidden className="bg-miku size-4 rounded-[2px]" />
-          <span>more</span>
         </div>
       )}
     </div>

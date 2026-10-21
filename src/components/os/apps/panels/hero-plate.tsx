@@ -1,86 +1,27 @@
 'use client'
 
-import Image from 'next/image'
 import { memo } from 'react'
 
-import { HeroText } from '@/components/os/hero-text'
-import { Kbd } from '@/components/os/kbd'
-import type { HeadingLevel } from '@/components/os/types'
-
 import { GithubActivityStrip } from './github-activity-strip'
+import {
+  HERO_STRIP_CLASS,
+  HeroPlateFrame,
+  type HeroPlateFrameProps,
+} from './hero-plate-frame'
 
-interface HeroPlateProps {
-  onOpenCmd: () => void
-  onOpenContact: () => void
-  /** Passed to {@link HeroText}. */
-  headingLevel?: HeadingLevel
-}
+type HeroPlateProps = Omit<HeroPlateFrameProps, 'animated' | 'children'>
 
 /**
- * HeroPlate: large hero card that sits on the desktop canvas behind the
- * windows. Carries the role, availability and proof points, the primary
- * CTAs, and the GitHub contribution strip underneath. Vertical density is
- * tight on purpose: the activity strip needs to stay above the fold on
- * 1080p and 1440x900 at 100% zoom; below 840px of height it is hidden.
+ * HeroPlate: the hero panel on the desktop (and first in the phone feed),
+ * with the GitHub activity strip under the author row.
  */
-function HeroPlateImpl({
-  onOpenCmd,
-  onOpenContact,
-  headingLevel,
-}: HeroPlateProps) {
+function HeroPlateImpl(props: HeroPlateProps) {
   return (
-    <div className="border-rule-2 bg-surf-solid shadow-elev-3 relative flex size-full flex-col overflow-hidden rounded-3xl border px-10 py-12 md:px-16 md:py-14">
-      <HeroText headingLevel={headingLevel} />
-
-      <div className="relative mt-8 flex flex-wrap gap-4">
-        <button
-          type="button"
-          onClick={onOpenContact}
-          className="focus-ring bg-miku text-cloud hover:bg-miku-2 flex items-center gap-4 rounded-lg px-8 py-4 text-sm font-semibold transition-colors"
-        >
-          Get in touch
-          <Kbd tone="accent" className="pointer-coarse:hidden">
-            ⏎
-          </Kbd>
-        </button>
-        <button
-          type="button"
-          onClick={onOpenCmd}
-          className="focus-ring bg-surf-0 border-rule-2 text-ink hover:bg-surf-soft flex items-center gap-4 rounded-lg border px-8 py-4 text-sm transition-colors"
-        >
-          {/* Keyboard hints are noise on touch: relabel to what it does there. */}
-          <span className="pointer-coarse:hidden">Command palette</span>
-          <span className="hidden pointer-coarse:inline">Search</span>
-          <Kbd className="pointer-coarse:hidden">⌘K</Kbd>
-        </button>
-      </div>
-
-      <div className="border-rule relative mt-8 flex items-center gap-6 border-t pt-8">
-        <div className="border-rule-2 bg-miku/15 relative size-18 shrink-0 overflow-hidden rounded-full border">
-          <Image
-            src="/mascot.png"
-            alt=""
-            width={72}
-            height={72}
-            className="size-full object-cover object-top"
-          />
-        </div>
-        <div className="flex flex-col">
-          <strong className="font-display text-ink text-sm font-bold">
-            Kacper Lachowicz · @shironex
-          </strong>
-          <span className="text-ink-4 font-mono text-xs">
-            Remote · CET · replies within 24h
-          </span>
-        </div>
-      </div>
-
-      {/* Short desktop viewports (1366x768 and similar) drop the heatmap so
-          the proof points and CTAs stay clear of the dock. */}
-      <div className="relative md:[@media(max-height:839px)]:hidden">
+    <HeroPlateFrame {...props}>
+      <div className={HERO_STRIP_CLASS}>
         <GithubActivityStrip />
       </div>
-    </div>
+    </HeroPlateFrame>
   )
 }
 
