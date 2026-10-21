@@ -214,7 +214,7 @@ test('the desktop: the heatmap adds no tab stops, the head is complete', async (
   await expect(graph).toBeVisible()
 
   const stops = await graph.evaluate((el) => {
-    const cells = el.querySelectorAll('[class*="size-[11px]"]').length
+    const cells = el.querySelectorAll('[data-day]').length
     const focusable = [el, ...el.querySelectorAll('*')].filter(
       (node) => node instanceof HTMLElement && node.tabIndex >= 0
     ).length
