@@ -121,7 +121,7 @@ export function ContactForm({
         className="flex flex-col items-start gap-4 outline-none"
       >
         <p className="text-heading lamp-heading">Message sent</p>
-        <p className="text-body max-w-[66ch] text-(--ink)">
+        <p className="text-prose max-w-[66ch] text-(--ink)">
           Thanks for reaching out. I will reply within 24 hours.
         </p>
         <Button

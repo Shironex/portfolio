@@ -90,7 +90,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
         <h2 className="text-display lamp-heading tabular-nums">
           {projectsData.length} projects
         </h2>
-        <p className="text-body text-(--ink)">
+        <p className="text-prose text-(--ink)">
           Pick one and it opens in its own window.
         </p>
       </header>
@@ -153,7 +153,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
       {shown.length === 0 ? (
         <div className="flex flex-col items-center gap-4 py-12 text-center">
           <PetOnLedge />
-          <p className="text-body text-(--ink)">
+          <p className="text-prose text-(--ink)">
             {q && filter !== 'all'
               ? `No ${filter} projects match “${q}”.`
               : q
@@ -202,7 +202,7 @@ export default function ProjectsApp({ onOpenProject }: ProjectsAppProps) {
                     {p.featured && <StatusChip tone="featured" />}
                     {p.status !== 'shipped' && <StatusChip tone={p.status} />}
                   </span>
-                  <span className="text-body line-clamp-2 text-(--meta)">
+                  <span className="text-prose line-clamp-2 text-(--meta)">
                     {p.summary}
                   </span>
                   <span className="text-label truncate text-(--meta)">

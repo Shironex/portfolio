@@ -177,7 +177,7 @@ export function ProjectFeatures({ project, titleLevel }: ProjectProps) {
         {project.features.map((feature) => (
           <li
             key={feature}
-            className="text-body flex items-start gap-3 text-(--ink)"
+            className="text-prose flex items-start gap-3 text-(--ink)"
           >
             <PixelIcon
               name="chevron-right"

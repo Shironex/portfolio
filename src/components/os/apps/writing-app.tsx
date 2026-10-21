@@ -107,7 +107,7 @@ function PostRow({ post, first }: { post: BlogPost; first: boolean }) {
           />
         </span>
         {post.excerpt && (
-          <span className="text-body line-clamp-2 text-(--meta) group-hover:text-(--ink)">
+          <span className="text-prose line-clamp-2 text-(--meta) group-hover:text-(--ink)">
             {post.excerpt}
           </span>
         )}
@@ -122,7 +122,7 @@ function PostList({ state }: { state: ApiFeedState<BlogPosts> }) {
   if (state.kind === 'error') {
     return (
       <div role="status" className="flex flex-col items-start gap-3">
-        <p className="text-body flex items-start gap-2 text-(--ink)">
+        <p className="text-prose flex items-start gap-2 text-(--ink)">
           <PixelIcon name="alert" className="mt-3 text-(--error)" />
           <span>
             I couldn&apos;t load my posts right now. You can read them on{' '}

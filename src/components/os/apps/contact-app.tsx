@@ -106,7 +106,7 @@ export default function ContactApp() {
         <MiniMe key={waves} tag="wave" play="once" />
         <div className="flex min-w-0 flex-col gap-1">
           <h2 className="text-display lamp-heading">Get in touch</h2>
-          <p className="text-body max-w-[66ch] text-(--ink)">
+          <p className="text-prose max-w-[66ch] text-(--ink)">
             Full-time roles, contracts, MVPs, or just to talk. I reply within 24
             hours.
           </p>

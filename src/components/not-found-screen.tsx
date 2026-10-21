@@ -64,7 +64,7 @@ export function NotFoundScreen() {
                 />
               </span>
             </h1>
-            <p id="not-found-desc" className="text-body text-(--ink)">
+            <p id="not-found-desc" className="text-prose text-(--ink)">
               No such path in this filesystem.
             </p>
 

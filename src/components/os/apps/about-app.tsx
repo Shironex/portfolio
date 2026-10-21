@@ -148,7 +148,7 @@ export default function AboutApp() {
           ].map((item, i) => (
             <li
               key={i}
-              className="text-body flex items-start gap-3 text-(--ink)"
+              className="text-prose flex items-start gap-3 text-(--ink)"
             >
               <PixelIcon
                 name="chevron-right"
@@ -190,7 +190,7 @@ export default function AboutApp() {
               )}
               <span className="flex min-w-0 flex-col gap-1">
                 <span className="text-title text-(--ink)">{h.title}</span>
-                <span className="text-body text-(--meta)">{h.desc}</span>
+                <span className="text-prose text-(--meta)">{h.desc}</span>
               </span>
             </li>
           ))}

@@ -13,7 +13,7 @@ const twMerge = extendTailwindMerge({
   extend: {
     theme: {
       shadow: ['elev-1', 'elev-2', 'elev-3', 'elev-4'],
-      text: ['label', 'body', 'title', 'heading', 'display'],
+      text: ['label', 'body', 'prose', 'title', 'heading', 'display'],
       ease: ['out-quart', 'sheet'],
       animate: [
         'drift',

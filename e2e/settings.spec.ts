@@ -1,4 +1,4 @@
-import { type Page, expect, test } from '@playwright/test'
+import { type Locator, type Page, expect, test } from '@playwright/test'
 
 import { SETTING_FLAGS } from '../src/lib/os/appearance'
 import {
@@ -135,3 +135,71 @@ for (const setting of SETTINGS) {
     await expect(announcer(page)).toHaveText(setting.said[1])
   })
 }
+
+/**
+ * Readable text swaps long text only (SPEC 2.3): paragraphs, descriptions
+ * and lists in app bodies turn to Atkinson Hyperlegible Next, while the
+ * chrome (menus, palette rows, buttons) stays in the pixel face.
+ */
+test('Readable text swaps long text and leaves the chrome pixel', async ({
+  page,
+}) => {
+  await page.addInitScript(
+    ([key, value]) => window.localStorage.setItem(key, value),
+    [SETTING_FLAGS.text.key, SETTING_FLAGS.text.value]
+  )
+  await openDesktop(page)
+  await expect(html(page)).toHaveAttribute('data-text', 'readable')
+
+  /** The first family of a font list, unquoted. */
+  const first = (list: string) => list.split(',')[0].trim().replace(/["']/g, '')
+  /** The first family of a font variable on <html>: the face next/font named. */
+  const face = async (variable: string) =>
+    first(
+      await page.evaluate(
+        (name) =>
+          getComputedStyle(document.documentElement).getPropertyValue(name),
+        variable
+      )
+    )
+  const pixel = await face('--font-pixel-sans')
+  const readable = await face('--font-atkinson')
+  expect(pixel).not.toBe('')
+  expect(readable).not.toBe(pixel)
+  const familyOf = async (target: Locator) =>
+    first(await target.evaluate((el) => getComputedStyle(el).fontFamily))
+
+  // A button of the hero.
+  await expect(
+    familyOf(page.getByRole('button', { name: 'Get in touch' }))
+  ).resolves.toBe(pixel)
+
+  // A menu item.
+  await viewTrigger(page).click()
+  const item = viewMenu(page).getByRole('menuitemcheckbox', {
+    name: 'Readable text',
+  })
+  await expect(item).toBeVisible()
+  expect(await familyOf(item)).toBe(pixel)
+  await page.keyboard.press('Escape')
+  await expect(viewMenu(page)).toBeHidden()
+
+  // A palette row.
+  await page.keyboard.press('Control+k')
+  const option = cmdPalette(page).getByRole('option').first()
+  await expect(option).toBeVisible()
+  expect(await familyOf(option)).toBe(pixel)
+  await page.keyboard.press('Escape')
+  await expect(cmdPalette(page)).toBeHidden()
+
+  // An About paragraph.
+  await page
+    .getByRole('navigation', { name: 'Taskbar' })
+    .getByRole('button', { name: 'Open About' })
+    .click()
+  const paragraph = page
+    .getByRole('dialog', { name: 'about.me' })
+    .getByText(/^I work in TypeScript and Rust/)
+  await expect(paragraph).toBeVisible()
+  expect(await familyOf(paragraph)).toBe(readable)
+})

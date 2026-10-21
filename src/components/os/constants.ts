@@ -59,8 +59,11 @@ export const LABEL_CLASS = 'text-label uppercase'
  */
 export const SKELETON_BAR = 'px-tile-skeleton ambient-loop'
 
-/** Long text: Pixeloid at body size, about 66 characters a line (SPEC 2.3). */
-export const PROSE_CLASS = 'text-body max-w-[66ch] text-(--ink)'
+/**
+ * Long text: body size, about 66 characters a line (SPEC 2.3), in the face
+ * the Readable text setting swaps (`text-prose`).
+ */
+export const PROSE_CLASS = 'text-prose max-w-[66ch] text-(--ink)'
 
 /** What a window is called out loud: the app name or the project title. */
 export function windowNameFor(win: WindowState): string {

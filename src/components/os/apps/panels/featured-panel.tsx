@@ -78,7 +78,7 @@ function FeaturedPanelImpl({ onOpenProject }: FeaturedPanelProps) {
                     {p.projectType ?? 'project'}
                   </StatusChip>
                 </span>
-                <span className="text-body block truncate text-(--meta)">
+                <span className="text-prose block truncate text-(--meta)">
                   {p.summary}
                 </span>
               </span>

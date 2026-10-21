@@ -82,7 +82,21 @@
   font-weight: 400;
 }
 
+/*
+ * Body size in two kinds. `text-body` is the chrome's (menu items, palette
+ * rows, buttons, fields, toasts) and is always pixel. `text-prose` is long
+ * text (paragraphs, descriptions, lists in app bodies, the hero's lines):
+ * the same size and line, in the face of long text, which the Readable text
+ * setting swaps (`--font-text`, below).
+ */
 @utility text-body {
+  font-family: var(--font-body);
+  font-size: var(--type-body);
+  line-height: calc(14 * var(--type-dp));
+  font-weight: 400;
+}
+
+@utility text-prose {
   font-family: var(--font-text);
   font-size: var(--type-body);
   line-height: calc(14 * var(--type-dp));
@@ -655,8 +669,9 @@
 
   /*
    * The Readable text setting (`shiroos:text`, applied by the boot script):
-   * long text (`text-body`) turns to Atkinson Hyperlegible Next, the chrome
-   * stays pixel. The face is not preloaded, so it is only fetched here.
+   * long text (`text-prose`) turns to Atkinson Hyperlegible Next, the chrome
+   * (`text-body` and the rest) stays pixel. The face is not preloaded, so it
+   * is only fetched here.
    */
   [data-text='readable'] {
     --font-text: var(--font-atkinson), system-ui, sans-serif;

@@ -25,7 +25,7 @@ interface HeroTextProps {
 /**
  * Text block of the hero (SPEC 1.4): the role line in meta grey, the
  * headline in lamp lettering (`text-display`, 36px on the desktop) with its
- * 1 art px shadow, and the availability and proof points in `text-body`
+ * 1 art px shadow, and the availability and proof points in `text-prose`
  * with a pixel chevron. Rendered by both the server StaticHero and the
  * client HeroPlate so the first paint matches the hydrated desktop.
  */
@@ -42,12 +42,12 @@ export function HeroText({ headingLevel = 1 }: HeroTextProps) {
         desktop apps.
       </Heading>
 
-      <p className="text-body mt-5 text-(--ink)">{HERO_COPY.availability}</p>
+      <p className="text-prose mt-5 text-(--ink)">{HERO_COPY.availability}</p>
 
       {/* A column that wraps: on a desktop too short for the whole hero the
           list is squeezed, and the lines that do not fit wrap into a
           second column out of sight, whole, from the last one up. */}
-      <ul className="text-body mt-4 flex min-h-0 flex-col flex-wrap gap-2 overflow-hidden text-(--meta)">
+      <ul className="text-prose mt-4 flex min-h-0 flex-col flex-wrap gap-2 overflow-hidden text-(--meta)">
         {HERO_COPY.proof.map((line) => (
           <li key={line} className="flex w-full gap-3">
             <PixelIcon

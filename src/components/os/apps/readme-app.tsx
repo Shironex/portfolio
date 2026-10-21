@@ -20,7 +20,7 @@ function List({ items }: { items: ReactNode[] }) {
   return (
     <ul className="flex max-w-[66ch] flex-col gap-2">
       {items.map((item, i) => (
-        <li key={i} className="text-body flex items-start gap-3 text-(--ink)">
+        <li key={i} className="text-prose flex items-start gap-3 text-(--ink)">
           <PixelIcon
             name="chevron-right"
             className="mt-3 text-(--accent-primary-icon)"
@@ -121,7 +121,7 @@ export default function ReadmeApp() {
         />
       </section>
 
-      <p className="text-body max-w-[66ch] text-(--meta)">
+      <p className="text-prose max-w-[66ch] text-(--meta)">
         Built with Next.js 16 and Tailwind v4. Source is on{' '}
         <a
           href={GITHUB_URL}
