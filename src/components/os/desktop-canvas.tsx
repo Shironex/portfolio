@@ -2,49 +2,26 @@
 
 import type { ReactNode } from 'react'
 
+import { DESKTOP_BARE_ATTRIBUTE, Wallpaper } from './wallpaper/wallpaper'
+
 interface DesktopCanvasProps {
+  /** Whether the sky is Live (the moon then shows its real phase). */
+  live: boolean
   children?: ReactNode
 }
 
 /**
- * Wallpaper layer: the bands of the chosen sky (`--sky-bands`, from
- * `data-sky` on <html>) with floating note decorations. Children are the
- * desktop content OsShell puts on it.
- *
- * The notes are `ambient-loop`s: they only animate `transform`, and
- * `AmbientPause` holds them still while something covers the desktop.
+ * The desktop: the wallpaper (SPEC 2.5) under the desktop content OsShell
+ * puts on it. `isolate` makes this the stacking context the wallpaper sits
+ * at the bottom of, under the content whatever its positioning.
  */
-export function DesktopCanvas({ children }: DesktopCanvasProps) {
+export function DesktopCanvas({ live, children }: DesktopCanvasProps) {
   return (
-    <div className="sky-bands relative min-h-dvh overflow-hidden">
-      <span
-        aria-hidden
-        className="text-miku/20 animate-drift ambient-loop pointer-events-none absolute top-[15%] left-[12%] text-4xl motion-reduce:animate-none"
-      >
-        ♪
-      </span>
-      <span
-        aria-hidden
-        className="text-miku/20 animate-drift ambient-loop pointer-events-none absolute top-[35%] right-[18%] text-5xl motion-reduce:animate-none"
-        style={{ animationDelay: '-4s' }}
-      >
-        ♫
-      </span>
-      <span
-        aria-hidden
-        className="text-ink-3/25 animate-drift ambient-loop pointer-events-none absolute top-[65%] left-[22%] text-3xl motion-reduce:animate-none"
-        style={{ animationDelay: '-8s' }}
-      >
-        ♪
-      </span>
-      <span
-        aria-hidden
-        className="text-miku-3/20 animate-drift ambient-loop pointer-events-none absolute top-[80%] right-[12%] text-4xl motion-reduce:animate-none"
-        style={{ animationDelay: '-12s' }}
-      >
-        ✧
-      </span>
-
+    <div
+      {...{ [DESKTOP_BARE_ATTRIBUTE]: '' }}
+      className="relative isolate min-h-dvh overflow-hidden bg-(--ground)"
+    >
+      <Wallpaper live={live} />
       {children}
     </div>
   )

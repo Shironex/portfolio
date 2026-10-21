@@ -230,7 +230,7 @@ export default function OsShell({ initialWindow }: OsShellProps) {
             onSelectSky={setSky}
           />
 
-          <DesktopCanvas>
+          <DesktopCanvas live={sky === 'live'}>
             <ShellMain overStaticLayer={onProjectRoute}>
               <DesktopIcons onLaunch={launchApp} />
 

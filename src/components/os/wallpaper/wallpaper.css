@@ -1,0 +1,75 @@
+/*
+ * The wallpaper (SPEC 2.5): a static frame in CSS under a canvas that draws
+ * the same frame 0 and then animates. Both are a whole number of art px tall
+ * and wide, anchored top left, so the canvas (`ceil(size / --px)` art px)
+ * and the static frame line up pixel for pixel. Sizes and positions come
+ * from the generated scene data, set inline by `wallpaper-static.tsx`.
+ */
+
+.wallpaper-static,
+.wallpaper-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  image-rendering: pixelated;
+}
+
+.wallpaper-static {
+  width: 100%;
+  height: 100%;
+  width: round(up, 100%, var(--px));
+  height: round(up, 100%, var(--px));
+  background: var(--wp-background);
+}
+
+[data-sky='night'] .wallpaper-static {
+  --wp-background: var(--wp-background-night);
+}
+
+[data-sky='dusk'] .wallpaper-static {
+  --wp-background: var(--wp-background-dusk);
+}
+
+[data-sky='dawn'] .wallpaper-static {
+  --wp-background: var(--wp-background-dawn);
+}
+
+[data-sky='day'] .wallpaper-static {
+  --wp-background: var(--wp-background-day);
+}
+
+.wallpaper-piece {
+  position: absolute;
+  background-image: var(--wp-atlas);
+  background-size: var(--wp-atlas-size);
+  background-repeat: no-repeat;
+}
+
+/* The stars clear the sky above the skyline; night only. */
+.wallpaper-stars {
+  position: absolute;
+  inset: 0 0 var(--wp-stars-clear) 0;
+  overflow: hidden;
+  background-image: var(--wp-stars-image);
+  background-size: var(--wp-stars-size);
+}
+
+.wallpaper-stars,
+.wallpaper-moon,
+.wallpaper-moon-faint,
+.wallpaper-glow {
+  display: none;
+}
+
+[data-sky='night'] .wallpaper-stars,
+[data-sky='night'] .wallpaper-moon,
+[data-sky='night'] .wallpaper-glow,
+[data-sky='dusk'] .wallpaper-moon-faint,
+[data-sky='dawn'] .wallpaper-moon-faint {
+  display: block;
+}
+
+/* Hidden until it has drawn, so the static frame shows until then. */
+.wallpaper-canvas:not([data-drawn]) {
+  visibility: hidden;
+}
