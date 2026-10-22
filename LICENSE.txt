@@ -19,3 +19,19 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+--------------------------------------------------------------------------------
+
+Artwork
+
+The MIT License above covers the source code only. It does not cover the pixel
+art in src/assets/pixel/ (sprite sheets, wallpapers, scenes, icons, cursors,
+pets, banners and their data files) or any image rendered from it.
+
+Copyright (c) 2024-2026 Kacper Lachowicz. All rights reserved.
+
+You may not use, copy, modify, redistribute or sell this artwork, or include it
+in any other project, website, game, product or dataset (including datasets for
+training machine learning models), without prior written permission from the
+copyright holder.
+
+The Pixeloid font in assets/fonts/pixeloid keeps its own SIL Open Font License.

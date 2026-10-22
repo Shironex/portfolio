@@ -170,4 +170,4 @@ commits, bumps the version, updates [CHANGELOG.md](CHANGELOG.md) and publishes a
 
 ### License
 
-MIT, see [LICENSE.txt](LICENSE.txt).
+The code is MIT. The pixel art in `src/assets/pixel/` is all rights reserved and may not be reused. See [LICENSE.txt](LICENSE.txt).
