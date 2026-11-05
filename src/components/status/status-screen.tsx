@@ -48,7 +48,10 @@ function headline(summary: StatusSummary): { title: string; lead: string } {
     case 'unknown':
       return {
         title: 'Waiting for fresh checks.',
-        lead: 'My monitor answered but has no recent results yet. It checks every minute, so this page fills in shortly.',
+        lead:
+          summary.up > 0
+            ? `${summary.up} of ${summary.total} checks are up; the rest have no recent results yet. My monitor checks every minute, so this page fills in shortly.`
+            : 'My monitor answered but has no recent results yet. It checks every minute, so this page fills in shortly.',
       }
     case 'unreachable':
       return {
@@ -166,7 +169,15 @@ function GroupSection({ group }: { group: GroupStatus }) {
         <h2 id={headingId} className="text-heading lamp-heading">
           {group.title}
         </h2>
-        <StateChip state={down ? 'down' : up > 0 ? 'up' : 'unknown'}>
+        <StateChip
+          state={
+            down
+              ? 'down'
+              : up > 0 && up === group.services.length
+                ? 'up'
+                : 'unknown'
+          }
+        >
           {up}/{group.services.length} up
         </StateChip>
       </div>

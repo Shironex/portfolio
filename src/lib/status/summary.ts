@@ -1,8 +1,8 @@
 import type { ServiceStatus, StatusReport } from './status-schema'
 
 /**
- * The page's overall state: every shown check passing, some failing, no
- * fresh data yet, or the monitor itself out of reach.
+ * The page's overall state: every shown check passing, some failing, some
+ * or all without fresh data yet, or the monitor itself out of reach.
  */
 export type OverallState = 'up' | 'down' | 'unknown' | 'unreachable'
 
@@ -27,7 +27,11 @@ export function summarize(report: StatusReport): StatusSummary {
     .map((service) => service.uptime30d)
     .filter((uptime) => uptime !== null)
   const state: OverallState =
-    down.length > 0 ? 'down' : up === 0 ? 'unknown' : 'up'
+    down.length > 0
+      ? 'down'
+      : up > 0 && up === services.length
+        ? 'up'
+        : 'unknown'
   return {
     state,
     total: services.length,
