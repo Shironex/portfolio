@@ -5,7 +5,12 @@ import { completedDateIso, projectPath } from '@/lib/utils/project-meta'
 
 import { projectsData } from '@/data/projects-data'
 
-const PRIORITY = { home: 1.0, featured: 0.8, project: 0.6 } as const
+const PRIORITY = {
+  home: 1.0,
+  featured: 0.8,
+  project: 0.6,
+  status: 0.3,
+} as const
 
 /**
  * The home page lists every project, so it last changed when the newest one
@@ -34,5 +39,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly' as const,
       priority: project.featured ? PRIORITY.featured : PRIORITY.project,
     })),
+    // Live data with no meaningful last change, so no `lastModified`.
+    {
+      url: absoluteUrl('/status'),
+      changeFrequency: 'always' as const,
+      priority: PRIORITY.status,
+    },
   ]
 }

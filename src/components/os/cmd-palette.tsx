@@ -172,6 +172,16 @@ export function CmdPalette({
         search: 'github profile source code repositories',
       },
       {
+        ic: actionIcon('clock', 'bright'),
+        label: 'Open system status',
+        hint: 'page',
+        onClick: () => {
+          onClose()
+          window.location.assign('/status')
+        },
+        search: 'status uptime monitor health sites servers down',
+      },
+      {
         ic: actionIcon('close', 'neutral'),
         label: 'Close all windows',
         hint: 'action',

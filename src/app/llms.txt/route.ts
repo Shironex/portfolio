@@ -62,6 +62,11 @@ export function GET() {
         absoluteUrl('/projects.json'),
         'The same project list as structured data'
       ),
+      link(
+        'Status',
+        absoluteUrl('/status'),
+        'Live uptime of my sites, APIs and servers'
+      ),
       link('Sitemap', absoluteUrl('/sitemap.xml'), 'Every page on this site'),
     ].join('\n'),
   ].join('\n\n')
