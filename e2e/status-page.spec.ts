@@ -45,6 +45,14 @@ test('the status page shows only allowlisted checks', async ({ page }) => {
   const rowNames = await page
     .locator('main li > div:first-child > :last-child')
     .allInnerTexts()
+  const unreachable = await page
+    .getByRole('heading', { level: 1, name: /can't reach my monitor/i })
+    .count()
+  // With the monitor answering, an empty page would pass the loop below.
+  expect(
+    unreachable > 0 || rowNames.length > 0,
+    'no service rows rendered'
+  ).toBe(true)
   for (const name of rowNames) {
     expect(ALLOWED_NAMES, `"${name}" is not allowlisted`).toContain(
       name.split('\n')[0].trim()
