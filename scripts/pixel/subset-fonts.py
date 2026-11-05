@@ -9,7 +9,9 @@ Subsets the pixel fonts to WOFF2 for next/font/local (SPEC 2.3).
     pnpm fonts:subset --check    fail if a committed WOFF2 differs from a fresh subset
 
 Sources are the untouched release files in assets/fonts/ (never shipped);
-outputs go to src/app/fonts/ with each family's OFL text next to them.
+outputs go to src/app/fonts/ with each family's OFL text next to them, and
+the same files to public/shared/fonts/, where my Gatus status page on another
+subdomain loads them (next.config.mjs serves that folder cross-origin).
 
 Licensing. Both fonts are SIL OFL 1.1. Departure Mono has no Reserved Font
 Name. Pixeloid's release (License.txt in Pixeloid_Font_1_0.zip) reserves the
@@ -41,6 +43,7 @@ from fontTools.ttLib import TTFont
 ROOT = Path(__file__).resolve().parents[2]
 SOURCES = ROOT / "assets" / "fonts"
 OUT = ROOT / "src" / "app" / "fonts"
+SHARED = ROOT / "public" / "shared" / "fonts"
 
 LATIN = [
     (0x0020, 0x007E),  # Basic Latin
@@ -153,28 +156,31 @@ def describe(missing: list[int], wanted: list[tuple[int, int]]) -> str:
     return f"{len(notable)} requested code points absent: {sample}{more}"
 
 
+def emit(dest: Path, data: bytes, check: bool, stale: list[str]) -> None:
+    """Write `data` to `dest` and its copy in SHARED, or note either as stale."""
+    for path in (dest, SHARED / dest.name):
+        if check:
+            if not path.exists() or path.read_bytes() != data:
+                stale.append(str(path.relative_to(ROOT)))
+            continue
+        path.write_bytes(data)
+
+
 def main(argv: list[str]) -> int:
     check = "--check" in argv
     OUT.mkdir(parents=True, exist_ok=True)
-    stale = []
+    SHARED.mkdir(parents=True, exist_ok=True)
+    stale: list[str] = []
     total = 0
     for face in FACES:
         data, missing = build(face)
         total += len(data)
-        rel = face["out"].relative_to(ROOT)
-        if check:
-            if not face["out"].exists() or face["out"].read_bytes() != data:
-                stale.append(str(rel))
-            continue
-        face["out"].write_bytes(data)
-        print(f"wrote {rel}: {len(data)} bytes; {describe(missing, face['ranges'])}")
+        emit(face["out"], data, check, stale)
+        if not check:
+            rel = face["out"].relative_to(ROOT)
+            print(f"wrote {rel}: {len(data)} bytes; {describe(missing, face['ranges'])}")
     for src, dest in LICENCES:
-        text = src.read_bytes()
-        if check:
-            if not dest.exists() or dest.read_bytes() != text:
-                stale.append(str(dest.relative_to(ROOT)))
-            continue
-        dest.write_bytes(text)
+        emit(dest, src.read_bytes(), check, stale)
     if check:
         if stale:
             print("stale, run `pnpm fonts:subset`: " + ", ".join(stale), file=sys.stderr)
