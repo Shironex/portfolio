@@ -56,9 +56,12 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
+     * - icon-192.png and shared/ (the logo and fonts my status page on
+     *   status.shirone.dev loads cross-origin, see next.config.mjs)
      */
     {
-      source: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+      source:
+        '/((?!api|_next/static|_next/image|favicon.ico|icon-192.png|shared/).*)',
       missing: [
         { type: 'header', key: 'next-router-prefetch' },
         { type: 'header', key: 'purpose', value: 'prefetch' },

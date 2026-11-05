@@ -159,6 +159,10 @@ function MenuBarImpl({
           onClick: () => window.open(GITHUB_URL, '_blank', 'noopener'),
         },
         {
+          label: 'System status',
+          onClick: () => window.location.assign('/status'),
+        },
+        {
           label: 'Email me',
           onClick: () => {
             window.location.href = `mailto:${EMAIL_CONTACT}`
