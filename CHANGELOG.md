@@ -1,3 +1,18 @@
+# [2.24.0](https://github.com/Shironex/portfolio/compare/v2.23.1...v2.24.0) (2026-11-05)
+
+
+### Bug Fixes
+
+* **status:** cap the gatus body while reading and pick the newest check by time ([e7bc5c1](https://github.com/Shironex/portfolio/commit/e7bc5c159d684b7733ec3487cd3e6c9b084ec659))
+* **status:** only say everything is up when every shown check is up ([e03551e](https://github.com/Shironex/portfolio/commit/e03551e1d4bf80cd08035bc1b66eccff4a642504))
+
+
+### Features
+
+* **status:** add a live status page at /status ([b070482](https://github.com/Shironex/portfolio/commit/b07048239ad3d6e823df868cd7f115181ac94317))
+* **status:** list the status page in the sitemap, llms.txt and go menu ([e9ab998](https://github.com/Shironex/portfolio/commit/e9ab998d71bbd2b1f43159dbda1feb2762b8e3f0))
+* **status:** serve the pixel fonts and logo to the gatus page ([c2e8016](https://github.com/Shironex/portfolio/commit/c2e80161ff869a6fe09fff31281dc2d5a54b7c08))
+
 ## [2.23.1](https://github.com/Shironex/portfolio/compare/v2.23.0...v2.23.1) (2026-10-21)
 
 
