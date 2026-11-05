@@ -43,6 +43,29 @@ async function gatusGet(path: string, accept: string): Promise<Response> {
   return res
 }
 
+/**
+ * Reads a body as text, giving up once it passes `limit` bytes, so a large
+ * or misreported body is never buffered whole.
+ */
+async function readBounded(res: Response, limit: number): Promise<string> {
+  const reader = res.body?.getReader()
+  if (!reader) return ''
+  const decoder = new TextDecoder()
+  let total = 0
+  let text = ''
+  for (;;) {
+    const { done, value } = await reader.read()
+    if (done) break
+    total += value.byteLength
+    if (total > limit) {
+      await reader.cancel()
+      throw new Error('Gatus statuses are too large')
+    }
+    text += decoder.decode(value, { stream: true })
+  }
+  return text + decoder.decode()
+}
+
 async function fetchStatuses(): Promise<Map<string, GatusEndpoint>> {
   const res = await gatusGet(
     `/statuses?page=1&pageSize=${HISTORY_LENGTH}`,
@@ -51,10 +74,7 @@ async function fetchStatuses(): Promise<Map<string, GatusEndpoint>> {
   if (Number(res.headers.get('content-length')) > MAX_STATUSES_BYTES) {
     throw new Error('Gatus statuses are too large')
   }
-  const text = await res.text()
-  if (text.length > MAX_STATUSES_BYTES) {
-    throw new Error('Gatus statuses are too large')
-  }
+  const text = await readBounded(res, MAX_STATUSES_BYTES)
   const endpoints = GatusStatusesSchema.parse(JSON.parse(text))
   return new Map(endpoints.map((endpoint) => [endpoint.key, endpoint]))
 }
@@ -129,7 +149,7 @@ async function readReport(): Promise<StatusReport> {
   const newest = services
     .map((service) => service.history.at(-1)?.at)
     .filter((at) => at !== undefined)
-    .sort()
+    .sort((a, b) => Date.parse(a) - Date.parse(b))
     .at(-1)
 
   return { reachable: true, groups, checkedAt: newest ?? null, fetchedAt }
