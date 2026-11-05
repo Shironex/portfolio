@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 
+import { PUBLIC_CHECKS } from '../src/lib/status/services'
 import {
   DESKTOP_VIEWPORT,
   contrastFailures,
@@ -14,17 +15,14 @@ import {
  * page renders, says what it knows, leaks nothing internal and meets AA.
  */
 
-/** Names that must never reach the public page, in any state. */
-const FORBIDDEN = [
-  'shinictl',
-  'grafana',
-  '100.127.',
-  'app.lunofi.app',
-  'alertmanager',
-  'watchdog',
-  'subslayer-api-dev',
-  'domain',
-]
+const ALLOWED_NAMES = new Set(PUBLIC_CHECKS.map((check) => check.name))
+
+/**
+ * Generic words from the monitor's own plumbing. Internal hosts and panel
+ * names are kept out of this public file on purpose: the row check below
+ * already fails on any name that is not allowlisted.
+ */
+const FORBIDDEN = ['alertmanager', 'watchdog', 'subslayer-api-dev', 'domain']
 
 test('the status page renders with its own title and one h1', async ({
   page,
@@ -43,6 +41,14 @@ test('the status page shows only allowlisted checks', async ({ page }) => {
   const html = (await response?.text())?.toLowerCase() ?? ''
   for (const name of FORBIDDEN) {
     expect(html, `"${name}" in the served HTML`).not.toContain(name)
+  }
+  const rowNames = await page
+    .locator('main li > div:first-child > :last-child')
+    .allInnerTexts()
+  for (const name of rowNames) {
+    expect(ALLOWED_NAMES, `"${name}" is not allowlisted`).toContain(
+      name.split('\n')[0].trim()
+    )
   }
 })
 
