@@ -1,3 +1,10 @@
+## [2.24.2](https://github.com/Shironex/portfolio/compare/v2.24.1...v2.24.2) (2026-11-10)
+
+
+### Bug Fixes
+
+* **projects:** retake the matmajka pictures with the new planner and upright photos ([d06af38](https://github.com/Shironex/portfolio/commit/d06af3809d4ad0727abde86e452463246380ffb1))
+
 ## [2.24.1](https://github.com/Shironex/portfolio/compare/v2.24.0...v2.24.1) (2026-11-10)
 
 
