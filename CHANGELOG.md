@@ -1,3 +1,10 @@
+## [2.24.3](https://github.com/Shironex/portfolio/compare/v2.24.2...v2.24.3) (2026-11-10)
+
+
+### Bug Fixes
+
+* **projects:** retake the matmajka pictures with the new book stack ([b721951](https://github.com/Shironex/portfolio/commit/b721951ffedfb49068740e621e1472db97e6d596))
+
 ## [2.24.2](https://github.com/Shironex/portfolio/compare/v2.24.1...v2.24.2) (2026-11-10)
 
 
