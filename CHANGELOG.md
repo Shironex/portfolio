@@ -1,3 +1,11 @@
+## [2.24.1](https://github.com/Shironex/portfolio/compare/v2.24.0...v2.24.1) (2026-11-10)
+
+
+### Bug Fixes
+
+* **projects:** describe the 3d study room in the matmajka text ([ed87920](https://github.com/Shironex/portfolio/commit/ed87920e79e7a46ceee6664ef36e511ce7ef5d41))
+* **projects:** refresh matmajka pictures for the 3d study room ([a591414](https://github.com/Shironex/portfolio/commit/a5914143c6db2dbdbf2813cbe71ca070bd42382b))
+
 # [2.24.0](https://github.com/Shironex/portfolio/compare/v2.23.1...v2.24.0) (2026-11-05)
 
 
