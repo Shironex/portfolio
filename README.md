@@ -126,7 +126,7 @@ repositories) to see the GitHub heatmap.
 | `pnpm dev:email`  | React Email preview of the templates, port 3001                                |
 | `pnpm build`      | Production build                                                               |
 | `pnpm start`      | Serve the production build                                                     |
-| `pnpm lint`       | ESLint                                                                         |
+| `pnpm lint`       | ESLint, then the token, art and pixel script checks                            |
 | `pnpm typecheck`  | TypeScript, no emit                                                            |
 | `pnpm format`     | Prettier over `src/`                                                           |
 | `pnpm test:e2e`   | Playwright end to end tests                                                    |
