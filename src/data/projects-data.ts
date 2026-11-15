@@ -9,6 +9,7 @@ import { ghLabelsCli } from './projects/gh-labels-cli'
 import { gitchorus } from './projects/gitchorus'
 import { hinomi } from './projects/hinomi'
 import { kireiManga } from './projects/kirei-manga'
+import { maquette } from './projects/maquette'
 import { matmajka } from './projects/matmajka'
 import { moekoder } from './projects/moekoder'
 import { nightMaze } from './projects/night-maze'
@@ -34,6 +35,7 @@ export const projectsData: Project[] = [
   // Newest work, newest first
   stackward,
   hinomi,
+  maquette,
   automaker,
   eslintPlugins,
   omniscribe,

@@ -83,6 +83,7 @@ export const projectAccent: Record<string, AccentRole> = {
   'night-maze': 'warm-2',
   stackward: 'primary',
   hinomi: 'warm',
+  maquette: 'warm-2',
 }
 
 export const DEFAULT_ACCENT: AccentRole = 'primary'
