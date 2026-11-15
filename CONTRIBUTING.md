@@ -13,6 +13,7 @@ See the Getting started section of the [README](README.md). Node.js 22.13 or new
 - Generated files (colour tokens, pixel art code, icons, OG cards) come from their `pnpm` scripts, never from hand edits.
   `pnpm lint` fails on stale colour tokens or pixel art code. The favicons and manifest icons, the OG cards and the font
   subsets have their own checks: `pnpm generate:icons --check`, `pnpm generate:og --check` and `pnpm fonts:subset --check`.
+  CI runs the icon and font checks; the OG check needs the Aseprite exports next to the repo, so it runs locally only.
 - Commits follow [Conventional Commits](https://www.conventionalcommits.org/) as `type(scope): lowercase summary`
   (commitlint checks it). Releases are cut by semantic-release from those messages, so the type matters.
 - The pixel art in `src/assets/pixel/` is all rights reserved and cannot be reused, see [LICENSE.txt](LICENSE.txt).
