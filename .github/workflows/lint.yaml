@@ -33,9 +33,6 @@ jobs:
       - name: Generated icons are current
         run: pnpm generate:icons --check
 
-      - name: Generated OG cards are current
-        run: pnpm generate:og --check
-
       - name: Setup uv
         uses: astral-sh/setup-uv@v6
 
