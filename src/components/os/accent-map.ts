@@ -82,6 +82,7 @@ export const projectAccent: Record<string, AccentRole> = {
   'business-erp': 'warm',
   'night-maze': 'warm-2',
   stackward: 'primary',
+  hinomi: 'warm',
 }
 
 export const DEFAULT_ACCENT: AccentRole = 'primary'

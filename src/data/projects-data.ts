@@ -7,6 +7,7 @@ import { cliTemplate } from './projects/cli-template'
 import { eslintPlugins } from './projects/eslint-plugins'
 import { ghLabelsCli } from './projects/gh-labels-cli'
 import { gitchorus } from './projects/gitchorus'
+import { hinomi } from './projects/hinomi'
 import { kireiManga } from './projects/kirei-manga'
 import { matmajka } from './projects/matmajka'
 import { moekoder } from './projects/moekoder'
@@ -32,6 +33,7 @@ export const projectsData: Project[] = [
   nightMaze,
   // Newest work, newest first
   stackward,
+  hinomi,
   automaker,
   eslintPlugins,
   omniscribe,
