@@ -19,6 +19,7 @@ import { shiniJsRateLimit } from './projects/shinijs-rate-limit'
 import { shiranami } from './projects/shiranami'
 import { shiroani } from './projects/shiroani'
 import { shironeBlog } from './projects/shirone-blog'
+import { stackward } from './projects/stackward'
 import { sudeko } from './projects/sudeko'
 import { writeWiz } from './projects/write-wiz'
 
@@ -29,6 +30,8 @@ import { writeWiz } from './projects/write-wiz'
 export const projectsData: Project[] = [
   shiranami,
   nightMaze,
+  // Newest work, newest first
+  stackward,
   automaker,
   eslintPlugins,
   omniscribe,
