@@ -7,7 +7,9 @@ import { cliTemplate } from './projects/cli-template'
 import { eslintPlugins } from './projects/eslint-plugins'
 import { ghLabelsCli } from './projects/gh-labels-cli'
 import { gitchorus } from './projects/gitchorus'
+import { hinomi } from './projects/hinomi'
 import { kireiManga } from './projects/kirei-manga'
+import { maquette } from './projects/maquette'
 import { matmajka } from './projects/matmajka'
 import { moekoder } from './projects/moekoder'
 import { nightMaze } from './projects/night-maze'
@@ -19,6 +21,7 @@ import { shiniJsRateLimit } from './projects/shinijs-rate-limit'
 import { shiranami } from './projects/shiranami'
 import { shiroani } from './projects/shiroani'
 import { shironeBlog } from './projects/shirone-blog'
+import { stackward } from './projects/stackward'
 import { sudeko } from './projects/sudeko'
 import { writeWiz } from './projects/write-wiz'
 
@@ -29,6 +32,10 @@ import { writeWiz } from './projects/write-wiz'
 export const projectsData: Project[] = [
   shiranami,
   nightMaze,
+  // Newest work, newest first
+  stackward,
+  hinomi,
+  maquette,
   automaker,
   eslintPlugins,
   omniscribe,

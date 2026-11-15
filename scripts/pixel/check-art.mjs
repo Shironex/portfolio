@@ -15,7 +15,8 @@
  *   - every opaque pixel is a README palette colour, unless the source keeps
  *     its own palette (`ownPalette`) or is 1-bit (`oneBit`: one colour,
  *     whichever it is, since code recolours it); the wallpaper (`skyPalette`)
- *     may also use the sky colours, for its clouds and its day skyline
+ *     may also use the sky colours, for its clouds and its day skyline, and
+ *     the project icons (`iconPalette`) the colours a README icon added
  * and per budget set, the PNG bytes stay under SPEC 4.6; generated outputs
  * (chrome CSS, glyph component, sprite CSS) are held to their budgets when
  * they exist, and a sprite stylesheet with no budget of its own fails.
@@ -36,11 +37,12 @@ import {
 } from './art-manifest.mjs'
 import { flag, isMain } from './cli.mjs'
 import { ROOT } from './export-art.mjs'
-import { PALETTE_HEX, SKY_COLOURS, toHex } from './palette.mjs'
+import { ICON_COLOURS, PALETTE_HEX, SKY_COLOURS, toHex } from './palette.mjs'
 import { readSheetJson } from './sheet.mjs'
 
 const PALETTE = new Set(PALETTE_HEX)
 const SKY_PALETTE = new Set([...PALETTE_HEX, ...SKY_COLOURS])
+const ICON_PALETTE = new Set([...PALETTE_HEX, ...ICON_COLOURS])
 
 function walk(dir) {
   if (!existsSync(dir)) return []
@@ -109,9 +111,18 @@ export function sheetProblems(data, width, height) {
  */
 export async function pixelProblems(
   file,
-  { ownPalette = false, oneBit = false, skyPalette = false } = {}
+  {
+    ownPalette = false,
+    oneBit = false,
+    skyPalette = false,
+    iconPalette = false,
+  } = {}
 ) {
-  const allowed = skyPalette ? SKY_PALETTE : PALETTE
+  const allowed = skyPalette
+    ? SKY_PALETTE
+    : iconPalette
+      ? ICON_PALETTE
+      : PALETTE
   const { data, info } = await sharp(file)
     .ensureAlpha()
     .raw()

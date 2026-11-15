@@ -1,4 +1,11 @@
 /**
+ * The README icons that each live in their own document,
+ * `readme/icons/icon-<name>.aseprite`, with one tag over every frame.
+ * `gen-project-icons.mjs` maps each to its project slug.
+ */
+export const README_ICON_FILES = ['stackward', 'hinomi', 'maquette']
+
+/**
  * Every Aseprite source the OS ships, where it comes from and where its
  * export lands (SPEC sections 5.1 and 5.2), plus the byte budgets of SPEC 4.6.
  *
@@ -17,6 +24,8 @@
  * code recolours (the glyphs, drawn into `currentColor`): any one colour
  * passes, a second fails. `skyPalette` marks the wallpaper, whose clouds and
  * day skyline may also use the sky colours (`SKY_COLOURS` in palette.mjs).
+ * `iconPalette` marks the project icons, which may also use the colours one
+ * README icon added (`ICON_COLOURS` in palette.mjs).
  * `companions` are data files drawn up with the art
  * (the wallpaper's sky bands, recolour maps and layout) that are copied next
  * to the export as they are, for a generator to read. `layer` exports one
@@ -45,6 +54,14 @@ export const ART_SOURCES = [
     file: 'icons.aseprite',
     group: 'project-icon-art',
   },
+  // README icons drawn one per document, after the shared sheet above.
+  ...README_ICON_FILES.map((name) => ({
+    name: `readme-icon-${name}`,
+    root: 'readme',
+    file: `icons/icon-${name}.aseprite`,
+    group: 'project-icon-art',
+    iconPalette: true,
+  })),
   { name: 'mascot-head', root: 'art', group: 'avatar', ownPalette: true },
   { name: 'os-boot', root: 'art', group: 'boot' },
   {
@@ -98,6 +115,7 @@ export const DERIVED_SHEETS = [
     name: 'project-icons-32',
     group: 'project-icons',
     from: 'os-project-icons',
+    iconPalette: true,
   },
   ...[
     'wallpaper',
@@ -172,7 +190,7 @@ export const GENERATED_BUDGETS = [
   { file: `${SPRITE_CSS_DIR}/mascot-head.css`, bytes: 2 * KB },
   { file: `${SPRITE_CSS_DIR}/os-boot.css`, bytes: 3 * KB },
   { file: `${SPRITE_CSS_DIR}/readme-headers.css`, bytes: 5 * KB },
-  { file: `${SPRITE_CSS_DIR}/project-icons-32.css`, bytes: 12 * KB },
+  { file: `${SPRITE_CSS_DIR}/project-icons-32.css`, bytes: 16 * KB },
   { file: `${SPRITE_CSS_DIR}/os-neon-404.css`, bytes: 1 * KB },
   { file: `${SPRITE_CSS_DIR}/stack-shelf.css`, bytes: 2 * KB },
   { file: `${SPRITE_CSS_DIR}/minime.css`, bytes: 3 * KB },
