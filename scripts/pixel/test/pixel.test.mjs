@@ -34,6 +34,7 @@ import { cursorsCss } from '../gen-cursors.mjs'
 import { glyphModuleSource, readGlyphs } from '../gen-glyphs.mjs'
 import { sheetData } from '../gen-pets.mjs'
 import {
+  README_ICON_FILE_PROJECTS,
   README_ICON_PROJECTS,
   TILE_TAG,
   projectIconLayout,
@@ -419,6 +420,26 @@ describe('check-art', () => {
     }
   })
 
+  it('lets the project icons use the colours a README icon added', async () => {
+    const dir = await fixtureDir()
+    try {
+      await writePng(join(dir, 'fx', 'icon-fixture.png'), [
+        ['#9a88c8', '#0b1420'],
+      ])
+      writeFileSync(
+        join(dir, 'fx', 'icon-fixture.json'),
+        JSON.stringify(sheetJson('icon-fixture', 2, 1))
+      )
+      const withIcon = [...sources, { name: 'icon-fixture', group: 'fx' }]
+      const strict = (await run(dir, { sources: withIcon })).failures.join('\n')
+      assert.match(strict, /icon-fixture\.png: off-palette colour #9a88c8/)
+      withIcon.at(-1).iconPalette = true
+      assert.deepEqual((await run(dir, { sources: withIcon })).failures, [])
+    } finally {
+      rmSync(dir, { recursive: true })
+    }
+  })
+
   it('fails an empty folder unless allowed', async () => {
     const dir = tempDir()
     try {
@@ -771,10 +792,33 @@ describe('gen-project-icons', () => {
     name,
     keys: [{ frame: 0, bounds: { x, y: 0, w: 32, h: 32 } }],
   })
-  /** Two OS icons (`a`: frames 0 and 1, `b`: frame 2), every README icon, a tile. */
+  /** A README icon in its own document: two frames under one tag. */
+  const single = (name) => ({
+    json: `${name}.json`,
+    data: {
+      frames: [frame(64, 32, 200), frame(64, 32, 70)].map((f) => ({
+        ...f,
+        sourceSize: { w: 32, h: 32 },
+      })),
+      meta: {
+        frameTags: [{ name: 'loop', from: 0, to: 1, direction: 'forward' }],
+        slices: [],
+      },
+    },
+  })
+  /**
+   * Two OS icons (`a`: frames 0 and 1, `b`: frame 2), every README icon on
+   * the shared sheet and in its own document, a tile.
+   */
   function exportsFixture() {
     const readmeTags = Object.keys(README_ICON_PROJECTS)
     return {
+      singles: Object.fromEntries(
+        Object.keys(README_ICON_FILE_PROJECTS).map((name) => [
+          name,
+          single(name),
+        ])
+      ),
       os: {
         json: 'os.json',
         data: {
@@ -831,6 +875,7 @@ describe('gen-project-icons', () => {
       'a',
       'b',
       ...Object.values(README_ICON_PROJECTS),
+      ...Object.values(README_ICON_FILE_PROJECTS),
       TILE_TAG,
     ])
     assert.equal(names.includes('shironedev'), false)
@@ -860,7 +905,39 @@ describe('gen-project-icons', () => {
     assert.equal(layout.cells[0].sheet, sheets.os)
     assert.equal(layout.cells[2].sheet, sheets.os)
     assert.equal(layout.cells[3].sheet, sheets.readme)
+    const [first] = Object.keys(README_ICON_FILE_PROJECTS)
+    const singleTag = layout.tags.find(
+      (t) => t.name === README_ICON_FILE_PROJECTS[first]
+    )
+    assert.equal(layout.cells[singleTag.from].sheet, sheets.singles[first])
+    assert.deepEqual(
+      layout.cells
+        .slice(singleTag.from, singleTag.to + 1)
+        .map((c) => [c.from, c.duration]),
+      [
+        [0, 200],
+        [1, 70],
+      ]
+    )
     assert.equal(layout.cells.at(-1).sheet, sheets.tile)
+  })
+
+  it('fails on a README icon document that is missing or has two tags', () => {
+    const [first] = Object.keys(README_ICON_FILE_PROJECTS)
+    const missing = exportsFixture()
+    delete missing.singles[first]
+    assert.throws(
+      () => projectIconLayout(missing),
+      new RegExp(`no export of the README icon "${first}"`)
+    )
+    const twoTags = exportsFixture()
+    twoTags.singles[first].data.meta.frameTags.push({
+      name: 'extra',
+      from: 1,
+      to: 1,
+      direction: 'forward',
+    })
+    assert.throws(() => projectIconLayout(twoTags), /wants one tag, has 2/)
   })
 
   it('fails on a README icon that is missing', () => {

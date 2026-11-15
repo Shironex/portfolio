@@ -1,6 +1,6 @@
 /**
  * The project icon sheet the OS ships (SPEC 2.4, Icons; section 9), cut from
- * the two icon exports and the tile under them.
+ * the icon exports and the tile under them.
  *
  *   pnpm art:project-icons            write src/assets/pixel/project-icons/project-icons-32
  *   pnpm art:project-icons --check    fail if that sheet is stale
@@ -9,6 +9,8 @@
  *   os-project-icons  the six icons drawn for the OS, a 32x32 slice
  *                     `project-<slug>` and one 8-frame tag `<slug>` each
  *   readme-icons      the README icons, 32x32 frames, one tag per icon
+ *   readme-icon-<name>  a README icon drawn in its own document, 32x32
+ *                     frames and one tag over all of them
  *   os-project-tile   the tile layer of os-project-icons alone, frame 0
  *
  * The shipped sheet has one row per icon, its tag's frames left to right,
@@ -20,6 +22,7 @@
 import { existsSync } from 'node:fs'
 import { join, relative } from 'node:path'
 
+import { README_ICON_FILES } from './art-manifest.mjs'
 import { flag, isMain } from './cli.mjs'
 import { ROOT } from './export-art.mjs'
 import { cell, writeCutSheet } from './gen-app-icons.mjs'
@@ -41,6 +44,16 @@ export const README_ICON_PROJECTS = {
   nightmaze: 'night-maze',
 }
 
+/**
+ * The README icons drawn one per document (`README_ICON_FILES` in
+ * art-manifest.mjs), and the slug of each.
+ */
+export const README_ICON_FILE_PROJECTS = {
+  stackward: 'stackward',
+  hinomi: 'hinomi',
+  maquette: 'maquette',
+}
+
 /** The name of the bare tile's one-frame tag. */
 export const TILE_TAG = 'tile'
 
@@ -60,9 +73,10 @@ function checkSide(bounds, what) {
 
 /**
  * The layout of the sheet for the loaded exports: cells (each naming the
- * export it reads), tags and size. Pure, so tests can read it.
+ * export it reads), tags and size. `singles` maps a README icon file name
+ * to its export. Pure, so tests can read it.
  */
-export function projectIconLayout({ os, readme, tile }) {
+export function projectIconLayout({ os, readme, singles = {}, tile }) {
   const layout = { cells: [], tags: [], w: 0, h: 0 }
   const row = (sheet, slug, frames, boundsAt) => {
     const y = layout.tags.length * SIDE
@@ -111,6 +125,17 @@ export function projectIconLayout({ os, readme, tile }) {
     row(readme, slug, span(tag), () => canvas)
   }
 
+  for (const [name, slug] of Object.entries(README_ICON_FILE_PROJECTS)) {
+    const single = singles[name]
+    if (!single) throw new Error(`no export of the README icon "${name}"`)
+    checkSide(canvasSize(single), single.json)
+    const tags = single.data.meta.frameTags
+    if (tags.length !== 1) {
+      throw new Error(`${single.json}: wants one tag, has ${tags.length}`)
+    }
+    row(single, slug, span(tags[0]), () => canvas)
+  }
+
   const under = sliceNamed(tile, `project-${osTags[0].name}`)
   row(tile, TILE_TAG, [0], () => {
     const { bounds } = sliceKey(under, 0)
@@ -125,9 +150,14 @@ export function projectIconLayout({ os, readme, tile }) {
  * there. Returns whether it was stale (or written).
  */
 export async function writeProjectIcons(inDir, outDir, { check = false } = {}) {
+  const singles = {}
+  for (const name of README_ICON_FILES) {
+    singles[name] = await loadSheet(join(inDir, `readme-icon-${name}.json`))
+  }
   const sheets = {
     os: await loadSheet(join(inDir, 'os-project-icons.json')),
     readme: await loadSheet(join(inDir, 'readme-icons.json')),
+    singles,
     tile: await loadSheet(join(inDir, 'os-project-tile.json')),
   }
   return writeCutSheet(
@@ -145,7 +175,13 @@ export async function writeProjectIcons(inDir, outDir, { check = false } = {}) {
 async function main(argv) {
   const inDir = flag(argv, '--in-dir', ART_DIR)
   const outDir = flag(argv, '--out-dir', DEFAULT_OUT_DIR)
-  for (const name of ['os-project-icons', 'readme-icons', 'os-project-tile']) {
+  const inputs = [
+    'os-project-icons',
+    'readme-icons',
+    ...README_ICON_FILES.map((name) => `readme-icon-${name}`),
+    'os-project-tile',
+  ]
+  for (const name of inputs) {
     if (!existsSync(join(inDir, `${name}.json`))) {
       console.error(
         `${relative(ROOT, join(inDir, name))}.json does not exist yet. ` +

@@ -7,7 +7,7 @@
   .px-project-icons-32 {
     width: calc(32*var(--px));
     height: calc(32*var(--px));
-    background-size: calc(288*var(--px)) calc(448*var(--px));
+    background-size: calc(320*var(--px)) calc(544*var(--px));
     background-repeat: no-repeat;
     image-rendering: pixelated;
   }
@@ -206,8 +206,55 @@
     84.3373% { background-position: calc(-160*var(--px)) calc(-384*var(--px)); }
   }
 
-  /* tile: frame 103 */
-  .px-project-icons-32-tile {
+  /* stackward: frames 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 1540ms */
+  .px-project-icons-32-stackward {
     background-position: 0 calc(-416*var(--px));
+    --px-loop: px-project-icons-32-stackward 1540ms step-end infinite;
+  }
+  @keyframes px-project-icons-32-stackward {
+    45.4545% { background-position: calc(-32*var(--px)) calc(-416*var(--px)); }
+    50% { background-position: calc(-64*var(--px)) calc(-416*var(--px)); }
+    57.7922% { background-position: calc(-96*var(--px)) calc(-416*var(--px)); }
+    63.6364% { background-position: calc(-128*var(--px)) calc(-416*var(--px)); }
+    67.5325% { background-position: calc(-160*var(--px)) calc(-416*var(--px)); }
+    75.3247% { background-position: calc(-192*var(--px)) calc(-416*var(--px)); }
+    81.1688% { background-position: calc(-224*var(--px)) calc(-416*var(--px)); }
+    85.0649% { background-position: calc(-256*var(--px)) calc(-416*var(--px)); }
+    92.8571% { background-position: calc(-288*var(--px)) calc(-416*var(--px)); }
+  }
+
+  /* hinomi: frames 113, 114, 115, 116, 117, 118, 119, 120, 1130ms */
+  .px-project-icons-32-hinomi {
+    background-position: 0 calc(-448*var(--px));
+    --px-loop: px-project-icons-32-hinomi 1130ms step-end infinite;
+  }
+  @keyframes px-project-icons-32-hinomi {
+    14.1593% { background-position: calc(-32*var(--px)) calc(-448*var(--px)); }
+    23.8938% { background-position: calc(-64*var(--px)) calc(-448*var(--px)); }
+    35.3982% { background-position: calc(-96*var(--px)) calc(-448*var(--px)); }
+    48.6726% { background-position: calc(-128*var(--px)) calc(-448*var(--px)); }
+    63.7168% { background-position: calc(-160*var(--px)) calc(-448*var(--px)); }
+    74.3363% { background-position: calc(-192*var(--px)) calc(-448*var(--px)); }
+    87.6106% { background-position: calc(-224*var(--px)) calc(-448*var(--px)); }
+  }
+
+  /* maquette: frames 121, 122, 123, 124, 125, 126, 127, 128, 1260ms */
+  .px-project-icons-32-maquette {
+    background-position: 0 calc(-480*var(--px));
+    --px-loop: px-project-icons-32-maquette 1260ms step-end infinite;
+  }
+  @keyframes px-project-icons-32-maquette {
+    28.5714% { background-position: calc(-32*var(--px)) calc(-480*var(--px)); }
+    35.7143% { background-position: calc(-64*var(--px)) calc(-480*var(--px)); }
+    45.2381% { background-position: calc(-96*var(--px)) calc(-480*var(--px)); }
+    52.381% { background-position: calc(-128*var(--px)) calc(-480*var(--px)); }
+    76.1905% { background-position: calc(-160*var(--px)) calc(-480*var(--px)); }
+    83.3333% { background-position: calc(-192*var(--px)) calc(-480*var(--px)); }
+    92.8571% { background-position: calc(-224*var(--px)) calc(-480*var(--px)); }
+  }
+
+  /* tile: frame 129 */
+  .px-project-icons-32-tile {
+    background-position: 0 calc(-512*var(--px));
   }
 }

@@ -6,7 +6,8 @@
  * contrast gate) and the art scripts next to this file (`check-art.mjs` for
  * palette membership, `gen-chrome.mjs` for the paper recolour).
  *
- * STYLE.md allows at most three added colours; the OS adds none.
+ * STYLE.md allows at most three added colours; the OS adds none, and the
+ * README icons add the two of `ICON_COLOURS`.
  */
 
 /** Ramps in STYLE.md order, dark to light where a ramp has a direction. */
@@ -61,6 +62,13 @@ export const SKY_COLOURS = [
   '#5f8fce',
   '#8fb9de',
 ]
+
+/**
+ * Colours a README icon added under that allowance: the two lavenders of the
+ * Hinomi icon. Only the project icon sheets may use them (`iconPalette` in
+ * art-manifest.mjs), never a token.
+ */
+export const ICON_COLOURS = ['#d2b4e6', '#9a88c8']
 
 /**
  * Night colour of a window, sheet or card body and the paper colour it becomes
