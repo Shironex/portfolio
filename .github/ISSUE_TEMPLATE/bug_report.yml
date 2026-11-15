@@ -1,0 +1,39 @@
+name: Bug report
+description: Something on the site is broken, looks wrong or does not respond
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Never paste secrets or personal data. If you found a security problem,
+        use the private security report instead (see SECURITY.md).
+  - type: input
+    id: page
+    attributes:
+      label: Where it happens
+      description: The address, or the window or app inside the desktop (for example the contact form or the terminal)
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What you expected and what happened
+    validations:
+      required: true
+  - type: input
+    id: browser
+    attributes:
+      label: Browser, version and device
+      description: For example Firefox 140 on Windows 11, or Safari on iPhone 15
+    validations:
+      required: true
+  - type: textarea
+    id: extra
+    attributes:
+      label: Screenshots or console output (optional)
