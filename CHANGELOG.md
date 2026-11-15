@@ -1,3 +1,13 @@
+# [2.25.0](https://github.com/Shironex/portfolio/compare/v2.24.3...v2.25.0) (2026-11-15)
+
+
+### Features
+
+* **projects:** add hinomi ([9d26ee2](https://github.com/Shironex/portfolio/commit/9d26ee22ddbd655a26db44ce9f5c80e19d48fb92))
+* **projects:** add maquette ([084c6f1](https://github.com/Shironex/portfolio/commit/084c6f1d227654bc85468f994bbc03bf11e42234))
+* **projects:** add stackward ([3407d31](https://github.com/Shironex/portfolio/commit/3407d315309f25c5b55ce3849ecfda10f25b8cd0))
+* **pixel:** add the stackward, hinomi and maquette project icons ([7a89220](https://github.com/Shironex/portfolio/commit/7a8922030c7b42336c84bc7eaaf8cd73e1089015))
+
 ## [2.24.3](https://github.com/Shironex/portfolio/compare/v2.24.2...v2.24.3) (2026-11-10)
 
 
