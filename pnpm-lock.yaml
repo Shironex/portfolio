@@ -129,9 +129,9 @@ importers:
         version: 0.4.2(eslint@10.15.0(jiti@2.7.0))(typescript@6.0.3)
       '@noctcore/showcase-kit':
         specifier: 0.3.1
-        version: 0.3.1(@types/node@25.9.9)(playwright@1.65.1)
+        version: 0.3.1(@types/node@25.9.9)(playwright@1.64.0)
       '@playwright/test':
-        specifier: 1.65.1
+        specifier: ^1.64.0
         version: 1.65.1
       '@react-email/ui':
         specifier: 6.11.1
@@ -191,8 +191,8 @@ importers:
         specifier: ^9.1.7
         version: 9.1.7
       playwright:
-        specifier: 1.65.1
-        version: 1.65.1
+        specifier: 1.64.0
+        version: 1.64.0
       png-to-ico:
         specifier: ^3.0.2
         version: 3.0.2
@@ -4175,8 +4175,18 @@ packages:
     resolution: {integrity: sha512-C+VUP+8jis7EsQZIhDYmS5qlNtjv2yP4SNtjXK9AP1ZcTRlnSfuumaTnRfYZnYgUUYVIKqL0fRvmUGDV2fmp6g==}
     engines: {node: '>=4'}
 
+  playwright-core@1.64.0:
+    resolution: {integrity: sha512-T9r+MZkTECl2+oUcZ26YgZzTrYidTsIhYYkJix+6iDOymOb1FB2RLLSOxRGnZGv5DStt+aduIVbt+E8WygXYpg==}
+    engines: {node: '>=20'}
+    hasBin: true
+
   playwright-core@1.65.1:
     resolution: {integrity: sha512-hqPpz7blSMPxWVdoeE1yiBSzXsKiVOd2k+kjCvmUywD2GPO2Dd9HfcWnq9NN0GHbNZDFgZ9JfBFr+X5/BLo0qw==}
+    engines: {node: '>=20'}
+    hasBin: true
+
+  playwright@1.64.0:
+    resolution: {integrity: sha512-kVzTnYFYEyQ9RGzBjNCd2+yEqWmVbxl3AHPynv3qQ6JTjv4a+kwRcnqQwIpuP3NnrnIrE/Q6wWAIAvMfIE2/Yg==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -5948,10 +5958,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@noctcore/showcase-kit@0.3.1(@types/node@25.9.9)(playwright@1.65.1)':
+  '@noctcore/showcase-kit@0.3.1(@types/node@25.9.9)(playwright@1.64.0)':
     dependencies:
       '@xterm/headless': 6.0.0
-      playwright: 1.65.1
+      playwright: 1.64.0
       sharp: 0.35.5(@types/node@25.9.9)
     transitivePeerDependencies:
       - '@types/node'
@@ -9246,7 +9256,13 @@ snapshots:
       find-up: 2.1.0
       load-json-file: 4.0.0
 
+  playwright-core@1.64.0: {}
+
   playwright-core@1.65.1: {}
+
+  playwright@1.64.0:
+    dependencies:
+      playwright-core: 1.64.0
 
   playwright@1.65.1:
     dependencies:
