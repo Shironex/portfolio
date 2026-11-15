@@ -29,3 +29,15 @@ jobs:
 
       - name: Linting
         run: pnpm run lint
+
+      - name: Generated icons are current
+        run: pnpm generate:icons --check
+
+      - name: Generated OG cards are current
+        run: pnpm generate:og --check
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Font subsets are current
+        run: pnpm fonts:subset --check
