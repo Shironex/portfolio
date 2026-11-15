@@ -1,0 +1,15 @@
+name: Suggestion
+description: An idea, a copy fix or an improvement for the site
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you change or add
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it helps
+      description: Who it is for and what problem it solves
