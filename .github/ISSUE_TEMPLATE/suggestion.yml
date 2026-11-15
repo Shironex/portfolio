@@ -1,6 +1,6 @@
 name: Suggestion
 description: An idea, a copy fix or an improvement for the site
-labels: ["enhancement"]
+labels: ['enhancement']
 body:
   - type: textarea
     id: idea
