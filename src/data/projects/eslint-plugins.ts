@@ -5,11 +5,11 @@ export const eslintPlugins: Project = {
   slug: 'eslint-plugins',
   title: '@noctcore/eslint-plugins',
   summary:
-    'A family of focused ESLint plugins for the mistakes generic linters miss: cross-file boundaries, IO contracts and code that compiles but breaks in production. 13 packages, 110+ rules.',
+    'A family of focused ESLint plugins for the mistakes generic linters miss: cross-file boundaries, IO contracts and code that compiles but breaks in production. 15 plugins, 170 rules.',
   description: [
     'I kept finding the same classes of bugs in code review: fetch calls without timeouts, boundary data used without parsing, swallowed navigation errors, Prisma writes that skip tenant scoping. None of them are type errors, and the usual lint configs do not catch them. These plugins encode those checks as rules.',
-    'The repository publishes 13 packages: eleven ESLint plugins (code quality, async safety, contracts, security, observability, React, React Server Components, LLM output handling, Prisma, architecture and monorepo boundaries), a shared utility package the rules are built on, and a set of whole-repo meta rules. Together they ship more than 110 rules.',
-    'Each plugin is flat-config only, has a zero-config recommended preset, and is versioned and installed on its own. Every rule has documentation with options, examples and a note on when the plugin is a bad fit.',
+    'The repository publishes fifteen ESLint plugins (code quality, async safety, contracts, security, observability, React, React Server Components, LLM output handling, NestJS and BullMQ, TanStack Query, Electron, dates, Prisma, architecture and monorepo boundaries), a shared utility package the rules are built on, and a set of whole-repo meta rules. The docs site lists 170 rules.',
+    'Each plugin is flat-config only, has a zero-config recommended preset, and is versioned and installed on its own. Every rule is error or off, never warn. The docs site has a page per rule with why it exists, what it flags, incorrect and correct examples, its options and when not to use it, plus guides for adopting the plugins in an existing codebase and for the rules that read other files.',
   ],
   image: '/projects/eslint-plugins/thumbnail.webp',
   projectType: 'library',
@@ -34,10 +34,10 @@ export const eslintPlugins: Project = {
   ],
   technologies: ['TypeScript', 'ESLint', 'typescript-eslint', 'Vitest'],
   features: [
-    '11 ESLint plugins plus shared utilities and whole-repo meta rules',
-    'More than 110 rules, each with documentation and examples',
+    '15 ESLint plugins plus shared utilities and whole-repo meta rules',
+    '170 rules, each with its own documentation page and examples',
     'Starter set for any TypeScript codebase: code-quality, async-safety, contracts',
-    'Stack-specific plugins for React, React Server Components, Prisma and monorepos',
+    'Stack-specific plugins for React, React Server Components, TanStack Query, NestJS, Electron, Prisma and monorepos',
     'Security rules for shell injection, path traversal, SSRF, open redirects and XSS',
     'Flat config only, ESLint 9+, zero-config presets',
     'Each package versioned and installed independently',
