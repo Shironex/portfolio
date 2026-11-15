@@ -7,7 +7,7 @@ export const nightMaze: Project = {
   summary:
     'A first person maze game for Windows, written without a game engine in C++20 and OpenGL 4.1. A stone maze at night, one flashlight, crystals to find, and a shadow that hunts by sound and is burned away by the light.',
   description: [
-    'Night Maze began as a university project for a computer graphics course and I kept going. You stand in a stone maze at night with a flashlight. Crystals lie in the corridors, and when you carry enough of them the gate at the far end opens. A shadow wanders the maze and listens: it hears a sprint from 14 metres and a walk from 6, and holding the beam on it for 2.5 seconds burns it away for a while.',
+    'Night Maze began as a university project for a computer graphics course and I kept going until it felt finished: 0.17.0 is the latest release. You stand in a stone maze at night with a flashlight. Crystals lie in the corridors, and when you carry enough of them the gate at the far end opens. A shadow wanders the maze and listens: it hears a sprint from 14 metres and a walk from 6, and holding the beam on it for 2.5 seconds burns it away for a while.',
     'There is no game engine underneath. The lighting, the two shadow maps, the fog, the HDR pipeline with ACES tone mapping and the bloom are written by hand on top of OpenGL. Small libraries do the window, the math, the menus and the sound. The rules of the game are plain structs and free functions that touch no window, file or clock, so more than 1000 test cases run without one.',
     'The game has a campaign of five nights, each in a bigger maze with a shorter battery, a daily maze that takes the date as its seed, a story told in 24 chalk marks on the walls, and free play with three difficulty levels. A new campaign opens with a storybook: six painted pictures read aloud by a narrator over their own theme. Most models start from shapes I generated in Tripo and are finished by my Blender scripts, and most sounds, the music and the narration are generated with ElevenLabs, then cut, levelled and wired into the game by me.',
     'Friends get it through a small launcher I wrote in Tauri and Rust. It installs the game from GitHub Releases, checks a signed manifest before anything is unpacked, keeps the game and itself up to date, and goes back a version when a new one does not start.',
@@ -53,6 +53,18 @@ export const nightMaze: Project = {
       src: '/projects/night-maze/map.webp',
       alt: 'Night Maze: The map',
       caption: 'The map while M is held: only the corridors seen so far.',
+    },
+    {
+      src: '/projects/night-maze/worn-walls.webp',
+      alt: 'Night Maze: Worn walls with missing stones, moss and cracks',
+      caption:
+        'Stones missing, moss and cracks. The seed decides which walls are worn.',
+    },
+    {
+      src: '/projects/night-maze/round-end.webp',
+      alt: 'Night Maze: The end of a round, with the time, the crystals, the difficulty and the seed',
+      caption:
+        'Through the gate: the time, the crystals, the difficulty and the seed.',
     },
     {
       src: '/projects/night-maze/intro.webp',
@@ -105,8 +117,8 @@ export const nightMaze: Project = {
       'GitHub Actions',
     ],
   },
-  status: 'in-progress',
-  duration: 'Ongoing',
+  status: 'shipped',
+  duration: 'Finished (0.17.0)',
   demoUrl: 'https://shironex.github.io/night-maze/',
   githubUrl: 'https://github.com/Shironex/night-maze',
   links: [
