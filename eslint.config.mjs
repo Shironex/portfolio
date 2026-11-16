@@ -101,10 +101,11 @@ const eslintConfig = [
     },
   },
   // noctcore presets: architecture/correctness rules generic linters miss
-  noctcoreCodeQuality.configs.recommended,
+  // strict keeps the house rules that 1.x moved out of recommended
+  noctcoreCodeQuality.configs.strict,
   noctcoreAsyncSafety.configs.recommended,
-  noctcoreContracts.configs.recommended,
-  noctcoreReact.configs.recommended,
+  noctcoreContracts.configs.strict,
+  noctcoreReact.configs.strict,
   noctcoreSecurity.configs.recommended,
   {
     files: ['**/*.{js,mjs,cjs,jsx,ts,tsx}'],
@@ -121,6 +122,15 @@ const eslintConfig = [
         { allow: ['Error', 'PublicError'] },
       ],
       'noctcore-contracts/require-schema-parse-at-boundary': 'error',
+      // `total` and `totalContributions` here are GitHub activity counts, not
+      // money; the repo has no monetary fields.
+      'noctcore-contracts/money-must-be-decimal': [
+        'error',
+        { allowIn: ['src/lib/github/**'] },
+      ],
+      // async-safety 1.x made these opt-in; keep the 0.x coverage.
+      'noctcore-async-safety/no-shared-mutable-module-state': 'error',
+      'noctcore-async-safety/require-client-timeout': 'error',
 
       // These assume a colocated `<Name>.hooks.ts` per component and
       // PascalCase component folders; this repo keeps hooks inline and uses
