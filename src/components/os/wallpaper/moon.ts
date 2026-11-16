@@ -26,7 +26,7 @@ const KNOWN_NEW_MOON = Date.UTC(2000, 0, 6, 18, 14)
 const SYNODIC_MONTH_MS = 29.530588853 * 24 * 60 * 60 * 1000
 
 /** The moon's age as a share of the month: 0 new, 0.5 full. */
-export function moonAge(date = new Date()): number {
+function moonAge(date = new Date()): number {
   const months = (date.getTime() - KNOWN_NEW_MOON) / SYNODIC_MONTH_MS
   return months - Math.floor(months)
 }

@@ -229,7 +229,7 @@ export function desktopArea(safeBottom = 0): Rect {
  * snapped to art px. Matches the original clamp inside `resize` in
  * `use-os-windows.ts` (mins 0/16, margins 8/40 art px, 4096 SSR fallback).
  */
-export function clampResize(
+function clampResize(
   current: Rect,
   patch: Partial<Rect>,
   minW: number,

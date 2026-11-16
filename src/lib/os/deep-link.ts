@@ -6,12 +6,12 @@ import { projectPath } from '@/lib/utils/project-meta'
 import { findProjectBySlug } from '@/lib/utils/projects'
 
 /** Query param naming the app window to open: `/?open=about`. */
-export const OPEN_PARAM = 'open'
+const OPEN_PARAM = 'open'
 /**
  * Legacy query param naming the project window to open: `/?project=<slug>`.
  * Still read on load so old links work; new links use `/projects/<slug>`.
  */
-export const PROJECT_PARAM = 'project'
+const PROJECT_PARAM = 'project'
 
 /**
  * Quiet time after the topmost window last changed before the URL follows
@@ -34,7 +34,7 @@ export type DeepLinkTarget =
  * mistyped link just lands on the plain desktop. `project` wins when both
  * params are present, since it is the more specific one.
  */
-export function parseDeepLink(search: string): DeepLinkTarget | null {
+function parseDeepLink(search: string): DeepLinkTarget | null {
   const params = new URLSearchParams(search)
   const slug = params.get(PROJECT_PARAM)
   if (slug && findProjectBySlug(slug)) return { kind: 'project', slug }

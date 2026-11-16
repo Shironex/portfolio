@@ -65,7 +65,7 @@ export const LIVE_SKY_HOURS = { dawn: 5, day: 8, dusk: 18, night: 21 } as const
 const LIVE_TIME_ZONE = 'Europe/Warsaw'
 
 /** The hour (0 to 23) in Warsaw, or the local hour if the zone is unknown. */
-export function warsawHour(date = new Date()): number {
+function warsawHour(date = new Date()): number {
   try {
     return Number(
       new Intl.DateTimeFormat('en-GB', {
@@ -80,7 +80,7 @@ export function warsawHour(date = new Date()): number {
 }
 
 /** The sky Live shows at an hour in Warsaw. */
-export function liveSky(hour: number): FixedSky {
+function liveSky(hour: number): FixedSky {
   const h = LIVE_SKY_HOURS
   if (hour >= h.night || hour < h.dawn) return 'night'
   if (hour < h.day) return 'dawn'
@@ -89,15 +89,15 @@ export function liveSky(hour: number): FixedSky {
 }
 
 /** The sky that paints for a choice, now. */
-export function resolveSky(sky: SkyId, date = new Date()): FixedSky {
+function resolveSky(sky: SkyId, date = new Date()): FixedSky {
   return sky === 'live' ? liveSky(warsawHour(date)) : sky
 }
 
-export function isSkyId(value: unknown): value is SkyId {
+function isSkyId(value: unknown): value is SkyId {
   return typeof value === 'string' && SKY_IDS.includes(value)
 }
 
-export function isMode(value: unknown): value is Mode {
+function isMode(value: unknown): value is Mode {
   return value === 'light' || value === 'dark'
 }
 
