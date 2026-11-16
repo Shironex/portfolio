@@ -12,6 +12,7 @@ import { PixelIcon } from '@/components/pixel/pixel-icon.generated'
 
 import neon from '@/assets/pixel/neon/os-neon-404.png'
 import { useHotkeys } from '@/hooks/use-hotkeys'
+import { useHydrated } from '@/hooks/use-hydrated'
 import '@/styles/sprites/os-neon-404.css'
 
 /**
@@ -20,11 +21,17 @@ import '@/styles/sprites/os-neon-404.css'
  * its drawn timing (3200, 90 and 150 ms) and holds its first frame under
  * reduced motion and the Pause setting (`px-rest-paused`). Client-side: it
  * reads the path and binds Escape.
+ *
+ * Every 404 shares one prerendered copy of this page, and its server render
+ * sees the internal route (`/_not-found`), not the address that was asked
+ * for. So the path is only shown once hydrated; until then (and without
+ * JavaScript) the terminal names no path.
  */
 export function NotFoundScreen() {
   const router = useRouter()
   const pathname = usePathname()
-  const path = `.${pathname || '/unknown'}`
+  const hydrated = useHydrated()
+  const path = `.${hydrated && pathname ? pathname : '/unknown'}`
 
   useHotkeys(useMemo(() => ({ escape: () => router.push('/') }), [router]))
 
