@@ -11,7 +11,7 @@ export const kireiManga: Project = {
     'It is an Electron app with NestJS embedded in the main process, talking to a React, Vite and Tailwind renderer over Socket.IO. Data lives in better-sqlite3, and downloaded covers and pages are served over custom protocols so offline reading works the same as online.',
     'The last release was v0.2.0 "Local Library" in April 2026. I had started on a translation overlay for raw Japanese pages (an OpenCV bubble detector in C++ plus a manga-ocr sidecar), but I archived the project before it shipped and put the time into my other apps.',
   ],
-  image: '/projects/kirei-manga/thumbnail.png',
+  image: '/projects/kirei-manga/library.png',
   projectType: 'desktop',
   gallery: [
     {
