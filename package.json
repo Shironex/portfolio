@@ -30,7 +30,6 @@
     "format": "prettier 'src/**/*.{js,ts,jsx,tsx}' --write",
     "format:check": "prettier 'src/**/*.{js,ts,jsx,tsx}' --check",
     "release": "standard-version",
-    "debug-release": "node scripts/debug-release.js",
     "generate:icons": "node scripts/generate-icons.mjs",
     "generate:og": "node scripts/generate-og-images.mjs",
     "prepare": "husky",
