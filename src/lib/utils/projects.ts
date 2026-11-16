@@ -46,7 +46,7 @@ export function projectStaticParams(): { slug: string }[] {
  * @param projects - Array of all projects
  * @returns Array of projects that are in progress
  */
-export function getInProgressProjects(projects: Project[]): Project[] {
+function getInProgressProjects(projects: Project[]): Project[] {
   return projects.filter((project) => project.status === 'in-progress')
 }
 
@@ -56,10 +56,7 @@ export function getInProgressProjects(projects: Project[]): Project[] {
  * @param limit - Optional limit for the number of featured projects to return
  * @returns Array of featured projects (excluding in-progress projects)
  */
-export function getFeaturedProjects(
-  projects: Project[],
-  limit?: number
-): Project[] {
+function getFeaturedProjects(projects: Project[], limit?: number): Project[] {
   const featured = projects.filter(
     (project) => project.featured && project.status !== 'in-progress'
   )

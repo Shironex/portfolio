@@ -33,7 +33,7 @@ interface Row {
  * Colour per row from the top, for a sky `horizon` rows tall: the fixed bands
  * stack up from the horizon and the fill band takes the rows above them.
  */
-export function bandRows(bands: readonly SkyBand[], horizon: number): Row[] {
+function bandRows(bands: readonly SkyBand[], horizon: number): Row[] {
   const fixed = bands.reduce(
     (sum, b) => sum + (b.rows === 'fill' ? 0 : b.rows),
     0
@@ -61,7 +61,7 @@ export function bandRows(bands: readonly SkyBand[], horizon: number): Row[] {
  * At an even height (the 450 rows of the mocks) that is the same pattern as
  * counting from the top.
  */
-export function skyPainter(
+function skyPainter(
   bands: readonly SkyBand[],
   rows: number,
   ground: number,
