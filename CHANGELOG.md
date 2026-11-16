@@ -1,3 +1,12 @@
+# [2.26.0](https://github.com/Shironex/portfolio/compare/v2.25.0...v2.26.0) (2026-11-16)
+
+
+### Features
+
+* **projects:** add the shiranami android preview and lan sync ([1c06ea4](https://github.com/Shironex/portfolio/commit/1c06ea4897c78d371738d234951d7ca75726df52))
+* **projects:** mark night maze as finished and add two pictures ([46b6987](https://github.com/Shironex/portfolio/commit/46b698784f91febbd006a62eb4b928421dc6d401))
+* **projects:** refresh the eslint plugins text and docs pictures ([b6f1108](https://github.com/Shironex/portfolio/commit/b6f11088d70a063b556d58e0d38b0961c3c651cf))
+
 # [2.25.0](https://github.com/Shironex/portfolio/compare/v2.24.3...v2.25.0) (2026-11-15)
 
 
