@@ -3,11 +3,11 @@ import { Project } from '@/types'
 export const shironeBlog: Project = {
   id: 'shirone-blog',
   slug: 'shirone-blog',
-  title: 'shirone.blog',
+  title: 'blog.shirone.dev',
   summary:
     'My blog: field notes on what I build and what broke along the way, from Electron pitfalls to the Shiranami Rust rewrite.',
   description: [
-    'shirone.blog is where I write up what I learn while building things: Electron packaging traps, environment variables leaking into builds, terminal performance with many sessions, moving an app to a plugin architecture, and the full story of rewriting Shiranami in Rust.',
+    'blog.shirone.dev is where I write up what I learn while building things: Electron packaging traps, environment variables leaking into builds, terminal performance with many sessions, moving an app to a plugin architecture, and the full story of rewriting Shiranami in Rust.',
     'It is a static Astro site with MDX posts, React islands where a post needs interactivity, Tailwind CSS with the typography plugin and Shiki for code highlighting. It has an RSS feed and a sitemap, and runs as a small Docker container on my own server through Coolify.',
   ],
   image: '/projects/shirone-blog/thumbnail.webp',
@@ -15,18 +15,18 @@ export const shironeBlog: Project = {
   gallery: [
     {
       src: '/projects/shirone-blog/home.webp',
-      alt: 'shirone.blog: Home',
+      alt: 'blog.shirone.dev: Home',
       caption: 'Home: a short intro and the latest post.',
     },
     {
       src: '/projects/shirone-blog/post.webp',
-      alt: 'shirone.blog: Shiranami 2 post',
+      alt: 'blog.shirone.dev: Shiranami 2 post',
       caption:
         'A post: how I rewrote Shiranami in Rust, with reading time, tags and a table of contents.',
     },
     {
       src: '/projects/shirone-blog/archive.webp',
-      alt: 'shirone.blog: Archive',
+      alt: 'blog.shirone.dev: Archive',
       caption: 'The archive: every post with its date, reading time and tags.',
     },
   ],
@@ -52,7 +52,7 @@ export const shironeBlog: Project = {
   },
   status: 'shipped',
   duration: 'Ongoing',
-  demoUrl: 'https://shirone.blog',
+  demoUrl: 'https://blog.shirone.dev',
   githubUrl: 'https://github.com/Shironex/shirone-blog',
   featured: false,
 }

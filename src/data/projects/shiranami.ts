@@ -100,7 +100,7 @@ export const shiranami: Project = {
   links: [
     {
       label: 'rewrite write-up',
-      url: 'https://shirone.blog/blog/shiranami-v2-rust-rewrite',
+      url: 'https://blog.shirone.dev/blog/shiranami-v2-rust-rewrite',
       kind: 'blog',
     },
     {

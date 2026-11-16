@@ -159,7 +159,7 @@ The images in this README and the project galleries are captured with
 
 - `pnpm showcase:portfolio` builds this site on mock values and captures `assets/showcase/`, hero included (stop
   `pnpm dev` first, it rebuilds `.next`).
-- `pnpm showcase:blog` captures shirone.blog into `public/projects/shirone-blog/`.
+- `pnpm showcase:blog` captures blog.shirone.dev into `public/projects/shirone-blog/`.
 - `pnpm showcase:eslint` captures the ESLint plugins docs into `public/projects/eslint-plugins/`.
 
 ### Releases
