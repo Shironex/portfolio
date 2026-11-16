@@ -33,7 +33,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
-          node-version: '24.15'
+          node-version-file: .nvmrc
           # setup-node v5 turns its package cache on by itself when
           # package.json names a `packageManager`, and then calls pnpm to find
           # the store. This job installs no pnpm, so the step fails with

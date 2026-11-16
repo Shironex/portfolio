@@ -32,7 +32,6 @@ overrides:
   ws: ">=8.20.1"
 
 # @noctcore packages are published by the owner and may be installed as soon as
-# they are out. The pinned pnpm 10.9.0 enforces neither the gate nor this
-# exclusion; newer pnpm releases read both.
+# they are out.
 minimumReleaseAgeExclude:
   - '@noctcore/*'

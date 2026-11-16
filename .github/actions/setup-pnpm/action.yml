@@ -1,14 +1,6 @@
 name: 'Setup Node.js and pnpm'
-description: 'Setup Node.js, pnpm and install dependencies with cache'
+description: 'Setup Node.js (from .nvmrc), pnpm (from packageManager) and install dependencies with cache'
 inputs:
-  node-version:
-    description: 'Node.js version'
-    required: false
-    default: '22.11.0'
-  pnpm-version:
-    description: 'pnpm version'
-    required: false
-    default: '10.9.0'
   install-dependencies:
     description: 'Whether to install dependencies'
     required: false
@@ -20,13 +12,12 @@ runs:
     - name: Setup pnpm
       uses: pnpm/action-setup@v4
       with:
-        version: ${{ inputs.pnpm-version }}
         run_install: false
 
     - name: Setup Node.js
       uses: actions/setup-node@v5
       with:
-        node-version: ${{ inputs.node-version }}
+        node-version-file: .nvmrc
 
     - name: Get pnpm store directory
       shell: bash
