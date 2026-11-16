@@ -84,7 +84,7 @@ The Aseprite sources live outside the repo (`../aseprite-demo/`); their exports 
 
 ### Important Considerations
 
-- Node.js >= 22.13.0 and pnpm >= 10.9.0 required
+- Node.js >= 26 (pinned in `.nvmrc`) and pnpm >= 10.34.9 (pinned in `packageManager`) required
 - Environment variables must be set based on `.env.example`
 - Redis and mail server run via Docker Compose
 - File/folder naming uses kebab-case (enforced by ESLint)

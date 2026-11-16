@@ -5,7 +5,7 @@ issues; code changes are welcome for bugs and small fixes, please open an issue 
 
 ## Setup
 
-See the Getting started section of the [README](README.md). Node.js 22.13 or newer and pnpm 10.9 or newer.
+See the Getting started section of the [README](README.md). Node.js 26 or newer (`.nvmrc` pins the version CI uses) and pnpm 10.34.9 or newer.
 
 ## Before you open a pull request
 

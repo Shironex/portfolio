@@ -40,10 +40,10 @@
     "showcase:portfolio": "showcase all -c showcase/portfolio.config.mjs && showcase hero -c showcase/portfolio.config.mjs"
   },
   "engines": {
-    "node": ">=22.13.0",
-    "pnpm": ">=10.9.0"
+    "node": ">=26",
+    "pnpm": ">=10.34.9"
   },
-  "packageManager": "pnpm@10.9.0",
+  "packageManager": "pnpm@10.34.9",
   "dependencies": {
     "@hookform/resolvers": "^7.0.6",
     "@radix-ui/react-label": "^2.1.17",

@@ -105,7 +105,7 @@ This is my portfolio. Instead of a long scrolling page, it opens as a desktop: m
 
 ### Getting started
 
-You need [Node.js](https://nodejs.org/) 22.13 or newer and [pnpm](https://pnpm.io/) 10.9 or newer.
+You need [Node.js](https://nodejs.org/) 26 or newer (`.nvmrc` pins the version CI uses) and [pnpm](https://pnpm.io/) 10.34.9 or newer.
 
 ```bash
 git clone https://github.com/Shironex/portfolio.git
