@@ -1,9 +1,9 @@
 import { defineConfig } from '@noctcore/showcase-kit'
 
-const ORIGIN = 'https://shirone.blog'
+const ORIGIN = 'https://blog.shirone.dev'
 
 export default defineConfig({
-  name: 'shirone.blog',
+  name: 'blog.shirone.dev',
   slug: 'shirone-blog',
   root: '..',
   target: { mode: 'url', url: `${ORIGIN}/` },

@@ -59,7 +59,7 @@ function site(domain: string): PublicCheck {
 
 export const PUBLIC_CHECKS: readonly PublicCheck[] = [
   site('shirone.dev'),
-  site('shirone.blog'),
+  site('blog.shirone.dev'),
   site('shiroani.app'),
   site('storybook.shiroani.app'),
   site('shiranami.app'),
