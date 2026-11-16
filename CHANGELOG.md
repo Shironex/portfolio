@@ -1,3 +1,10 @@
+## [2.26.2](https://github.com/Shironex/portfolio/compare/v2.26.1...v2.26.2) (2026-11-16)
+
+
+### Bug Fixes
+
+* **os:** show the 404 path only after hydration ([32f973a](https://github.com/Shironex/portfolio/commit/32f973a9dc707e5156dcc749ec160db51c2d3c26))
+
 ## [2.26.1](https://github.com/Shironex/portfolio/compare/v2.26.0...v2.26.1) (2026-11-16)
 
 
