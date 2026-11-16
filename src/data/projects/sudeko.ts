@@ -10,7 +10,7 @@ export const sudeko: Project = {
     'Sudeko is the website of an electrical installation and construction company that has operated in Elbląg, Poland since 2019. It presents the services, company background, credentials and client testimonials in Polish.',
     "I built it in a few days with Next.js, following the company's blue and yellow branding and a mobile-first layout. The contact form validates input with Zod and is protected by a honeypot, Cloudflare Turnstile and Arcjet rate limiting, with messages delivered through Resend.",
   ],
-  image: '/projects/sudeko/thumbnail.png',
+  image: '/projects/sudeko/overview.png',
   projectType: 'web',
   gallery: [
     {

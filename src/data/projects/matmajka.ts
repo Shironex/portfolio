@@ -11,7 +11,7 @@ export const matmajka: Project = {
     'The sections are ordinary HTML that the server renders, so the page reads the same without the room. Clicking an object flies the camera to it and slides that section in as a panel. Phones and weak graphics cards get a picture of the room and the plain page first, with a button to enter the room. A switch in the navbar goes between the two views.',
     'Most models started as generated meshes that I cleaned up, and the laptop, the cradle and the room itself are built in Blender. The files are compressed with Meshopt and KTX2, and lighter copies load first and are swapped for the full ones at the first close-up. The site is in Polish and English, the contact form is guarded by Cloudflare Turnstile and sends mail over SMTP, and it runs in Docker on my own server.',
   ],
-  image: '/projects/matmajka/thumbnail.png',
+  image: '/projects/matmajka/overview.png',
   projectType: 'web',
   gallery: [
     {
