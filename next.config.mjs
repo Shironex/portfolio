@@ -18,6 +18,7 @@ const nextConfig = {
     remotePatterns: [{ protocol: 'https', hostname: 'images.unsplash.com' }],
   },
   cacheComponents: true,
+  partialPrefetching: true,
   cacheLife: {
     hours: { stale: 3600, revalidate: 900, expire: 86400 },
     days: { stale: 86400, revalidate: 3600, expire: 604800 },
