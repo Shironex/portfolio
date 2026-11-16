@@ -79,7 +79,7 @@
     "@noctcore/eslint-plugin-react": "^0.4.2",
     "@noctcore/eslint-plugin-security": "^0.4.2",
     "@noctcore/showcase-kit": "0.3.1",
-    "@playwright/test": "^1.64.0",
+    "@playwright/test": "1.64.0",
     "@react-email/ui": "6.11.1",
     "@semantic-release/changelog": "^7.0.0",
     "@semantic-release/git": "^11.0.1",
