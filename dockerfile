@@ -1,15 +1,13 @@
-FROM node:22-alpine AS base
+# Keep the Node version in step with .nvmrc and the pnpm version with packageManager in package.json.
+FROM node:26.13.1-alpine AS base
 
 ### Dependencies ###
 FROM base AS deps
 
 RUN apk add --no-cache libc6-compat
 
-# Setup pnpm environment
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
-RUN corepack prepare pnpm@latest --activate
+# Node 25 and later no longer ship corepack, so pnpm comes from npm at the packageManager version
+RUN npm install --global pnpm@10.34.9
 
 WORKDIR /app
 
@@ -27,8 +25,7 @@ RUN pnpm install --frozen-lockfile --prefer-frozen-lockfile
 ### Builder ###
 FROM base AS builder
 
-RUN corepack enable
-RUN corepack prepare pnpm@latest --activate
+RUN npm install --global pnpm@10.34.9
 
 WORKDIR /app
 
