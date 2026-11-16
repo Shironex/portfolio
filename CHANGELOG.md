@@ -1,3 +1,10 @@
+## [2.26.1](https://github.com/Shironex/portfolio/compare/v2.26.0...v2.26.1) (2026-11-16)
+
+
+### Bug Fixes
+
+* **deps:** raise override floors for dompurify, undici and fast-uri, bump zod to 4.6.7 ([52ac6dc](https://github.com/Shironex/portfolio/commit/52ac6dcab250aa34531ed5dd87f2d3b499de8863))
+
 # [2.26.0](https://github.com/Shironex/portfolio/compare/v2.25.0...v2.26.0) (2026-11-16)
 
 
