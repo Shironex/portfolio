@@ -34,8 +34,11 @@
     "generate:og": "node scripts/generate-og-images.mjs",
     "prepare": "husky",
     "commit": "git-cz",
+    "showcase:auth": "showcase all -c showcase/auth.config.mjs",
     "showcase:blog": "showcase all -c showcase/shirone-blog.config.mjs",
     "showcase:eslint": "showcase all -c showcase/eslint-plugins.config.mjs",
+    "showcase:harness": "showcase all -c showcase/harness.config.mjs",
+    "showcase:kit": "showcase all -c showcase/showcase-kit.config.mjs",
     "showcase:portfolio": "showcase all -c showcase/portfolio.config.mjs && showcase hero -c showcase/portfolio.config.mjs"
   },
   "engines": {
