@@ -51,12 +51,12 @@ export const projectsData: Project[] = [
   businessErp,
   nysia,
   moekoder,
+  kireiManga,
   rumi,
   shironeBlog,
   sudeko,
   matmajka,
   // Archive
-  kireiManga,
   gitchorus,
   writeWiz,
   claudeCodeDiscordBot,
