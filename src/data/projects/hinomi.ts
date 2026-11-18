@@ -5,12 +5,12 @@ export const hinomi: Project = {
   slug: 'hinomi',
   title: 'Hinomi',
   summary:
-    'A small self-hosted app that tells you whether anything deployed and reachable is exposed to a serious vulnerability. It joins Coolify deployments with GitHub and OSV advisories, ranks every finding by real exposure and plans the fix.',
+    'A small self-hosted app that tells you whether anything deployed and reachable is exposed to a serious vulnerability. It joins deployments from Coolify, Dokploy or Docker hosts with GitHub and OSV advisories, ranks every finding by real exposure and plans the fix.',
   description: [
     'GitHub can report thousands of Dependabot alerts across a few dozen repos, and most of them sit in repos that are not deployed anywhere. Meanwhile alerts can be switched off on a repo without anyone noticing, so a critical advisory on a live site produces no alert at all. I built Hinomi for my own servers, where I look after a dozen apps alone, to answer one question: is anything that is actually deployed and reachable exposed right now?',
-    'It reads deployments from Coolify, repos and Dependabot alerts from GitHub, and checks the lockfiles on its own through OSV.dev, so repos with Dependabot off are covered too. Every finding is ranked by severity, runtime or development code, deployed or not, and public or internal. A deployed repo it cannot see into is reported as a blind spot instead of staying silent.',
+    'It reads deployments from Coolify, Dokploy, Docker hosts or a manual list, repos and Dependabot alerts from GitHub, and checks the lockfiles on its own through OSV.dev, so repos with Dependabot off are covered too. Every finding is ranked by severity, runtime or development code, deployed or not, and public or internal. A deployed repo it cannot see into is reported as a blind spot instead of staying silent.',
     'The By fix view groups findings by the package bump that clears the most of them, and a fix plan shows the safe steps of one repo as the diff its pull request makes. With the fix runner on, Hinomi opens that pull request for me to review; it never merges and never touches a deployment. New critical findings go to Discord, a webhook or email right after a scan, with a daily digest for the rest.',
-    'It is one container with a SQLite database, published to GHCR for amd64 and arm64 with an SBOM and build provenance, and it installs on a phone as an app. It has no login yet, so it sits behind Tailscale or Cloudflare Access and shows on every page how a request reached it. The newest release is v0.2.1; the 0.3 release candidate adds drift guards, image scans and deployments from Dokploy and Docker hosts.',
+    'It is one container with a SQLite database, published to GHCR for amd64 and arm64 with an SBOM and build provenance, and it installs on a phone as an app. It has no login yet, so it sits behind Tailscale or Cloudflare Access and shows on every page how a request reached it. The newest release is v0.3.0, which guards configuration as well as dependencies: drift guards for a container running as root, a mounted Docker socket or a shared network, runtime and framework support windows from endoflife.date, image scans for deployments with no repo, a release tier for desktop apps that ship installers but deploy nowhere, and lockfiles for Go, Python, PHP and Ruby.',
   ],
   image: '/projects/hinomi/thumbnail.webp',
   projectType: 'web',
@@ -65,8 +65,10 @@ export const hinomi: Project = {
   ],
   technologies: ['TypeScript', 'React', 'Hono', 'SQLite', 'Docker'],
   features: [
-    'Joins Coolify deployments with GitHub Dependabot alerts and its own OSV.dev lockfile check',
+    'Joins deployments from Coolify, Dokploy, Docker hosts or a manual list with GitHub Dependabot alerts and its own OSV.dev lockfile check',
     'Every finding ranked by severity, runtime code, deployed or not, and public or internal',
+    'Drift guards: root containers, mounted Docker sockets, shared networks and runtimes near end of life',
+    'Image scans for deployments with no repo, and a release tier for desktop apps that only ship installers',
     'Blind spots as findings: alerts switched off, unreadable or missing lockfiles, unmapped deployments',
     'By fix view: the package bumps that clear the most findings across repos',
     'Fix plans as diffs, and an opt in runner that opens pull requests but never merges',
