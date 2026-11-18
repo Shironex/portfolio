@@ -1,5 +1,6 @@
 import { Project } from '@/types'
 
+import { auth } from './projects/auth'
 import { automaker } from './projects/automaker'
 import { businessErp } from './projects/business-erp'
 import { claudeCodeDiscordBot } from './projects/claude-code-discord-bot'
@@ -35,6 +36,7 @@ export const projectsData: Project[] = [
   nightMaze,
   // Newest work, newest first
   harness,
+  auth,
   stackward,
   hinomi,
   maquette,
