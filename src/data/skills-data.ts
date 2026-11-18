@@ -25,6 +25,7 @@ export const skillsData: SkillGroup[] = [
       { n: 'TanStack' },
       { n: 'Next.js' },
       { n: 'Tailwind' },
+      { n: 'Astro' },
       { n: 'Motion' },
       { n: 'shadcn/ui' },
       { n: 'React Native' },
@@ -36,6 +37,7 @@ export const skillsData: SkillGroup[] = [
     items: [
       { n: 'Node.js' },
       { n: 'NestJS' },
+      { n: 'Go' },
       { n: 'tRPC' },
       { n: 'PostgreSQL' },
       { n: 'Prisma' },
