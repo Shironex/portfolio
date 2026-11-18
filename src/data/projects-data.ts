@@ -15,6 +15,7 @@ import { maquette } from './projects/maquette'
 import { matmajka } from './projects/matmajka'
 import { moekoder } from './projects/moekoder'
 import { nightMaze } from './projects/night-maze'
+import { nightcore } from './projects/nightcore'
 import { nysia } from './projects/nysia'
 import { omniscribe } from './projects/omniscribe'
 import { rumi } from './projects/rumi'
@@ -44,6 +45,7 @@ export const projectsData: Project[] = [
   automaker,
   eslintPlugins,
   showcaseKit,
+  nightcore,
   omniscribe,
   shiroani,
   businessErp,
