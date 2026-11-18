@@ -23,6 +23,7 @@ import { shiniJsRateLimit } from './projects/shinijs-rate-limit'
 import { shiranami } from './projects/shiranami'
 import { shiroani } from './projects/shiroani'
 import { shironeBlog } from './projects/shirone-blog'
+import { showcaseKit } from './projects/showcase-kit'
 import { stackward } from './projects/stackward'
 import { sudeko } from './projects/sudeko'
 import { writeWiz } from './projects/write-wiz'
@@ -42,6 +43,7 @@ export const projectsData: Project[] = [
   maquette,
   automaker,
   eslintPlugins,
+  showcaseKit,
   omniscribe,
   shiroani,
   businessErp,
