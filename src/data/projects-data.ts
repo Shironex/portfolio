@@ -7,6 +7,7 @@ import { cliTemplate } from './projects/cli-template'
 import { eslintPlugins } from './projects/eslint-plugins'
 import { ghLabelsCli } from './projects/gh-labels-cli'
 import { gitchorus } from './projects/gitchorus'
+import { harness } from './projects/harness'
 import { hinomi } from './projects/hinomi'
 import { kireiManga } from './projects/kirei-manga'
 import { maquette } from './projects/maquette'
@@ -33,6 +34,7 @@ export const projectsData: Project[] = [
   shiranami,
   nightMaze,
   // Newest work, newest first
+  harness,
   stackward,
   hinomi,
   maquette,
