@@ -20,7 +20,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -31,7 +31,7 @@ jobs:
       # never runs `pnpm install`, so nothing else decides the version either:
       # without this step it is whatever the runner image happens to ship.
       - name: Setup Node.js
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
           # setup-node v5 turns its package cache on by itself when
@@ -42,7 +42,7 @@ jobs:
           package-manager-cache: false
 
       - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@61680d0e9b02ff86f5648ade99e01be17f0260a4 # v4
+        uses: cycjimmy/semantic-release-action@ad51787758d9654d5a75150a89a6fa9b3ccef95e # v4
         with:
           # The action bundles its own copies of the semantic-release plugins and
           # never runs `pnpm install`, so the versions in package.json are not the
