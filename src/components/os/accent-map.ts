@@ -86,6 +86,7 @@ export const projectAccent: Record<string, AccentRole> = {
   maquette: 'warm-2',
   harness: 'primary',
   auth: 'deep',
+  'showcase-kit': 'bright',
 }
 
 export const DEFAULT_ACCENT: AccentRole = 'primary'
