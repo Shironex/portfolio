@@ -17,7 +17,6 @@ import '@/styles/sprites/project-icons-32.css'
 const ICON_SLUGS = new Set([
   'moekoder',
   'rumi',
-  'nysia',
   'matmajka',
   'shirone-blog',
   'sudeko',
@@ -68,7 +67,7 @@ interface ProjectIconProps {
 
 /**
  * A project's 32x32 icon on its tile. Decorative: keep the project's name
- * and description beside it (rumi and nysia are both terminals). Renders
+ * and description beside it. Renders
  * nothing for a project with no icon; `ProjectAvatar` falls back to the
  * letter tile.
  */

@@ -16,7 +16,6 @@ import { matmajka } from './projects/matmajka'
 import { moekoder } from './projects/moekoder'
 import { nightMaze } from './projects/night-maze'
 import { nightcore } from './projects/nightcore'
-import { nysia } from './projects/nysia'
 import { omniscribe } from './projects/omniscribe'
 import { rumi } from './projects/rumi'
 import { shiniJsLogger } from './projects/shinijs-logger'
@@ -49,7 +48,6 @@ export const projectsData: Project[] = [
   omniscribe,
   shiroani,
   businessErp,
-  nysia,
   moekoder,
   kireiManga,
   rumi,
