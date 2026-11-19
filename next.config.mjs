@@ -11,8 +11,19 @@ const jiti = createJiti(fileURLToPath(import.meta.url))
 await jiti.import('./src/env/server.ts', { default: true })
 await jiti.import('./src/env/client.ts', { default: true })
 
+// Coolify hands the commit of the deploy to the build as SOURCE_COMMIT (the
+// dockerfile declares it as a build arg). A page from one deploy then only
+// requests assets of that deploy, and a client that meets another deploy's
+// server reloads instead of loading chunks that no longer exist. Unset (local
+// builds) or a placeholder, no id is set and Next behaves as before.
+const commit = process.env.SOURCE_COMMIT?.trim()
+const deploymentId =
+  process.env.NEXT_DEPLOYMENT_ID ||
+  (commit && commit !== 'HEAD' ? commit : undefined)
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  deploymentId,
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   images: {
     remotePatterns: [{ protocol: 'https', hostname: 'images.unsplash.com' }],
