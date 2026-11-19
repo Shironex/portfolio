@@ -11,6 +11,7 @@ export const README_ICON_FILES = [
   'auth',
   'nightcore',
   'showcase-kit',
+  'eslint-plugins',
 ]
 
 /**

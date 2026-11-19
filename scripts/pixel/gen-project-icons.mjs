@@ -37,7 +37,6 @@ export const PROJECT_ICON_STEM = 'project-icons-32'
 export const README_ICON_PROJECTS = {
   automaker: 'automaker',
   erp: 'business-erp',
-  noctcore: 'eslint-plugins',
   omniscribe: 'omniscribe',
   shiranami: 'shiranami',
   shiroani: 'shiroani',
@@ -56,6 +55,7 @@ export const README_ICON_FILE_PROJECTS = {
   auth: 'auth',
   nightcore: 'nightcore',
   'showcase-kit': 'showcase-kit',
+  'eslint-plugins': 'eslint-plugins',
 }
 
 /** The name of the bare tile's one-frame tag. */

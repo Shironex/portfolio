@@ -1431,186 +1431,10 @@
       "duration": 90
     },
     {
-      "filename": "eslint-plugins:0",
-      "frame": {
-        "x": 0,
-        "y": 256,
-        "w": 32,
-        "h": 32
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 32,
-        "h": 32
-      },
-      "sourceSize": {
-        "w": 32,
-        "h": 32
-      },
-      "duration": 110
-    },
-    {
-      "filename": "eslint-plugins:1",
-      "frame": {
-        "x": 32,
-        "y": 256,
-        "w": 32,
-        "h": 32
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 32,
-        "h": 32
-      },
-      "sourceSize": {
-        "w": 32,
-        "h": 32
-      },
-      "duration": 110
-    },
-    {
-      "filename": "eslint-plugins:2",
-      "frame": {
-        "x": 64,
-        "y": 256,
-        "w": 32,
-        "h": 32
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 32,
-        "h": 32
-      },
-      "sourceSize": {
-        "w": 32,
-        "h": 32
-      },
-      "duration": 110
-    },
-    {
-      "filename": "eslint-plugins:3",
-      "frame": {
-        "x": 96,
-        "y": 256,
-        "w": 32,
-        "h": 32
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 32,
-        "h": 32
-      },
-      "sourceSize": {
-        "w": 32,
-        "h": 32
-      },
-      "duration": 70
-    },
-    {
-      "filename": "eslint-plugins:4",
-      "frame": {
-        "x": 128,
-        "y": 256,
-        "w": 32,
-        "h": 32
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 32,
-        "h": 32
-      },
-      "sourceSize": {
-        "w": 32,
-        "h": 32
-      },
-      "duration": 100
-    },
-    {
-      "filename": "eslint-plugins:5",
-      "frame": {
-        "x": 160,
-        "y": 256,
-        "w": 32,
-        "h": 32
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 32,
-        "h": 32
-      },
-      "sourceSize": {
-        "w": 32,
-        "h": 32
-      },
-      "duration": 150
-    },
-    {
-      "filename": "eslint-plugins:6",
-      "frame": {
-        "x": 192,
-        "y": 256,
-        "w": 32,
-        "h": 32
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 32,
-        "h": 32
-      },
-      "sourceSize": {
-        "w": 32,
-        "h": 32
-      },
-      "duration": 250
-    },
-    {
-      "filename": "eslint-plugins:7",
-      "frame": {
-        "x": 224,
-        "y": 256,
-        "w": 32,
-        "h": 32
-      },
-      "rotated": false,
-      "trimmed": false,
-      "spriteSourceSize": {
-        "x": 0,
-        "y": 0,
-        "w": 32,
-        "h": 32
-      },
-      "sourceSize": {
-        "w": 32,
-        "h": 32
-      },
-      "duration": 110
-    },
-    {
       "filename": "omniscribe:0",
       "frame": {
         "x": 0,
-        "y": 288,
+        "y": 256,
         "w": 32,
         "h": 32
       },
@@ -1632,7 +1456,7 @@
       "filename": "omniscribe:1",
       "frame": {
         "x": 32,
-        "y": 288,
+        "y": 256,
         "w": 32,
         "h": 32
       },
@@ -1654,7 +1478,7 @@
       "filename": "omniscribe:2",
       "frame": {
         "x": 64,
-        "y": 288,
+        "y": 256,
         "w": 32,
         "h": 32
       },
@@ -1676,7 +1500,7 @@
       "filename": "omniscribe:3",
       "frame": {
         "x": 96,
-        "y": 288,
+        "y": 256,
         "w": 32,
         "h": 32
       },
@@ -1698,7 +1522,7 @@
       "filename": "omniscribe:4",
       "frame": {
         "x": 128,
-        "y": 288,
+        "y": 256,
         "w": 32,
         "h": 32
       },
@@ -1720,7 +1544,7 @@
       "filename": "omniscribe:5",
       "frame": {
         "x": 160,
-        "y": 288,
+        "y": 256,
         "w": 32,
         "h": 32
       },
@@ -1742,7 +1566,7 @@
       "filename": "omniscribe:6",
       "frame": {
         "x": 192,
-        "y": 288,
+        "y": 256,
         "w": 32,
         "h": 32
       },
@@ -1764,7 +1588,7 @@
       "filename": "omniscribe:7",
       "frame": {
         "x": 224,
-        "y": 288,
+        "y": 256,
         "w": 32,
         "h": 32
       },
@@ -1786,7 +1610,7 @@
       "filename": "shiranami:0",
       "frame": {
         "x": 0,
-        "y": 320,
+        "y": 288,
         "w": 32,
         "h": 32
       },
@@ -1808,7 +1632,7 @@
       "filename": "shiranami:1",
       "frame": {
         "x": 32,
-        "y": 320,
+        "y": 288,
         "w": 32,
         "h": 32
       },
@@ -1830,7 +1654,7 @@
       "filename": "shiranami:2",
       "frame": {
         "x": 64,
-        "y": 320,
+        "y": 288,
         "w": 32,
         "h": 32
       },
@@ -1852,7 +1676,7 @@
       "filename": "shiranami:3",
       "frame": {
         "x": 96,
-        "y": 320,
+        "y": 288,
         "w": 32,
         "h": 32
       },
@@ -1874,7 +1698,7 @@
       "filename": "shiranami:4",
       "frame": {
         "x": 128,
-        "y": 320,
+        "y": 288,
         "w": 32,
         "h": 32
       },
@@ -1896,7 +1720,7 @@
       "filename": "shiranami:5",
       "frame": {
         "x": 160,
-        "y": 320,
+        "y": 288,
         "w": 32,
         "h": 32
       },
@@ -1918,7 +1742,7 @@
       "filename": "shiranami:6",
       "frame": {
         "x": 192,
-        "y": 320,
+        "y": 288,
         "w": 32,
         "h": 32
       },
@@ -1940,7 +1764,7 @@
       "filename": "shiranami:7",
       "frame": {
         "x": 224,
-        "y": 320,
+        "y": 288,
         "w": 32,
         "h": 32
       },
@@ -1962,7 +1786,7 @@
       "filename": "shiroani:0",
       "frame": {
         "x": 0,
-        "y": 352,
+        "y": 320,
         "w": 32,
         "h": 32
       },
@@ -1984,7 +1808,7 @@
       "filename": "shiroani:1",
       "frame": {
         "x": 32,
-        "y": 352,
+        "y": 320,
         "w": 32,
         "h": 32
       },
@@ -2006,7 +1830,7 @@
       "filename": "shiroani:2",
       "frame": {
         "x": 64,
-        "y": 352,
+        "y": 320,
         "w": 32,
         "h": 32
       },
@@ -2028,7 +1852,7 @@
       "filename": "shiroani:3",
       "frame": {
         "x": 96,
-        "y": 352,
+        "y": 320,
         "w": 32,
         "h": 32
       },
@@ -2050,7 +1874,7 @@
       "filename": "shiroani:4",
       "frame": {
         "x": 128,
-        "y": 352,
+        "y": 320,
         "w": 32,
         "h": 32
       },
@@ -2072,7 +1896,7 @@
       "filename": "shiroani:5",
       "frame": {
         "x": 160,
-        "y": 352,
+        "y": 320,
         "w": 32,
         "h": 32
       },
@@ -2094,7 +1918,7 @@
       "filename": "shiroani:6",
       "frame": {
         "x": 192,
-        "y": 352,
+        "y": 320,
         "w": 32,
         "h": 32
       },
@@ -2116,7 +1940,7 @@
       "filename": "shiroani:7",
       "frame": {
         "x": 224,
-        "y": 352,
+        "y": 320,
         "w": 32,
         "h": 32
       },
@@ -2138,7 +1962,7 @@
       "filename": "night-maze:0",
       "frame": {
         "x": 0,
-        "y": 384,
+        "y": 352,
         "w": 32,
         "h": 32
       },
@@ -2160,7 +1984,7 @@
       "filename": "night-maze:1",
       "frame": {
         "x": 32,
-        "y": 384,
+        "y": 352,
         "w": 32,
         "h": 32
       },
@@ -2182,7 +2006,7 @@
       "filename": "night-maze:2",
       "frame": {
         "x": 64,
-        "y": 384,
+        "y": 352,
         "w": 32,
         "h": 32
       },
@@ -2204,7 +2028,7 @@
       "filename": "night-maze:3",
       "frame": {
         "x": 96,
-        "y": 384,
+        "y": 352,
         "w": 32,
         "h": 32
       },
@@ -2226,7 +2050,7 @@
       "filename": "night-maze:4",
       "frame": {
         "x": 128,
-        "y": 384,
+        "y": 352,
         "w": 32,
         "h": 32
       },
@@ -2248,7 +2072,7 @@
       "filename": "night-maze:5",
       "frame": {
         "x": 160,
-        "y": 384,
+        "y": 352,
         "w": 32,
         "h": 32
       },
@@ -2270,7 +2094,7 @@
       "filename": "stackward:0",
       "frame": {
         "x": 0,
-        "y": 416,
+        "y": 384,
         "w": 32,
         "h": 32
       },
@@ -2292,7 +2116,7 @@
       "filename": "stackward:1",
       "frame": {
         "x": 32,
-        "y": 416,
+        "y": 384,
         "w": 32,
         "h": 32
       },
@@ -2314,7 +2138,7 @@
       "filename": "stackward:2",
       "frame": {
         "x": 64,
-        "y": 416,
+        "y": 384,
         "w": 32,
         "h": 32
       },
@@ -2336,7 +2160,7 @@
       "filename": "stackward:3",
       "frame": {
         "x": 96,
-        "y": 416,
+        "y": 384,
         "w": 32,
         "h": 32
       },
@@ -2358,7 +2182,7 @@
       "filename": "stackward:4",
       "frame": {
         "x": 128,
-        "y": 416,
+        "y": 384,
         "w": 32,
         "h": 32
       },
@@ -2380,7 +2204,7 @@
       "filename": "stackward:5",
       "frame": {
         "x": 160,
-        "y": 416,
+        "y": 384,
         "w": 32,
         "h": 32
       },
@@ -2402,7 +2226,7 @@
       "filename": "stackward:6",
       "frame": {
         "x": 192,
-        "y": 416,
+        "y": 384,
         "w": 32,
         "h": 32
       },
@@ -2424,7 +2248,7 @@
       "filename": "stackward:7",
       "frame": {
         "x": 224,
-        "y": 416,
+        "y": 384,
         "w": 32,
         "h": 32
       },
@@ -2446,7 +2270,7 @@
       "filename": "stackward:8",
       "frame": {
         "x": 256,
-        "y": 416,
+        "y": 384,
         "w": 32,
         "h": 32
       },
@@ -2468,7 +2292,7 @@
       "filename": "stackward:9",
       "frame": {
         "x": 288,
-        "y": 416,
+        "y": 384,
         "w": 32,
         "h": 32
       },
@@ -2490,7 +2314,7 @@
       "filename": "hinomi:0",
       "frame": {
         "x": 0,
-        "y": 448,
+        "y": 416,
         "w": 32,
         "h": 32
       },
@@ -2512,7 +2336,7 @@
       "filename": "hinomi:1",
       "frame": {
         "x": 32,
-        "y": 448,
+        "y": 416,
         "w": 32,
         "h": 32
       },
@@ -2534,7 +2358,7 @@
       "filename": "hinomi:2",
       "frame": {
         "x": 64,
-        "y": 448,
+        "y": 416,
         "w": 32,
         "h": 32
       },
@@ -2556,7 +2380,7 @@
       "filename": "hinomi:3",
       "frame": {
         "x": 96,
-        "y": 448,
+        "y": 416,
         "w": 32,
         "h": 32
       },
@@ -2578,7 +2402,7 @@
       "filename": "hinomi:4",
       "frame": {
         "x": 128,
-        "y": 448,
+        "y": 416,
         "w": 32,
         "h": 32
       },
@@ -2600,7 +2424,7 @@
       "filename": "hinomi:5",
       "frame": {
         "x": 160,
-        "y": 448,
+        "y": 416,
         "w": 32,
         "h": 32
       },
@@ -2622,7 +2446,7 @@
       "filename": "hinomi:6",
       "frame": {
         "x": 192,
-        "y": 448,
+        "y": 416,
         "w": 32,
         "h": 32
       },
@@ -2644,7 +2468,7 @@
       "filename": "hinomi:7",
       "frame": {
         "x": 224,
-        "y": 448,
+        "y": 416,
         "w": 32,
         "h": 32
       },
@@ -2666,7 +2490,7 @@
       "filename": "maquette:0",
       "frame": {
         "x": 0,
-        "y": 480,
+        "y": 448,
         "w": 32,
         "h": 32
       },
@@ -2688,7 +2512,7 @@
       "filename": "maquette:1",
       "frame": {
         "x": 32,
-        "y": 480,
+        "y": 448,
         "w": 32,
         "h": 32
       },
@@ -2710,7 +2534,7 @@
       "filename": "maquette:2",
       "frame": {
         "x": 64,
-        "y": 480,
+        "y": 448,
         "w": 32,
         "h": 32
       },
@@ -2732,7 +2556,7 @@
       "filename": "maquette:3",
       "frame": {
         "x": 96,
-        "y": 480,
+        "y": 448,
         "w": 32,
         "h": 32
       },
@@ -2754,7 +2578,7 @@
       "filename": "maquette:4",
       "frame": {
         "x": 128,
-        "y": 480,
+        "y": 448,
         "w": 32,
         "h": 32
       },
@@ -2776,7 +2600,7 @@
       "filename": "maquette:5",
       "frame": {
         "x": 160,
-        "y": 480,
+        "y": 448,
         "w": 32,
         "h": 32
       },
@@ -2798,7 +2622,7 @@
       "filename": "maquette:6",
       "frame": {
         "x": 192,
-        "y": 480,
+        "y": 448,
         "w": 32,
         "h": 32
       },
@@ -2820,7 +2644,7 @@
       "filename": "maquette:7",
       "frame": {
         "x": 224,
-        "y": 480,
+        "y": 448,
         "w": 32,
         "h": 32
       },
@@ -2842,7 +2666,7 @@
       "filename": "harness:0",
       "frame": {
         "x": 0,
-        "y": 512,
+        "y": 480,
         "w": 32,
         "h": 32
       },
@@ -2864,7 +2688,7 @@
       "filename": "harness:1",
       "frame": {
         "x": 32,
-        "y": 512,
+        "y": 480,
         "w": 32,
         "h": 32
       },
@@ -2886,7 +2710,7 @@
       "filename": "harness:2",
       "frame": {
         "x": 64,
-        "y": 512,
+        "y": 480,
         "w": 32,
         "h": 32
       },
@@ -2908,7 +2732,7 @@
       "filename": "harness:3",
       "frame": {
         "x": 96,
-        "y": 512,
+        "y": 480,
         "w": 32,
         "h": 32
       },
@@ -2930,7 +2754,7 @@
       "filename": "harness:4",
       "frame": {
         "x": 128,
-        "y": 512,
+        "y": 480,
         "w": 32,
         "h": 32
       },
@@ -2952,7 +2776,7 @@
       "filename": "harness:5",
       "frame": {
         "x": 160,
-        "y": 512,
+        "y": 480,
         "w": 32,
         "h": 32
       },
@@ -2974,7 +2798,7 @@
       "filename": "harness:6",
       "frame": {
         "x": 192,
-        "y": 512,
+        "y": 480,
         "w": 32,
         "h": 32
       },
@@ -2996,7 +2820,7 @@
       "filename": "harness:7",
       "frame": {
         "x": 224,
-        "y": 512,
+        "y": 480,
         "w": 32,
         "h": 32
       },
@@ -3018,7 +2842,7 @@
       "filename": "auth:0",
       "frame": {
         "x": 0,
-        "y": 544,
+        "y": 512,
         "w": 32,
         "h": 32
       },
@@ -3040,7 +2864,7 @@
       "filename": "auth:1",
       "frame": {
         "x": 32,
-        "y": 544,
+        "y": 512,
         "w": 32,
         "h": 32
       },
@@ -3062,7 +2886,7 @@
       "filename": "auth:2",
       "frame": {
         "x": 64,
-        "y": 544,
+        "y": 512,
         "w": 32,
         "h": 32
       },
@@ -3084,7 +2908,7 @@
       "filename": "auth:3",
       "frame": {
         "x": 96,
-        "y": 544,
+        "y": 512,
         "w": 32,
         "h": 32
       },
@@ -3106,7 +2930,7 @@
       "filename": "auth:4",
       "frame": {
         "x": 128,
-        "y": 544,
+        "y": 512,
         "w": 32,
         "h": 32
       },
@@ -3128,7 +2952,7 @@
       "filename": "auth:5",
       "frame": {
         "x": 160,
-        "y": 544,
+        "y": 512,
         "w": 32,
         "h": 32
       },
@@ -3150,7 +2974,7 @@
       "filename": "auth:6",
       "frame": {
         "x": 192,
-        "y": 544,
+        "y": 512,
         "w": 32,
         "h": 32
       },
@@ -3172,7 +2996,7 @@
       "filename": "auth:7",
       "frame": {
         "x": 224,
-        "y": 544,
+        "y": 512,
         "w": 32,
         "h": 32
       },
@@ -3194,7 +3018,7 @@
       "filename": "nightcore:0",
       "frame": {
         "x": 0,
-        "y": 576,
+        "y": 544,
         "w": 32,
         "h": 32
       },
@@ -3216,7 +3040,7 @@
       "filename": "nightcore:1",
       "frame": {
         "x": 32,
-        "y": 576,
+        "y": 544,
         "w": 32,
         "h": 32
       },
@@ -3238,7 +3062,7 @@
       "filename": "nightcore:2",
       "frame": {
         "x": 64,
-        "y": 576,
+        "y": 544,
         "w": 32,
         "h": 32
       },
@@ -3260,7 +3084,7 @@
       "filename": "nightcore:3",
       "frame": {
         "x": 96,
-        "y": 576,
+        "y": 544,
         "w": 32,
         "h": 32
       },
@@ -3282,7 +3106,7 @@
       "filename": "nightcore:4",
       "frame": {
         "x": 128,
-        "y": 576,
+        "y": 544,
         "w": 32,
         "h": 32
       },
@@ -3304,7 +3128,7 @@
       "filename": "nightcore:5",
       "frame": {
         "x": 160,
-        "y": 576,
+        "y": 544,
         "w": 32,
         "h": 32
       },
@@ -3326,7 +3150,7 @@
       "filename": "nightcore:6",
       "frame": {
         "x": 192,
-        "y": 576,
+        "y": 544,
         "w": 32,
         "h": 32
       },
@@ -3348,7 +3172,7 @@
       "filename": "nightcore:7",
       "frame": {
         "x": 224,
-        "y": 576,
+        "y": 544,
         "w": 32,
         "h": 32
       },
@@ -3370,7 +3194,7 @@
       "filename": "showcase-kit:0",
       "frame": {
         "x": 0,
-        "y": 608,
+        "y": 576,
         "w": 32,
         "h": 32
       },
@@ -3392,7 +3216,7 @@
       "filename": "showcase-kit:1",
       "frame": {
         "x": 32,
-        "y": 608,
+        "y": 576,
         "w": 32,
         "h": 32
       },
@@ -3414,7 +3238,7 @@
       "filename": "showcase-kit:2",
       "frame": {
         "x": 64,
-        "y": 608,
+        "y": 576,
         "w": 32,
         "h": 32
       },
@@ -3436,7 +3260,7 @@
       "filename": "showcase-kit:3",
       "frame": {
         "x": 96,
-        "y": 608,
+        "y": 576,
         "w": 32,
         "h": 32
       },
@@ -3458,7 +3282,7 @@
       "filename": "showcase-kit:4",
       "frame": {
         "x": 128,
-        "y": 608,
+        "y": 576,
         "w": 32,
         "h": 32
       },
@@ -3480,7 +3304,7 @@
       "filename": "showcase-kit:5",
       "frame": {
         "x": 160,
-        "y": 608,
+        "y": 576,
         "w": 32,
         "h": 32
       },
@@ -3502,7 +3326,7 @@
       "filename": "showcase-kit:6",
       "frame": {
         "x": 192,
-        "y": 608,
+        "y": 576,
         "w": 32,
         "h": 32
       },
@@ -3524,7 +3348,7 @@
       "filename": "showcase-kit:7",
       "frame": {
         "x": 224,
-        "y": 608,
+        "y": 576,
         "w": 32,
         "h": 32
       },
@@ -3541,6 +3365,182 @@
         "h": 32
       },
       "duration": 80
+    },
+    {
+      "filename": "eslint-plugins:0",
+      "frame": {
+        "x": 0,
+        "y": 608,
+        "w": 32,
+        "h": 32
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 32
+      },
+      "sourceSize": {
+        "w": 32,
+        "h": 32
+      },
+      "duration": 600
+    },
+    {
+      "filename": "eslint-plugins:1",
+      "frame": {
+        "x": 32,
+        "y": 608,
+        "w": 32,
+        "h": 32
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 32
+      },
+      "sourceSize": {
+        "w": 32,
+        "h": 32
+      },
+      "duration": 70
+    },
+    {
+      "filename": "eslint-plugins:2",
+      "frame": {
+        "x": 64,
+        "y": 608,
+        "w": 32,
+        "h": 32
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 32
+      },
+      "sourceSize": {
+        "w": 32,
+        "h": 32
+      },
+      "duration": 90
+    },
+    {
+      "filename": "eslint-plugins:3",
+      "frame": {
+        "x": 96,
+        "y": 608,
+        "w": 32,
+        "h": 32
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 32
+      },
+      "sourceSize": {
+        "w": 32,
+        "h": 32
+      },
+      "duration": 110
+    },
+    {
+      "filename": "eslint-plugins:4",
+      "frame": {
+        "x": 128,
+        "y": 608,
+        "w": 32,
+        "h": 32
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 32
+      },
+      "sourceSize": {
+        "w": 32,
+        "h": 32
+      },
+      "duration": 100
+    },
+    {
+      "filename": "eslint-plugins:5",
+      "frame": {
+        "x": 160,
+        "y": 608,
+        "w": 32,
+        "h": 32
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 32
+      },
+      "sourceSize": {
+        "w": 32,
+        "h": 32
+      },
+      "duration": 130
+    },
+    {
+      "filename": "eslint-plugins:6",
+      "frame": {
+        "x": 192,
+        "y": 608,
+        "w": 32,
+        "h": 32
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 32
+      },
+      "sourceSize": {
+        "w": 32,
+        "h": 32
+      },
+      "duration": 130
+    },
+    {
+      "filename": "eslint-plugins:7",
+      "frame": {
+        "x": 224,
+        "y": 608,
+        "w": 32,
+        "h": 32
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 32,
+        "h": 32
+      },
+      "sourceSize": {
+        "w": 32,
+        "h": 32
+      },
+      "duration": 90
     },
     {
       "filename": "tile:0",
@@ -3624,73 +3624,73 @@
         "direction": "forward"
       },
       {
-        "name": "eslint-plugins",
+        "name": "omniscribe",
         "from": 65,
         "to": 72,
         "direction": "forward"
       },
       {
-        "name": "omniscribe",
+        "name": "shiranami",
         "from": 73,
         "to": 80,
         "direction": "forward"
       },
       {
-        "name": "shiranami",
+        "name": "shiroani",
         "from": 81,
         "to": 88,
         "direction": "forward"
       },
       {
-        "name": "shiroani",
-        "from": 89,
-        "to": 96,
-        "direction": "forward"
-      },
-      {
         "name": "night-maze",
-        "from": 97,
-        "to": 102,
+        "from": 89,
+        "to": 94,
         "direction": "forward"
       },
       {
         "name": "stackward",
-        "from": 103,
-        "to": 112,
+        "from": 95,
+        "to": 104,
         "direction": "forward"
       },
       {
         "name": "hinomi",
+        "from": 105,
+        "to": 112,
+        "direction": "forward"
+      },
+      {
+        "name": "maquette",
         "from": 113,
         "to": 120,
         "direction": "forward"
       },
       {
-        "name": "maquette",
+        "name": "harness",
         "from": 121,
         "to": 128,
         "direction": "forward"
       },
       {
-        "name": "harness",
+        "name": "auth",
         "from": 129,
         "to": 136,
         "direction": "forward"
       },
       {
-        "name": "auth",
+        "name": "nightcore",
         "from": 137,
         "to": 144,
         "direction": "forward"
       },
       {
-        "name": "nightcore",
+        "name": "showcase-kit",
         "from": 145,
         "to": 152,
         "direction": "forward"
       },
       {
-        "name": "showcase-kit",
+        "name": "eslint-plugins",
         "from": 153,
         "to": 160,
         "direction": "forward"
