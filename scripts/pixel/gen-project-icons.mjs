@@ -52,6 +52,10 @@ export const README_ICON_FILE_PROJECTS = {
   stackward: 'stackward',
   hinomi: 'hinomi',
   maquette: 'maquette',
+  harness: 'harness',
+  auth: 'auth',
+  nightcore: 'nightcore',
+  'showcase-kit': 'showcase-kit',
 }
 
 /** The name of the bare tile's one-frame tag. */

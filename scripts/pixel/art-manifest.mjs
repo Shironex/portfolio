@@ -3,7 +3,15 @@
  * `readme/icons/icon-<name>.aseprite`, with one tag over every frame.
  * `gen-project-icons.mjs` maps each to its project slug.
  */
-export const README_ICON_FILES = ['stackward', 'hinomi', 'maquette']
+export const README_ICON_FILES = [
+  'stackward',
+  'hinomi',
+  'maquette',
+  'harness',
+  'auth',
+  'nightcore',
+  'showcase-kit',
+]
 
 /**
  * Every Aseprite source the OS ships, where it comes from and where its

@@ -10,7 +10,7 @@ import '@/styles/sprites/project-icons-32.css'
 /**
  * The projects with a drawn 32x32 icon (SPEC 2.4, Icons; section 9): the six
  * of `os-project-icons.aseprite`, the seven README icons of `icons.aseprite`
- * and the three drawn one per document, cut into one sheet by
+ * and the seven drawn one per document, cut into one sheet by
  * `gen-project-icons.mjs`, each tag named by its slug. The others
  * get their letter on the bare tile (`ProjectAvatar`, decision 3).
  */
@@ -31,6 +31,10 @@ const ICON_SLUGS = new Set([
   'stackward',
   'hinomi',
   'maquette',
+  'harness',
+  'auth',
+  'nightcore',
+  'showcase-kit',
 ])
 
 /** Whether a project has a drawn 32x32 icon. */
