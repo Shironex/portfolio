@@ -24,8 +24,8 @@ export const README_ICON_FILES = ['stackward', 'hinomi', 'maquette']
  * code recolours (the glyphs, drawn into `currentColor`): any one colour
  * passes, a second fails. `skyPalette` marks the wallpaper, whose clouds and
  * day skyline may also use the sky colours (`SKY_COLOURS` in palette.mjs).
- * `iconPalette` marks the project icons, which may also use the colours one
- * README icon added (`ICON_COLOURS` in palette.mjs).
+ * `iconPalette` marks the project icons, which may also use the colours the
+ * README icons added (`ICON_COLOURS` in palette.mjs).
  * `companions` are data files drawn up with the art
  * (the wallpaper's sky bands, recolour maps and layout) that are copied next
  * to the export as they are, for a generator to read. `layer` exports one

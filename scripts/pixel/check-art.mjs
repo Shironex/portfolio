@@ -16,7 +16,7 @@
  *     its own palette (`ownPalette`) or is 1-bit (`oneBit`: one colour,
  *     whichever it is, since code recolours it); the wallpaper (`skyPalette`)
  *     may also use the sky colours, for its clouds and its day skyline, and
- *     the project icons (`iconPalette`) the colours a README icon added
+ *     the project icons (`iconPalette`) the colours the README icons added
  * and per budget set, the PNG bytes stay under SPEC 4.6; generated outputs
  * (chrome CSS, glyph component, sprite CSS) are held to their budgets when
  * they exist, and a sprite stylesheet with no budget of its own fails.
