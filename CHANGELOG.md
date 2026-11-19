@@ -1,3 +1,10 @@
+## [2.27.1](https://github.com/Shironex/portfolio/compare/v2.27.0...v2.27.1) (2026-11-19)
+
+
+### Bug Fixes
+
+* **os:** reload once on chunk load errors and set a deployment id ([2e05e19](https://github.com/Shironex/portfolio/commit/2e05e19a4b6fe619f8d12f1d6ef0c0ef1526e0ce))
+
 # [2.27.0](https://github.com/Shironex/portfolio/compare/v2.26.2...v2.27.0) (2026-11-19)
 
 
