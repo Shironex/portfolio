@@ -1,3 +1,25 @@
+# [2.27.0](https://github.com/Shironex/portfolio/compare/v2.26.2...v2.27.0) (2026-11-19)
+
+
+### Bug Fixes
+
+* **projects:** relabel kireimanga as being rebuilt and drop the dead demo link ([6a42917](https://github.com/Shironex/portfolio/commit/6a42917c22dc09ab8cb9fc1bca183e5ea26a046d))
+* **projects:** update hinomi to v0.3.0 ([674655d](https://github.com/Shironex/portfolio/commit/674655d58d0efc4b88ddbe40cc987c7fd72c4836))
+* **projects:** update stackward to v0.4.0 ([5b46627](https://github.com/Shironex/portfolio/commit/5b4662702339f4cae1f268545d82d70fe39d7a2d))
+
+
+### Features
+
+* **projects:** add auth card ([d6fe296](https://github.com/Shironex/portfolio/commit/d6fe296c2c628caf15612ba9a6502feb2a454e74))
+* **skills:** add go and astro ([198d50e](https://github.com/Shironex/portfolio/commit/198d50e67075930816b75c6d7f29e7caf23152a8))
+* **projects:** add harness card ([d214d98](https://github.com/Shironex/portfolio/commit/d214d986a5c4e84b91e86dbb97e2578e67e6ffb7))
+* **projects:** add nightcore card ([bf5be54](https://github.com/Shironex/portfolio/commit/bf5be5481fd8502f8aca253ca9c2bee0cd189565))
+* **projects:** add showcase-kit card ([222d670](https://github.com/Shironex/portfolio/commit/222d670e6e80f44c54c26dcd4ffb3cc7eb153c6c))
+* **pixel:** add the harness, auth, nightcore and showcase-kit project icons ([36351b9](https://github.com/Shironex/portfolio/commit/36351b97e3d3ddf4dfccc7f5aff977ffe83ad4ca))
+* **pixel:** allow the noctcore steel blue on the project icons ([a1fde3f](https://github.com/Shironex/portfolio/commit/a1fde3fa9a43837e264044ecd1313aed4141cc12)), closes [#aac8e2](https://github.com/Shironex/portfolio/issues/aac8e2)
+* **projects:** link the eslint plugins card to npm and the noctcore site ([f6318fb](https://github.com/Shironex/portfolio/commit/f6318fb6546ca7eb3b7c38d65574dec0b0127bfa))
+* **pixel:** redraw the eslint-plugins icon with the noctcore bracket mark ([8cb3d16](https://github.com/Shironex/portfolio/commit/8cb3d168b52b502e1e3f33a299278542d8e89ae8))
+
 ## [2.26.2](https://github.com/Shironex/portfolio/compare/v2.26.1...v2.26.2) (2026-11-16)
 
 
