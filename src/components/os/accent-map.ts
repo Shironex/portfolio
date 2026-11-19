@@ -76,7 +76,6 @@ export const projectAccent: Record<string, AccentRole> = {
   'shinijs-logger': 'primary',
   'shinijs-rate-limit': 'warm',
   'eslint-plugins': 'primary',
-  nysia: 'deep',
   'shirone-blog': 'bright',
   rumi: 'warm-2',
   'business-erp': 'warm',
