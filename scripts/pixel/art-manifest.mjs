@@ -190,7 +190,8 @@ export const GENERATED_BUDGETS = [
   { file: `${SPRITE_CSS_DIR}/mascot-head.css`, bytes: 2 * KB },
   { file: `${SPRITE_CSS_DIR}/os-boot.css`, bytes: 3 * KB },
   { file: `${SPRITE_CSS_DIR}/readme-headers.css`, bytes: 5 * KB },
-  { file: `${SPRITE_CSS_DIR}/project-icons-32.css`, bytes: 16 * KB },
+  // About 0.9 KB per 8-frame loop: 21 icons since the five noctcore marks.
+  { file: `${SPRITE_CSS_DIR}/project-icons-32.css`, bytes: 18 * KB },
   { file: `${SPRITE_CSS_DIR}/os-neon-404.css`, bytes: 1 * KB },
   { file: `${SPRITE_CSS_DIR}/stack-shelf.css`, bytes: 2 * KB },
   { file: `${SPRITE_CSS_DIR}/minime.css`, bytes: 3 * KB },
