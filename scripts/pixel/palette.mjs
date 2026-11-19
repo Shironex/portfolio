@@ -7,7 +7,7 @@
  * palette membership, `gen-chrome.mjs` for the paper recolour).
  *
  * STYLE.md allows at most three added colours; the OS adds none, and the
- * README icons add the two of `ICON_COLOURS`.
+ * README icons add the three of `ICON_COLOURS`.
  */
 
 /** Ramps in STYLE.md order, dark to light where a ramp has a direction. */
@@ -64,11 +64,12 @@ export const SKY_COLOURS = [
 ]
 
 /**
- * Colours a README icon added under that allowance: the two lavenders of the
- * Hinomi icon. Only the project icon sheets may use them (`iconPalette` in
+ * Colours the README icons added under that allowance: the two lavenders of
+ * the Hinomi icon and the noctcore steel blue of the noctcore project marks.
+ * Only the project icon sheets may use them (`iconPalette` in
  * art-manifest.mjs), never a token.
  */
-export const ICON_COLOURS = ['#d2b4e6', '#9a88c8']
+export const ICON_COLOURS = ['#d2b4e6', '#9a88c8', '#aac8e2']
 
 /**
  * Night colour of a window, sheet or card body and the paper colour it becomes

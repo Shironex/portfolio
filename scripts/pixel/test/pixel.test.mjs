@@ -420,15 +420,15 @@ describe('check-art', () => {
     }
   })
 
-  it('lets the project icons use the colours a README icon added', async () => {
+  it('lets the project icons use the colours the README icons added', async () => {
     const dir = await fixtureDir()
     try {
       await writePng(join(dir, 'fx', 'icon-fixture.png'), [
-        ['#9a88c8', '#0b1420'],
+        ['#9a88c8', '#aac8e2', '#0b1420'],
       ])
       writeFileSync(
         join(dir, 'fx', 'icon-fixture.json'),
-        JSON.stringify(sheetJson('icon-fixture', 2, 1))
+        JSON.stringify(sheetJson('icon-fixture', 3, 1))
       )
       const withIcon = [...sources, { name: 'icon-fixture', group: 'fx' }]
       const strict = (await run(dir, { sources: withIcon })).failures.join('\n')
