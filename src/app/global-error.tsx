@@ -1,6 +1,8 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+
+import { reloadForChunkError } from '@/lib/chunk-reload'
 
 /*
  * The night colours of the pixel chrome, written out: `global-error`
@@ -38,9 +40,25 @@ export default function GlobalError({
   error: Error & { digest?: string }
   retry: () => void
 }) {
+  // A chunk that 404s after a deploy is not a bug in the app: load the new
+  // build once. The guard in reloadForChunkError keeps a second failure on
+  // the error screen instead of looping.
+  const [reloading, setReloading] = useState(false)
+
   useEffect(() => {
     console.error(error)
+    if (reloadForChunkError(error)) setReloading(true)
   }, [error])
+
+  if (reloading) {
+    return (
+      <html lang="en">
+        <body style={{ margin: 0, minHeight: '100dvh', background: GROUND }}>
+          <title>Reloading | ShiroOS</title>
+        </body>
+      </html>
+    )
+  }
 
   return (
     <html lang="en">

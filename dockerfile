@@ -35,6 +35,10 @@ COPY . ./
 # Disable Next.js telemetry
 RUN pnpm exec next telemetry disable
 
+# Coolify passes the deployed commit as SOURCE_COMMIT; next.config.mjs turns
+# it into the deploymentId (version skew protection).
+ARG SOURCE_COMMIT
+
 # Build the app
 RUN pnpm build
 
